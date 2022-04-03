@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import HeaderLeft from "./HeaderLeft.vue";
+import HeaderLeft from './HeaderLeft.vue';
 </script>
 
 <template>

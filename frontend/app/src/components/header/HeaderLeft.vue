@@ -1,4 +1,4 @@
-<script>
+<script setup lang="ts">
 
 </script>
 
@@ -7,6 +7,6 @@
   <h1>Turnierplaner</h1>
 </template>
 
-<style scoped>
+<style>
 
 </style>
