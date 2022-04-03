@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import HeadContent from "@/components/header/HeadContent.vue";
-import Registration from "@/components/header/HeadContent.vue"
-import test1 from "@/components/views/test1.vue";
-import test2 from "@/components/views/test2.vue";
+import tournament from "@/components/views/viewTournaments.vue";
+import competition from "@/components/views/viewCompetitions.vue";
 
-let state = 1;
+let state = 'tournament';
+let aside = true;
 </script>
 
 <template>
@@ -12,10 +12,10 @@ let state = 1;
 
   <div id="body">
     <main>
-      <Registration v-if="state === 1" />
-      <test2 v-if="state === 2" />
+      <tournament v-if="state === 'tournament'" />
+      <competition v-if="state === 'competition'" />
     </main>
-    <aside>
+    <aside v-if="aside">
       <h2>Aside content</h2>
     </aside>
   </div>
@@ -30,17 +30,15 @@ let state = 1;
 #body {
   margin-top: 20px;
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
 }
 
 main {
-  height: 100px;
-  background-color: red;
+  flex-grow: 1;
 }
 
 aside {
   height: 100px;
+  width: 400px;
   background-color: blue;
 }
 
