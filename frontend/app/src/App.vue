@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import HeadContent from "@/components/header/HeadContent.vue";
+import Registration from "@/components/header/HeadContent.vue"
 import test1 from "@/components/views/test1.vue";
 import test2 from "@/components/views/test2.vue";
 
@@ -11,8 +12,8 @@ let state = 1;
 
   <div id="body">
     <main>
-      <test1 v-if="state == 1" />
-      <test2 v-if="state == 2" />
+      <Registration v-if="state === 1" />
+      <test2 v-if="state === 2" />
     </main>
     <aside>
       <h2>Aside content</h2>
