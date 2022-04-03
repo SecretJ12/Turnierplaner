@@ -1,10 +1,9 @@
 <script setup lang="ts">
+import HeadContent from "@/components/header/HeadContent.vue";
 </script>
 
 <template>
-  <header>
-    <h1>Turnierplaner</h1>
-  </header>
+  <HeadContent />
 
   <main>
     <p>Content</p>
@@ -12,4 +11,8 @@
 </template>
 
 <style>
+body {
+  margin: 0;
+  padding: 0;
+}
 </style>
