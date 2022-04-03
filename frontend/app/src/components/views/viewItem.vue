@@ -3,11 +3,18 @@
 const info = defineProps({
   title: String,
   description: String
-})
+});
+
+const emit = defineEmits(['clicked']);
+
+function clicked() {
+  emit('clicked', info.title);
+  console.log("clicked item1");
+}
 </script>
 
 <template>
-  <div id="item">
+  <div id="item" @click="clicked">
     <h2>{{ title }}</h2>
     <p>{{ description }}</p>
   </div>
@@ -32,5 +39,10 @@ const info = defineProps({
 
   #item:hover {
     box-shadow: 0 0 10px black;
+    cursor: pointer;
+  }
+
+  #item:active {
+    background-color: #C0C0C0;
   }
 </style>

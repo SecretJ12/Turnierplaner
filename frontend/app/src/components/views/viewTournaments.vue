@@ -7,11 +7,18 @@ const tournaments = ref([
   {title: "2021", description: "noch mehr Text"},
   {title: "2020", description: "richtig, noch mehr text"}
 ])
+
+const emit = defineEmits(['clicked']);
+
+function clicked() {
+  emit("clicked", "title");
+  console.log("clicked item2");
+}
 </script>
 
 <template>
   <div id="tournaments">
-    <item v-for="tournament in tournaments" :key="tournament.title" :title="tournament.title" :description="tournament.description" />
+    <item v-for="tournament in tournaments" :key="tournament.title" :title="tournament.title" :description="tournament.description" @clicked="clicked"/>
   </div>
 </template>
 
