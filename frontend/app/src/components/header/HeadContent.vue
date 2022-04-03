@@ -13,12 +13,11 @@ import HeaderRight from "@/components/header/HeaderRight.vue";
 <style scoped>
 header {
   height: 100px;
-  width: 100vw;
-  background-color: red;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   align-items: center;
   justify-content: space-between;
+  box-shadow: 0 0 10px black;
 }
 </style>
