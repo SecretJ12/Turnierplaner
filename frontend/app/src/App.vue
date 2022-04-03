@@ -2,9 +2,9 @@
 import HeadContent from "@/components/header/HeadContent.vue";
 import tournament from "@/components/views/viewTournaments.vue";
 import competition from "@/components/views/viewCompetitions.vue";
-import Registration from "@/components/views/viewCompetitions.vue"
+import Registration from "@/components/header/Registration.vue"
 
-let state = 'tournament';
+let state = 'registration';
 let aside = true;
 </script>
 
