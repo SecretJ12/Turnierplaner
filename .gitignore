@@ -40,3 +40,4 @@ nb-configuration.xml
 
 # Frontend
 node_modules/**
+package-lock.json
