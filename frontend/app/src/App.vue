@@ -2,6 +2,7 @@
 import HeadContent from "@/components/header/HeadContent.vue";
 import tournament from "@/components/views/viewTournaments.vue";
 import competition from "@/components/views/viewCompetitions.vue";
+import Registration from "@/components/views/viewCompetitions.vue"
 
 let state = 'tournament';
 let aside = true;
@@ -14,6 +15,7 @@ let aside = true;
     <main>
       <tournament v-if="state === 'tournament'" />
       <competition v-if="state === 'competition'" />
+      <Registration v-if="state === 'registration'"/>
     </main>
     <aside v-if="aside">
       <h2>Aside content</h2>
