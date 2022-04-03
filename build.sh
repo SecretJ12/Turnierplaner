@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-mvn mvn package
+mvn package
 java -jar distribution/target/quarkus-app/quarkus-run.jar
