@@ -8,7 +8,6 @@ let correctInput = false
 
 const newEntry = ref('')
 const entries = ref([
-  {id: id++, text: 'Learn Vue'}
 ])
 
 function checkInput(i: { target: { value: string; }; }) {
