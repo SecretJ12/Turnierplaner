@@ -3,10 +3,21 @@
 </script>
 
 <template>
-  <font-awesome-icon icon="fa-solid fa-tennis-ball" />
-  <h1>Turnierplaner</h1>
+  <div id="headerLeft">
+    <font-awesome-icon :icon="['fas', 'flag']" class="fa-2x" ></font-awesome-icon>
+    <h1>Turnierplaner</h1>
+  </div>
 </template>
 
-<style>
+<style scoped>
+  #headerLeft {
+    padding-left: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
 
+  #headerLeft > * {
+    margin-left: 20px;
+  }
 </style>
