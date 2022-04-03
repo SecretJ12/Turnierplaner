@@ -15,7 +15,8 @@
 
     <properties>
         <working.dir>app</working.dir>
-        <node.version>v16.14.2</node.version>
+        <node.version>v17.8.0</node.version>
+        <npm.version>8.6.0</npm.version>
         <production.build.dir>${working.dir}/dist</production.build.dir>
     </properties>
 
@@ -36,6 +37,7 @@
                         <configuration>
                             <workingDirectory>${working.dir}</workingDirectory>
                             <nodeVersion>${node.version}</nodeVersion>
+                            <npmVersion>${npm.version}</npmVersion>
                         </configuration>
                         <executions>
                             <execution>
