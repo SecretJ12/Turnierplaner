@@ -20,6 +20,14 @@ const curTournament = ref("");
 function selected(tournament: string) {
   curTournament.value = tournament
 }
+
+function toReset() {
+  curTournament.value = "";
+}
+
+const emit = defineEmits(["toReset"]);
+emit("toReset", toReset)
+
 </script>
 
 <template>

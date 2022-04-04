@@ -1,9 +1,14 @@
 <script setup lang="ts">
 
+const emit = defineEmits(['home'])
+
+function home() {
+  emit('home', null)
+}
 </script>
 
 <template>
-  <div id="headerLeft">
+  <div id="headerLeft" @click="home">
     <font-awesome-icon :icon="['fas', 'flag']" class="fa-2x" ></font-awesome-icon>
     <h1>{{$t("title")}}</h1>
   </div>
@@ -15,6 +20,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    cursor: pointer;
   }
 
   #headerLeft > * {

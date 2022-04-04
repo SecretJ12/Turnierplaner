@@ -43,7 +43,7 @@ function addEntry() {
 <template>
   <h2>{{props.idTour}} - {{props.idComp}}</h2>
   <form @submit.prevent="addEntry">
-    <input :value="text" @input="checkInput" placeholder="Vorname Nachname">
+    <input @input="checkInput" placeholder="Vorname Nachname">
     <button>Teilnehmer hinzufügen</button>
   </form>
   <ul>

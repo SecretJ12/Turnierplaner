@@ -19,14 +19,15 @@ const curCompetition = ref("");
 
 function selected(competition: string) {
   curCompetition.value = competition
-  console.log(curCompetition.value)
 }
 </script>
 
 <template>
-  <div id="competitions" v-if="curCompetition === ''">
+  <div v-if="curCompetition === ''">
     <h2>{{props.idTour}}</h2>
-    <item v-for="competition in competitions" :key="competition.title" :idComp="competition.idComp" :title="competition.title" :description="competition.description" @selected="selected"/>
+    <div id="competitions">
+      <item v-for="competition in competitions" :key="competition.title" :idComp="competition.idComp" :title="competition.title" :description="competition.description" @selected="selected"/>
+    </div>
   </div>
   <div id="showCompetition" v-else>
     <registration :idTour="props.idTour" :idComp="curCompetition"/>

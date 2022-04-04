@@ -6,14 +6,24 @@ import tournament from "@/components/views/viewTournaments.vue";
 let state = ref('tournament');
 let aside = true;
 
+let toResetTournaments = function() {}
+
+function home() {
+  state.value = 'tournament';
+  toResetTournaments()
+}
+
+function getToResetTournaments(toReset: () => void) {
+  toResetTournaments = toReset;
+}
 </script>
 
 <template>
-  <HeadContent />
+  <HeadContent @home="home"/>
 
   <div id="body">
     <main>
-      <tournament v-if="state === 'tournament'"/>
+      <tournament ref="viewTournament" v-if="state === 'tournament'" @toReset="getToResetTournaments"/>
     </main>
     <aside v-if="aside">
       <h2>Aside content</h2>
