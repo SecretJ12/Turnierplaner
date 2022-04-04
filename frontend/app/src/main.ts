@@ -15,6 +15,11 @@ library.add(faFlag, faRightToBracket)
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 /* add font awesome icon component */
-createApp(App)
+const app = createApp(App);
+
+/* add alle global variables here */
+app.config.globalProperties.backend = "http://localhost:2000"
+
+app
     .component('font-awesome-icon', FontAwesomeIcon)
     .mount('#app')
