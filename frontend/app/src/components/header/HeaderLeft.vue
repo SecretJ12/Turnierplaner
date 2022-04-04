@@ -5,7 +5,7 @@
 <template>
   <div id="headerLeft">
     <font-awesome-icon :icon="['fas', 'flag']" class="fa-2x" ></font-awesome-icon>
-    <h1>Turnierplaner</h1>
+    <h1>{{$t("title")}}</h1>
   </div>
 </template>
 

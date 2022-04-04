@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
+import {createI18n} from "vue-i18n";
 
 /* import the fontawesome core */
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -14,6 +15,14 @@ library.add(faFlag, faRightToBracket)
 /* import font awesome icon component */
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
+import languages from './i18n/index';
+const messages = Object.assign(languages);
+const i18n = createI18n({
+    locale: 'de', // set locale
+    fallbackLocale: 'en', // set fallback locale
+    messages
+})
+
 /* add font awesome icon component */
 const app = createApp(App);
 
@@ -21,5 +30,6 @@ const app = createApp(App);
 app.config.globalProperties.backend = "http://localhost:2000"
 
 app
+    .use(i18n)
     .component('font-awesome-icon', FontAwesomeIcon)
     .mount('#app')
