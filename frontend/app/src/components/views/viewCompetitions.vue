@@ -1,34 +1,40 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import item from '@/components/views/itemTournament.vue';
+import registration from '@/components/views/viewRegistration.vue';
+import item from '@/components/views/itemCompetition.vue';
 
-const tournaments = ref([
-  {title: "Herren", description: "ganz viel Text"},
-  {title: "Damen", description: "noch mehr Text"},
-  {title: "U18", description: "richtig, noch mehr text"}
+const competitions = ref([
+  {idComp: "1", title: "Herren", description: "ganz viel Text"},
+  {idComp: "2", title: "Damen", description: "noch mehr Text"},
+  {idComp: "3", title: "U18", description: "richtig, noch mehr text"}
 ])
 
 const props = defineProps({
-  id: String
+  idTour: String
 })
 
 const emit = defineEmits(['clicked']);
 
-function clicked() {
-  emit("clicked", "title");
-  console.log(props.id)
+const curCompetition = ref("");
+
+function selected(competition: string) {
+  curCompetition.value = competition
+  console.log(curCompetition.value)
 }
 </script>
 
 <template>
-  <h2>{{props.id}}</h2>
-  <div id="tournaments">
-    <item v-for="tournament in tournaments" :key="tournament.title" :title="tournament.title" :description="tournament.description" @clicked="clicked"/>
+  <div id="competitions" v-if="curCompetition === ''">
+    <h2>{{props.idTour}}</h2>
+    <item v-for="competition in competitions" :key="competition.title" :idComp="competition.idComp" :title="competition.title" :description="competition.description" @selected="selected"/>
+  </div>
+  <div id="showCompetition" v-else>
+    <registration :idTour="props.idTour" :idComp="curCompetition"/>
   </div>
 </template>
 
 <style scoped>
-#tournaments {
+#competitions {
   margin: 10px;
   display: flex;
   flex-wrap: wrap;
@@ -36,7 +42,7 @@ function clicked() {
   justify-content: center;
 }
 
-#tournaments > * {
+#competitions > * {
   margin: 0 10px 10px 10px;
 }
 

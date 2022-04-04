@@ -1,8 +1,7 @@
 <script setup lang="ts">
 
-
 const props = defineProps({
-  id: String,
+  idTour: String,
   title: String,
   description: String
 })
@@ -10,7 +9,7 @@ const props = defineProps({
 const emit = defineEmits(['selected']);
 
 function selected() {
-  emit('selected', props.id);
+  emit('selected', props.idTour);
 }
 </script>
 

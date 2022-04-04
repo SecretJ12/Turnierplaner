@@ -1,6 +1,7 @@
 <script setup lang="ts">
 
-const info = defineProps({
+const props = defineProps({
+  idComp: String,
   title: String,
   description: String
 });
@@ -8,7 +9,7 @@ const info = defineProps({
 const emit = defineEmits(['selected']);
 
 function selected() {
-  emit('selected', info);
+  emit('selected', props.idComp);
 }
 </script>
 

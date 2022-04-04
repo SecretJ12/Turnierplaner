@@ -5,9 +5,13 @@ const string = [];
 let id = 0
 let correctInput = false
 
+const props = defineProps({
+  idTour: String,
+  idComp: String
+})
 
 const newEntry = ref('')
-const entries = ref([
+const entries = ref<Array<{id: number, text: string}>>([
 ])
 
 function checkInput(i: { target: { value: string; }; }) {
@@ -24,7 +28,8 @@ function checkInput(i: { target: { value: string; }; }) {
 
 function addEntry() {
   if (correctInput) {
-    entries.value.push({id: id++, text: newEntry.value})
+    const entry = {id: id++, text: newEntry.value}
+    entries.value.push(entry)
     newEntry.value = ''
     correctInput = false
   }
@@ -36,6 +41,7 @@ function addEntry() {
 </script>
 
 <template>
+  <h2>{{props.idTour}} - {{props.idComp}}</h2>
   <form @submit.prevent="addEntry">
     <input :value="text" @input="checkInput" placeholder="Vorname Nachname">
     <button>Teilnehmer hinzufügen</button>
@@ -49,14 +55,7 @@ function addEntry() {
 </template>
 
 <style scoped>
-header {
-  height: 100px;
-  width: 100vw;
-  background-color: red;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  align-items: center;
-  justify-content: space-between;
+h2 {
+  text-align: center;
 }
 </style>

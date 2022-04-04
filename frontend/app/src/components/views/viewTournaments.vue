@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import item from '@/components/views/itemTournament.vue';
 import competition from "@/components/views/viewCompetitions.vue";
-import Registration from "@/components/header/Registration.vue"
+import Registration from "@/components/views/viewRegistration.vue"
 
 interface TournamentDetails {
   id: String,
@@ -24,10 +24,10 @@ function selected(tournament: string) {
 
 <template>
   <div id="tournaments" v-if="curTournament === ''">
-    <item v-for="tournament in tournaments" :key="tournament.title" :id="tournament.id" :title="tournament.title" :description="tournament.description" @selected="selected"/>
+    <item v-for="tournament in tournaments" :key="tournament.title" :idTour="tournament.id" :title="tournament.title" :description="tournament.description" @selected="selected"/>
   </div>
   <div id="showCompetition" v-else>
-    <competition :id="curTournament"/>
+    <competition :idTour="curTournament"/>
   </div>
 </template>
 
