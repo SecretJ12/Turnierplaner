@@ -1,22 +1,23 @@
 <script setup lang="ts">
 
-const info = defineProps({
+
+const props = defineProps({
+  id: String,
   title: String,
   description: String
-});
+})
 
-const emit = defineEmits(['clicked']);
+const emit = defineEmits(['selected']);
 
-function clicked() {
-  emit('clicked', info.title);
-  console.log("clicked item1");
+function selected() {
+  emit('selected', props.id);
 }
 </script>
 
 <template>
-  <div id="item" @click="clicked">
-    <h2>{{ title }}</h2>
-    <p>{{ description }}</p>
+  <div id="item" @click="selected">
+    <h2>{{ props.title }}</h2>
+    <p>{{ props.description }}</p>
   </div>
 </template>
 

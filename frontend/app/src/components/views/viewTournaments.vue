@@ -1,24 +1,33 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import item from '@/components/views/viewItem.vue';
+import item from '@/components/views/itemTournament.vue';
+import competition from "@/components/views/viewCompetitions.vue";
+import Registration from "@/components/header/Registration.vue"
 
-const tournaments = ref([
-  {title: "2022", description: "ganz viel Text"},
-  {title: "2021", description: "noch mehr Text"},
-  {title: "2020", description: "richtig, noch mehr text"}
+interface TournamentDetails {
+  id: String,
+  title: String,
+  description: String
+}
+
+const tournaments = ref<Array<TournamentDetails>>([
+  {id: "1", title: "2022", description: "ganz viel Text"},
+  {id: "2", title: "2021", description: "noch mehr Text"},
+  {id: "3", title: "2020", description: "richtig, noch mehr text"}
 ])
+const curTournament = ref("");
 
-const emit = defineEmits(['clicked']);
-
-function clicked() {
-  emit("clicked", "title");
-  console.log("clicked item2");
+function selected(tournament: string) {
+  curTournament.value = tournament
 }
 </script>
 
 <template>
-  <div id="tournaments">
-    <item v-for="tournament in tournaments" :key="tournament.title" :title="tournament.title" :description="tournament.description" @clicked="clicked"/>
+  <div id="tournaments" v-if="curTournament === ''">
+    <item v-for="tournament in tournaments" :key="tournament.title" :id="tournament.id" :title="tournament.title" :description="tournament.description" @selected="selected"/>
+  </div>
+  <div id="showCompetition" v-else>
+    <competition :id="curTournament"/>
   </div>
 </template>
 
