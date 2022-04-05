@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import item from '@/components/views/itemTournament.vue';
-import competition from "@/components/views/viewCompetitions.vue";
-import Registration from "@/components/views/viewRegistration.vue"
+import item from '@/components/views/ItemTournament.vue';
+import competition from "@/components/views/ViewCompetitions.vue";
+import Registration from "@/components/views/ViewRegistration.vue"
 
 interface TournamentDetails {
   id: String,

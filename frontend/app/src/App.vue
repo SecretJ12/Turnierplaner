@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import HeadContent from "@/components/header/HeadContent.vue";
-import tournament from "@/components/views/viewTournaments.vue";
+import Tournament from "@/components/views/ViewTournaments.vue";
 
 let state = ref('tournament');
 let aside = true;
