@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import registration from '@/components/views/ViewRegistration.vue';
-import item from '@/components/views/ItemCompetition.vue';
+import Registration from '@/components/views/ViewRegistration.vue';
+import Item from '@/components/views/ItemCompetition.vue';
 
 const competitions = ref([
   {idComp: "1", title: "Herren", description: "ganz viel Text"},

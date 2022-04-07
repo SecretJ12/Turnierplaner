@@ -1,5 +1,12 @@
 {
   "dependencies": {
-    "vue": "^3.2.31"
+    "axios": "^0.26.1",
+    "vee-validate": "^4.5.10",
+    "vue": "^3.2.31",
+    "vue-axios": "^3.4.1",
+    "vue-password": "^3.1.0"
+  },
+  "devDependencies": {
+    "vue-loader-v16": "^16.0.0-beta.5.4"
   }
 }

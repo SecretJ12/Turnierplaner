@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {ref} from 'vue'
+import axios from "axios";
 
 const usernameInput = ref("");
 const passwordInput = ref("")
@@ -24,6 +25,12 @@ const switchVisibility = () => {
 
 const sendLoginInformationToBackend = () => {
 //  TODO send information to backend
+  axios.get('/hello').then(
+      response => {
+        console.log(response.data)
+      }
+  ).catch(error => console.error(error))
+
 
   usernameInput.value = ""
   passwordInput.value = ""
@@ -36,12 +43,5 @@ const sendLoginInformationToBackend = () => {
   <input :type="passWordFieldType" v-model="passwordInput">
   <button @click="switchVisibility"> {{ visibility }}</button>
   <button @click="sendLoginInformationToBackend"> Login</button>
-  <div>
-    <b-button v-b-modal.modal-1>Launch demo modal</b-button>
-
-    <b-modal id="modal-1" title="BootstrapVue">
-      <p class="my-4">Hello from modal!</p>
-    </b-modal>
-  </div>
 </template>
 

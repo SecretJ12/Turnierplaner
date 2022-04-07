@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import item from '@/components/views/ItemTournament.vue';
-import competition from "@/components/views/ViewCompetitions.vue";
+import {ref} from 'vue';
+import Item from '@/components/views/ItemTournament.vue';
+import Competition from "@/components/views/ViewCompetitions.vue";
 import Registration from "@/components/views/ViewRegistration.vue"
 
 interface TournamentDetails {
-  id: String,
-  title: String,
-  description: String
+  id: any,
+  title: any,
+  description: any
 }
 
 const tournaments = ref<Array<TournamentDetails>>([
@@ -32,7 +32,8 @@ emit("toReset", toReset)
 
 <template>
   <div id="tournaments" v-if="curTournament === ''">
-    <item v-for="tournament in tournaments" :key="tournament.title" :idTour="tournament.id" :title="tournament.title" :description="tournament.description" @selected="selected"/>
+    <item v-for="tournament in tournaments" :key="tournament.title" :idTour="tournament.id" :title="tournament.title"
+          :description="tournament.description" @selected="selected"/>
   </div>
   <div id="showCompetition" v-else>
     <competition :idTour="curTournament"/>
@@ -40,16 +41,16 @@ emit("toReset", toReset)
 </template>
 
 <style scoped>
-  #tournaments {
-    margin: 10px;
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-    justify-content: center;
+#tournaments {
+  margin: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
 
-  }
+}
 
-  #tournaments > * {
-    margin: 0 10px 10px 10px;
-  }
+#tournaments > * {
+  margin: 0 10px 10px 10px;
+}
 </style>
