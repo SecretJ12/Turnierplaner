@@ -1,4 +1,4 @@
-import {createApp, inject} from 'vue'
+import {createApp} from 'vue'
 import App from './App.vue'
 import {createI18n} from "vue-i18n";
 
@@ -19,7 +19,7 @@ library.add(faFlag, faRightToBracket)
 /* import font awesome icon component */
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 
-import languages from './i18n/index';
+import languages from './i18n';
 
 const messages = Object.assign(languages);
 const i18n = createI18n({

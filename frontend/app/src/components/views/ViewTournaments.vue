@@ -1,23 +1,17 @@
-<script setup lang="ts">
+<script setup>
 import {ref} from 'vue';
-import Item from '@/components/views/ItemTournament.vue';
-import Competition from "@/components/views/ViewCompetitions.vue";
-import Registration from "@/components/views/ViewRegistration.vue"
+import Item from './ItemTournament.vue';
+import Competition from "./ViewCompetitions.vue";
+import Registration from "./ViewRegistration.vue"
 
-interface TournamentDetails {
-  id: any,
-  title: any,
-  description: any
-}
-
-const tournaments = ref<Array<TournamentDetails>>([
+const tournaments = ref([
   {id: "1", title: "2022", description: "ganz viel Text"},
   {id: "2", title: "2021", description: "noch mehr Text"},
   {id: "3", title: "2020", description: "richtig, noch mehr text"}
 ])
 const curTournament = ref("");
 
-function selected(tournament: string) {
+function selected(tournament) {
   curTournament.value = tournament
 }
 

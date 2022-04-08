@@ -1,7 +1,7 @@
-<script setup lang="ts">
+<script setup>
 import { ref } from 'vue';
-import HeadContent from "@/components/header/HeadContent.vue";
-import Tournament from "@/components/views/ViewTournaments.vue";
+import HeadContent from "./components/header/HeadContent.vue";
+import Tournament from "./components/views/ViewTournaments.vue";
 
 let state = ref('tournament');
 let aside = true;
@@ -13,7 +13,7 @@ function home() {
   toResetTournaments()
 }
 
-function getToResetTournaments(toReset: () => void) {
+function getToResetTournaments(toReset) {
   toResetTournaments = toReset;
 }
 </script>
@@ -32,7 +32,7 @@ function getToResetTournaments(toReset: () => void) {
 </template>
 
 <style>
-@import './assets/base.css';
+@import 'assets/base.css';
 </style>
 
 <style scoped>

@@ -1,6 +1,6 @@
-<script setup lang="ts">
+<script setup>
 import HeaderLeft from './HeaderLeft.vue';
-import HeaderRight from "@/components/header/HeaderRight.vue";
+import HeaderRight from "./HeaderRight.vue";
 
 const emit = defineEmits(['home'])
 

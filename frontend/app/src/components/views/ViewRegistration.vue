@@ -1,5 +1,5 @@
-<script setup lang="ts">
-import {ref, type Ref} from 'vue'
+<script setup>
+import {ref} from 'vue'
 
 const string = [];
 let id = 0
@@ -11,9 +11,9 @@ const props = defineProps({
 })
 
 const input = ref('')
-const entries: Ref<String[]> = ref([])
+const entries = ref([])
 
-function checkInput(i: any ) {
+function checkInput(i) {
   input.value = i.target.value
   const tmp = input.value.trim().split(' ');
   let specialCharacter = input.value.match(/[^a-z]/i)
