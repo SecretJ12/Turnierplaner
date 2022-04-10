@@ -1,12 +1,14 @@
 <script setup>
-import { ref } from 'vue';
+import {ref} from 'vue';
 import HeadContent from "./components/header/HeadContent.vue";
 import Tournament from "./components/views/ViewTournaments.vue";
+import Login from "./components/pop-up/Login.vue"
 
 let state = ref('tournament');
 let aside = true;
 
-let toResetTournaments = function() {}
+let toResetTournaments = function () {
+}
 
 function home() {
   state.value = 'tournament';

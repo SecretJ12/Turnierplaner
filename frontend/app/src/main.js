@@ -9,6 +9,8 @@ import {library} from '@fortawesome/fontawesome-svg-core'
 import VueAxios from 'vue-axios'
 import axios from 'axios'
 
+axios.defaults.baseURL = 'http://localhost:8080'
+
 /* import specific icons */
 import {faFlag, faRightToBracket} from '@fortawesome/free-solid-svg-icons'
 import {} from '@fortawesome/free-regular-svg-icons'
