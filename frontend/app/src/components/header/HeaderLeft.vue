@@ -1,9 +1,8 @@
 <script setup>
-
-const emit = defineEmits(['home'])
+import {router} from '/src/main'
 
 function home() {
-  emit('home', null)
+  router.replace({path:"/"})
 }
 </script>
 

@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
-import Registration from './ViewRegistration.vue';
-import Item from './ItemCompetition.vue';
+import Item from '../items/ItemCompetition.vue';
+import { router } from '/src/main'
 
 const competitions = ref([
   {idComp: "1", title: "Herren", description: "ganz viel Text"},
@@ -9,28 +9,18 @@ const competitions = ref([
   {idComp: "3", title: "U18", description: "richtig, noch mehr text"}
 ])
 
-const props = defineProps({
-  idTour: String
-})
-
-const emit = defineEmits(['clicked']);
-
-const curCompetition = ref("");
 
 function selected(competition) {
-  curCompetition.value = competition
-}
+  router.push({path: "/tournaments/3/competitions/" + competition})
+} /* TODO keep tourId */
 </script>
 
 <template>
-  <div v-if="curCompetition === ''">
-    <h2>{{props.idTour}}</h2>
+  <div>
+    <h2>{{$route.params.tourId}}</h2>
     <div id="competitions">
       <item v-for="competition in competitions" :key="competition.title" :idComp="competition.idComp" :title="competition.title" :description="competition.description" @selected="selected"/>
     </div>
-  </div>
-  <div id="showCompetition" v-else>
-    <registration :idTour="props.idTour" :idComp="curCompetition"/>
   </div>
 </template>
 

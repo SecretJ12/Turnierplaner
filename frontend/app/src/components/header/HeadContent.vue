@@ -2,16 +2,11 @@
 import HeaderLeft from './HeaderLeft.vue';
 import HeaderRight from "./HeaderRight.vue";
 
-const emit = defineEmits(['home'])
-
-function home() {
-  emit('home', null)
-}
 </script>
 
 <template>
   <header>
-    <HeaderLeft @home="home"/>
+    <HeaderLeft />
     <HeaderRight />
   </header>
 </template>

@@ -5,11 +5,6 @@ const string = [];
 let id = 0
 let correctInput = false
 
-const props = defineProps({
-  idTour: String,
-  idComp: String
-})
-
 const input = ref('')
 const entries = ref([])
 
@@ -45,7 +40,7 @@ function addEntry() {
 </script>
 
 <template>
-  <h2>{{ props.idTour }} - {{ props.idComp }}</h2>
+  <h2>{{ $route.params.tourId }} - {{ $route.params.compId }}</h2>
   <form @submit.prevent="addEntry">
     <input :value="input"  @input="checkInput" placeholder="Vorname Nachname">
     <button>Teilnehmer hinzufügen</button>

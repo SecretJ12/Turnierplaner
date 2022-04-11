@@ -1,6 +1,7 @@
 import {createApp} from 'vue'
 import App from './App.vue'
-import {createI18n} from "vue-i18n";
+import {createI18n} from "vue-i18n"
+import * as VueRouter from 'vue-router'
 
 /* import the fontawesome core */
 import {library} from '@fortawesome/fontawesome-svg-core'
@@ -36,8 +37,38 @@ const app = createApp(App);
 /* add alle global variables here */
 app.config.globalProperties.backend = "http://localhost:2000"
 
+import viewTournaments from './components/views/ViewTournaments.vue'
+import viewCompetitions from './components/views/ViewCompetitions.vue'
+import viewRegistration from './components/views/ViewRegistration.vue'
+
+const routes = [
+    {
+        path: "/",
+        name: "Home",
+        component: viewTournaments
+    },
+    {
+        path: "/tournaments/:tourId",
+        name: "Tournaments",
+        component: viewCompetitions
+    },
+    {
+        path: "/tournaments/:tourId/competitions/:compId",
+        name: "Competition",
+        component: viewRegistration
+    }
+]
+
+const router = VueRouter.createRouter({
+    history: VueRouter.createWebHashHistory(),
+    routes
+})
+
 app
     .use(i18n)
     .component('font-awesome-icon', FontAwesomeIcon)
     .use(VueAxios, axios)
+    .use(router)
     .mount('#app')
+
+export {router}
