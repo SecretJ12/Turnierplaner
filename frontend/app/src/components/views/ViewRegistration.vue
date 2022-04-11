@@ -40,19 +40,19 @@ function addEntry() {
 </script>
 
 <template>
-  <h2>{{ $route.params.tourId }} - {{ $route.params.compId }}</h2>
-  <form @submit.prevent="addEntry">
-    <input :value="input"  @input="checkInput" placeholder="Vorname Nachname">
-    <button>Teilnehmer hinzufügen</button>
-  </form>
-  <ul>
-    <li v-for="name in entries" >
-      {{ name }}
-      <!--      <button @click="removeEntry(name)">X</button>-->
-    </li>
-  </ul>
-
-
+  <div>
+    <h2>{{ $route.params.tourId }} - {{ $route.params.compId }}</h2>
+    <form @submit.prevent="addEntry">
+      <input :value="input"  @input="checkInput" placeholder="Vorname Nachname">
+      <button>Teilnehmer hinzufügen</button>
+    </form>
+    <ul>
+      <li v-for="name in entries" >
+        {{ name }}
+        <!--      <button @click="removeEntry(name)">X</button>-->
+      </li>
+    </ul>
+  </div>
 </template>
 
 <style scoped>
