@@ -25,12 +25,19 @@ const switchVisibility = () => {
 
 const sendLoginInformationToBackend = () => {
 //  TODO send information to backend
-  axios.get('/hello').then(
-      response => {
-        console.log(response.data)
+  axios.post('/login', {
+          username: usernameInput.value,
+          password: passwordInput.value
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
       }
-  ).catch(error => console.error(error))
-
+  ).then(function (response) {
+    console.log(response)
+  }).catch(function (error) {
+    console.log(error)
+  });
 
   usernameInput.value = ""
   passwordInput.value = ""
@@ -39,9 +46,15 @@ const sendLoginInformationToBackend = () => {
 </script>
 
 <template>
-  <input v-model="usernameInput">
-  <input :type="passWordFieldType" v-model="passwordInput">
-  <button @click="switchVisibility"> {{ visibility }}</button>
-  <button @click="sendLoginInformationToBackend"> Login</button>
+  <div>
+    <h1>Login</h1>
+    <input v-model="usernameInput">
+    <br><br>
+    <input :type="passWordFieldType" v-model="passwordInput">
+    <button @click="switchVisibility"> {{ visibility }}</button>
+    <br><br>
+    <button @click="sendLoginInformationToBackend"> Login</button>
+
+  </div>
 </template>
 
