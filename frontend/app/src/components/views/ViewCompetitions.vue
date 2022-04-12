@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import Item from '../items/ItemCompetition.vue';
 import { router } from '/src/main'
+import { useRoute } from 'vue-router'
 
 const competitions = ref([
   {idComp: "1", title: "Herren", description: "ganz viel Text"},
@@ -9,10 +10,11 @@ const competitions = ref([
   {idComp: "3", title: "U18", description: "richtig, noch mehr text"}
 ])
 
+const route = useRoute()
 
 function selected(competition) {
-  router.push({path: "/tournaments/3/competitions/" + competition})
-} /* TODO keep tourId */
+  router.push({path: "/tournaments/" + route.params.tourId + "/competitions/" + competition})
+}
 </script>
 
 <template>
