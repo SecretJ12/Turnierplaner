@@ -2,12 +2,18 @@
 import {ref} from 'vue';
 import Item from '../items/ItemTournament.vue';
 import { router } from '/src/main'
+import axios from "axios";
 
-const tournaments = ref([
-  {id: "1", title: "2022", description: "ganz viel Text"},
-  {id: "2", title: "2021", description: "noch mehr Text"},
-  {id: "3", title: "2020", description: "richtig, noch mehr text"}
-])
+const tournaments = ref([])
+
+axios.get('/tournaments')
+    .then((response) => {
+      console.log(response)
+      tournaments.value = response.data
+    })
+    .catch((error) => {
+      console.log(error)
+    })
 
 function selected(tournament) {
   router.push({path: '/tournaments/'+tournament})
