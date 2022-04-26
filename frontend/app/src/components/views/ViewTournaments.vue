@@ -10,6 +10,7 @@ axios.get('/tournaments')
     .then((response) => {
       console.log(response)
       tournaments.value = response.data
+      tournaments.value.forEach(t => console.log(t.visible))
     })
     .catch((error) => {
       console.log(error)
@@ -23,8 +24,12 @@ function selected(tournament) {
 
 <template>
   <div id="tournaments">
-    <item v-for="tournament in tournaments" :key="tournament.title" :idTour="tournament.id" :title="tournament.title"
-          :description="tournament.description" @selected="selected"/>
+    <item v-for="tournament in tournaments" :key="tournament.name"
+          :name="tournament.name" :description="tournament.description"
+          :beginRegistration="new Date(tournament.beginRegistration)" :endRegistration="new Date(tournament.endRegistration)"
+          :beginGamePhase="new Date(tournament.beginGamePhase)" :endGamePhase="new Date(tournament.endGamePhase)"
+          :visible="tournament.visible"
+          @selected="selected"/>
   </div>
 </template>
 

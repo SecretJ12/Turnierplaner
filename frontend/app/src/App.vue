@@ -1,7 +1,7 @@
 <script setup>
 import HeadContent from "./components/header/HeadContent.vue";
 
-let aside = true;
+let aside = false;
 
 </script>
 

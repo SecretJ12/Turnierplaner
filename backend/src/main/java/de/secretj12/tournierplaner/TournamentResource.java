@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.Collection;
 
 @Path("/tournaments")
@@ -27,16 +28,18 @@ public class TournamentResource {
     @Path("/{tourId}")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Tournament getTournament(@Param String tourId) {
-        return tournaments.find("name", tourId).firstResultOptional().orElse(null);
+    public Tournament getTournament(@Param String name) {
+        return tournaments.find("name", name).firstResultOptional().orElse(null);
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     @Transactional
-    public String addTournament(Tournament tournament) {
+    public Response addTournament(Tournament tournament) {
+        if (getTournament(tournament.getName()) != null)
+            return Response.status(Response.Status.CONFLICT).build();
         tournaments.persist(tournament);
-        return "successfully added";
+        return Response.ok("succceessfully added").build();
     }
 }

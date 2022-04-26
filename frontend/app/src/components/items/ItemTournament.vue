@@ -1,21 +1,25 @@
 <script setup>
 
 const props = defineProps({
-  idTour: String,
-  title: String,
-  description: String
+  name: String,
+  description: String,
+  beginRegistration: Date,
+  endRegistration: Date,
+  beginGamePhase: Date,
+  endGamePhase: Date,
+  visible: Boolean
 })
 
 const emit = defineEmits(['selected']);
 
 function selected() {
-  emit('selected', props.idTour);
+  emit('selected', props.name);
 }
 </script>
 
 <template>
-  <div id="item" @click="selected">
-    <h2>{{ props.title }}</h2>
+  <div id="item" @click="selected" v-if="props.visible">
+    <h2>{{ props.name }}</h2>
     <p>{{ props.description }}</p>
   </div>
 </template>
