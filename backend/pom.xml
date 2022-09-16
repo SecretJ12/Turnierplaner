@@ -73,10 +73,6 @@
           <groupId>io.quarkus</groupId>
           <artifactId>quarkus-oidc</artifactId>
         </dependency>
-        <dependency>
-          <groupId>io.quarkus</groupId>
-          <artifactId>quarkus-keycloak-authorization</artifactId>
-        </dependency>
 
     </dependencies>
     <build>
