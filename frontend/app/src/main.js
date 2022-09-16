@@ -1,26 +1,36 @@
-import {createApp} from 'vue'
+import { createApp } from 'vue'
 import App from './App.vue'
-import {createI18n} from "vue-i18n"
+import { createI18n } from "vue-i18n"
 import * as VueRouter from 'vue-router'
 
 /* import the fontawesome core */
-import {library} from '@fortawesome/fontawesome-svg-core'
+import { library } from '@fortawesome/fontawesome-svg-core'
 
 /* https request */
 import VueAxios from 'vue-axios'
 import axios from 'axios'
 
+import { access_token } from '/src/security/AuthService'
 axios.defaults.baseURL = 'http://localhost:2000'
 
+axios.interceptors.request.use(function (config) {
+    if (access_token.value !== null)
+        config.headers.Authorization = `Bearer ${access_token.value}`
+    return config;
+}, function (error) {
+    // Do something with request error
+    return Promise.reject(error);
+});
+
 /* import specific icons */
-import {faFlag, faRightToBracket, faRightFromBracket} from '@fortawesome/free-solid-svg-icons'
-import {} from '@fortawesome/free-regular-svg-icons'
+import { faFlag, faRightToBracket, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
+import { } from '@fortawesome/free-regular-svg-icons'
 
 /* add icons to the library */
 library.add(faFlag, faRightToBracket, faRightFromBracket)
 
 /* import font awesome icon component */
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 import languages from './i18n';
 
@@ -40,6 +50,7 @@ app.config.globalProperties.backend = "http://localhost:2000"
 import viewTournaments from './components/views/ViewTournaments.vue'
 import viewCompetitions from './components/views/ViewCompetitions.vue'
 import viewRegistration from './components/views/ViewRegistration.vue'
+import viewTemplates from './components/views/ViewTemplates.vue'
 
 const routes = [
     {
@@ -56,6 +67,11 @@ const routes = [
         path: "/tournaments/:tourId/competitions/:compId",
         name: "Competition",
         component: viewRegistration
+    },
+    {
+        path: "/templates",
+        name: "Templates",
+        component: viewTemplates
     }
 ]
 

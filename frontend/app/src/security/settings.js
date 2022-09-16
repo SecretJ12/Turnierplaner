@@ -14,7 +14,9 @@ export const settings = {
     popup_post_logout_redirect_uri: FRONTEND + "/callbackSignOut.html",
     registration_endpoint: AUTH_DOMAIN + "/clients-registrations/openid-connect",
 
+    automaticSilentRenew: true,
+
     filterProtocolClaims: true
 };
 
-export const popup = false;
+export const popup = true;
