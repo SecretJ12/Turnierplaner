@@ -12,7 +12,7 @@
 
     <properties>
         <java.version>18</java.version>
-        <quarkus.platform.version>2.8.2.Final</quarkus.platform.version>
+        <quarkus.platform.version>2.11.2.Final</quarkus.platform.version>
         <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
         <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
         <compiler-plugin.version>3.8.1</compiler-plugin.version>

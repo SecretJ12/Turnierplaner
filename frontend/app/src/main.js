@@ -13,11 +13,11 @@ import axios from 'axios'
 axios.defaults.baseURL = 'http://localhost:2000'
 
 /* import specific icons */
-import {faFlag, faRightToBracket} from '@fortawesome/free-solid-svg-icons'
+import {faFlag, faRightToBracket, faRightFromBracket} from '@fortawesome/free-solid-svg-icons'
 import {} from '@fortawesome/free-regular-svg-icons'
 
 /* add icons to the library */
-library.add(faFlag, faRightToBracket)
+library.add(faFlag, faRightToBracket, faRightFromBracket)
 
 /* import font awesome icon component */
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'

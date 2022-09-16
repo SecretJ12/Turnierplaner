@@ -1,5 +1,5 @@
 <script setup>
-import HeadContent from "./components/header/HeadContent.vue";
+import HeadContent from "/src/components/header/HeadContent.vue";
 
 let aside = false;
 
