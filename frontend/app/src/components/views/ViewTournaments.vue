@@ -1,5 +1,5 @@
 <script setup>
-import {ref} from 'vue';
+import { ref } from 'vue';
 import Item from '../items/ItemTournament.vue';
 import { router } from '/src/main'
 import axios from "axios";
@@ -10,7 +10,6 @@ axios.get('/tournaments')
     .then((response) => {
       console.log(response)
       tournaments.value = response.data
-      tournaments.value.forEach(t => console.log(t.visible))
     })
     .catch((error) => {
       console.log(error)
@@ -19,7 +18,6 @@ axios.get('/tournaments')
 function selected(tournament) {
   router.push({path: '/tournaments/'+tournament})
 }
-
 </script>
 
 <template>

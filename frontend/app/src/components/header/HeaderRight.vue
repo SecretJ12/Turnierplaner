@@ -1,8 +1,6 @@
 <script setup>
-import AuthService from '/src/security/AuthService';
+import { auth } from '/src/security/AuthService';
 import { ref } from 'vue';
-
-const auth = new AuthService();
 
 const currentUser = ref('');
 const accessTokenExpired = ref(false);
@@ -17,7 +15,6 @@ function logout() {
 }
 
 auth.addUserUpdateListener(() => {
-  console.log("test");
   auth.getUser().then((user) => {
     if (user !== null) {
       currentUser.value = user.profile.preferred_username;

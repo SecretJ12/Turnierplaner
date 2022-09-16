@@ -1,5 +1,5 @@
 <script setup>
-import {router} from '/src/main'
+import { router } from '/src/main'
 
 function home() {
   router.replace({path:"/"})
