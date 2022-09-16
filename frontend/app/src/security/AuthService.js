@@ -1,11 +1,19 @@
 import { UserManager } from "oidc-client-ts";
 import { settings, popup } from "./settings";
+import { ref } from 'vue'
 
-export default class AuthService {
+class AuthService {
     userManager;
 
     constructor() {
         this.userManager = new UserManager(settings);
+    }
+
+    silentLogin() {
+        this.userManager.signinSilent()
+            .then(r => {
+                console.log("successfully logged in")
+            })
     }
 
     getUser() {
@@ -37,3 +45,16 @@ export default class AuthService {
             cb.call();
     }
 }
+
+export const auth = new AuthService()
+export const access_token = ref(null)
+
+auth.addUserUpdateListener(() => {
+    auth.getUser().then((user) => {
+        if (user !== null) {
+            access_token.value = user.access_token
+        } else {
+            access_token.value = null
+        }
+    });
+})

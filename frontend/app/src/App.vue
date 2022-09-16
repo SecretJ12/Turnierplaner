@@ -3,6 +3,9 @@ import HeadContent from "/src/components/header/HeadContent.vue";
 
 let aside = false;
 
+import { auth } from "/src/security/AuthService"
+auth.silentLogin()
+
 </script>
 
 <template>
