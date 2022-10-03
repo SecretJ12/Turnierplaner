@@ -18,7 +18,6 @@ axios.interceptors.request.use(function (config) {
         config.headers.Authorization = `Bearer ${access_token.value}`
     return config;
 }, function (error) {
-    // Do something with request error
     return Promise.reject(error);
 });
 

@@ -14,7 +14,7 @@ import LoadingBar from "./LoadingBar.vue";
 
 <style scoped>
 header {
-  height: 100px;
+  height: 70px;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
