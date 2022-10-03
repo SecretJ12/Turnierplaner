@@ -1,17 +1,15 @@
 package de.secretj12.tournierplaner.entities;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name="tournaments")
 public class Tournament {
-    @Id
+    @Id @GeneratedValue
+    @Column(name="id")
+    private long id;
+
     @Column(name="name")
     private String name;
     @Column(name="description")
@@ -29,6 +27,14 @@ public class Tournament {
 
     @Column(name="visible")
     private boolean visible;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

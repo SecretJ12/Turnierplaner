@@ -2,6 +2,7 @@ package de.secretj12.tournierplaner;
 
 import de.secretj12.tournierplaner.entities.Tournament;
 import de.secretj12.tournierplaner.repositories.TournamentRepository;
+import io.quarkus.security.Authenticated;
 import org.jboss.logging.annotations.Param;
 
 import javax.inject.Inject;
@@ -29,13 +30,14 @@ public class TournamentResource {
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
     public Tournament getTournament(@Param String name) {
-        return tournaments.find("name", name).firstResultOptional().orElse(null);
+        return tournaments.getByName(name);
     }
 
     @POST
+    @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    @Transactional
+    @Authenticated
     public Response addTournament(Tournament tournament) {
         if (getTournament(tournament.getName()) != null)
             return Response.status(Response.Status.CONFLICT).build();
