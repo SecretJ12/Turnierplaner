@@ -41,3 +41,7 @@ nb-configuration.xml
 # Frontend
 node_modules/**
 package-lock.json
+
+keycloak/**
+keycloak-19.0.1/**
+backend/.mvn
