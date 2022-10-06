@@ -1,4 +1,4 @@
-const AUTH_DOMAIN = "http://localhost:8080/realms/quarkus";
+const AUTH_DOMAIN = "http://localhost:7777/realms/Quarkus";
 const FRONTEND = "http://localhost:3000"
 
 export const settings = {
@@ -15,7 +15,6 @@ export const settings = {
     registration_endpoint: AUTH_DOMAIN + "/clients-registrations/openid-connect",
 
     automaticSilentRenew: true,
-
     filterProtocolClaims: true
 };
 

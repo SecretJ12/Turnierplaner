@@ -68,7 +68,7 @@
             <artifactId>quarkus-jdbc-postgresql</artifactId>
         </dependency>
 
-        <!-- keycloak -->
+        <!-- oidc -->
         <dependency>
           <groupId>io.quarkus</groupId>
           <artifactId>quarkus-oidc</artifactId>
