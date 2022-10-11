@@ -4,37 +4,26 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name="tournaments")
+@Table(name = "tournaments")
 public class Tournament {
-    @Id @GeneratedValue
-    @Column(name="id")
-    private long id;
-
-    @Column(name="name")
+    @Id
+    @Column(name = "name")
     private String name;
-    @Column(name="description")
+    @Column(name = "description")
     private String description;
 
-    @Column(name="begin_registration")
+    @Column(name = "begin_registration")
     private LocalDateTime beginRegistration;
-    @Column(name="end_registration")
+    @Column(name = "end_registration")
     private LocalDateTime endRegistration;
 
-    @Column(name="begin_game_phase")
+    @Column(name = "begin_game_phase")
     private LocalDateTime beginGamePhase;
-    @Column(name="end_game_phase")
+    @Column(name = "end_game_phase")
     private LocalDateTime endGamePhase;
 
-    @Column(name="visible")
+    @Column(name = "visible")
     private boolean visible;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
