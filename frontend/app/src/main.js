@@ -52,6 +52,7 @@ import viewTournaments from './components/views/ViewTournaments.vue'
 import viewCompetitions from './components/views/ViewCompetitions.vue'
 import viewRegistration from './components/views/ViewRegistration.vue'
 import viewTemplates from './components/views/ViewTemplates.vue'
+import viewPlayerRegistration from './components/views/ViewPlayerRegistration.vue'
 
 const routes = [
     {
@@ -73,6 +74,11 @@ const routes = [
         path: "/templates",
         name: "Templates",
         component: viewTemplates
+    },
+    {
+        path: "/player/registration",
+        name: "Player Registration",
+        component: viewPlayerRegistration
     }
 ]
 

@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import Item from '../items/ItemTournament.vue';
-import { router } from '/src/main'
+import {router} from '/src/main'
 import axios from "axios";
 
 const tournaments = ref([])
@@ -15,8 +15,17 @@ axios.get('/tournaments')
       console.log(error)
     })
 
+
+// axios.get('/api/admin')
+//     .then((response) => {
+//       console.log(response)
+//     })
+//     .catch((error) => {
+//       console.log(error)
+//     })
+
 function selected(tournament) {
-  router.push({path: '/tournaments/'+tournament})
+  router.push({path: '/tournaments/' + tournament})
 }
 </script>
 
@@ -24,7 +33,8 @@ function selected(tournament) {
   <div id="tournaments">
     <item v-for="tournament in tournaments" :key="tournament.name"
           :name="tournament.name" :description="tournament.description"
-          :beginRegistration="new Date(tournament.beginRegistration)" :endRegistration="new Date(tournament.endRegistration)"
+          :beginRegistration="new Date(tournament.beginRegistration)"
+          :endRegistration="new Date(tournament.endRegistration)"
           :beginGamePhase="new Date(tournament.beginGamePhase)" :endGamePhase="new Date(tournament.endGamePhase)"
           :visible="tournament.visible"
           @selected="selected"/>

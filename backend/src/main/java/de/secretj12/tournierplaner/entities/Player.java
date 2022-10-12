@@ -1,7 +1,7 @@
 package de.secretj12.tournierplaner.entities;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,16 +19,16 @@ public class Player {
     private String lastName;
 
     @Column(name = "birthday")
-    private LocalDateTime birthday;
+    private LocalDate birthday;
 
     @ManyToMany
     @JoinTable(
-        name = "participating_in",
-        joinColumns = {@JoinColumn(name = "competition_id")},
-        inverseJoinColumns = {
-            @JoinColumn(name = "tournament_name"),
-            @JoinColumn(name = "competition_name")
-        }
+            name = "participating_in",
+            joinColumns = {@JoinColumn(name = "competition_id")},
+            inverseJoinColumns = {
+                    @JoinColumn(name = "tournament_name"),
+                    @JoinColumn(name = "competition_name")
+            }
     )
     private List<Competition> competitions;
 
@@ -56,11 +56,11 @@ public class Player {
         this.lastName = lastName;
     }
 
-    public LocalDateTime getBirthday() {
+    public LocalDate getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(LocalDateTime birthday) {
+    public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
     }
 
