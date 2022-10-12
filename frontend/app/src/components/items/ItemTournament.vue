@@ -19,8 +19,8 @@ function selected() {
 
 <template>
   <div id="item" @click="selected" v-if="props.visible">
-    <h2>{{ props.name }}</h2>
-    <p>{{ props.description }}</p>
+    <h2>{{ name }}</h2>
+    <p>{{ description }}</p>
   </div>
 </template>
 

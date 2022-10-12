@@ -3,6 +3,7 @@ package de.secretj12.tournierplaner.resources;
 import de.secretj12.tournierplaner.entities.Tournament;
 import de.secretj12.tournierplaner.repositories.TournamentRepository;
 
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
@@ -32,6 +33,7 @@ public class TournamentResource {
     }
 
     @POST
+    @RolesAllowed("director")
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)

@@ -43,6 +43,7 @@ function selected(tournament) {
 
 <style scoped>
 #tournaments {
+  width: 100%;
   margin: 10px;
   display: flex;
   flex-wrap: wrap;

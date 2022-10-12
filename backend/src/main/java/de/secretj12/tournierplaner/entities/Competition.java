@@ -1,5 +1,7 @@
 package de.secretj12.tournierplaner.entities;
 
+import com.fasterxml.jackson.annotation.*;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
@@ -7,17 +9,21 @@ import java.util.Objects;
 @Entity
 @Table(name = "competitions")
 public class Competition {
+    @Transient
+    private String name;
+
     @EmbeddedId
+    @JsonIgnore
     private CompetitionKey key;
 
     @Column(name = "description")
     private String description;
-    @Column(name = "turnierform")
-    private String turnierform;
+    @Column(name = "type")
+    private CompetitionType type;
 
     @Embeddable
     public static class CompetitionKey implements Serializable {
-        @ManyToOne(cascade = { CascadeType.ALL })
+        @ManyToOne(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
         @JoinColumn(name = "tournament")
         private Tournament tournament;
         @Column(name = "name")
@@ -69,11 +75,19 @@ public class Competition {
         this.description = description;
     }
 
-    public String getTurnierform() {
-        return turnierform;
+    public CompetitionType getType() {
+        return type;
     }
 
-    public void setTurnierform(String turnierform) {
-        this.turnierform = turnierform;
+    public void setType(CompetitionType turnierform) {
+        this.type = turnierform;
+    }
+
+    public String getName() {
+        return key.getName();
+    }
+
+    public void setName(String name) {
+        key.setName(name);
     }
 }

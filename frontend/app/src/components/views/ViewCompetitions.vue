@@ -3,25 +3,35 @@ import { ref } from 'vue';
 import Item from '../items/ItemCompetition.vue';
 import { router } from '/src/main'
 import { useRoute } from 'vue-router'
-
-const competitions = ref([
-  {idComp: "1", title: "Herren", description: "ganz viel Text"},
-  {idComp: "2", title: "Damen", description: "noch mehr Text"},
-  {idComp: "3", title: "U18", description: "richtig, noch mehr text"}
-])
+import axios from "axios";
 
 const route = useRoute()
 
 function selected(competition) {
   router.push({path: "/tournaments/" + route.params.tourId + "/competitions/" + competition})
 }
+
+const competitions = ref([])
+
+axios.get(`/tournaments/${route.params.tourId}/competitions`)
+    .then((response) => {
+      console.log(response)
+      competitions.value = response.data
+    })
+    .catch((error) => {
+      console.log(error)
+    })
 </script>
 
 <template>
-  <div>
+  <div id="container">
     <h2>{{$route.params.tourId}}</h2>
     <div id="competitions">
-      <item v-for="competition in competitions" :key="competition.title" :idComp="competition.idComp" :title="competition.title" :description="competition.description" @selected="selected"/>
+      <item v-for="competition in competitions"
+            :name="competition.name"
+            :description="competition.description"
+            :type="competition.type"
+            @selected="selected"/>
     </div>
   </div>
 </template>
@@ -33,6 +43,10 @@ function selected(competition) {
   flex-wrap: wrap;
   flex-direction: row;
   justify-content: center;
+}
+
+#container {
+  width: 100%;
 }
 
 #competitions > * {
