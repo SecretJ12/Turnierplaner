@@ -2,6 +2,8 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import { createI18n } from "vue-i18n"
 import * as VueRouter from 'vue-router'
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
 
 /* import the fontawesome core */
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -84,6 +86,7 @@ app
     .component('font-awesome-icon', FontAwesomeIcon)
     .use(VueAxios, axios)
     .use(router)
+    .use(ElementPlus)
     .mount('#app')
 
 export {router}
