@@ -41,8 +41,7 @@ class AuthService {
     addUserUpdateListener(cb) {
         this.userManager.events.addUserLoaded(cb);
         this.userManager.events.addUserUnloaded(cb);
-        if (!popup)
-            cb.call();
+        cb.call();
     }
 }
 

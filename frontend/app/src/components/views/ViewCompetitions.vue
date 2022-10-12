@@ -8,14 +8,13 @@ import axios from "axios";
 const route = useRoute()
 
 function selected(competition) {
-  router.push({path: "/tournaments/" + route.params.tourId + "/competitions/" + competition})
+  router.push({path: "/tournament/" + route.params.tourId + "/competition/" + competition})
 }
 
 const competitions = ref([])
 
-axios.get(`/tournaments/${route.params.tourId}/competitions`)
+axios.get(`/competition/list?tourName=${route.params.tourId}`)
     .then((response) => {
-      console.log(response)
       competitions.value = response.data
     })
     .catch((error) => {
@@ -25,7 +24,7 @@ axios.get(`/tournaments/${route.params.tourId}/competitions`)
 
 <template>
   <div id="container">
-    <h2>{{$route.params.tourId}}</h2>
+    <h2>{{route.params.tourId}}</h2>
     <div id="competitions">
       <item v-for="competition in competitions"
             :name="competition.name"

@@ -9,7 +9,7 @@ const props = defineProps({
 const emit = defineEmits(['selected']);
 
 function selected() {
-  emit('selected', props.idComp);
+  emit('selected', props.name);
 }
 </script>
 

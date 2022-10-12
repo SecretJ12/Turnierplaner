@@ -1,31 +1,39 @@
 <script setup>
 import { ref } from 'vue';
 import Item from '../items/ItemTournament.vue';
-import {router} from '/src/main'
+import AddItem from '../items/ItemAdd.vue';
+import { router } from '/src/main'
 import axios from "axios";
+import { auth } from '/src/security/AuthService';
 
 const tournaments = ref([])
+const canCreate = ref(false)
 
-axios.get('/tournaments')
+axios.get('/tournament/list')
     .then((response) => {
-      console.log(response)
       tournaments.value = response.data
     })
     .catch((error) => {
       console.log(error)
     })
 
-
-// axios.get('/api/admin')
-//     .then((response) => {
-//       console.log(response)
-//     })
-//     .catch((error) => {
-//       console.log(error)
-//     })
+auth.addUserUpdateListener(() => {
+  canCreate.value = false;
+  auth.getUser().then((user) => {
+    if (user !== null) {
+      axios.get('/tournament/canCreate')
+          .then((response) => {
+            canCreate.value = response.status === 200
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+    }
+  });
+});
 
 function selected(tournament) {
-  router.push({path: '/tournaments/' + tournament})
+  router.push({path: '/tournament/' + tournament})
 }
 </script>
 
@@ -38,6 +46,7 @@ function selected(tournament) {
           :beginGamePhase="new Date(tournament.beginGamePhase)" :endGamePhase="new Date(tournament.endGamePhase)"
           :visible="tournament.visible"
           @selected="selected"/>
+    <AddItem v-if="canCreate" />
   </div>
 </template>
 

@@ -24,11 +24,11 @@ axios.interceptors.request.use(function (config) {
 });
 
 /* import specific icons */
-import { faFlag, faRightToBracket, faRightFromBracket, faTableCellsLarge, faUserGroup } from '@fortawesome/free-solid-svg-icons'
+import { faFlag, faRightToBracket, faRightFromBracket, faTableCellsLarge, faUserGroup, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { } from '@fortawesome/free-regular-svg-icons'
 
 /* add icons to the library */
-library.add(faFlag, faRightToBracket, faRightFromBracket, faTableCellsLarge, faUserGroup)
+library.add(faFlag, faRightToBracket, faRightFromBracket, faTableCellsLarge, faUserGroup, faPlus)
 
 /* import font awesome icon component */
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -61,12 +61,12 @@ const routes = [
         component: viewTournaments
     },
     {
-        path: "/tournaments/:tourId",
+        path: "/tournament/:tourId",
         name: "Tournaments",
         component: viewCompetitions
     },
     {
-        path: "/tournaments/:tourId/competitions/:compId",
+        path: "/tournament/:tourId/competition/:compId",
         name: "Competition",
         component: viewRegistration
     },
