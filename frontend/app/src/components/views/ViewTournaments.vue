@@ -1,13 +1,12 @@
 <script setup>
-import { ref } from 'vue';
+import {inject, ref, watch} from 'vue';
 import Item from '../items/ItemTournament.vue';
 import AddItem from '../items/ItemAdd.vue';
 import { router } from '/src/main'
 import axios from "axios";
-import { auth } from '/src/security/AuthService';
+import { auth } from "/src/security/AuthService"
 
 const tournaments = ref([])
-const canCreate = ref(false)
 
 axios.get('/tournament/list')
     .then((response) => {
@@ -17,8 +16,15 @@ axios.get('/tournament/list')
       console.log(error)
     })
 
-auth.addUserUpdateListener(() => {
-  canCreate.value = false;
+const isLoggedIn = inject('loggedIn', ref(false))
+const canCreate = ref(false)
+
+watch (isLoggedIn, async () => {
+  checkCanCreate()
+})
+checkCanCreate()
+function checkCanCreate() {
+  canCreate.value = false
   auth.getUser().then((user) => {
     if (user !== null) {
       axios.get('/tournament/canCreate')
@@ -26,14 +32,15 @@ auth.addUserUpdateListener(() => {
             canCreate.value = response.status === 200
           })
           .catch((error) => {
-            console.log(error)
           })
     }
   });
-});
-
+}
 function selected(tournament) {
   router.push({path: '/tournament/' + tournament})
+}
+function addTournament() {
+  router.push({path: '/createTournament'})
 }
 </script>
 
@@ -46,7 +53,7 @@ function selected(tournament) {
           :beginGamePhase="new Date(tournament.beginGamePhase)" :endGamePhase="new Date(tournament.endGamePhase)"
           :visible="tournament.visible"
           @selected="selected"/>
-    <AddItem v-if="canCreate" />
+    <AddItem v-if="canCreate" @selected="addTournament"/>
   </div>
 </template>
 

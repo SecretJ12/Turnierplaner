@@ -1,25 +1,48 @@
 <script setup>
-import { ref } from 'vue';
 import Item from '../items/ItemCompetition.vue';
+import { inject, ref, watch } from "vue";
+import { useRoute } from "vue-router";
+import AddItem from '../items/ItemAdd.vue';
 import { router } from '/src/main'
-import { useRoute } from 'vue-router'
 import axios from "axios";
+import { auth } from "@/security/AuthService";
 
 const route = useRoute()
-
 function selected(competition) {
   router.push({path: "/tournament/" + route.params.tourId + "/competition/" + competition})
 }
 
 const competitions = ref([])
-
 axios.get(`/competition/list?tourName=${route.params.tourId}`)
     .then((response) => {
       competitions.value = response.data
     })
     .catch((error) => {
-      console.log(error)
     })
+
+const isLoggedIn = inject('loggedIn', ref(false))
+const canEdit = ref(false);
+
+watch (isLoggedIn, async () => {
+  checkCanEdit()
+})
+checkCanEdit()
+function checkCanEdit() {
+  canEdit.value = false
+  auth.getUser().then((user) => {
+    if (user !== null) {
+      axios.get('/competition/canEdit')
+          .then((response) => {
+            canEdit.value = response.status === 200
+          })
+          .catch((error) => {
+          })
+    }
+  });
+}
+function addCompetition() {
+  router.push({path: '/createCompetition'})
+}
 </script>
 
 <template>
@@ -31,6 +54,7 @@ axios.get(`/competition/list?tourName=${route.params.tourId}`)
             :description="competition.description"
             :type="competition.type"
             @selected="selected"/>
+      <AddItem v-if="canEdit" @selected="addCompetition"/>
     </div>
   </div>
 </template>

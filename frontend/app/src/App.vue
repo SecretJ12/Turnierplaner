@@ -1,11 +1,21 @@
 <script setup>
 import HeadContent from "/src/components/header/HeadContent.vue";
+import { ref, provide } from 'vue'
 
 let aside = false;
 
 import { auth } from "/src/security/AuthService"
 auth.silentLogin()
 
+
+const loggedIn = ref(false);
+provide('loggedIn', loggedIn)
+auth.addUserLoadedListener(() => {
+  loggedIn.value = true
+})
+auth.addUserUnloadedListener(() => {
+  loggedIn.value = false
+})
 </script>
 
 <template>

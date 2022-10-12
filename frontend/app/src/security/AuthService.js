@@ -3,52 +3,56 @@ import { settings, popup } from "./settings";
 import { ref } from 'vue'
 
 class AuthService {
-    userManager;
+    userManager
 
     constructor() {
-        this.userManager = new UserManager(settings);
+        this.userManager = new UserManager(settings)
     }
 
     silentLogin() {
-        this.userManager.signinSilent()
-            .then(r => {
-                console.log("successfully logged in")
-            })
+        this.userManager.getUser().then((user) => {
+            if (!user.expired)
+                this.userManager.signinSilent()
+                    .then(() => {
+                        console.log("successfully logged in")
+                    })
+        })
     }
 
     getUser() {
-        return this.userManager.getUser();
+        return this.userManager.getUser()
     }
 
     getName() {
-        return this.userManager.getName();
+        return this.userManager.getName()
     }
 
     login() {
         if (popup)
-            return this.userManager.signinPopup();
+            return this.userManager.signinPopup()
         else
-            return this.userManager.signinRedirect();
+            return this.userManager.signinRedirect()
     }
 
     logout() {
         if (popup)
-            return this.userManager.signoutPopup();
+            return this.userManager.signoutPopup()
         else
-            return this.userManager.signoutRedirect();
+            return this.userManager.signoutRedirect()
     }
 
-    addUserUpdateListener(cb) {
-        this.userManager.events.addUserLoaded(cb);
-        this.userManager.events.addUserUnloaded(cb);
-        cb.call();
+    addUserLoadedListener(cb) {
+        this.userManager.events.addUserLoaded(cb)
+    }
+    addUserUnloadedListener(cb) {
+        this.userManager.events.addUserUnloaded(cb)
     }
 }
 
 export const auth = new AuthService()
 export const access_token = ref(null)
 
-auth.addUserUpdateListener(() => {
+auth.addUserLoadedListener(() => {
     auth.getUser().then((user) => {
         if (user !== null) {
             access_token.value = user.access_token

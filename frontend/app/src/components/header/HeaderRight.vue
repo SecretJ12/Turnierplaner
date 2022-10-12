@@ -1,10 +1,17 @@
 <script setup>
-import { auth } from '/src/security/AuthService';
-import { ref } from 'vue';
+import { auth } from '/src/security/AuthService'
+import { ref, inject, watch } from 'vue'
 
-const currentUser = ref('');
-const accessTokenExpired = ref(false);
-const isLoggedIn = ref(false);
+const currentUser = ref('')
+const isLoggedIn = inject('loggedIn', ref(false))
+
+watch (isLoggedIn, async () => {
+  auth.getUser().then((user) => {
+    if (user !== null) {
+      currentUser.value = user.profile.preferred_username;
+    }
+  });
+})
 
 function login() {
   auth.login();
@@ -13,17 +20,6 @@ function login() {
 function logout() {
   auth.logout();
 }
-
-auth.addUserUpdateListener(() => {
-  auth.getUser().then((user) => {
-    if (user !== null) {
-      currentUser.value = user.profile.preferred_username;
-      accessTokenExpired.value = user.expired;
-    }
-
-    isLoggedIn.value = (user !== null && !user.expired);
-  });
-});
 </script>
 
 <template>
