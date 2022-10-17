@@ -21,6 +21,9 @@ public class Player {
     @Column(name = "birthday")
     private LocalDate birthday;
 
+    @Column(name = "email")
+    private String email;
+
     @ManyToMany
     @JoinTable(
             name = "participating_in",
@@ -62,6 +65,14 @@ public class Player {
 
     public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public List<Competition> getCompetitions() {

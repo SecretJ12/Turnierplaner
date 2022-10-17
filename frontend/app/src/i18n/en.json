@@ -1,3 +1,11 @@
 {
-  "title": "Tournament planner"
+  "title": "Tournament planner",
+  "ViewPlayerRegistration": {
+    "first_name" : "first name",
+    "last_name" : "last name",
+    "gender" : "gender",
+    "birthdate" : "birthdate",
+    "birthday_prompt": "Please pick your birthday",
+    "sign_up": "sign up"
+  }
 }
