@@ -39,7 +39,8 @@ const messages = Object.assign(languages);
 const i18n = createI18n({
     locale: 'de', // set locale
     fallbackLocale: 'en', // set fallback locale
-    messages
+    messages,
+    legacy: false
 })
 
 /* add font awesome icon component */
@@ -95,4 +96,4 @@ app
     .use(ElementPlus)
     .mount('#app')
 
-export {router}
+export { router, i18n }
