@@ -20,7 +20,19 @@ function login() {
 function logout() {
   auth.logout();
 }
+
+
 </script>
+
+<script>
+export default {
+  name: 'locale-changer',
+  data () {
+    return { langs: ['en', 'en'] }
+  }
+}
+</script>
+
 
 <template>
   <div id="headerRight">
