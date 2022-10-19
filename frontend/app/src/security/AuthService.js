@@ -11,7 +11,7 @@ class AuthService {
 
     silentLogin() {
         this.userManager.getUser().then((user) => {
-            if (!user.expired)
+            if (user != null && !user.expired)
                 this.userManager.signinSilent()
                     .then(() => {
                         console.log("successfully logged in")
