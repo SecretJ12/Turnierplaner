@@ -24,11 +24,11 @@ axios.interceptors.request.use(function (config) {
 });
 
 /* import specific icons */
-import { faFlag, faRightToBracket, faRightFromBracket, faTableCellsLarge, faUserGroup, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faFlag, faRightToBracket, faRightFromBracket, faTableCellsLarge, faUserGroup, faPlus, faGear } from '@fortawesome/free-solid-svg-icons'
 import { } from '@fortawesome/free-regular-svg-icons'
 
 /* add icons to the library */
-library.add(faFlag, faRightToBracket, faRightFromBracket, faTableCellsLarge, faUserGroup, faPlus)
+library.add(faFlag, faRightToBracket, faRightFromBracket, faTableCellsLarge, faUserGroup, faPlus, faGear)
 
 /* import font awesome icon component */
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -49,12 +49,13 @@ const app = createApp(App);
 /* add alle global variables here */
 app.config.globalProperties.backend = "http://localhost:2000"
 
-import viewTournaments from './components/views/ViewTournaments.vue'
-import viewCompetitions from './components/views/ViewCompetitions.vue'
-import viewRegistration from './components/views/ViewRegistration.vue'
-import viewTemplates from './components/views/ViewTemplates.vue'
-import viewPlayerRegistration from './components/views/ViewPlayerRegistration.vue'
-import createTournament from './components/views/ViewCreateTournament.vue'
+import viewTournaments from '@/components/views/ViewTournaments.vue'
+import viewCompetitions from '@/components/views/ViewCompetitions.vue'
+import viewRegistration from '@/components/views/ViewRegistration.vue'
+import viewTemplates from '@/components/views/ViewTemplates.vue'
+import viewPlayerRegistration from '@/components/views/ViewPlayerRegistration.vue'
+import createTournament from '@/components/views/ViewCreateTournament.vue'
+import editTournament from '@/components/views/ViewEditTournament.vue'
 
 const routes = [
     {
@@ -86,6 +87,11 @@ const routes = [
         path: "/createTournament",
         name: "Create tournament",
         component: createTournament
+    },
+    {
+        path: "/tournament/:tourId/edit",
+        name: "Edit tournament",
+        component: editTournament
     }
 ]
 

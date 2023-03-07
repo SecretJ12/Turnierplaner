@@ -39,6 +39,10 @@ function checkCanCreate() {
 function selected(tournament) {
   router.push({path: '/tournament/' + tournament})
 }
+function settingsItem(tournament) {
+  router.push({path: '/tournament/' + tournament + '/edit'})
+}
+
 function addTournament() {
   router.push({path: '/createTournament'})
 }
@@ -52,7 +56,8 @@ function addTournament() {
           :endRegistration="new Date(tournament.endRegistration)"
           :beginGamePhase="new Date(tournament.beginGamePhase)" :endGamePhase="new Date(tournament.endGamePhase)"
           :visible="tournament.visible"
-          @selected="selected"/>
+          @selected="selected"
+          @settings="settingsItem"/>
     <AddItem v-if="canCreate" @selected="addTournament"/>
   </div>
 </template>
@@ -68,6 +73,6 @@ function addTournament() {
 }
 
 #tournaments > * {
-  margin: 0 10px 10px 10px;
+  margin: 0 10px 20px 10px;
 }
 </style>

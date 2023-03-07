@@ -10,35 +10,74 @@ const props = defineProps({
   visible: Boolean
 })
 
-const emit = defineEmits(['selected']);
+const emit = defineEmits(['selected', 'settings']);
 
 function selected() {
+  console.log("click");
   emit('selected', props.name);
+}
+
+function settings() {
+  console.log("settings");
+  emit('settings', props.name);
 }
 </script>
 
 <template>
-  <div id="item" @click="selected" v-if="props.visible">
-    <h2>{{ name }}</h2>
-    <p>{{ description }}</p>
+  <div id="item" v-if="props.visible">
+    <div id="content" @click="selected" >
+      <h2>{{ name }}</h2>
+      <p>{{ description }}</p>
+    </div>
+    <font-awesome-icon
+        @click="settings"
+        id="settings" :icon="['fas', 'gear']" class="fa-2x" >
+    </font-awesome-icon>
   </div>
 </template>
 
 <style scoped>
   #item {
     border-radius: 10px;
-    padding: 0 10px 0 10px;
-    width: 400px;
+    padding: 0;
+    width: 420px;
     height: 300px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #content {
+    padding: 20px 10px 0 10px;
     background-color: #D0D0D0;
+    box-shadow: 0 0 5px #909090;
+    width: 400px;
+    height: 400px;
+  }
+
+  #settings {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    color: #303030;
+  }
+
+  #settings:hover {
+    filter: drop-shadow(0 0 10px #808080);
+  }
+
+  #settings:active {
+    color: #404040;
   }
 
   h2 {
+    margin-top: 0;
     text-align: center;
+    overflow-wrap: break-word;
   }
 
   p {
     text-align: center;
+    overflow-wrap: break-word;
   }
 
   #item:hover {
@@ -46,7 +85,7 @@ function selected() {
     cursor: pointer;
   }
 
-  #item:active {
+  #content:active {
     background-color: #C0C0C0;
   }
 </style>

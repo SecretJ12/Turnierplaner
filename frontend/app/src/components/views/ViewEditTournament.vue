@@ -2,6 +2,7 @@
   <div id="createTournament">
     <el-form
         ref="formRef"
+        :disabled="disabled"
         :model="data"
         label-width="120px"
         size="large"
@@ -102,7 +103,7 @@
       <el-row class="row-bg" justify="end">
         <el-col :span="5">
           <el-form-item>
-            <el-button type="primary" @click="submit(formRef)">Create</el-button>
+            <el-button type="primary" @click="submit(formRef)">Update</el-button>
           </el-form-item>
         </el-col>
       </el-row>
@@ -116,15 +117,37 @@ import { settings } from '@/settings'
 import axios from "axios";
 import { ElMessage } from "element-plus";
 import { router } from "@/main";
+import { useRoute } from "vue-router";
+
+const route = useRoute()
 
 const formRef = ref()
 const data = reactive({
+  id: null,
   name: '',
   visible: true,
   description: '',
-  registration_phase: null,
-  game_phase: null
+  registration_phase: [],
+  game_phase: []
 })
+
+const disabled = ref(true)
+
+axios.get(`/tournament/details?tourName=${route.params.tourId}`)
+    .then((response) => {
+      data.id = response.data.id
+      data.name = response.data.name
+      data.visible = response.data.visible
+      data.description = response.data.description
+      data.registration_phase = [response.data.beginRegistration, response.data.endRegistration]
+      data.game_phase = [response.data.beginGamePhase, response.data.endGamePhase]
+      disabled.value = false
+    })
+    .catch((error) => {
+      ElMessage.error("Couldn't load tournament details")
+      console.log(error)
+      router.back();
+    })
 
 function submit(formRef) {
   if (!formRef)
@@ -132,7 +155,9 @@ function submit(formRef) {
   formRef.validate((valid) => {
     if (valid) {
       console.log('submit!')
+      console.log(data.registration_phase)
       const server_data = {
+        id: data.id,
         name: data.name,
         description: data.description,
         beginRegistration: data.registration_phase[0],
@@ -141,7 +166,7 @@ function submit(formRef) {
         endGamePhase: data.game_phase[1],
         visible: data.visible
       }
-      axios.post(settings.BACKEND+"/tournament/add", server_data)
+      axios.post(settings.BACKEND+"/tournament/update", server_data)
           .then(value => {
             router.push({path: "/tournament/" + data.name})
           })

@@ -53,7 +53,34 @@ public class TournamentResource {
     public Response addTournament(Tournament tournament) {
         if (getTournament(tournament.getName()) != null)
             return Response.status(Response.Status.CONFLICT).build();
+        // TODO Check validity of dates
         tournaments.persist(tournament);
         return Response.ok("successfully added").build();
+    }
+
+    @POST
+    @Path("/update")
+    @RolesAllowed("director")
+    @Transactional
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response updateTournament(Tournament tournament) {
+        if (!getTournament(tournament.getName()).getId()
+                .equals(tournament.getId()))
+            return Response.status(Response.Status.CONFLICT).build();
+        Tournament tour = tournaments.getById(tournament.getId());
+        if (tour == null)
+            return Response.status(Response.Status.NOT_FOUND).build();
+        // TODO Check validity of dates
+        tournaments.getById(tournament.getId());
+        tour.setName(tournament.getName());
+        tour.setDescription(tournament.getDescription());
+        tour.setVisible(tournament.isVisible());
+        tour.setBeginRegistration(tournament.getBeginRegistration());
+        tour.setEndRegistration(tournament.getEndRegistration());
+        tour.setBeginGamePhase(tournament.getBeginGamePhase());
+        tour.setEndGamePhase(tournament.getEndGamePhase());
+        tournaments.persist(tour);
+        return Response.ok("successfully changed").build();
     }
 }

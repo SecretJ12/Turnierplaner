@@ -2,8 +2,8 @@
 import Item from '../items/ItemCompetition.vue';
 import { inject, ref, watch } from "vue";
 import { useRoute } from "vue-router";
-import AddItem from '../items/ItemAdd.vue';
-import { router } from '/src/main'
+import AddItem from '@/components/items/ItemAdd.vue';
+import { router } from '@/main'
 import axios from "axios";
 import { auth } from "@/security/AuthService";
 
@@ -53,7 +53,7 @@ function addCompetition() {
             :name="competition.name"
             :description="competition.description"
             :type="competition.type"
-            @selected="selected"/>
+            @selected="selected" />
       <AddItem v-if="canEdit" @selected="addCompetition"/>
     </div>
   </div>
