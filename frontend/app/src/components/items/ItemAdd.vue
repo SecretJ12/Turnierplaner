@@ -38,6 +38,6 @@ function selected() {
 }
 
 #item:active {
-  background-color: #C0C0C0;
+  background-color: #D0D0D0;
 }
 </style>

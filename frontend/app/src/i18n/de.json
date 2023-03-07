@@ -25,6 +25,9 @@
       "prompt": "Bitte geben Sie Ihren Geburtstag ein"
     } ,
     "sign_up": "Registrieren"
+  },
+  "CreateTournament": {
+
   }
 }
 

@@ -12,7 +12,7 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import VueAxios from 'vue-axios'
 import axios from 'axios'
 
-import { access_token } from '/src/security/AuthService'
+import { access_token } from '@/security/AuthService'
 axios.defaults.baseURL = 'http://localhost:2000'
 
 axios.interceptors.request.use(function (config) {
@@ -54,6 +54,7 @@ import viewCompetitions from './components/views/ViewCompetitions.vue'
 import viewRegistration from './components/views/ViewRegistration.vue'
 import viewTemplates from './components/views/ViewTemplates.vue'
 import viewPlayerRegistration from './components/views/ViewPlayerRegistration.vue'
+import createTournament from './components/views/ViewCreateTournament.vue'
 
 const routes = [
     {
@@ -80,6 +81,11 @@ const routes = [
         path: "/player/registration",
         name: "Player Registration",
         component: viewPlayerRegistration
+    },
+    {
+        path: "/createTournament",
+        name: "Create tournament",
+        component: createTournament
     }
 ]
 

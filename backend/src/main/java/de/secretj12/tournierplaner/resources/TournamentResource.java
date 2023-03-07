@@ -30,12 +30,10 @@ public class TournamentResource {
 
     @GET
     @Path("/canCreate")
+    @RolesAllowed("director")
     @Produces(MediaType.TEXT_PLAIN)
     public Response canCreate() {
-        if (securityIdentity.hasRole("director"))
-            return Response.ok("Authorized").build();
-        else
-            return Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized").build();
+        return Response.ok("Authorized").build();
     }
 
     @GET
