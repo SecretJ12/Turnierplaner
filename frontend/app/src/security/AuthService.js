@@ -1,12 +1,12 @@
 import { UserManager } from "oidc-client-ts";
-import { settings, popup } from "./settings";
+import { auth_settings, popup } from "./settings";
 import { ref } from 'vue'
 
 class AuthService {
     userManager
 
     constructor() {
-        this.userManager = new UserManager(settings)
+        this.userManager = new UserManager(auth_settings)
     }
 
     silentLogin() {

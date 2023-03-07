@@ -1,7 +1,7 @@
 import { UserManager } from "oidc-client-ts";
-import { settings, popup } from "./settings";
+import { auth_settings, popup } from "./settings";
 
-const mgr = new UserManager(settings);
+const mgr = new UserManager(auth_settings);
 
 if (popup)
     mgr.signoutPopupCallback(undefined, false).then(() => {

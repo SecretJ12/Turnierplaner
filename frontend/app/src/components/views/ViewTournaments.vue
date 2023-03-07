@@ -2,9 +2,9 @@
 import {inject, ref, watch} from 'vue';
 import Item from '../items/ItemTournament.vue';
 import AddItem from '../items/ItemAdd.vue';
-import { router } from '/src/main'
+import { router } from '@/main'
 import axios from "axios";
-import { auth } from "/src/security/AuthService"
+import { auth } from "@/security/AuthService"
 
 const tournaments = ref([])
 
@@ -65,7 +65,6 @@ function addTournament() {
   flex-wrap: wrap;
   flex-direction: row;
   justify-content: center;
-
 }
 
 #tournaments > * {
