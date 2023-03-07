@@ -4,6 +4,7 @@ import de.secretj12.tournierplaner.entities.Match;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -20,8 +21,6 @@ public class FinalOfGroup {
         private Match match;
         @OneToOne
         @JoinColumns({
-                @JoinColumn(name = "tournament_name", nullable = false),
-                @JoinColumn(name = "competition_name", nullable = false),
                 @JoinColumn(name = "group_id", nullable = false)
         })
         private Group group;
@@ -56,11 +55,22 @@ public class FinalOfGroup {
         }
     }
 
+    @Column(name = "position")
+    private int end;
+
     public FinalOfGroupKey getFinalofGroupKey() {
         return finalofGroupKey;
     }
 
     public void setFinalofGroupKey(FinalOfGroupKey finalofGroupKey) {
         this.finalofGroupKey = finalofGroupKey;
+    }
+
+    public int getEnd() {
+        return end;
+    }
+
+    public void setEnd(int end) {
+        this.end = end;
     }
 }

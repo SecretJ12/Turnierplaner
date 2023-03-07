@@ -14,8 +14,7 @@ public class Match {
 
     @ManyToOne(cascade = { CascadeType.ALL })
     @JoinColumns({
-            @JoinColumn(name = "tournament_name"),
-            @JoinColumn(name = "competition_name")
+            @JoinColumn(name = "competition_id")
     })
     private Competition competitionId;
     @ManyToOne

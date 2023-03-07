@@ -2,12 +2,17 @@ package de.secretj12.tournierplaner.entities;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "tournaments")
 public class Tournament {
     @Id
-    @Column(name = "name")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", nullable = false)
+    private UUID id;
+
+    @Column(name = "name", unique = true)
     private String name;
     @Column(name = "description")
     private String description;
@@ -24,6 +29,14 @@ public class Tournament {
 
     @Column(name = "visible")
     private boolean visible;
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

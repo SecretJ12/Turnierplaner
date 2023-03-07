@@ -23,8 +23,6 @@ public class GameOfGroup {
         private Match match;
         @OneToOne
         @JoinColumns({
-                @JoinColumn(name = "tournament_name", nullable = false),
-                @JoinColumn(name = "competition_name", nullable = false),
                 @JoinColumn(name = "group_id", nullable = false)
         })
         private Group group;

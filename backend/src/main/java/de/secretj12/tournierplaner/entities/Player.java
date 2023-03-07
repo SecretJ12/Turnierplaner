@@ -27,10 +27,11 @@ public class Player {
     @ManyToMany
     @JoinTable(
             name = "participating_in",
-            joinColumns = {@JoinColumn(name = "competition_id")},
+            joinColumns = {
+                    @JoinColumn(name = "competition_id")
+            },
             inverseJoinColumns = {
-                    @JoinColumn(name = "tournament_name"),
-                    @JoinColumn(name = "competition_name")
+                    @JoinColumn(name = "player_id")
             }
     )
     private List<Competition> competitions;

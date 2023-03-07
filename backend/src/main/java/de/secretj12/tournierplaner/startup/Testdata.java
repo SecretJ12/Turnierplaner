@@ -37,19 +37,15 @@ public class Testdata {
 
 
         Competition comp1 = new Competition();
-        Competition.CompetitionKey comp1Key = new Competition.CompetitionKey();
-        comp1Key.setName("Damen");
-        comp1Key.setTournament(tour1);
-        comp1.setKey(comp1Key);
+        comp1.setName("Damen");
+        comp1.setTournament(tour1);
         comp1.setDescription("Damen-Konkurrenz");
         comp1.setType(CompetitionType.GROUPS);
         competitions.persist(comp1);
 
         Competition comp2 = new Competition();
-        Competition.CompetitionKey comp2Key = new Competition.CompetitionKey();
-        comp2Key.setName("Herren");
-        comp2Key.setTournament(tour1);
-        comp2.setKey(comp2Key);
+        comp2.setName("Herren");
+        comp2.setTournament(tour1);
         comp2.setDescription("Herren-Konkurrenz");
         comp2.setType(CompetitionType.KNOCKOUT);
         competitions.persist(comp2);

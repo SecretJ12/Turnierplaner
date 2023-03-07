@@ -1,70 +1,55 @@
 package de.secretj12.tournierplaner.entities;
 
 import com.fasterxml.jackson.annotation.*;
+import org.eclipse.microprofile.jwt.Claim;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "competitions")
 public class Competition {
-    @Transient
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", nullable = false)
+    private UUID id;
+
+    @Column(name = "name", unique = true)
     private String name;
 
-    @EmbeddedId
-    @JsonIgnore
-    private CompetitionKey key;
+    @ManyToOne(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
+    @JoinColumn(name = "tournament")
+    private Tournament tournament;
 
     @Column(name = "description")
     private String description;
     @Column(name = "type")
     private CompetitionType type;
 
-    @Embeddable
-    public static class CompetitionKey implements Serializable {
-        @ManyToOne(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
-        @JoinColumn(name = "tournament")
-        private Tournament tournament;
-        @Column(name = "name")
-        private String name;
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            CompetitionKey that = (CompetitionKey) o;
-            return tournament.equals(that.tournament) && name.equals(that.name);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(tournament, name);
-        }
-
-        public Tournament getTournament() {
-            return tournament;
-        }
-
-        public void setTournament(Tournament tournament) {
-            this.tournament = tournament;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
+    public UUID getId() {
+        return id;
     }
 
-    public CompetitionKey getKey() {
-        return key;
+    public void setId(UUID id) {
+        this.id = id;
     }
 
-    public void setKey(CompetitionKey key) {
-        this.key = key;
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Tournament getTournament() {
+        return tournament;
+    }
+
+    public void setTournament(Tournament tournament) {
+        this.tournament = tournament;
     }
 
     public String getDescription() {
@@ -79,15 +64,7 @@ public class Competition {
         return type;
     }
 
-    public void setType(CompetitionType turnierform) {
-        this.type = turnierform;
-    }
-
-    public String getName() {
-        return key.getName();
-    }
-
-    public void setName(String name) {
-        key.setName(name);
+    public void setType(CompetitionType type) {
+        this.type = type;
     }
 }

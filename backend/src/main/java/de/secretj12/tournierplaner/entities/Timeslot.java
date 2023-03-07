@@ -18,8 +18,7 @@ public class Timeslot {
     private LocalDateTime end;
     @ManyToOne
     @JoinColumns({
-            @JoinColumn(name = "tournament_name"),
-            @JoinColumn(name = "competition_name")
+            @JoinColumn(name = "competition_id")
     })
     private Competition competition;
 
