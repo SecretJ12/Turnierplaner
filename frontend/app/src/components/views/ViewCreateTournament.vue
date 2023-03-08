@@ -17,7 +17,7 @@
               :rules="[
                   {
                     required: true,
-                    message: 'Prompt text',
+                    message: i18n.global.t('TournamentSettings.name_missing'),
                     trigger: 'blur',
                   }
               ]"
@@ -66,8 +66,7 @@
           prop="registration_phase"
           :rules="[
         {
-          required: true,
-          message: 'Prompt text',
+          validator: checkDates,
           trigger: 'blur',
         }
     ]"
@@ -85,8 +84,7 @@
           prop="game_phase"
           :rules="[
         {
-          required: true,
-          message: 'Prompt text',
+          validator: checkDates,
           trigger: 'blur',
         }
     ]"
@@ -145,10 +143,10 @@ function submit(formRef) {
         visible: data.visible
       }
       axios.post(settings.BACKEND+"/tournament/add", server_data)
-          .then(value => {
+          .then(_ => {
             router.push({path: "/tournament/" + data.name})
           })
-          .catch(reason => {
+          .catch(_ => {
             ElMessage.error("Couldn't create tournament")
           })
     } else {
@@ -156,6 +154,15 @@ function submit(formRef) {
     }
   })
 }
+
+const checkDates = (rule, value, callback) => {
+  if (!value)
+    callback(new Error(i18n.global.t("TournamentSettings.missing_date")))
+  if (data.registration_phase[1] > data.game_phase[0])
+    callback(new Error(i18n.global.t("TournamentSettings.wrong_dates")))
+  callback()
+}
+
 </script>
 
 <style scoped>

@@ -32,10 +32,13 @@
   },
   "TournamentSettings": {
     "name": "Name",
+    "name_missing": "Bitte gib einen Namen ein",
     "visible": "Sichtbar",
     "description": "Beschreibung",
     "registration_phase": "Anmeldephase",
-    "game_phase": "Spielphase"
+    "game_phase": "Spielphase",
+    "missing_date": "Bitte wähle einen Zeitraum",
+    "wrong_dates": "Beginn der Spielphase muss vor dem Ende der Anmeldephase sein"
   }
 }
 

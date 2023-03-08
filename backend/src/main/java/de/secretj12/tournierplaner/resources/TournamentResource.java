@@ -50,6 +50,22 @@ public class TournamentResource {
         return tournaments.getByName(name);
     }
 
+    private Response checkDates(Tournament tournament) {
+        if (tournament.getBeginRegistration().isAfter(tournament.getEndRegistration()))
+            return Response.status(Response.Status.BAD_REQUEST.getStatusCode(),
+                            "Begin of registration phase needs to be before it's end")
+                    .build();
+        if (tournament.getEndRegistration().isAfter(tournament.getBeginGamePhase()))
+            return Response.status(Response.Status.BAD_REQUEST.getStatusCode(),
+                            "End of registration phase needs to be before begin of game phase")
+                    .build();
+        if (tournament.getBeginGamePhase().isAfter(tournament.getEndGamePhase()))
+            return Response.status(Response.Status.BAD_REQUEST.getStatusCode(),
+                            "Begin of game phase needs to be before it's end")
+                    .build();
+        return null;
+    }
+
     @POST
     @Path("/add")
     @RolesAllowed("director")
@@ -59,7 +75,10 @@ public class TournamentResource {
     public Response addTournament(Tournament tournament) {
         if (getTournament(tournament.getName()) != null)
             return Response.status(Response.Status.CONFLICT).build();
-        // TODO Check validity of dates
+        Response r = checkDates(tournament);
+        if (r != null)
+            return r;
+
         tournaments.persist(tournament);
         return Response.ok("successfully added").build();
     }
@@ -75,9 +94,10 @@ public class TournamentResource {
                 .equals(tournament.getId()))
             return Response.status(Response.Status.CONFLICT).build();
         Tournament tour = tournaments.getById(tournament.getId());
-        if (tour == null)
-            return Response.status(Response.Status.NOT_FOUND).build();
-        // TODO Check validity of dates
+        Response r = checkDates(tournament);
+        if (r != null)
+            return r;
+
         tournaments.getById(tournament.getId());
         tour.setName(tournament.getName());
         tour.setDescription(tournament.getDescription());

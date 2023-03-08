@@ -14,7 +14,7 @@
       "prompt": "Please input your last name"
     },
     "email": {
-      "empty": "Pleasee input email address",
+      "empty": "Please input email address",
       "correct": "Please input correct email adress"
     },
     "sex": {
@@ -32,10 +32,13 @@
   },
   "TournamentSettings": {
     "name": "Name",
+    "name_missing": "Please input a name",
     "visible": "Visible",
     "description": "Description",
     "registration_phase": "Registration phase",
-    "game_phase": "Game phase"
+    "game_phase": "Game phase",
+    "missing_date": "Please select a period of time",
+    "wrong_dates": "Begin of game phase needs to be after end of registration phase"
   }
 }
 
