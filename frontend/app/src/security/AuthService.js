@@ -52,12 +52,17 @@ class AuthService {
 export const auth = new AuthService()
 export const access_token = ref(null)
 
-auth.addUserLoadedListener(() => {
+auth.addUserLoadedListener(updateToken)
+auth.addUserUnloadedListener(updateToken)
+
+function updateToken() {
     auth.getUser().then((user) => {
         if (user !== null) {
+            console.log("token loaded")
             access_token.value = user.access_token
         } else {
+            console.log("token unloaded")
             access_token.value = null
         }
     });
-})
+}

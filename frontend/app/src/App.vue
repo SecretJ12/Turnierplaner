@@ -4,7 +4,7 @@ import { ref, provide } from 'vue'
 
 let aside = false;
 
-import { auth } from "/src/security/AuthService"
+import { auth } from "@/security/AuthService"
 auth.silentLogin()
 
 
