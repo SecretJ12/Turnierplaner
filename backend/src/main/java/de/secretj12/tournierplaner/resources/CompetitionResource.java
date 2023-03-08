@@ -23,7 +23,7 @@ public class CompetitionResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public List<Competition> getAllCompetitions(@QueryParam("tourName") String tourName) {
-        return competitions.list("tournament", tourName);
+        return competitions.listByName(tourName);
     }
 
     @GET
