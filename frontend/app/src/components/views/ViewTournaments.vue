@@ -8,23 +8,22 @@ import { auth } from "@/security/AuthService"
 
 const tournaments = ref([])
 
-axios.get('/tournament/list')
-    .then((response) => {
-      tournaments.value = response.data
-    })
-    .catch((error) => {
-      console.log(error)
-    })
-
 const isLoggedIn = inject('loggedIn', ref(false))
 const canCreate = ref(false)
 
 watch (isLoggedIn, async () => {
-  checkCanCreate()
+  update()
 })
-checkCanCreate()
-function checkCanCreate() {
+update()
+function update() {
   canCreate.value = false
+  axios.get('/tournament/list')
+      .then((response) => {
+        tournaments.value = response.data
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   auth.getUser().then((user) => {
     if (user !== null) {
       axios.get('/tournament/canCreate')
@@ -34,7 +33,7 @@ function checkCanCreate() {
           .catch((error) => {
           })
     }
-  });
+  })
 }
 function selected(tournament) {
   router.push({path: '/tournament/' + tournament})
