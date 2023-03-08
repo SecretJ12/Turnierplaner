@@ -1,33 +1,41 @@
 {
   "title": "Turnierplaner",
+  "general": {
+    "create": "Erstellen",
+    "update": "Aktualisieren"
+  },
   "ViewPlayerRegistration": {
-    "first_name" :{
-      "field" : "Vorname",
+    "first_name": {
+      "field": "Vorname",
       "prompt": "Bitte geben Sie Ihren Vornamen an"
     },
-    "last_name" : {
-      "field" : "Nachname",
+    "last_name": {
+      "field": "Nachname",
       "prompt": "Bitte geben Sie Ihren Nachnamen an"
     },
     "email": {
-      "empty" : "Bitte geben Sie Ihre Email Adresse an",
+      "empty": "Bitte geben Sie Ihre Email Adresse an",
       "correct": "Bitte geben Sie eine korrekte Email Adresse an"
     },
-    "sex" :{
-      "field" : "Geschlect",
+    "sex": {
+      "field": "Geschlect",
       "prompt": "Bitte geben Sie Ihr Geschlecht an",
       "select": "Bitte wählen Sie aus",
       "Option1": "Männlich",
       "Option2": "Weiblich"
     },
     "birthdate": {
-      "field" : "Geburtstag",
+      "field": "Geburtstag",
       "prompt": "Bitte geben Sie Ihren Geburtstag ein"
-    } ,
+    },
     "sign_up": "Registrieren"
   },
-  "CreateTournament": {
-
+  "TournamentSettings": {
+    "name": "Name",
+    "visible": "Sichtbar",
+    "description": "Beschreibung",
+    "registration_phase": "Anmeldephase",
+    "game_phase": "Spielphase"
   }
 }
 

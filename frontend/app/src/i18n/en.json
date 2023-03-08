@@ -1,30 +1,41 @@
 {
   "title": "Tournament planner",
+  "general": {
+    "create": "Create",
+    "update": "Update"
+  },
   "ViewPlayerRegistration": {
-    "first_name" :{
-      "field" : "First name",
+    "first_name": {
+      "field": "First name",
       "prompt": "Please input your first name"
     },
-    "last_name" : {
-      "field" : "Last name",
+    "last_name": {
+      "field": "Last name",
       "prompt": "Please input your last name"
     },
     "email": {
-      "empty" : "Pleasee input email address",
+      "empty": "Pleasee input email address",
       "correct": "Please input correct email adress"
     },
-    "sex" :{
-      "field" : "Sex",
+    "sex": {
+      "field": "Sex",
       "prompt": "Please input your gender",
       "select": "Select",
       "Option1": "Men ",
       "Option2": "Woman"
     },
     "birthdate": {
-      "field" : "birthdate",
+      "field": "birthdate",
       "prompt": "Please input your birthdate"
-    } ,
+    },
     "sign_up": "Sign up"
+  },
+  "TournamentSettings": {
+    "name": "Name",
+    "visible": "Visible",
+    "description": "Description",
+    "registration_phase": "Registration phase",
+    "game_phase": "Game phase"
   }
 }
 

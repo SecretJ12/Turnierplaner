@@ -13,7 +13,7 @@
         <el-col :span="20">
           <!-- Tournament name -->
           <el-form-item
-              :label="'Name'"
+              :label="$t('TournamentSettings.name')"
               prop="name"
               :rules="[
                   {
@@ -33,7 +33,7 @@
         <el-col :span="4">
           <!-- Visible -->
           <el-form-item
-              :label="'Visible'"
+              :label="$t('TournamentSettings.visible')"
               prop="visible"
           >
             <el-switch
@@ -46,7 +46,7 @@
 
       <!-- Description -->
       <el-form-item
-          :label="'Description'"
+          :label="$t('TournamentSettings.description')"
           prop="description"
       >
         <el-input
@@ -63,7 +63,7 @@
       <el-divider />
       <!-- Begin -> End registration -->
       <el-form-item
-          :label="'Registration phase'"
+          :label="$t('TournamentSettings.registration_phase')"
           prop="registration_phase"
           :rules="[
         {
@@ -82,7 +82,7 @@
       </el-form-item>
       <!-- Begin -> End game phase -->
       <el-form-item
-          :label="'Game phase'"
+          :label="$t('TournamentSettings.game_phase')"
           prop="game_phase"
           :rules="[
         {
@@ -103,7 +103,9 @@
       <el-row class="row-bg" justify="end">
         <el-col :span="5">
           <el-form-item>
-            <el-button type="primary" @click="submit(formRef)">Update</el-button>
+            <el-button type="primary" @click="submit(formRef)">
+              {{ i18n.global.t("general.create") }}
+            </el-button>
           </el-form-item>
         </el-col>
       </el-row>
@@ -117,6 +119,7 @@ import { settings } from '@/settings'
 import axios from "axios";
 import { ElMessage } from "element-plus";
 import { router } from "@/main";
+import { i18n } from "@/main";
 import { useRoute } from "vue-router";
 
 const route = useRoute()
