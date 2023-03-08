@@ -29,10 +29,7 @@ public class CompetitionResource {
     @GET
     @Path("/canEdit")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response canCreate() {
-        // TODO muss auch can_edit erfüllen
-        for (String key : securityIdentity.getAttributes().keySet())
-            System.out.println(key + ": " + securityIdentity.getAttribute(key));
+    public Response canEdit() {
         if (securityIdentity.hasRole("director"))
             return Response.ok("Authorized").build();
         else
@@ -43,7 +40,7 @@ public class CompetitionResource {
     @Path("/details")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Competition getTournament(@QueryParam("tourName") String tourNamme, @QueryParam("compName") String compName) {
-        return competitions.getByName(tourNamme, compName);
+    public Competition getTournament(@QueryParam("tourName") String tourName, @QueryParam("compName") String compName) {
+        return competitions.getByName(tourName, compName);
     }
 }

@@ -3,8 +3,11 @@ package de.secretj12.tournierplaner.resources;
 import de.secretj12.tournierplaner.entities.Tournament;
 import de.secretj12.tournierplaner.repositories.TournamentRepository;
 import io.quarkus.security.identity.SecurityIdentity;
+import org.jboss.resteasy.annotations.cache.NoCache;
 
 import javax.annotation.security.RolesAllowed;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
@@ -25,7 +28,10 @@ public class TournamentResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Collection<Tournament> getAllTournaments() {
-        return tournaments.listAll();
+        if (securityIdentity.hasRole("director"))
+            return tournaments.listAll();
+        else
+            return tournaments.listAllVisible();
     }
 
     @GET

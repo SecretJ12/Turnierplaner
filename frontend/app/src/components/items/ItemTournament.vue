@@ -24,10 +24,11 @@ function settings() {
 </script>
 
 <template>
-  <div id="item" v-if="props.visible">
+  <div id="item">
     <div id="content" @click="selected" >
       <h2>{{ name }}</h2>
       <p>{{ description }}</p>
+      <p v-if="!visible">invisible</p>
     </div>
     <font-awesome-icon
         @click="settings"
