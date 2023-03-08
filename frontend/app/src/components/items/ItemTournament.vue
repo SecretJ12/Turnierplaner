@@ -28,11 +28,13 @@ function settings() {
     <div id="content" @click="selected" >
       <h2>{{ name }}</h2>
       <p>{{ description }}</p>
-      <p v-if="!visible">invisible</p>
     </div>
     <font-awesome-icon
         @click="settings"
         id="settings" :icon="['fas', 'gear']" class="fa-2x" >
+    </font-awesome-icon>
+    <font-awesome-icon v-if="!visible"
+        id="invisible" :icon="['fas', 'eye-slash']" class="fa-2x" >
     </font-awesome-icon>
   </div>
 </template>
@@ -58,6 +60,13 @@ function settings() {
   #settings {
     position: absolute;
     right: 10px;
+    bottom: 10px;
+    color: #303030;
+  }
+
+  #invisible {
+    position: absolute;
+    left: 10px;
     bottom: 10px;
     color: #303030;
   }

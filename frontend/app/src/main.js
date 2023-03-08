@@ -24,11 +24,12 @@ axios.interceptors.request.use(function (config) {
 });
 
 /* import specific icons */
-import { faFlag, faRightToBracket, faRightFromBracket, faTableCellsLarge, faUserGroup, faPlus, faGear } from '@fortawesome/free-solid-svg-icons'
+import { faFlag, faRightToBracket, faRightFromBracket, faTableCellsLarge, faUserGroup, faPlus, faGear, faEyeSlash }
+    from '@fortawesome/free-solid-svg-icons'
 import { } from '@fortawesome/free-regular-svg-icons'
 
 /* add icons to the library */
-library.add(faFlag, faRightToBracket, faRightFromBracket, faTableCellsLarge, faUserGroup, faPlus, faGear)
+library.add(faFlag, faRightToBracket, faRightFromBracket, faTableCellsLarge, faUserGroup, faPlus, faGear, faEyeSlash)
 
 /* import font awesome icon component */
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
