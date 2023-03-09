@@ -49,5 +49,29 @@ public class Testdata {
         comp2.setDescription("Herren-Konkurrenz");
         comp2.setType(CompetitionType.KNOCKOUT);
         competitions.persist(comp2);
+
+        Tournament tour2 = new Tournament();
+        tour2.setName("Clubmeisterschaft 2023");
+        tour2.setDescription("Anmeldung noch bis zum 4.1.");
+        tour2.setBeginRegistration(LocalDateTime.of(2022, 1, 1, 12, 12));
+        tour2.setEndRegistration(LocalDateTime.of(2022, 1, 2, 12, 12));
+        tour2.setBeginGamePhase(LocalDateTime.of(2022, 2, 1, 12, 12));
+        tour2.setEndGamePhase(LocalDateTime.of(2022, 2, 2, 12, 12));
+        tour2.setVisible(false);
+        tournaments.persist(tour2);
+
+        Competition comp3 = new Competition();
+        comp3.setName("Damen");
+        comp3.setTournament(tour2);
+        comp3.setDescription("Damen-Konkurrenz");
+        comp3.setType(CompetitionType.GROUPS);
+        competitions.persist(comp3);
+
+        Competition comp4 = new Competition();
+        comp4.setName("Herren");
+        comp4.setTournament(tour2);
+        comp4.setDescription("Herren-Konkurrenz");
+        comp4.setType(CompetitionType.KNOCKOUT);
+        competitions.persist(comp4);
     }
 }

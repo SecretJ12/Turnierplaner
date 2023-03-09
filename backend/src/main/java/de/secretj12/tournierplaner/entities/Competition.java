@@ -23,7 +23,7 @@ public class Competition {
     @Column(name = "id", nullable = false)
     private UUID id;
 
-    @Column(name = "name", unique = true)
+    @Column(name = "name")
     private String name;
 
     @ManyToOne(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
