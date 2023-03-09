@@ -18,7 +18,7 @@
               :rules="[
                   {
                     required: true,
-                    message: 'Prompt text',
+                    message: i18n.global.t('TournamentSettings.name_missing'),
                     trigger: 'blur',
                   }
               ]"
@@ -67,8 +67,7 @@
           prop="registration_phase"
           :rules="[
         {
-          required: true,
-          message: 'Prompt text',
+          validator: checkDates,
           trigger: 'blur',
         }
     ]"
@@ -86,8 +85,7 @@
           prop="game_phase"
           :rules="[
         {
-          required: true,
-          message: 'Prompt text',
+          validator: checkDates,
           trigger: 'blur',
         }
     ]"
@@ -104,7 +102,7 @@
         <el-col :span="5">
           <el-form-item>
             <el-button type="primary" @click="submit(formRef)">
-              {{ i18n.global.t("general.create") }}
+              {{ i18n.global.t("general.update") }}
             </el-button>
           </el-form-item>
         </el-col>
@@ -117,9 +115,9 @@
 import { ref, reactive } from 'vue'
 import { settings } from '@/settings'
 import axios from "axios";
+import { i18n } from "@/main";
 import { ElMessage } from "element-plus";
 import { router } from "@/main";
-import { i18n } from "@/main";
 import { useRoute } from "vue-router";
 
 const route = useRoute()
@@ -142,8 +140,8 @@ axios.get(`/tournament/details?tourName=${route.params.tourId}`)
       data.name = response.data.name
       data.visible = response.data.visible
       data.description = response.data.description
-      data.registration_phase = [response.data.beginRegistration, response.data.endRegistration]
-      data.game_phase = [response.data.beginGamePhase, response.data.endGamePhase]
+      data.registration_phase = [Date.parse(response.data.beginRegistration), Date.parse(response.data.endRegistration)]
+      data.game_phase = [Date.parse(response.data.beginGamePhase), Date.parse(response.data.endGamePhase)]
       disabled.value = false
     })
     .catch((error) => {
@@ -158,7 +156,6 @@ function submit(formRef) {
   formRef.validate((valid) => {
     if (valid) {
       console.log('submit!')
-      console.log(data.registration_phase)
       const server_data = {
         id: data.id,
         name: data.name,
@@ -170,10 +167,10 @@ function submit(formRef) {
         visible: data.visible
       }
       axios.post(settings.BACKEND+"/tournament/update", server_data)
-          .then(value => {
-            router.push({path: "/tournament/" + data.name})
+          .then(_ => {
+            ElMessage.success("Tournament saved")
           })
-          .catch(reason => {
+          .catch(_ => {
             ElMessage.error("Couldn't create tournament")
           })
     } else {
@@ -181,6 +178,17 @@ function submit(formRef) {
     }
   })
 }
+
+const checkDates = (rule, value, callback) => {
+  if (!value)
+    callback(new Error(i18n.global.t("TournamentSettings.missing_date")))
+  console.log(data.registration_phase[1])
+  console.log(data.game_phase[0])
+  if (data.registration_phase[1] > data.game_phase[0])
+    callback(new Error(i18n.global.t("TournamentSettings.wrong_dates")))
+  callback()
+}
+
 </script>
 
 <style scoped>
