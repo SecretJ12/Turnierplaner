@@ -99,13 +99,11 @@
       </el-form-item>
 
       <el-row class="row-bg" justify="end">
-        <el-col :span="5">
-          <el-form-item>
-            <el-button type="primary" @click="submit(formRef)">
-              {{ i18n.global.t("general.update") }}
-            </el-button>
-          </el-form-item>
-        </el-col>
+        <el-form-item>
+          <el-button type="primary" @click="submit(formRef)">
+            {{ i18n.global.t("general.update") }}
+          </el-button>
+        </el-form-item>
       </el-row>
     </el-form>
   </div>
