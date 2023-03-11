@@ -1,7 +1,7 @@
 <script setup>
 import {inject, ref, watch} from 'vue';
-import Item from '../items/ItemTournament.vue';
-import AddItem from '../items/ItemAdd.vue';
+import Item from '../../items/ItemTournament.vue';
+import AddItem from '../../items/ItemAdd.vue';
 import {i18n, router} from '@/main'
 import axios from "axios";
 import { auth } from "@/security/AuthService"

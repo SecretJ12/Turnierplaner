@@ -50,13 +50,13 @@ const app = createApp(App);
 /* add alle global variables here */
 app.config.globalProperties.backend = "http://localhost:2000"
 
-import viewTournaments from '@/components/views/ViewTournaments.vue'
-import viewCompetitions from '@/components/views/ViewCompetitions.vue'
+import viewTournaments from '@/components/views/tournaments/ViewTournaments.vue'
+import viewCompetitions from '@/components/views/competitions/ViewCompetitions.vue'
 import viewRegistration from '@/components/views/ViewRegistration.vue'
 import viewTemplates from '@/components/views/ViewTemplates.vue'
 import viewPlayerRegistration from '@/components/views/ViewPlayerRegistration.vue'
-import createTournament from '@/components/views/ViewCreateTournament.vue'
-import editTournament from '@/components/views/ViewEditTournament.vue'
+import createTournament from '@/components/views/tournaments/ViewCreateTournament.vue'
+import editTournament from '@/components/views/tournaments/ViewEditTournament.vue'
 
 const routes = [
     {
