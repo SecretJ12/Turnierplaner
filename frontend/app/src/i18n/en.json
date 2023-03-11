@@ -39,6 +39,15 @@
     "game_phase": "Game phase",
     "missing_date": "Please select a period of time",
     "wrong_dates": "Begin of game phase needs to be after end of registration phase"
+  },
+  "ViewTournaments": {
+    "loadingFailed": "Couldn't load tournaments"
+  },
+  "ViewEditTournament": {
+    "loadingDetailsFailed": "Couldn't load tournament details"
+  },
+  "ViewCreateTournament": {
+    "creationFailed": "Couldn't create tournament"
   }
 }
 

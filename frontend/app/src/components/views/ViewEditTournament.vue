@@ -143,8 +143,7 @@ axios.get(`/tournament/details?tourName=${route.params.tourId}`)
       disabled.value = false
     })
     .catch((error) => {
-      // TODO add to i18n
-      ElMessage.error("Couldn't load tournament details")
+      ElMessage.error(i18n.global.t("ViewEditTournament.loadingDetailsFailed"))
       console.log(error)
       router.back();
     })

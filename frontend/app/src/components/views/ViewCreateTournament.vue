@@ -145,8 +145,7 @@ function submit(formRef) {
             router.push({path: "/tournament/" + data.name})
           })
           .catch(_ => {
-            // TODO add to i18n
-            ElMessage.error("Couldn't create tournament")
+            ElMessage.error(i18n.global.t("ViewCreateTournament.creationFailed"))
           })
     } else {
       console.log('error submit!')

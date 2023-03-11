@@ -39,6 +39,15 @@
     "game_phase": "Spielphase",
     "missing_date": "Bitte wähle einen Zeitraum",
     "wrong_dates": "Beginn der Spielphase muss vor dem Ende der Anmeldephase sein"
+  },
+  "ViewTournaments": {
+    "loadingFailed": "Turniere konnten nicht geladen werden"
+  },
+  "ViewEditTournament": {
+    "loadingDetailsFailed": "Tournierdetails konnten nicht geladen werden"
+  },
+  "ViewCreateTournament": {
+    "creationFailed": "Turnier konnte nicht erstellt werden"
   }
 }
 

@@ -2,9 +2,10 @@
 import {inject, ref, watch} from 'vue';
 import Item from '../items/ItemTournament.vue';
 import AddItem from '../items/ItemAdd.vue';
-import { router } from '@/main'
+import {i18n, router} from '@/main'
 import axios from "axios";
 import { auth } from "@/security/AuthService"
+import {ElMessage} from "element-plus";
 
 const tournaments = ref([])
 
@@ -22,6 +23,7 @@ function update() {
         tournaments.value = response.data
       })
       .catch((error) => {
+        ElMessage.error(i18n.global.t("ViewTournaments.loadingFailed"))
         console.log(error)
       })
   auth.getUser().then((user) => {
