@@ -7,7 +7,8 @@ const props = defineProps({
   endRegistration: Date,
   beginGamePhase: Date,
   endGamePhase: Date,
-  visible: Boolean
+  visible: Boolean,
+  canCreate: Boolean
 })
 
 const emit = defineEmits(['selected', 'settings']);
@@ -29,7 +30,7 @@ function settings() {
       <h2>{{ name }}</h2>
       <p>{{ description }}</p>
     </div>
-    <font-awesome-icon
+    <font-awesome-icon v-if="canCreate"
         @click="settings"
         id="settings" :icon="['fas', 'gear']" class="fa-2x" >
     </font-awesome-icon>

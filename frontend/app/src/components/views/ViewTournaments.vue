@@ -30,7 +30,8 @@ function update() {
           .then((response) => {
             canCreate.value = response.status === 200
           })
-          .catch((error) => {
+          .catch((_) => {
+            canCreate.value = false
           })
     }
   })
@@ -55,6 +56,7 @@ function addTournament() {
           :endRegistration="new Date(tournament.endRegistration)"
           :beginGamePhase="new Date(tournament.beginGamePhase)" :endGamePhase="new Date(tournament.endGamePhase)"
           :visible="tournament.visible"
+          :canCreate=canCreate
           @selected="selected"
           @settings="settingsItem"/>
     <AddItem v-if="canCreate" @selected="addTournament"/>

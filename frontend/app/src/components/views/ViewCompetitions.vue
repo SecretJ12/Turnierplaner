@@ -54,7 +54,7 @@ function settings() {
 <template>
   <div id="container">
     <h2>
-      <font-awesome-icon
+      <font-awesome-icon v-if=canEdit
           @click="settings"
           id="settings" :icon="['fas', 'gear']" class="fa-1x" >
       </font-awesome-icon>
