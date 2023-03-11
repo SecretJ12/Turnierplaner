@@ -145,6 +145,7 @@ function submit(formRef) {
             router.push({path: "/tournament/" + data.name})
           })
           .catch(_ => {
+            // TODO add to i18n
             ElMessage.error("Couldn't create tournament")
           })
     } else {
@@ -156,7 +157,7 @@ function submit(formRef) {
 const checkDates = (rule, value, callback) => {
   if (!value)
     callback(new Error(i18n.global.t("TournamentSettings.missing_date")))
-  if (data.registration_phase[1] > data.game_phase[0])
+  if (new Date(data.registration_phase[1]) > new Date(data.game_phase[0]))
     callback(new Error(i18n.global.t("TournamentSettings.wrong_dates")))
   callback()
 }

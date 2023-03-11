@@ -138,11 +138,12 @@ axios.get(`/tournament/details?tourName=${route.params.tourId}`)
       data.name = response.data.name
       data.visible = response.data.visible
       data.description = response.data.description
-      data.registration_phase = [Date.parse(response.data.beginRegistration), Date.parse(response.data.endRegistration)]
-      data.game_phase = [Date.parse(response.data.beginGamePhase), Date.parse(response.data.endGamePhase)]
+      data.registration_phase = [response.data.beginRegistration, response.data.endRegistration]
+      data.game_phase = [response.data.beginGamePhase, response.data.endGamePhase]
       disabled.value = false
     })
     .catch((error) => {
+      // TODO add to i18n
       ElMessage.error("Couldn't load tournament details")
       console.log(error)
       router.back();
@@ -180,9 +181,7 @@ function submit(formRef) {
 const checkDates = (rule, value, callback) => {
   if (!value)
     callback(new Error(i18n.global.t("TournamentSettings.missing_date")))
-  console.log(data.registration_phase[1])
-  console.log(data.game_phase[0])
-  if (data.registration_phase[1] > data.game_phase[0])
+  if (new Date(data.registration_phase[1]) > new Date(data.game_phase[0]))
     callback(new Error(i18n.global.t("TournamentSettings.wrong_dates")))
   callback()
 }
