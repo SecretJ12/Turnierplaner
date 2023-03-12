@@ -49,6 +49,9 @@
   "ViewEditTournament": {
     "loadingDetailsFailed": "Couldn't load tournament details"
   },
+  "ViewCompetitions": {
+    "loadingFailed": "Couldn't load competitions"
+  },
   "CompetitionSettings": {
     "type": "Type",
     "knockout": "Knockout",

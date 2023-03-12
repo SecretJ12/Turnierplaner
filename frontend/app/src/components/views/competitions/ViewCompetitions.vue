@@ -3,9 +3,10 @@ import Item from '../../items/ItemCompetition.vue';
 import { inject, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import AddItem from '@/components/items/ItemAdd.vue';
-import { router } from '@/main'
+import {i18n, router} from '@/main'
 import axios from "axios";
 import { auth } from "@/security/AuthService";
+import {ElMessage} from "element-plus";
 
 const route = useRoute()
 function selected(competition) {
@@ -13,22 +14,16 @@ function selected(competition) {
 }
 
 const competitions = ref([])
-axios.get(`/competition/list?tourName=${route.params.tourId}`)
-    .then((response) => {
-      competitions.value = response.data
-    })
-    .catch((_) => {
-      // TODO show error
-    })
 
 const isLoggedIn = inject('loggedIn', ref(false))
 const canEdit = ref(false);
 
 watch (isLoggedIn, async () => {
-  checkCanEdit()
+  update()
 })
-checkCanEdit()
-function checkCanEdit() {
+update()
+
+function update() {
   canEdit.value = false
   auth.getUser().then((user) => {
     if (user !== null) {
@@ -41,6 +36,19 @@ function checkCanEdit() {
           })
     }
   });
+  axios.get(`/competition/list?tourName=${route.params.tourId}`)
+    .then((response) => {
+      competitions.value = response.data
+    })
+    .catch((_) => {
+      ElMessage.error(i18n.global.t("ViewCompetitions.loadingFailed"))
+      console.log(error)
+    })
+}
+
+checkCanEdit()
+function checkCanEdit() {
+
 }
 function addCompetition() {
   router.push({path: '/tournament/' + route.params.tourId + '/createCompetition'})
@@ -65,6 +73,7 @@ function settings() {
             :name="competition.name"
             :description="competition.description"
             :type="competition.type"
+            :can-edit="canEdit"
             @selected="selected" />
       <AddItem v-if="canEdit" @selected="addCompetition"/>
     </div>

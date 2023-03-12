@@ -49,6 +49,9 @@
   "ViewEditTournament": {
     "loadingDetailsFailed": "Tournierdetails konnten nicht geladen werden"
   },
+  "ViewCompetitions": {
+    "loadingFailed": "Konkurrenzen konnten nicht geladen werden"
+  },
   "CompetitionSettings": {
     "type": "Typ",
     "knockout": "KO-System",

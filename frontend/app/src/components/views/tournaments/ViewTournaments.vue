@@ -2,10 +2,10 @@
 import {inject, ref, watch} from 'vue';
 import Item from '../../items/ItemTournament.vue';
 import AddItem from '../../items/ItemAdd.vue';
-import {i18n, router} from '@/main'
+import { i18n, router } from '@/main'
 import axios from "axios";
 import { auth } from "@/security/AuthService"
-import {ElMessage} from "element-plus";
+import { ElMessage } from "element-plus";
 
 const tournaments = ref([])
 
@@ -16,25 +16,26 @@ watch (isLoggedIn, async () => {
   update()
 })
 update()
+
 function update() {
   canCreate.value = false
   axios.get('/tournament/list')
-      .then((response) => {
-        tournaments.value = response.data
-      })
-      .catch((error) => {
-        ElMessage.error(i18n.global.t("ViewTournaments.loadingFailed"))
-        console.log(error)
-      })
+    .then((response) => {
+      tournaments.value = response.data
+    })
+    .catch((error) => {
+      ElMessage.error(i18n.global.t("ViewTournaments.loadingFailed"))
+      console.log(error)
+    })
   auth.getUser().then((user) => {
     if (user !== null) {
       axios.get('/tournament/canCreate')
-          .then((response) => {
-            canCreate.value = response.status === 200
-          })
-          .catch((_) => {
-            canCreate.value = false
-          })
+        .then((response) => {
+          canCreate.value = response.status === 200
+        })
+        .catch((_) => {
+          canCreate.value = false
+        })
     }
   })
 }
