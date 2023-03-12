@@ -43,11 +43,22 @@
   "ViewTournaments": {
     "loadingFailed": "Turniere konnten nicht geladen werden"
   },
+  "ViewCreateTournament": {
+    "creationFailed": "Turnier konnte nicht erstellt werden"
+  },
   "ViewEditTournament": {
     "loadingDetailsFailed": "Tournierdetails konnten nicht geladen werden"
   },
-  "ViewCreateTournament": {
-    "creationFailed": "Turnier konnte nicht erstellt werden"
+  "CompetitionSettings": {
+    "type": "Typ",
+    "knockout": "KO-System",
+    "groups": "Gruppenphase"
+  },
+  "ViewCreateCompetition": {
+    "creationFailed": "Konkurrenz konnte nicht erstellt werden"
+  },
+  "ViewEditCompetition": {
+    "loadingDetailsFailed": "Details der Konkurrenz konnten nicht geladen werden"
   }
 }
 

@@ -43,11 +43,22 @@
   "ViewTournaments": {
     "loadingFailed": "Couldn't load tournaments"
   },
+  "ViewCreateTournament": {
+    "creationFailed": "Couldn't create tournament"
+  },
   "ViewEditTournament": {
     "loadingDetailsFailed": "Couldn't load tournament details"
   },
-  "ViewCreateTournament": {
-    "creationFailed": "Couldn't create tournament"
+  "CompetitionSettings": {
+    "type": "Type",
+    "knockout": "Knockout",
+    "groups": "Group system"
+  },
+  "ViewCreateCompetition": {
+    "creationFailed": "Couldn't create competition"
+  },
+  "ViewEditCompetition": {
+    "loadingDetailsFailed": "Couldn't load competition details"
   }
 }
 

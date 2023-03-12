@@ -43,7 +43,7 @@ function checkCanEdit() {
   });
 }
 function addCompetition() {
-  router.push({path: '/createCompetition'})
+  router.push({path: '/tournament/' + route.params.tourId + '/createCompetition'})
 }
 
 function settings() {
