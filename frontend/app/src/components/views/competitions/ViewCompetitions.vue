@@ -35,11 +35,17 @@ function update() {
   });
   axios.get(`/competition/list?tourName=${route.params.tourId}`)
     .then((response) => {
-      competitions.value = response.data
+      if (response.status === 200)
+        competitions.value = response.data
+      else {
+        ElMessage.error(i18n.global.t("ViewCompetitions.loadingFailed"))
+        router.push("/")
+      }
     })
     .catch((error) => {
       ElMessage.error(i18n.global.t("ViewCompetitions.loadingFailed"))
       console.log(error)
+      router.push("/")
     })
 }
 
