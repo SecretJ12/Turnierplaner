@@ -1,21 +1,35 @@
 <script setup>
-import HeadContent from "/src/components/header/HeadContent.vue";
+import HeadContent from "@/components/header/HeadContent.vue";
 import { ref, provide } from 'vue'
 
 let aside = false;
 
-import { auth } from "@/security/AuthService"
+import {access_token, auth} from "@/security/AuthService"
 auth.silentLogin()
 
 
 const loggedIn = ref(false);
 provide('loggedIn', loggedIn)
 auth.addUserLoadedListener(() => {
+  updateToken()
   loggedIn.value = true
 })
 auth.addUserUnloadedListener(() => {
+  updateToken()
   loggedIn.value = false
 })
+
+function updateToken() {
+  auth.getUser().then((user) => {
+    if (user !== null) {
+      console.log("token loaded")
+      access_token.value = user.access_token
+    } else {
+      console.log("token unloaded")
+      access_token.value = null
+    }
+  });
+}
 </script>
 
 <template>
