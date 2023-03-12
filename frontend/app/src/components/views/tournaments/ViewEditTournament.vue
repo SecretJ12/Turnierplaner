@@ -1,5 +1,5 @@
 <template>
-  <div id="createTournament">
+  <div id="form">
     <el-form
         ref="formRef"
         :disabled="disabled"
@@ -188,7 +188,7 @@ const checkDates = (rule, value, callback) => {
 </script>
 
 <style scoped>
-#createTournament {
+#form {
   width: 100%;
   margin: 10px;
   display: flex;
