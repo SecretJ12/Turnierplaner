@@ -174,7 +174,7 @@ function submit(formRef) {
             ElMessage.error("Couldn't create tournament")
           })
     } else {
-      console.log('error submit!')
+      console.log('validation failed')
     }
   })
 }

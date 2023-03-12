@@ -150,7 +150,7 @@ function submit(formRef) {
             ElMessage.error(i18n.global.t("ViewCreateTournament.creationFailed"))
           })
     } else {
-      console.log('error submit!')
+      console.log('validation failed')
     }
   })
 }
