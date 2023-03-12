@@ -9,9 +9,6 @@ import { auth } from "@/security/AuthService";
 import {ElMessage} from "element-plus";
 
 const route = useRoute()
-function selected(competition) {
-  router.push({path: "/tournament/" + route.params.tourId + "/competition/" + competition})
-}
 
 const competitions = ref([])
 
@@ -40,22 +37,26 @@ function update() {
     .then((response) => {
       competitions.value = response.data
     })
-    .catch((_) => {
+    .catch((error) => {
       ElMessage.error(i18n.global.t("ViewCompetitions.loadingFailed"))
       console.log(error)
     })
 }
 
-checkCanEdit()
-function checkCanEdit() {
-
-}
-function addCompetition() {
-  router.push({path: '/tournament/' + route.params.tourId + '/createCompetition'})
-}
-
 function settings() {
   router.push({path: '/tournament/' + route.params.tourId + '/edit'})
+}
+
+function selected(competition) {
+  router.push({path: "/tournament/" + route.params.tourId + "/competition/" + competition})
+}
+
+function settingsItem(competition) {
+  router.push({path: '/tournament/' + route.params.tourId + '/competition/' + competition + '/edit'})
+}
+
+function addCompetition() {
+  router.push({path: '/tournament/' + route.params.tourId + '/createCompetition'})
 }
 </script>
 
@@ -74,7 +75,8 @@ function settings() {
             :description="competition.description"
             :type="competition.type"
             :can-edit="canEdit"
-            @selected="selected" />
+            @selected="selected"
+            @settings="settingsItem" />
       <AddItem v-if="canEdit" @selected="addCompetition"/>
     </div>
   </div>
