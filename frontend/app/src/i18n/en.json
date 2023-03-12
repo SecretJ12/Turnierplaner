@@ -2,7 +2,10 @@
   "title": "Tournament planner",
   "general": {
     "create": "Create",
-    "update": "Update"
+    "update": "Update",
+    "name": "Name",
+    "description": "Description",
+    "name_missing": "Please input a name"
   },
   "ViewPlayerRegistration": {
     "first_name": {
@@ -31,10 +34,7 @@
     "sign_up": "Sign up"
   },
   "TournamentSettings": {
-    "name": "Name",
-    "name_missing": "Please input a name",
     "visible": "Visible",
-    "description": "Description",
     "registration_phase": "Registration phase",
     "game_phase": "Game phase",
     "missing_date": "Please select a period of time",

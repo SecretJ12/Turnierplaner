@@ -12,12 +12,12 @@
         <el-col :span="20">
           <!-- Tournament name -->
           <el-form-item
-              :label="$t('TournamentSettings.name')"
+              :label="$t('general.name')"
               prop="name"
               :rules="[
                   {
                     required: true,
-                    message: i18n.global.t('TournamentSettings.name_missing'),
+                    message: i18n.global.t('general.name_missing'),
                     trigger: 'blur',
                   }
               ]"
@@ -45,7 +45,7 @@
 
       <!-- Description -->
       <el-form-item
-          :label="$t('TournamentSettings.description')"
+          :label="$t('general.description')"
           prop="description"
       >
         <el-input
@@ -65,11 +65,12 @@
           :label="$t('TournamentSettings.registration_phase')"
           prop="registration_phase"
           :rules="[
-        {
-          validator: checkDates,
-          trigger: 'blur',
-        }
-    ]"
+            {
+              required: true,
+              validator: checkDates,
+              trigger: 'blur',
+            }
+        ]"
       >
         <el-date-picker
             v-model="data.registration_phase"
@@ -83,11 +84,12 @@
           :label="$t('TournamentSettings.game_phase')"
           prop="game_phase"
           :rules="[
-        {
-          validator: checkDates,
-          trigger: 'blur',
-        }
-    ]"
+            {
+              required: true,
+              validator: checkDates,
+              trigger: 'blur',
+            }
+        ]"
       >
         <el-date-picker
             v-model="data.game_phase"
