@@ -1,19 +1,27 @@
 <script setup>
 import Item from '../../items/ItemCompetition.vue';
-import { inject, ref, watch } from "vue";
+import {inject, ref, watch} from "vue";
 import { useRoute } from "vue-router";
 import AddItem from '@/components/items/ItemAdd.vue';
-import {i18n, router} from '@/main'
+import { i18n, router } from '@/main'
 import axios from "axios";
 import { auth } from "@/security/AuthService";
-import {ElMessage} from "element-plus";
+import { ElMessage } from "element-plus";
 
 const route = useRoute()
 
 const competitions = ref([])
 
 const isLoggedIn = inject('loggedIn', ref(false))
-const canEdit = ref(false);
+const canEdit = ref(false)
+
+const progress = ref(0)
+const statusActive = ref("wait")
+
+const beginRegistration = ref(new Date())
+const endRegistration = ref(new Date())
+const beginGamePhase = ref(new Date())
+const endGamePhase = ref(new Date())
 
 watch (isLoggedIn, async () => {
   update()
@@ -47,6 +55,35 @@ function update() {
       console.log(error)
       router.push("/")
     })
+  axios.get(`/tournament/details?tourName=${route.params.tourId}`)
+    .then((response) => {
+      const date = new Date()
+      beginRegistration.value = new Date(response.data.beginRegistration)
+      endRegistration.value = new Date(response.data.endRegistration)
+      beginGamePhase.value = new Date(response.data.beginGamePhase)
+      endGamePhase.value = new Date(response.data.endGamePhase)
+
+      if (date < beginRegistration) {
+        progress.value = 0
+        statusActive.value = "wait"
+      } else if (date < endRegistration) {
+        progress.value = 0
+        statusActive.value = "progress"
+      } else if (date < beginGamePhase) {
+        progress.value = 1
+        statusActive.value = "wait"
+      } else if (date < endGamePhase) {
+        progress.value = 1
+        statusActive.value = "progress"
+      } else {
+        progress.value = 1
+        statusActive.value = "success"
+      }
+    })
+    .catch((error) => {
+      statusActive.value = "error"
+      console.log(error)
+    })
 }
 
 function settings() {
@@ -64,6 +101,16 @@ function settingsItem(competition) {
 function addCompetition() {
   router.push({path: '/tournament/' + route.params.tourId + '/createCompetition'})
 }
+
+const options = {
+  weekday: "long",
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+  hour: "numeric",
+  minute: "numeric",
+};
+
 </script>
 
 <template>
@@ -75,15 +122,29 @@ function addCompetition() {
       </font-awesome-icon>
       {{route.params.tourId}}
     </h2>
-    <div id="competitions">
-      <item v-for="competition in competitions"
-            :name="competition.name"
-            :description="competition.description"
-            :type="competition.type"
-            :can-edit="canEdit"
-            @selected="selected"
-            @settings="settingsItem" />
-      <AddItem v-if="canEdit" @selected="addCompetition"/>
+    <div id="content">
+      <div id="competitions">
+        <item v-for="competition in competitions"
+              :name="competition.name"
+              :description="competition.description"
+              :type="competition.type"
+              :can-edit="canEdit"
+              @selected="selected"
+              @settings="settingsItem" />
+        <AddItem v-if="canEdit" @selected="addCompetition"/>
+      </div>
+      <el-steps direction="vertical" :active="progress"
+                :process-status="statusActive"
+                finish-status="success"
+                id="progress">
+        <el-step :title="$t('TournamentSettings.registration_phase')"
+          :description="beginRegistration.toLocaleString(i18n.global.t('lang'), options)
+            +'\n - '+endRegistration.toLocaleString(i18n.global.t('lang'), options)" />
+        <el-step :title="$t('TournamentSettings.game_phase')"
+          :description="beginGamePhase.toLocaleString(i18n.global.t('lang'), options)
+            +' - '+endGamePhase.toLocaleString(i18n.global.t('lang'), options)"
+        />
+      </el-steps>
     </div>
   </div>
 </template>
@@ -114,11 +175,22 @@ function addCompetition() {
     width: 100%;
   }
 
+  #content {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+
   #competitions > * {
     margin: 0 10px 10px 10px;
   }
 
+  #progress {
+    margin-top: 20px;
+  }
+
   h2 {
     text-align: center;
+    font-size: 30px;
   }
 </style>
