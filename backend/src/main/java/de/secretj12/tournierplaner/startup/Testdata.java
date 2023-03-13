@@ -27,7 +27,7 @@ public class Testdata {
     public void createData() {
         Tournament tour1 = new Tournament();
         tour1.setName("Clubmeisterschaft 2022");
-        tour1.setDescription("Anmeldung noch bis zum 2.1.");
+        tour1.setDescription("Anmeldung geschlossen");
         tour1.setBeginRegistration(LocalDateTime.of(2022, 1, 1, 12, 12));
         tour1.setEndRegistration(LocalDateTime.of(2022, 1, 2, 12, 12));
         tour1.setBeginGamePhase(LocalDateTime.of(2022, 2, 1, 12, 12));
@@ -52,11 +52,11 @@ public class Testdata {
 
         Tournament tour2 = new Tournament();
         tour2.setName("Clubmeisterschaft 2023");
-        tour2.setDescription("Anmeldung noch bis zum 4.1.");
-        tour2.setBeginRegistration(LocalDateTime.of(2022, 1, 1, 12, 12));
-        tour2.setEndRegistration(LocalDateTime.of(2022, 1, 2, 12, 12));
-        tour2.setBeginGamePhase(LocalDateTime.of(2022, 2, 1, 12, 12));
-        tour2.setEndGamePhase(LocalDateTime.of(2022, 2, 2, 12, 12));
+        tour2.setDescription("Anmeldung offen");
+        tour2.setBeginRegistration(LocalDateTime.of(2023, 7, 1, 12, 12));
+        tour2.setEndRegistration(LocalDateTime.of(2023, 7, 2, 12, 12));
+        tour2.setBeginGamePhase(LocalDateTime.of(2023, 8, 1, 12, 12));
+        tour2.setEndGamePhase(LocalDateTime.of(2023, 8, 2, 12, 12));
         tour2.setVisible(false);
         tournaments.persist(tour2);
 
