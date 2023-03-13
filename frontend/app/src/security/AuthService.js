@@ -16,6 +16,11 @@ class AuthService {
                     .then(() => {
                         console.log("successfully logged in")
                     })
+                    .catch(() => {
+                        access_token.value = null
+                    })
+            // already load before logging in to avoid errors
+            access_token.value = user.access_token
         })
     }
 

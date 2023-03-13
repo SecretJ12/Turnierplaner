@@ -47,7 +47,6 @@ function update() {
         competitions.value = response.data
       else {
         ElMessage.error(i18n.global.t("ViewCompetitions.loadingFailed"))
-        router.push("/")
       }
     })
     .catch((error) => {
