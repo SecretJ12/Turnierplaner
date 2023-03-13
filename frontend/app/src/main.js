@@ -51,40 +51,24 @@ const app = createApp(App);
 app.config.globalProperties.backend = "http://localhost:2000"
 
 import viewTournaments from '@/components/views/tournaments/ViewTournaments.vue'
-import viewCompetitions from '@/components/views/competitions/ViewCompetitions.vue'
-import viewRegistration from '@/components/views/ViewRegistration.vue'
-import viewTemplates from '@/components/views/ViewTemplates.vue'
-import viewPlayerRegistration from '@/components/views/ViewPlayerRegistration.vue'
 import createTournament from '@/components/views/tournaments/ViewCreateTournament.vue'
 import editTournament from '@/components/views/tournaments/ViewEditTournament.vue'
+
+import viewCompetitions from '@/components/views/competitions/ViewCompetitions.vue'
 import createCompetition from '@/components/views/competitions/ViewCreateCompetition.vue'
 import editCompetition from '@/components/views/competitions/ViewEditCompetition.vue'
+
+import viewCompetition from "@/components/views/competition/ViewCompetition.vue";
+
+import viewPlayerRegistration from '@/components/views/ViewPlayerRegistration.vue'
+
+import viewTemplates from '@/components/views/ViewTemplates.vue'
 
 const routes = [
     {
         path: "/",
-        name: "Home",
-        component: viewTournaments
-    },
-    {
-        path: "/tournament/:tourId",
         name: "Tournaments",
-        component: viewCompetitions
-    },
-    {
-        path: "/tournament/:tourId/competition/:compId",
-        name: "Competition",
-        component: viewRegistration
-    },
-    {
-        path: "/templates",
-        name: "Templates",
-        component: viewTemplates
-    },
-    {
-        path: "/player/registration",
-        name: "Player Registration",
-        component: viewPlayerRegistration
+        component: viewTournaments
     },
     {
         path: "/createTournament",
@@ -97,6 +81,11 @@ const routes = [
         component: editTournament
     },
     {
+        path: "/tournament/:tourId",
+        name: "Competitions",
+        component: viewCompetitions
+    },
+    {
         path: "/tournament/:tourId/createCompetition",
         name: "Create competition",
         component: createCompetition
@@ -105,6 +94,21 @@ const routes = [
         path: "/tournament/:tourId/competition/:compId/edit",
         name: "Edit competition",
         component: editCompetition
+    },
+    {
+        path: "/tournament/:tourId/competition/:compId",
+        name: "Competition",
+        component: viewCompetition
+    },
+    {
+        path: "/player/registration",
+        name: "Player Registration",
+        component: viewPlayerRegistration
+    },
+    {
+        path: "/templates",
+        name: "Templates",
+        component: viewTemplates
     }
 ]
 

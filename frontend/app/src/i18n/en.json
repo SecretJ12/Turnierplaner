@@ -63,6 +63,9 @@
   },
   "ViewEditCompetition": {
     "loadingDetailsFailed": "Couldn't load competition details"
+  },
+  "ViewCompetition": {
+    "tournament_system": "Turniersystem"
   }
 }
 
