@@ -24,6 +24,15 @@ public class Player {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "phone")
+    private String phone;
+
+    @Column(name = "mail_verified")
+    private boolean mailVerified;
+
+    @Column(name = "admin_verified")
+    private boolean adminVerified;
+
     @ManyToMany
     @JoinTable(
             name = "participating_in",
@@ -82,5 +91,29 @@ public class Player {
 
     public void setCompetitions(List<Competition> competitions) {
         this.competitions = competitions;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public boolean isMailVerified() {
+        return mailVerified;
+    }
+
+    public void setMailVerified(boolean mail_verified) {
+        this.mailVerified = mail_verified;
+    }
+
+    public boolean isAdminVerified() {
+        return adminVerified;
+    }
+
+    public void setAdminVerified(boolean admin_verified) {
+        this.adminVerified = admin_verified;
     }
 }
