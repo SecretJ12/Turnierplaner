@@ -17,12 +17,8 @@
       "field": "Nachname",
       "prompt": "Bitte geben Sie Ihren Nachnamen an"
     },
-    "email": {
-      "empty": "Bitte geben Sie Ihre Email Adresse an",
-      "correct": "Bitte geben Sie eine korrekte Email Adresse an"
-    },
     "sex": {
-      "field": "Geschlect",
+      "field": "Geschlecht",
       "prompt": "Bitte geben Sie Ihr Geschlecht an",
       "select": "Bitte wählen Sie aus",
       "Option1": "Männlich",
@@ -32,7 +28,19 @@
       "field": "Geburtstag",
       "prompt": "Bitte geben Sie Ihren Geburtstag ein"
     },
-    "sign_up": "Registrieren"
+    "email": {
+      "field": "E-Mail",
+      "empty": "Bitte geben Sie Ihre Email Adresse an",
+      "correct": "Bitte geben Sie eine korrekte Email Adresse an"
+    },
+    "phone": {
+      "field": "Handynummer",
+      "empty": "Bitte geben sie Ihre Handynummer an",
+      "correct": "Bitte gib eine korrekte Telefonnummer an"
+    },
+    "sign_up": "Registrieren",
+    "registration_failed": "Player registration failed",
+    "registration_successful": "Player registered successfully"
   },
   "TournamentSettings": {
     "visible": "Sichtbar",

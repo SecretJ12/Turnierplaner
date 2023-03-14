@@ -17,22 +17,30 @@
       "field": "Last name",
       "prompt": "Please input your last name"
     },
-    "email": {
-      "empty": "Please input email address",
-      "correct": "Please input correct email adress"
-    },
     "sex": {
       "field": "Sex",
       "prompt": "Please input your gender",
       "select": "Select",
-      "Option1": "Men ",
+      "Option1": "Men",
       "Option2": "Woman"
     },
     "birthdate": {
       "field": "birthdate",
       "prompt": "Please input your birthdate"
     },
-    "sign_up": "Sign up"
+    "email": {
+      "field": "E-Mail",
+      "empty": "Please input email address",
+      "correct": "Please input a valid mail address"
+    },
+    "phone": {
+      "field": "Phone number",
+      "empty": "Please enter your phone number",
+      "correct": "Please enter a valid phone number"
+    },
+    "sign_up": "Sign up",
+    "registration_failed": "Player registration failed",
+    "registration_successful": "Player registered successfully"
   },
   "TournamentSettings": {
     "visible": "Visible",
@@ -65,7 +73,7 @@
     "loadingDetailsFailed": "Couldn't load competition details"
   },
   "ViewCompetition": {
-    "tournament_system": "Turniersystem"
+    "tournament_system": "Tournament system"
   }
 }
 

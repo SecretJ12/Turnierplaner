@@ -30,6 +30,9 @@ public class PlayerResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     public Response playerRegistration(Player player) {
+        // TODO check mail
+        // TODO check phone number
+
         player.setMailVerified(false);
         player.setAdminVerified(false);
         playerRepository.persist(player);

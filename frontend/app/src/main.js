@@ -61,7 +61,7 @@ import editCompetition from '@/components/views/competitions/ViewEditCompetition
 
 import viewCompetition from "@/components/views/competition/ViewCompetition.vue";
 
-import viewPlayerRegistration from '@/components/views/ViewPlayerRegistration.vue'
+import viewPlayerRegistration from '@/components/views/player/ViewPlayerRegistration.vue'
 
 import viewTemplates from '@/components/views/ViewTemplates.vue'
 
