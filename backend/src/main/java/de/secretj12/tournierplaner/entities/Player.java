@@ -18,6 +18,9 @@ public class Player {
     @Column(name = "last_name")
     private String lastName;
 
+    @Column(name = "sex")
+    private SexType sex;
+
     @Column(name = "birthday")
     private LocalDate birthday;
 
@@ -75,6 +78,14 @@ public class Player {
 
     public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
+    }
+
+    public SexType getSex() {
+        return sex;
+    }
+
+    public void setSex(SexType sex) {
+        this.sex = sex;
     }
 
     public String getEmail() {
