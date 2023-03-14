@@ -9,19 +9,21 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.UUID;
 
 @Path("/player")
 public class PlayerResource {
     @Inject
     PlayerRepository playerRepository;
 
-    // TODO rework, use for playersearch
     // TODO add search parameters like name and sex
+    // TODO only return verified accounts (except for admins)
+    // TODO add endpoint for players to competition
     @GET
     @Path("/players")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Player> getAllCompetitions() {
-        return playerRepository.listAll();
+    public List<ReducedPlayer> listPlayer(@QueryParam("search") String search) {
+        return playerRepository.filter(search).stream().map(p -> new ReducedPlayer(p.getId(), p.getFirstName(), p.getLastName())).toList();
     }
 
     @POST
@@ -40,5 +42,42 @@ public class PlayerResource {
         // TODO mail verification and verification by admin?
 
         return Response.ok("successfully added").build();
+    }
+
+    public static class ReducedPlayer {
+        private UUID id;
+        private String firstName;
+
+        private String lastName;
+
+        public ReducedPlayer(UUID id, String firstName, String lastName) {
+            this.id = id;
+            this.firstName = firstName;
+            this.lastName = lastName;
+        }
+
+        public UUID getId() {
+            return id;
+        }
+
+        public void setId(UUID id) {
+            this.id = id;
+        }
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public void setFirstName(String firstName) {
+            this.firstName = firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public void setLast_name(String lastName) {
+            this.lastName = lastName;
+        }
     }
 }

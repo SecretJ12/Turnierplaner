@@ -7,6 +7,11 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "players")
+@NamedQueries({
+        @NamedQuery(name="filter",
+                query="SELECT p FROM Player p " +
+                        "WHERE p.firstName = '%?1%' AND p.lastName = '%?1%'")
+})
 public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
