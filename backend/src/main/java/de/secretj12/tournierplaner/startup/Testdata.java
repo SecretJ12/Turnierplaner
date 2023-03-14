@@ -1,14 +1,14 @@
 package de.secretj12.tournierplaner.startup;
 
-import de.secretj12.tournierplaner.entities.Competition;
-import de.secretj12.tournierplaner.entities.CompetitionType;
-import de.secretj12.tournierplaner.entities.Tournament;
+import de.secretj12.tournierplaner.entities.*;
 import de.secretj12.tournierplaner.repositories.CompetitionRepository;
+import de.secretj12.tournierplaner.repositories.PlayerRepository;
 import de.secretj12.tournierplaner.repositories.TournamentRepository;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @ApplicationScoped
@@ -18,6 +18,8 @@ public class Testdata {
     TournamentRepository tournaments;
     @Inject
     CompetitionRepository competitions;
+    @Inject
+    PlayerRepository players;
 
     public Testdata() {
 
@@ -73,5 +75,27 @@ public class Testdata {
         comp4.setDescription("Herren-Konkurrenz");
         comp4.setType(CompetitionType.KNOCKOUT);
         competitions.persist(comp4);
+
+        Player p1 = new Player();
+        p1.setFirstName("Rainer");
+        p1.setLastName("Zufall");
+        p1.setBirthday(LocalDate.now());
+        p1.setSex(SexType.male);
+        p1.setEmail("abc@def.ghi");
+        p1.setPhone("+49 123 456789");
+        p1.setMailVerified(true);
+        p1.setAdminVerified(true);
+        players.persist(p1);
+
+        Player p2 = new Player();
+        p2.setFirstName("Biene");
+        p2.setLastName("Maja");
+        p2.setBirthday(LocalDate.now());
+        p2.setSex(SexType.female);
+        p2.setEmail("abc@def.ghi");
+        p2.setPhone("+49 123 456789");
+        p2.setMailVerified(true);
+        p2.setAdminVerified(true);
+        players.persist(p2);
     }
 }
