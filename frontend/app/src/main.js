@@ -7,13 +7,14 @@ import 'element-plus/dist/index.css'
 
 /* import the fontawesome core */
 import { library } from '@fortawesome/fontawesome-svg-core'
+import {settings} from "@/settings";
 
 /* https request */
 import VueAxios from 'vue-axios'
 import axios from 'axios'
 
 import { access_token } from '@/security/AuthService'
-axios.defaults.baseURL = 'http://localhost:2000'
+axios.defaults.baseURL = settings.BACKEND
 
 axios.interceptors.request.use(function (config) {
     if (access_token.value !== null)

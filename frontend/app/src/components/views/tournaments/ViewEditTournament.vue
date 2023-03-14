@@ -113,7 +113,6 @@
 
 <script setup>
 import { ref, reactive } from 'vue'
-import { settings } from '@/settings'
 import axios from "axios";
 import { i18n } from "@/main";
 import { ElMessage } from "element-plus";
@@ -166,7 +165,7 @@ function submit(formRef) {
         endGamePhase: data.game_phase[1],
         visible: data.visible
       }
-      axios.post(settings.BACKEND+"/tournament/update", server_data)
+      axios.post("/tournament/update", server_data)
           .then(_ => {
             ElMessage.success("Tournament saved")
           })

@@ -78,7 +78,6 @@ import { i18n } from "@/main";
 import { reactive, ref } from "vue";
 import { router } from "@/main";
 import axios from "axios";
-import { settings } from "@/settings";
 import { ElMessage } from "element-plus";
 import { useRoute } from "vue-router";
 
@@ -120,7 +119,7 @@ function submit(formRef) {
         type: data.type
       }
 
-      axios.post(settings.BACKEND+"/competition/update", server_data)
+      axios.post("/competition/update", server_data)
         .then(_ => {
           router.push({path: "/tournament/" + route.params.tourId})
         })
