@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Random;
 
 @ApplicationScoped
 public class Testdata {
@@ -55,10 +56,10 @@ public class Testdata {
         Tournament tour2 = new Tournament();
         tour2.setName("Clubmeisterschaft 2023");
         tour2.setDescription("Anmeldung offen");
-        tour2.setBeginRegistration(LocalDateTime.of(2023, 7, 1, 12, 12));
-        tour2.setEndRegistration(LocalDateTime.of(2023, 7, 2, 12, 12));
-        tour2.setBeginGamePhase(LocalDateTime.of(2023, 8, 1, 12, 12));
-        tour2.setEndGamePhase(LocalDateTime.of(2023, 8, 2, 12, 12));
+        tour2.setBeginRegistration(LocalDateTime.now().minusDays(1));
+        tour2.setEndRegistration(LocalDateTime.now().plusDays(1));
+        tour2.setBeginGamePhase(LocalDateTime.now().plusDays(2));
+        tour2.setEndGamePhase(LocalDateTime.now().plusDays(3));
         tour2.setVisible(false);
         tournaments.persist(tour2);
 
@@ -76,6 +77,7 @@ public class Testdata {
         comp4.setType(CompetitionType.KNOCKOUT);
         competitions.persist(comp4);
 
+        // too good to be left out
         Player p1 = new Player();
         p1.setFirstName("Rainer");
         p1.setLastName("Zufall");
@@ -87,15 +89,24 @@ public class Testdata {
         p1.setAdminVerified(true);
         players.persist(p1);
 
-        Player p2 = new Player();
-        p2.setFirstName("Biene");
-        p2.setLastName("Maja");
-        p2.setBirthday(LocalDate.now());
-        p2.setSex(SexType.female);
-        p2.setEmail("abc@def.ghi");
-        p2.setPhone("+49 123 456789");
-        p2.setMailVerified(true);
-        p2.setAdminVerified(true);
-        players.persist(p2);
+        String[] firstNames = new String[]{"Charlene", "Amado", "Goldie", "Louis", "Carrol", "Everette", "Laverne", "Robt", "Abby", "German", "Katharine", "Vanessa", "Emilio", "Adela", "Mel", "Guy", "Cassandra", "Antonia", "Angie", "Mindy", "Brice", "Deshawn", "Shawna", "Bryant", "Zachariah", "Bernie", "Selena", "Lacey", "Darnell", "Cory", "Socorro", "Belinda", "Stephan", "Korey", "Josefina", "Joe", "Clyde", "Silas", "Moses", "Christian", "Dalton", "Adrienne", "Adan", "Helena", "Luann", "Chuck", "Leona", "Emmanuel", "Debra", "Jose"};
+        String[] lastNames = new String[]{"Brennan", "Meyers", "Mora", "Bailey", "Burns", "Trevino", "Horton", "Monroe", "Ali", "Jarvis", "Banks", "Leblanc", "Kidd", "Mooney", "Stout", "Kramer", "Galvan", "Barrett", "Steele", "Morgan", "English", "Pitts", "Fowler", "Vaughan", "Livingston", "May", "Holden", "Sandoval", "Freeman", "Hurley", "Lambert", "Watson", "Huff", "Ruiz", "Santana", "Conway", "Mcintosh", "Bates", "Greene", "Castaneda", "Mcclure", "Kemp", "Hanna", "Merritt", "Mccarthy", "Sampson", "Barnett", "Green", "Ewing", "Floyd"};
+
+        Random rn = new Random();
+        for (int i = 0; i < 50; i++) {
+            String fn = firstNames[rn.nextInt(firstNames.length)];
+            String ln = lastNames[rn.nextInt(lastNames.length)];
+            Player p = new Player();
+            p.setFirstName(fn);
+            p.setLastName(ln);
+            p.setBirthday(LocalDate.now());
+            p.setSex(SexType.male);
+            p.setEmail(fn + "." + ln + "@mail.de");
+            p.setPhone("+49 123 456789");
+            p.setMailVerified(true);
+            p.setAdminVerified(true);
+            players.persist(p);
+        }
     }
 }
+
