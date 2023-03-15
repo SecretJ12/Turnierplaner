@@ -2,6 +2,7 @@ package de.secretj12.tournierplaner.resources;
 
 import de.secretj12.tournierplaner.entities.Player;
 import de.secretj12.tournierplaner.repositories.PlayerRepository;
+import de.secretj12.tournierplaner.resources.FormEntities.ReducedPlayer;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -9,7 +10,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
-import java.util.UUID;
 
 @Path("/player")
 public class PlayerResource {
@@ -27,7 +27,7 @@ public class PlayerResource {
         if (search.length() == 0)
             return List.of();
         return playerRepository
-                .filter(search).map(p -> new ReducedPlayer(p.getId(), p.getFirstName(), p.getLastName()))
+                .filter(search).map(ReducedPlayer::new)
                 .toList();
     }
 
@@ -37,6 +37,9 @@ public class PlayerResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     public Response playerRegistration(Player player) {
+        if (playerRepository.getByName(player.getFirstName(), player.getLastName()) != null)
+            return Response.status(Response.Status.CONFLICT.getStatusCode(),
+                    "A player already exists with this name").build();
         // TODO check mail
         // TODO check phone number
 
@@ -47,42 +50,5 @@ public class PlayerResource {
         // TODO mail verification and verification by admin?
 
         return Response.ok("successfully added").build();
-    }
-
-    public static class ReducedPlayer {
-        private UUID id;
-        private String firstName;
-
-        private String lastName;
-
-        public ReducedPlayer(UUID id, String firstName, String lastName) {
-            this.id = id;
-            this.firstName = firstName;
-            this.lastName = lastName;
-        }
-
-        public UUID getId() {
-            return id;
-        }
-
-        public void setId(UUID id) {
-            this.id = id;
-        }
-
-        public String getFirstName() {
-            return firstName;
-        }
-
-        public void setFirstName(String firstName) {
-            this.firstName = firstName;
-        }
-
-        public String getLastName() {
-            return lastName;
-        }
-
-        public void setLast_name(String lastName) {
-            this.lastName = lastName;
-        }
     }
 }
