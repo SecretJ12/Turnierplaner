@@ -1,13 +1,13 @@
-package de.secretj12.tournierplaner.resources;
+package de.secretj12.turnierplaner.resources;
 
-import de.secretj12.tournierplaner.entities.Competition;
-import de.secretj12.tournierplaner.entities.Player;
-import de.secretj12.tournierplaner.entities.Tournament;
-import de.secretj12.tournierplaner.repositories.CompetitionRepository;
-import de.secretj12.tournierplaner.repositories.TournamentRepository;
-import de.secretj12.tournierplaner.resources.FormEntities.ReducedCompetition;
-import de.secretj12.tournierplaner.resources.FormEntities.ReducedPlayer;
-import de.secretj12.tournierplaner.resources.FormEntities.RegisterPlayerForCompetition;
+import de.secretj12.turnierplaner.entities.Competition;
+import de.secretj12.turnierplaner.entities.Player;
+import de.secretj12.turnierplaner.entities.Tournament;
+import de.secretj12.turnierplaner.repositories.CompetitionRepository;
+import de.secretj12.turnierplaner.repositories.TournamentRepository;
+import de.secretj12.turnierplaner.resources.FormEntities.ReducedCompetition;
+import de.secretj12.turnierplaner.resources.FormEntities.ReducedPlayer;
+import de.secretj12.turnierplaner.resources.FormEntities.RegisterPlayerForCompetition;
 import io.quarkus.security.identity.SecurityIdentity;
 
 import javax.annotation.security.RolesAllowed;

@@ -1,6 +1,6 @@
-package de.secretj12.tournierplaner.resources.FormEntities;
+package de.secretj12.turnierplaner.resources.FormEntities;
 
-import de.secretj12.tournierplaner.entities.Player;
+import de.secretj12.turnierplaner.entities.Player;
 
 import java.util.UUID;
 

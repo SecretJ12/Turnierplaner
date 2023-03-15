@@ -1,7 +1,7 @@
-package de.secretj12.tournierplaner.resources;
+package de.secretj12.turnierplaner.resources;
 
-import de.secretj12.tournierplaner.entities.Tournament;
-import de.secretj12.tournierplaner.repositories.TournamentRepository;
+import de.secretj12.turnierplaner.entities.Tournament;
+import de.secretj12.turnierplaner.repositories.TournamentRepository;
 import io.quarkus.security.identity.SecurityIdentity;
 
 import javax.annotation.security.RolesAllowed;

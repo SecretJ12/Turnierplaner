@@ -1,8 +1,8 @@
-package de.secretj12.tournierplaner.resources;
+package de.secretj12.turnierplaner.resources;
 
-import de.secretj12.tournierplaner.entities.Player;
-import de.secretj12.tournierplaner.repositories.PlayerRepository;
-import de.secretj12.tournierplaner.resources.FormEntities.ReducedPlayer;
+import de.secretj12.turnierplaner.entities.Player;
+import de.secretj12.turnierplaner.repositories.PlayerRepository;
+import de.secretj12.turnierplaner.resources.FormEntities.ReducedPlayer;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;

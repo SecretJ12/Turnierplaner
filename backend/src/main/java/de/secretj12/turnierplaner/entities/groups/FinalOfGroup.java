@@ -1,10 +1,9 @@
-package de.secretj12.tournierplaner.entities.groups;
+package de.secretj12.turnierplaner.entities.groups;
 
-import de.secretj12.tournierplaner.entities.Match;
+import de.secretj12.turnierplaner.entities.Match;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity

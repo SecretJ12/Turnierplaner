@@ -1,4 +1,4 @@
-package de.secretj12.tournierplaner.startup;
+package de.secretj12.turnierplaner.startup;
 
 import io.quarkus.runtime.StartupEvent;
 import org.eclipse.microprofile.config.inject.ConfigProperty;

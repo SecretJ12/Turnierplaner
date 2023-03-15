@@ -1,7 +1,7 @@
-package de.secretj12.tournierplaner.resources.FormEntities;
+package de.secretj12.turnierplaner.resources.FormEntities;
 
-import de.secretj12.tournierplaner.entities.Competition;
-import de.secretj12.tournierplaner.entities.CompetitionType;
+import de.secretj12.turnierplaner.entities.Competition;
+import de.secretj12.turnierplaner.entities.CompetitionType;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;

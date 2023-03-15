@@ -1,10 +1,8 @@
-package de.secretj12.tournierplaner.entities.groups;
+package de.secretj12.turnierplaner.entities.groups;
 
-import de.secretj12.tournierplaner.entities.Competition;
+import de.secretj12.turnierplaner.entities.Competition;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.util.Objects;
 import java.util.UUID;
 
 @Entity
