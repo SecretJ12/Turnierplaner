@@ -2,7 +2,6 @@ package de.secretj12.tournierplaner.entities;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -41,18 +40,6 @@ public class Player {
 
     @Column(name = "admin_verified")
     private boolean adminVerified;
-
-    @ManyToMany
-    @JoinTable(
-            name = "participating_in",
-            joinColumns = {
-                    @JoinColumn(name = "competition_id")
-            },
-            inverseJoinColumns = {
-                    @JoinColumn(name = "player_id")
-            }
-    )
-    private List<Competition> competitions;
 
     public UUID getId() {
         return id;
@@ -100,14 +87,6 @@ public class Player {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public List<Competition> getCompetitions() {
-        return competitions;
-    }
-
-    public void setCompetitions(List<Competition> competitions) {
-        this.competitions = competitions;
     }
 
     public String getPhone() {

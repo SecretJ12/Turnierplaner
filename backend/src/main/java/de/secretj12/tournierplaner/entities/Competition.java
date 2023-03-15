@@ -1,11 +1,7 @@
 package de.secretj12.tournierplaner.entities;
 
-import com.fasterxml.jackson.annotation.*;
-import org.eclipse.microprofile.jwt.Claim;
-
 import javax.persistence.*;
-import java.io.Serializable;
-import java.util.Objects;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -34,6 +30,26 @@ public class Competition {
     private String description;
     @Column(name = "type")
     private CompetitionType type;
+
+    @ManyToMany
+    @JoinTable(
+            name = "participating_in",
+            joinColumns = {
+                    @JoinColumn(name = "competition_id")
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "player_id")
+            }
+    )
+    private List<Player> players;
+
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(List<Player> players) {
+        this.players = players;
+    }
 
     public UUID getId() {
         return id;
