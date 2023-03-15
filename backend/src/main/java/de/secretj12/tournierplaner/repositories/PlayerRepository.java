@@ -1,12 +1,10 @@
 package de.secretj12.tournierplaner.repositories;
 
+import de.secretj12.tournierplaner.entities.Player;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 
-import de.secretj12.tournierplaner.entities.*;
-
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import java.util.List;
+import java.util.stream.Stream;
 
 @ApplicationScoped
 public class PlayerRepository implements PanacheRepository<Player> {
@@ -15,7 +13,7 @@ public class PlayerRepository implements PanacheRepository<Player> {
         return find("last_name", name).firstResultOptional().orElse(null);
     }
 
-    public List<Player> filter(String search) {
-        return find("#filter", search).list();
+    public Stream<Player> filter(String search) {
+        return find("#filter", search).page(0, 10).stream();
     }
 }

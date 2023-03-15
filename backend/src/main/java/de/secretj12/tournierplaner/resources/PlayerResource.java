@@ -20,10 +20,15 @@ public class PlayerResource {
     // TODO only return verified accounts (except for admins)
     // TODO add endpoint for players to competition
     @GET
+    @Transactional
     @Path("/players")
     @Produces(MediaType.APPLICATION_JSON)
     public List<ReducedPlayer> listPlayer(@QueryParam("search") String search) {
-        return playerRepository.filter(search).stream().map(p -> new ReducedPlayer(p.getId(), p.getFirstName(), p.getLastName())).toList();
+        if (search.length() == 0)
+            return List.of();
+        return playerRepository
+                .filter(search).map(p -> new ReducedPlayer(p.getId(), p.getFirstName(), p.getLastName()))
+                .toList();
     }
 
     @POST
