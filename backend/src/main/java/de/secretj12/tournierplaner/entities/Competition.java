@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.util.List;
 import java.util.UUID;
 
+// TODO add attributes to allow setting age and sex restrictions (but optional!)
 @Entity
 @Table(name = "competitions")
 @NamedQueries({

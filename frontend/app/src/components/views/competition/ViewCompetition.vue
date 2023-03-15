@@ -24,10 +24,12 @@
 
     <template v-if="tournamentLoaded">
       <template v-if="!game_started">
+        <!-- TODO only if registration phase has started -->
         <!-- show registration page -->
         <ViewRegister />
       </template>
       <template v-else>
+        <!-- TODO show after plan has been published -->
         <!-- show game page -->
         <ViewGame />
       </template>

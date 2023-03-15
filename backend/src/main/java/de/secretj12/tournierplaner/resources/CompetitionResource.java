@@ -72,6 +72,7 @@ public class CompetitionResource {
                     "No tournament specified").build();
         if (competitions.getByName(competition.getTournament().getName(), competition.getName()) != null)
             return Response.status(Response.Status.CONFLICT).build();
+
         Tournament tournament = tournaments.getByName(competition.getTournament().getName());
         if (tournament == null)
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(),
@@ -107,6 +108,7 @@ public class CompetitionResource {
     @Produces(MediaType.APPLICATION_JSON)
     public List<ReducedPlayer> getRegisteredPlayers(@QueryParam("tourName") String tourName,
                                                     @QueryParam("compName") String compName) {
+        // TODO only allow for if role > director or current date after begin of registration phase
         Competition competition = competitions.getByName(tourName, compName);
         if (competition == null)
             return null;
@@ -126,6 +128,7 @@ public class CompetitionResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     public Response registerPlayer(RegisterPlayerForCompetition reg) {
+        // TODO only allow for role > director or current date in registration phase
         Competition competition = competitions.getByName(reg.getTourName(), reg.getCompName());
         Player player = players.playerRepository.getByName(reg.getFirstName(), reg.getLastName());
         if (competition == null)

@@ -73,6 +73,8 @@ public class TournamentResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     public Response addTournament(Tournament tournament) {
+
+        // TODO check if name exists
         if (getTournament(tournament.getName()) != null)
             return Response.status(Response.Status.CONFLICT).build();
         Response r = checkDates(tournament);
