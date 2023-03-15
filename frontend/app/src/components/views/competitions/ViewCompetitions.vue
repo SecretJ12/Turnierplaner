@@ -62,16 +62,16 @@ function update() {
       beginGamePhase.value = new Date(response.data.beginGamePhase)
       endGamePhase.value = new Date(response.data.endGamePhase)
 
-      if (date < beginRegistration) {
+      if (date < beginRegistration.value) {
         progress.value = 0
         statusActive.value = "wait"
-      } else if (date < endRegistration) {
+      } else if (date < endRegistration.value) {
         progress.value = 0
         statusActive.value = "progress"
-      } else if (date < beginGamePhase) {
+      } else if (date < beginGamePhase.value) {
         progress.value = 1
         statusActive.value = "wait"
-      } else if (date < endGamePhase) {
+      } else if (date < endGamePhase.value) {
         progress.value = 1
         statusActive.value = "progress"
       } else {
