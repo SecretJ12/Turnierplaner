@@ -6,7 +6,8 @@
     "update": "Update",
     "name": "Name",
     "description": "Description",
-    "name_missing": "Please input a name"
+    "name_missing": "Please input a name",
+    "register": "Register"
   },
   "ViewPlayerRegistration": {
     "first_name": {
@@ -73,7 +74,10 @@
     "loadingDetailsFailed": "Couldn't load competition details"
   },
   "ViewCompetition": {
-    "tournament_system": "Tournament system"
+    "tournament_system": "Tournament system",
+    "no_registration": "It seems that no one has registered yet...",
+    "query_search_failed": "Querying player failed",
+    "query_player_failed": "Querying participants failed"
   }
 }
 

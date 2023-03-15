@@ -22,7 +22,7 @@
       </template>
     </p>
 
-    <template v-if="detailsLoaded">
+    <template v-if="tournamentLoaded">
       <template v-if="!game_started">
         <!-- show registration page -->
         <ViewRegister />
@@ -52,6 +52,8 @@ const canEdit = ref(false)
 const detailsLoaded = ref(false)
 const description = ref("")
 const type = ref("knockout")
+
+const tournamentLoaded = ref(false)
 const game_started = ref(false)
 
 watch (isLoggedIn, async () => {
@@ -77,12 +79,19 @@ function update() {
     .then((response) => {
       description.value = response.data.description
       type.value = response.data.type.toLowerCase()
-      game_started.value = Date.parse(response.data.tournament.beginGamePhase) < new Date()
       detailsLoaded.value = true
     })
     .catch((error) => {
         console.log(error)
     })
+  axios.get(`/tournament/details?tourName=${route.params.tourId}`)
+      .then((response) => {
+        game_started.value = Date.parse(response.data.beginGamePhase) < new Date()
+        tournamentLoaded.value = true
+      })
+      .catch((error) => {
+        console.log(error)
+      })
 }
 
 function settings() {

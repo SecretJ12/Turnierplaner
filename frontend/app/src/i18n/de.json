@@ -6,7 +6,8 @@
     "update": "Aktualisieren",
     "name": "Name",
     "description": "Beschreibung",
-    "name_missing": "Bitte gib einen Namen ein"
+    "name_missing": "Bitte gib einen Namen ein",
+    "register": "Anmelden"
   },
   "ViewPlayerRegistration": {
     "first_name": {
@@ -73,7 +74,10 @@
     "loadingDetailsFailed": "Details der Konkurrenz konnten nicht geladen werden"
   },
   "ViewCompetition": {
-    "tournament_system": "Turniersystem"
+    "tournament_system": "Turniersystem",
+    "no_registration": "Es scheint sich noch niemand angemeldet zu haben...",
+    "query_search_failed": "Abrufen der Spieler ist fehlgeschlagen",
+    "query_player_failed": "Abrufen der Teilnehmer ist fehlgeschlagen"
   }
 }
 

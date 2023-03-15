@@ -1,17 +1,44 @@
 <template>
-  <!-- TODO field to search for players and register for tournament -->
-  <!-- button to register player -->
-  <el-table stripe border :data="players" style="width: fit-content">
-    <el-table-column width="200" prop="name" :label="i18n.global.t('general.name')" />
-  </el-table>
+  <el-space direction="vertical" fill>
+    <el-row id="" :gutter="20" class="row-bg" justify="space-between">
+      <el-col :span="16">
+        <el-autocomplete
+            v-model="playerSearch"
+            :fetch-suggestions="queryPlayer"
+            :placeholder="i18n.global.t('general.name')"
+            @keyup.enter="register"
+            hide-loading
+            style="width: 100%"
+        />
+      </el-col>
+      <!-- TODO button to create a player -->
+      <el-col :span="8" >
+        <el-button
+            style="width: 100%"
+            @click="register"
+        >
+          {{ i18n.global.t('general.register') }}
+        </el-button>
+      </el-col>
+    </el-row>
+    <el-row :gutter="20" class="row-bg" justify="center">
+      <el-col :span="24">
+        <el-table stripe border :data="players" :empty-text="$t('ViewCompetition.no_registration')">
+          <el-table-column sortable prop="name" :label="i18n.global.t('general.name')" />
+          <!-- TODO add delete for admin -->
+        </el-table>
+      </el-col>
+    </el-row>
+  </el-space>
 </template>
 
 <script setup>
 import { inject, ref, watch } from "vue"
-import { i18n, router } from '@/main'
+import { i18n } from '@/main'
 import {auth} from "@/security/AuthService";
 import axios from "axios";
 import { useRoute } from "vue-router";
+import { ElMessage } from "element-plus";
 
 const route = useRoute()
 const isLoggedIn = inject('loggedIn', ref(false))
@@ -38,14 +65,77 @@ function update() {
         })
     }
   });
-  // TODO only show players belonging to competition
-  axios.get(`/player/players`)
-    .then((result) => {
-      players.value = result.data.map((value) => {
-        value.name = value.firstName + ' ' + value.lastName
-        return value
-      })
+  axios.get(`/competition/registered?tourName=${route.params.tourId}&compName=${route.params.compId}`)
+    .then((response) => {
+      if (response.status !== 200)
+        players.value = []
+      else
+        players.value = response.data.map((player) => {
+          player.name = player.firstName + ' ' + player.lastName
+          return player
+        })
     })
+    .catch((error) => {
+      ElMessage.error(i18n.global.t("ViewCompetition.query_player_failed"))
+      console.log(error)
+    })
+}
+
+const playerSearch = ref("")
+
+let queriedPlayer = []
+function queryPlayer(search, callback) {
+  queriedPlayer = queriedPlayer.filter((item) => {
+    return item.value.includes(search)
+  })
+  callback(queriedPlayer)
+  axios.get(`/player/players?search=${search}`)
+    .then((result) => {
+      queriedPlayer = result.data.map((item) => {
+        item.value = item.firstName + ' ' + item.lastName
+        return item
+      })
+      callback(queriedPlayer)
+    })
+    .catch((error) => {
+      ElMessage.error(i18n.global.t("ViewCompetition.query_search_failed"))
+      console.log(error)
+    })
+}
+
+function register() {
+  const validPlayers = queriedPlayer.filter((p) => {
+    return p.value.includes(playerSearch.value)
+  })
+  if (validPlayers.length > 1) {
+    ElMessage.error("zu viele ergebnisse") // TODO i18n
+    return
+  }
+  if (validPlayers.length === 0) {
+    ElMessage.error("niemanden gefunden") // TODO i18n
+    return
+  }
+  const player = validPlayers[0]
+
+  const form = {
+    firstName: player.firstName,
+    lastName: player.lastName,
+    tourName: route.params.tourId,
+    compName: route.params.compId
+  }
+  axios.post(`/competition/register`, form)
+      .then((response) => {
+        if (response.status === 200)
+          ElMessage.success("erfolgreich erstellt") // TODO i18n
+        else
+          ElMessage.error("ne irgendwie passt da was nich") // TODO i18n
+        update()
+      })
+      .catch((error) => {
+        console.log(error)
+        ElMessage.error("ne irgendwie passt da was nich") // TODO i18n
+      })
+
 }
 </script>
 
