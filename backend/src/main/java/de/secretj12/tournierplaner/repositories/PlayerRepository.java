@@ -9,8 +9,8 @@ import java.util.stream.Stream;
 @ApplicationScoped
 public class PlayerRepository implements PanacheRepository<Player> {
 
-    public Player getByName(String name) {
-        return find("last_name", name).firstResultOptional().orElse(null);
+    public Player getByName(String first_name, String last_name) {
+        return find("#find", first_name, last_name).firstResultOptional().orElse(null);
     }
 
     public Stream<Player> filter(String search) {
