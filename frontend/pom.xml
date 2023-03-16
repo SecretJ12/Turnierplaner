@@ -78,6 +78,12 @@
                                 <fileset>
                                     <directory>app/node_modules</directory>
                                 </fileset>
+                                <fileset>
+                                    <directory>app/node</directory>
+                                </fileset>
+                                <fileset>
+                                    <directory>app/dist</directory>
+                                </fileset>
                             </filesets>
                         </configuration>
                         <executions>
