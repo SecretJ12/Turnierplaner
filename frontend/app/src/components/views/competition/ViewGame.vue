@@ -1,11 +1,16 @@
 <template>
-Game phase
+  <ViewGroupSystem v-if="props.type === 'groups'"/>
+  <ViewKnockoutSystem v-else-if="props.type === 'knockout'"/>
+  <p v-else>Invalid type</p>
 </template>
 
 <script setup>
-// TODO differ between GROUP and KO system
-// TODO create view for KO system
-// TODO create view for GROUP system
+import ViewGroupSystem from "@/components/views/competition/ViewGroupSystem.vue";
+import ViewKnockoutSystem from "@/components/views/competition/ViewKnockoutSystem.vue";
+
+const props = defineProps({
+  type: String
+});
 </script>
 
 <style scoped>

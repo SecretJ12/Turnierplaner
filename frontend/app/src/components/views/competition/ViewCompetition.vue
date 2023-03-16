@@ -31,7 +31,7 @@
       <template v-else>
         <!-- TODO show after plan has been published -->
         <!-- show game page -->
-        <ViewGame />
+        <ViewGame :type="type" />
       </template>
     </template>
   </div>
