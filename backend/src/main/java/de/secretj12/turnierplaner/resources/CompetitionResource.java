@@ -110,11 +110,8 @@ public class CompetitionResource {
                                                     @QueryParam("compName") String compName) {
         // TODO only allow for if role > director or current date after begin of registration phase
         Competition competition = competitions.getByName(tourName, compName);
-        System.out.println("Hello World");
-        if (competition == null){
-            System.out.println("Nicht gefunden");
+        if (competition == null)
             return null;
-        }
 
         return competition.getPlayers().stream().map(ReducedPlayer::new)
                 .sorted((A, B) -> {
@@ -133,7 +130,6 @@ public class CompetitionResource {
     public Response registerPlayer(RegisterPlayerForCompetition reg) {
         // TODO only allow for role > director or current date in registration phase
         Competition competition = competitions.getByName(reg.getTourName(), reg.getCompName());
-        System.out.println(reg.getTourName()+" " +reg.getCompName());
         Player player = players.playerRepository.getByName(reg.getFirstName(), reg.getLastName());
         if (competition == null)
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(),
