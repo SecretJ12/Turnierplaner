@@ -61,7 +61,7 @@ public class Testdata {
         tour2.setEndRegistration(LocalDateTime.now().plusDays(1));
         tour2.setBeginGamePhase(LocalDateTime.now().plusDays(2));
         tour2.setEndGamePhase(LocalDateTime.now().plusDays(3));
-        tour2.setVisible(false);
+        tour2.setVisible(true);
         tournaments.persist(tour2);
 
         Competition comp3 = new Competition();

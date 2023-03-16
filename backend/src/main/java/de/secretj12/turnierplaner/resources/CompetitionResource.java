@@ -110,8 +110,11 @@ public class CompetitionResource {
                                                     @QueryParam("compName") String compName) {
         // TODO only allow for if role > director or current date after begin of registration phase
         Competition competition = competitions.getByName(tourName, compName);
-        if (competition == null)
+        System.out.println("Hello World");
+        if (competition == null){
+            System.out.println("Nicht gefunden");
             return null;
+        }
 
         return competition.getPlayers().stream().map(ReducedPlayer::new)
                 .sorted((A, B) -> {
@@ -130,6 +133,7 @@ public class CompetitionResource {
     public Response registerPlayer(RegisterPlayerForCompetition reg) {
         // TODO only allow for role > director or current date in registration phase
         Competition competition = competitions.getByName(reg.getTourName(), reg.getCompName());
+        System.out.println(reg.getTourName()+" " +reg.getCompName());
         Player player = players.playerRepository.getByName(reg.getFirstName(), reg.getLastName());
         if (competition == null)
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(),
@@ -141,8 +145,12 @@ public class CompetitionResource {
         List<Player> regPlayers = competition.getPlayers();
         if (regPlayers == null)
             regPlayers = List.of(player);
-        else
+        else if(regPlayers.contains(player)){
+            return Response.status(Response.Status.BAD_REQUEST.getStatusCode(),"Player already registered!").build();
+        }
+        else{
             regPlayers.add(player);
+        }
         competition.setPlayers(regPlayers);
         competitions.persist(competition);
         // TODO verify by mail?
