@@ -6,16 +6,30 @@
             v-model="playerSearch"
             :fetch-suggestions="queryPlayer"
             :placeholder="i18n.global.t('general.name')"
-            @keyup.enter="register"
+            @keyup.enter="signUp"
             hide-loading
             style="width: 100%"
         />
       </el-col>
-      <!-- TODO button to create a player -->
       <el-col :span="8" >
         <el-button
             style="width: 100%"
-            @click="register"
+            @click="signUp"
+        >
+          {{ i18n.global.t('general.signUp') }}
+        </el-button>
+      </el-col>
+    </el-row>
+    <el-row id="" :gutter="20" class="row-bg" justify="space-between">
+      <el-col :span="16">
+        <el-text class="mx-1" size="small" type="danger" >{{ $t('ViewPlayerRegistration.not_found') }}</el-text>
+<!--TODO only show warning when text is empty? And smaller in red?-->
+<!-- Why does text formatting not work above??? -->
+      </el-col>
+      <el-col :span="8" >
+        <el-button
+            style="width: 100%"
+            @click="playerRegistration"
         >
           {{ i18n.global.t('general.register') }}
         </el-button>
@@ -33,8 +47,8 @@
 </template>
 
 <script setup>
-import { inject, ref, watch } from "vue"
-import { i18n } from '@/main'
+import {inject, reactive, ref, watch} from "vue"
+import {i18n, router} from '@/main'
 import {auth} from "@/security/AuthService";
 import axios from "axios";
 import { useRoute } from "vue-router";
@@ -103,7 +117,7 @@ function queryPlayer(search, callback) {
     })
 }
 
-function register() {
+function signUp() {
   const validPlayers = queriedPlayer.filter((p) => {
     return p.value.includes(playerSearch.value)
   })
@@ -137,6 +151,10 @@ function register() {
       })
 
 }
+function playerRegistration(){
+  router.push({path: "/player/registration"})
+}
+
 </script>
 
 <style scoped>

@@ -26,7 +26,7 @@
       <template v-if="!game_started">
         <!-- TODO only if registration phase has started -->
         <!-- show registration page -->
-        <ViewRegister />
+        <ViewSignUp />
       </template>
       <template v-else>
         <!-- TODO show after plan has been published -->
@@ -44,7 +44,7 @@ import { auth } from "@/security/AuthService";
 import axios from "axios";
 import { router } from "@/main";
 
-import ViewRegister from "@/components/views/competition/ViewRegister.vue";
+import ViewSignUp from "@/components/views/competition/ViewSignUp.vue";
 import ViewGame from "@/components/views/competition/ViewGame.vue";
 
 const route = useRoute()

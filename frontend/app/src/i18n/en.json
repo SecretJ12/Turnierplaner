@@ -7,9 +7,11 @@
     "name": "Name",
     "description": "Description",
     "name_missing": "Please input a name",
-    "register": "Register"
+    "signUp": "sign up",
+    "register": "register"
   },
   "ViewPlayerRegistration": {
+    "headline": "Player Registration",
     "first_name": {
       "field": "First name",
       "prompt": "Please input your first name"
@@ -41,7 +43,8 @@
     },
     "sign_up": "Sign up",
     "registration_failed": "Player registration failed",
-    "registration_successful": "Player registered successfully"
+    "registration_successful": "Player registered successfully",
+    "not_found": "Can't find yourself? Maybe you forgot to register yourself."
   },
   "TournamentSettings": {
     "visible": "Visible",
