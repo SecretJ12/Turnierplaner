@@ -1,7 +1,9 @@
 package de.secretj12.turnierplaner.resources;
 
 import de.secretj12.turnierplaner.entities.Player;
+import de.secretj12.turnierplaner.entities.SexType;
 import de.secretj12.turnierplaner.repositories.PlayerRepository;
+import de.secretj12.turnierplaner.resources.FormEntities.PlayerRegistrationForm;
 import de.secretj12.turnierplaner.resources.FormEntities.ReducedPlayer;
 
 import javax.inject.Inject;
@@ -10,6 +12,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.Objects;
 
 @Path("/player")
 public class PlayerResource {
@@ -36,16 +39,31 @@ public class PlayerResource {
     @Path("/registration")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response playerRegistration(Player player) {
-        if (playerRepository.getByName(player.getFirstName(), player.getLastName()) != null)
+    public Response playerRegistration(PlayerRegistrationForm playerForm) {
+        System.out.println(playerForm.getSex());
+        if (playerRepository.getByName(playerForm.getFirstName(), playerForm.getLastName()) != null)
             return Response.status(Response.Status.CONFLICT.getStatusCode(),
                     "A player already exists with this name").build();
         // TODO check mail
         // TODO check phone number
+        Player newPlayer = new Player();
+        if (Objects.equals(playerForm.getSex(), "woman")){
+            newPlayer.setSex(SexType.male);
+        }else if (Objects.equals(playerForm.getSex(),"men")){
+            newPlayer.setSex(SexType.male);
+        }else{
+            return Response.status(Response.Status.CONFLICT.getStatusCode(),
+                    "Gender not recognized").build();
+        }
+        newPlayer.setFirstName(playerForm.getFirstName());
+        newPlayer.setLastName(playerForm.getLastName());
+        newPlayer.setBirthday(playerForm.getBirthdate());
+        newPlayer.setEmail(playerForm.getEmail());
+        newPlayer.setPhone(playerForm.getPhone());
+        newPlayer.setMailVerified(false);
+        newPlayer.setAdminVerified(false);
 
-        player.setMailVerified(false);
-        player.setAdminVerified(false);
-        playerRepository.persist(player);
+        playerRepository.persist(newPlayer);
 
         // TODO mail verification and verification by admin?
 

@@ -11,10 +11,7 @@ import java.util.UUID;
                 query="SELECT p FROM Player p " +
                         "WHERE p.firstName like CONCAT('%', ?1, '%') OR p.lastName = CONCAT('%', ?1, '%')" +
                         "OR CONCAT(p.firstName, ' ', p.lastName) like CONCAT('%', ?1, '%')" +
-                        "ORDER BY p.firstName, p.lastName"),
-        @NamedQuery(name="find",
-                query="SELECT p FROM Player p " +
-                        "WHERE p.firstName = ?1 OR p.lastName = ?2")
+                        "ORDER BY p.firstName, p.lastName")
 })
 public class Player {
     @Id

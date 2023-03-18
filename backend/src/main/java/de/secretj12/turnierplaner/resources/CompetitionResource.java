@@ -7,7 +7,7 @@ import de.secretj12.turnierplaner.repositories.CompetitionRepository;
 import de.secretj12.turnierplaner.repositories.TournamentRepository;
 import de.secretj12.turnierplaner.resources.FormEntities.ReducedCompetition;
 import de.secretj12.turnierplaner.resources.FormEntities.ReducedPlayer;
-import de.secretj12.turnierplaner.resources.FormEntities.RegisterPlayerForCompetition;
+import de.secretj12.turnierplaner.resources.FormEntities.PlayerSignUpForm;
 import io.quarkus.security.identity.SecurityIdentity;
 
 import javax.annotation.security.RolesAllowed;
@@ -104,10 +104,10 @@ public class CompetitionResource {
     }
 
     @GET
-    @Path("/registered")
+    @Path("/signUpedPlayers") //TODO signUped rename?
     @Produces(MediaType.APPLICATION_JSON)
-    public List<ReducedPlayer> getRegisteredPlayers(@QueryParam("tourName") String tourName,
-                                                    @QueryParam("compName") String compName) {
+    public List<ReducedPlayer> getSignedUpPlayers(@QueryParam("tourName") String tourName,
+                                                  @QueryParam("compName") String compName) {
         // TODO only allow for if role > director or current date after begin of registration phase
         Competition competition = competitions.getByName(tourName, compName);
         if (competition == null)
@@ -123,11 +123,11 @@ public class CompetitionResource {
     }
 
     @POST
-    @Path("/register")
+    @Path("/signUp")
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response registerPlayer(RegisterPlayerForCompetition reg) {
+    public Response signUpPlayer(PlayerSignUpForm reg) {
         // TODO only allow for role > director or current date in registration phase
         Competition competition = competitions.getByName(reg.getTourName(), reg.getCompName());
         Player player = players.playerRepository.getByName(reg.getFirstName(), reg.getLastName());

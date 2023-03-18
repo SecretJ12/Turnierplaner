@@ -47,7 +47,7 @@
 </template>
 
 <script setup>
-import {inject, reactive, ref, watch} from "vue"
+import {inject, ref, watch} from "vue"
 import {i18n, router} from '@/main'
 import {auth} from "@/security/AuthService";
 import axios from "axios";
@@ -79,7 +79,7 @@ function update() {
         })
     }
   });
-  axios.get(`/competition/registered?tourName=${route.params.tourId}&compName=${route.params.compId}`)
+  axios.get(`/competition/signUpedPlayers?tourName=${route.params.tourId}&compName=${route.params.compId}`)
     .then((response) => {
       if (response.status !== 200)
         players.value = []
@@ -137,7 +137,7 @@ function signUp() {
     tourName: route.params.tourId,
     compName: route.params.compId
   }
-  axios.post(`/competition/register`, form)
+  axios.post(`/competition/signUp`, form)
       .then((response) => {
         if (response.status === 200)
           ElMessage.success("erfolgreich erstellt") // TODO i18n

@@ -1,6 +1,6 @@
 package de.secretj12.turnierplaner.resources.FormEntities;
 
-public class RegisterPlayerForCompetition {
+public class PlayerSignUpForm {
 
     private String firstName;
     private String lastName;
