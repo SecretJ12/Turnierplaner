@@ -34,7 +34,7 @@ function settings() {
         @click="settings"
         id="settings" :icon="['fas', 'gear']" class="fa-2x" >
     </font-awesome-icon>
-    <font-awesome-icon v-if="!visible"
+    <font-awesome-icon v-if="canCreate && !visible"
         id="invisible" :icon="['fas', 'eye-slash']" class="fa-2x" >
     </font-awesome-icon>
   </div>

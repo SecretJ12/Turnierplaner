@@ -98,9 +98,7 @@ function submit(formRef) {
         name: data.name,
         description: data.description,
         type: data.type,
-        tournament: {
-          name: route.params.tourId
-        }
+        tourName: route.params.tourId
       }
 
       axios.post("/competition/add", server_data)
