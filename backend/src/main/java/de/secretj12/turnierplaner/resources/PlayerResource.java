@@ -3,8 +3,8 @@ package de.secretj12.turnierplaner.resources;
 import de.secretj12.turnierplaner.db.entities.Player;
 import de.secretj12.turnierplaner.db.entities.SexType;
 import de.secretj12.turnierplaner.db.repositories.PlayerRepository;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.PlayerRegistrationForm;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.ReducedPlayer;
+import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayerRegistrationForm;
+import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayer;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -26,11 +26,11 @@ public class PlayerResource {
     @Transactional
     @Path("/players")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<ReducedPlayer> listPlayer(@QueryParam("search") String search) {
+    public List<jUserPlayer> listPlayer(@QueryParam("search") String search) {
         if (search.length() == 0)
             return List.of();
         return playerRepository
-                .filter(search).map(ReducedPlayer::new)
+                .filter(search).map(jUserPlayer::new)
                 .toList();
     }
 
@@ -39,7 +39,7 @@ public class PlayerResource {
     @Path("/registration")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response playerRegistration(PlayerRegistrationForm playerForm) {
+    public Response playerRegistration(jUserPlayerRegistrationForm playerForm) {
         System.out.println(playerForm.getSex());
         if (playerRepository.getByName(playerForm.getFirstName(), playerForm.getLastName()) != null)
             return Response.status(Response.Status.CONFLICT.getStatusCode(),

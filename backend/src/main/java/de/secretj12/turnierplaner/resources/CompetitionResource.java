@@ -5,9 +5,11 @@ import de.secretj12.turnierplaner.db.entities.Player;
 import de.secretj12.turnierplaner.db.entities.Tournament;
 import de.secretj12.turnierplaner.db.repositories.CompetitionRepository;
 import de.secretj12.turnierplaner.db.repositories.TournamentRepository;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.ReducedCompetition;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.ReducedPlayer;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.PlayerSignUpForm;
+import de.secretj12.turnierplaner.resources.jsonEntities.director.jDirectorCompetitionAdd;
+import de.secretj12.turnierplaner.resources.jsonEntities.director.jDirectorCompetitionUpdate;
+import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserCompetition;
+import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayer;
+import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayerSignUpForm;
 import io.quarkus.security.identity.SecurityIdentity;
 
 import javax.annotation.security.RolesAllowed;
@@ -34,9 +36,9 @@ public class CompetitionResource {
     @Path("/list")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public List<ReducedCompetition> getAllCompetitions(@QueryParam("tourName") String tourName) {
+    public List<jUserCompetition> getAllCompetitions(@QueryParam("tourName") String tourName) {
         if (canSee(tourName))
-            return competitions.listByName(tourName).stream().map(ReducedCompetition::new).toList();
+            return competitions.listByName(tourName).stream().map(jUserCompetition::new).toList();
         return null;
     }
 
@@ -44,9 +46,11 @@ public class CompetitionResource {
     @Path("/details")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public ReducedCompetition getCompetition(@QueryParam("tourName") String tourName, @QueryParam("compName") String compName) {
+    public jUserCompetition getCompetition(@QueryParam("tourName") String tourName, @QueryParam("compName") String compName) {
+        if (securityIdentity.hasRole("director"))
+            return new jDirectorCompetitionUpdate(competitions.getByName(tourName, compName));
         if (canSee(tourName))
-            return new ReducedCompetition(competitions.getByName(tourName, compName));
+            return new jUserCompetition(competitions.getByName(tourName, compName));
         return null;
     }
 
@@ -54,6 +58,7 @@ public class CompetitionResource {
     @Path("/canEdit")
     @Produces(MediaType.TEXT_PLAIN)
     public Response canEdit() {
+        // TODO don't return via status code but via text
         if (securityIdentity.hasRole("director"))
             return Response.ok("Authorized").build();
         else
@@ -66,20 +71,22 @@ public class CompetitionResource {
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response addCompetition(Competition competition) {
-        if (competition.getTournament() == null)
+    public Response addCompetition(jDirectorCompetitionAdd competition) {
+        if (competition.getName() == null)
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(),
                     "No tournament specified").build();
-        if (competitions.getByName(competition.getTournament().getName(), competition.getName()) != null)
+
+        if (competitions.getByName(competition.getTourName(), competition.getName()) != null)
             return Response.status(Response.Status.CONFLICT).build();
 
-        Tournament tournament = tournaments.getByName(competition.getTournament().getName());
+        Tournament tournament = tournaments.getByName(competition.getTourName());
         if (tournament == null)
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(),
                     "Tournament doesn't exist").build();
 
-        competition.setTournament(tournament);
-        competitions.persist(competition);
+        Competition dbCompetition = competition.toDB();
+        dbCompetition.setTournament(tournament);
+        competitions.persist(dbCompetition);
         return Response.ok("successfully added").build();
     }
 
@@ -89,16 +96,16 @@ public class CompetitionResource {
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response updateCompetition(Competition competition) {
-        Competition savedCompetition = competitions.getById(competition.getId());
-        if (savedCompetition == null)
+    public Response updateCompetition(jDirectorCompetitionUpdate competition) {
+        Competition dbCompetition = competitions.getById(competition.getId());
+        if (dbCompetition == null)
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(),
                     "Competition doesn't exist").build();
 
-        competitions.persist(savedCompetition);
-        savedCompetition.setName(competition.getName());
-        savedCompetition.setDescription(competition.getDescription());
-        savedCompetition.setType(competition.getType());
+        competitions.persist(dbCompetition);
+        dbCompetition.setName(competition.getName());
+        dbCompetition.setDescription(competition.getDescription());
+        dbCompetition.setType(competition.getType());
 
         return Response.ok("successfully changed").build();
     }
@@ -106,14 +113,14 @@ public class CompetitionResource {
     @GET
     @Path("/signUpedPlayers") //TODO signUped rename?
     @Produces(MediaType.APPLICATION_JSON)
-    public List<ReducedPlayer> getSignedUpPlayers(@QueryParam("tourName") String tourName,
-                                                  @QueryParam("compName") String compName) {
+    public List<jUserPlayer> getSignedUpPlayers(@QueryParam("tourName") String tourName,
+                                                @QueryParam("compName") String compName) {
         // TODO only allow for if role > director or current date after begin of registration phase
         Competition competition = competitions.getByName(tourName, compName);
         if (competition == null)
             return null;
 
-        return competition.getPlayers().stream().map(ReducedPlayer::new)
+        return competition.getPlayers().stream().map(jUserPlayer::new)
                 .sorted((A, B) -> {
                     if (A.getFirstName().equals(B.getFirstName()))
                         return A.getLastName().compareTo(B.getLastName());
@@ -127,7 +134,7 @@ public class CompetitionResource {
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response signUpPlayer(PlayerSignUpForm reg) {
+    public Response signUpPlayer(jUserPlayerSignUpForm reg) {
         // TODO only allow for role > director or current date in registration phase
         Competition competition = competitions.getByName(reg.getTourName(), reg.getCompName());
         Player player = players.playerRepository.getByName(reg.getFirstName(), reg.getLastName());

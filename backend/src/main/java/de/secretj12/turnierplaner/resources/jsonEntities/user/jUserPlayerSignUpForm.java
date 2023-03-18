@@ -1,6 +1,6 @@
 package de.secretj12.turnierplaner.resources.jsonEntities.user;
 
-public class PlayerSignUpForm {
+public class jUserPlayerSignUpForm {
 
     private String firstName;
     private String lastName;

@@ -2,7 +2,7 @@ package de.secretj12.turnierplaner.resources.jsonEntities.user;
 
 import java.time.LocalDate;
 
-public class PlayerRegistrationForm {
+public class jUserPlayerRegistrationForm {
 
     String firstName;
     String lastName;

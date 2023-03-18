@@ -4,19 +4,19 @@ import de.secretj12.turnierplaner.db.entities.Player;
 
 import java.util.UUID;
 
-public class ReducedPlayer {
+public class jUserPlayer {
     private UUID id;
     private String firstName;
 
     private String lastName;
 
-    public ReducedPlayer(UUID id, String firstName, String lastName) {
+    public jUserPlayer(UUID id, String firstName, String lastName) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
     }
 
-    public ReducedPlayer(Player p) {
+    public jUserPlayer(Player p) {
         this.id = p.getId();
         this.firstName = p.getFirstName();
         this.lastName = p.getLastName();

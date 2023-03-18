@@ -2,6 +2,9 @@ package de.secretj12.turnierplaner.resources;
 
 import de.secretj12.turnierplaner.db.entities.Tournament;
 import de.secretj12.turnierplaner.db.repositories.TournamentRepository;
+import de.secretj12.turnierplaner.resources.jsonEntities.director.jDirectorTournamentAdd;
+import de.secretj12.turnierplaner.resources.jsonEntities.director.jDirectorTournamentUpdate;
+import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserTournament;
 import io.quarkus.security.identity.SecurityIdentity;
 
 import javax.annotation.security.RolesAllowed;
@@ -10,7 +13,7 @@ import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Collection;
+import java.util.List;
 
 @Path("/tournament")
 public class TournamentResource {
@@ -24,11 +27,12 @@ public class TournamentResource {
     @Path("/list")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Collection<Tournament> getAllTournaments() {
+    public Response getAllTournaments() {
+        // TODO think about sorting them, creation date?
         if (securityIdentity.hasRole("director"))
-            return tournaments.listAll();
+             return Response.ok(tournaments.listAll().stream().map(jDirectorTournamentAdd::new).toList()).build();
         else
-            return tournaments.listAllVisible();
+            return Response.ok(tournaments.listAllVisible().stream().map(jUserTournament::new).toList()).build();
     }
 
     @GET
@@ -36,6 +40,7 @@ public class TournamentResource {
     @RolesAllowed("director")
     @Produces(MediaType.TEXT_PLAIN)
     public Response canCreate() {
+        // TODO don't return via status code but via text
         return Response.ok("Authorized").build();
     }
 
@@ -43,14 +48,16 @@ public class TournamentResource {
     @Path("/details")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Tournament getTournament(@QueryParam("tourName") String name) {
+    public Response getTournament(@QueryParam("tourName") String name) {
         Tournament tournament = tournaments.getByName(name);
-        if (securityIdentity.hasRole("director") || tournament.isVisible())
-            return tournament;
-        return null;
+        if (securityIdentity.hasRole("director"))
+            return Response.ok(new jDirectorTournamentUpdate(tournament)).build();
+        if (tournament.isVisible())
+            return Response.ok(new jUserTournament(tournament)).build();
+        return Response.status(Response.Status.UNAUTHORIZED).build();
     }
 
-    private Response checkDates(Tournament tournament) {
+    private Response checkDates(jDirectorTournamentAdd tournament) {
         if (tournament.getBeginRegistration().isAfter(tournament.getEndRegistration()))
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(),
                             "Begin of registration phase needs to be before it's end")
@@ -72,16 +79,17 @@ public class TournamentResource {
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response addTournament(Tournament tournament) {
-
-        // TODO check if name exists
-        if (getTournament(tournament.getName()) != null)
+    public Response addTournament(jDirectorTournamentAdd tournament) {
+        System.out.println(tournament);
+        if (tournament.getName() == null)
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        if (tournaments.getByName(tournament.getName()) != null)
             return Response.status(Response.Status.CONFLICT).build();
         Response r = checkDates(tournament);
         if (r != null)
             return r;
 
-        tournaments.persist(tournament);
+        tournaments.persist(tournament.toDB());
         return Response.ok("successfully added").build();
     }
 
@@ -91,24 +99,28 @@ public class TournamentResource {
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response updateTournament(Tournament tournament) {
-        if (!getTournament(tournament.getName()).getId()
-                .equals(tournament.getId()))
+    public Response updateTournament(jDirectorTournamentUpdate tournament) {
+        Tournament possibleDuplicate = tournaments.getByName(tournament.getName());
+        if (possibleDuplicate != null &&
+                !possibleDuplicate.getId().equals(tournament.getId()))
             return Response.status(Response.Status.CONFLICT).build();
-        Tournament tour = tournaments.getById(tournament.getId());
+
+        Tournament dbTournament = tournaments.getById(tournament.getId());
+        if (dbTournament == null)
+            return Response.status(Response.Status.BAD_REQUEST).build();
         Response r = checkDates(tournament);
         if (r != null)
             return r;
 
         tournaments.getById(tournament.getId());
-        tour.setName(tournament.getName());
-        tour.setDescription(tournament.getDescription());
-        tour.setVisible(tournament.isVisible());
-        tour.setBeginRegistration(tournament.getBeginRegistration());
-        tour.setEndRegistration(tournament.getEndRegistration());
-        tour.setBeginGamePhase(tournament.getBeginGamePhase());
-        tour.setEndGamePhase(tournament.getEndGamePhase());
-        tournaments.persist(tour);
+        dbTournament.setName(tournament.getName());
+        dbTournament.setDescription(tournament.getDescription());
+        dbTournament.setVisible(tournament.isVisible());
+        dbTournament.setBeginRegistration(tournament.getBeginRegistration());
+        dbTournament.setEndRegistration(tournament.getEndRegistration());
+        dbTournament.setBeginGamePhase(tournament.getBeginGamePhase());
+        dbTournament.setEndGamePhase(tournament.getEndGamePhase());
+        tournaments.persist(dbTournament);
         return Response.ok("successfully changed").build();
     }
 }
