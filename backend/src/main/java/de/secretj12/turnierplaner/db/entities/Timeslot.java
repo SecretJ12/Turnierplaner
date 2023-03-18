@@ -1,4 +1,4 @@
-package de.secretj12.turnierplaner.entities;
+package de.secretj12.turnierplaner.db.entities;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

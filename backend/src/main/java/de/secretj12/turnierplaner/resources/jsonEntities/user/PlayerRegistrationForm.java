@@ -1,6 +1,4 @@
-package de.secretj12.turnierplaner.resources.FormEntities;
-
-import de.secretj12.turnierplaner.entities.SexType;
+package de.secretj12.turnierplaner.resources.jsonEntities.user;
 
 import java.time.LocalDate;
 

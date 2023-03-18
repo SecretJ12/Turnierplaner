@@ -1,10 +1,10 @@
 package de.secretj12.turnierplaner.resources;
 
-import de.secretj12.turnierplaner.entities.Player;
-import de.secretj12.turnierplaner.entities.SexType;
-import de.secretj12.turnierplaner.repositories.PlayerRepository;
-import de.secretj12.turnierplaner.resources.FormEntities.PlayerRegistrationForm;
-import de.secretj12.turnierplaner.resources.FormEntities.ReducedPlayer;
+import de.secretj12.turnierplaner.db.entities.Player;
+import de.secretj12.turnierplaner.db.entities.SexType;
+import de.secretj12.turnierplaner.db.repositories.PlayerRepository;
+import de.secretj12.turnierplaner.resources.jsonEntities.user.PlayerRegistrationForm;
+import de.secretj12.turnierplaner.resources.jsonEntities.user.ReducedPlayer;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;

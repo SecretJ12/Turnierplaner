@@ -1,9 +1,9 @@
 package de.secretj12.turnierplaner.startup;
 
-import de.secretj12.turnierplaner.entities.*;
-import de.secretj12.turnierplaner.repositories.CompetitionRepository;
-import de.secretj12.turnierplaner.repositories.PlayerRepository;
-import de.secretj12.turnierplaner.repositories.TournamentRepository;
+import de.secretj12.turnierplaner.db.entities.*;
+import de.secretj12.turnierplaner.db.repositories.CompetitionRepository;
+import de.secretj12.turnierplaner.db.repositories.PlayerRepository;
+import de.secretj12.turnierplaner.db.repositories.TournamentRepository;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;

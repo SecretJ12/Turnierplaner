@@ -1,4 +1,4 @@
-package de.secretj12.turnierplaner.resources.FormEntities;
+package de.secretj12.turnierplaner.resources.jsonEntities.user;
 
 public class PlayerSignUpForm {
 

@@ -1,6 +1,6 @@
-package de.secretj12.turnierplaner.entities.groups;
+package de.secretj12.turnierplaner.db.entities.groups;
 
-import de.secretj12.turnierplaner.entities.Competition;
+import de.secretj12.turnierplaner.db.entities.Competition;
 
 import javax.persistence.*;
 import java.util.UUID;

@@ -1,6 +1,6 @@
-package de.secretj12.turnierplaner.entities.groups;
+package de.secretj12.turnierplaner.db.entities.groups;
 
-import de.secretj12.turnierplaner.entities.Match;
+import de.secretj12.turnierplaner.db.entities.Match;
 
 import javax.persistence.*;
 import java.io.Serializable;
