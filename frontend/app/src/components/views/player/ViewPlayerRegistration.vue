@@ -1,5 +1,5 @@
 <template>
-  <div id="container">
+  <div id="container" v-if="!registered">
     <div>
       <h2>
         {{ $t('ViewPlayerRegistration.headline') }}
@@ -134,17 +134,25 @@
       </el-form>
     </div>
   </div>
+  <div id="container" v-else>
+    <h2>
+      {{$t('general.success')}}
+    </h2>
+    <p>
+      {{$t('ViewPlayerRegistration.after')}}
+    </p>
+  </div>
 </template>
 
 <script setup>
 
 import {reactive, ref} from 'vue'
-import {i18n, router} from "@/main";
+import {i18n} from "@/main";
 import axios from "axios";
 import {ElMessage} from "element-plus";
 
 const formRef = ref()
-
+const registered = ref(false)
 const data = reactive({
   firstName: '',
   lastName: '',
@@ -161,7 +169,7 @@ const submitForm = (formEl) => {
           .then((result) => {
             if (result.status === 200) {
               ElMessage.success(i18n.global.t("ViewPlayerRegistration.registration_successful"))
-              router.push({path: "/player/registration/confirmation"})
+              registered.value = true
             } else {
               ElMessage.error(i18n.global.t("ViewPlayerRegistration.registration_failed"))
             }

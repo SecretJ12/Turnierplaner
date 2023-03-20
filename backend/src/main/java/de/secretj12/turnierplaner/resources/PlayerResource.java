@@ -9,6 +9,7 @@ import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayerRegistr
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayer;
 
 import io.quarkus.mailer.Mailer;
+import io.quarkus.panache.common.Parameters;
 import io.smallrye.common.annotation.Blocking;
 
 import javax.inject.Inject;
@@ -17,9 +18,9 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Path("/player")
 public class PlayerResource {
@@ -99,5 +100,28 @@ public class PlayerResource {
     }
 
 
+    @GET
+    @Transactional
+    @Path("/verification")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response verification(@QueryParam("code") String code) {
+        System.out.println(code);
+        VerificationCode verificationCode = verificationCodeRepository.find("FROM VerificationCode v WHERE v.id = :code",
+                Parameters.with("code", UUID.fromString(code)).map()).firstResultOptional().orElse(null);
+        if (verificationCode == null){
+            System.out.println("ERROR no matching verification code");
+            return Response.status(Response.Status.CONFLICT.getStatusCode(),"This verification code is not correct!").build();
+        }
+        Player player = playerRepository.find("FROM Player p where p.id= :code",Parameters.with("code",verificationCode.getPlayer().getId()).map()).firstResultOptional().orElse(null);
+        if (player == null){
+            System.out.println("ERROR no matching player");
+            return Response.status(Response.Status.CONFLICT.getStatusCode(),"ERROR could not find a matching player with this verification code!").build();
+        }
+        player.setMailVerified(true);
+        playerRepository.persist(player);
+        verificationCodeRepository.delete(verificationCode);
+        System.out.println("SUCCESS");
+        return Response.status(Response.Status.ACCEPTED.getStatusCode(),"Successfully verified!").build();
+    }
 
 }

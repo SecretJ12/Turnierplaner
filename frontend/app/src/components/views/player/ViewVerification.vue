@@ -18,24 +18,18 @@
 </template>
 
 <script setup>
-import {ref} from "vue";
-
-console.log("helo world")
 import axios from "axios";
-const verified = checkVerificationCode()
-const test = ref(false)
-function checkVerificationCode(){
-  let success = false;
+async function checkVerificationCode(){
   let verificationCode =new URL(location.href).searchParams.get('code')
-  axios.post('/player/verification',verificationCode)
+  return axios.get('/player/verification?code='+verificationCode)
       .then((response) =>{
-        success = response.status === 200
+        return  response.status === 202
           }
-      ).catch((error) => {
-        success =  false
+      ).catch((_) => {
+        return   false
   })
-  return success
 }
+const verified = checkVerificationCode().then((res) => {return res})
 </script>
 
 <style scoped>

@@ -64,7 +64,6 @@ import viewCompetition from "@/components/views/competition/ViewCompetition.vue"
 import viewPlayerRegistration from '@/components/views/player/ViewPlayerRegistration.vue'
 
 import viewTemplates from '@/components/views/ViewTemplates.vue'
-import viewAfterPlayerRegistration from "@/components/views/player/ViewAfterPlayerRegistration.vue";
 import viewVerification from "@/components/views/player/ViewVerification.vue";
 
 const routes = [
@@ -107,11 +106,6 @@ const routes = [
         path: "/player/registration",
         name: "Player Registration",
         component: viewPlayerRegistration
-    },
-    {
-        path: "/player/registration/confirmation",
-        name: "Waiting for confirmation",
-        component: viewAfterPlayerRegistration
     },
     {
         path: "/player/verification",
