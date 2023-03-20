@@ -10,6 +10,7 @@ import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayer;
 
 import io.quarkus.mailer.Mailer;
 import io.quarkus.panache.common.Parameters;
+import io.quarkus.scheduler.Scheduled;
 import io.smallrye.common.annotation.Blocking;
 
 import javax.inject.Inject;
@@ -118,6 +119,12 @@ public class PlayerResource {
         verificationCodeRepository.delete(verificationCode);
         System.out.println("SUCCESS");
         return Response.status(Response.Status.ACCEPTED.getStatusCode(),"Successfully verified!").build();
+    }
+
+    @Transactional
+    @Scheduled(every = "30m",identity = "clear-verification-code")
+    void clear(){
+        verificationCodeRepository.delete("FROM VerificationCode v WHERE v.expiration_date < NOW()");
     }
 
 }

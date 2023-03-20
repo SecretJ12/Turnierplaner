@@ -87,7 +87,11 @@
           <groupId>io.quarkus</groupId>
           <artifactId>quarkus-oidc</artifactId>
         </dependency>
-
+        <!-- scheduled task -->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-quartz</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
