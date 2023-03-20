@@ -5,11 +5,9 @@ import de.secretj12.turnierplaner.db.entities.SexType;
 import de.secretj12.turnierplaner.db.entities.VerificationCode;
 import de.secretj12.turnierplaner.db.repositories.PlayerRepository;
 import de.secretj12.turnierplaner.db.repositories.VerificationCodeRepository;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayerRegistrationForm;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayer;
-
+import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayerRegistrationForm;
 import io.quarkus.mailer.Mailer;
-import io.quarkus.panache.common.Parameters;
 import io.quarkus.scheduler.Scheduled;
 import io.smallrye.common.annotation.Blocking;
 
@@ -60,14 +58,13 @@ public class PlayerResource {
         if (playerRepository.getByName(playerForm.getFirstName(), playerForm.getLastName()) != null)
             return Response.status(Response.Status.CONFLICT.getStatusCode(),
                     "A player already exists with this name").build();
-        // TODO check mail
-        // TODO check phone number
+        // TODO check phone number (only valid phone number)
         Player newPlayer = new Player();
-        if (Objects.equals(playerForm.getSex(), "woman")){
+        if (Objects.equals(playerForm.getSex(), "woman")) {
             newPlayer.setSex(SexType.male);
-        }else if (Objects.equals(playerForm.getSex(),"men")){
+        } else if (Objects.equals(playerForm.getSex(), "men")) {
             newPlayer.setSex(SexType.male);
-        }else{
+        } else {
             return Response.status(Response.Status.CONFLICT.getStatusCode(),
                     "Gender not recognized").build();
         }
@@ -77,6 +74,7 @@ public class PlayerResource {
         newPlayer.setEmail(playerForm.getEmail());
         newPlayer.setPhone(playerForm.getPhone());
         newPlayer.setMailVerified(false);
+        // TODO Admin verification
         newPlayer.setAdminVerified(false);
         playerRepository.persist(newPlayer);
 
@@ -85,17 +83,13 @@ public class PlayerResource {
         verificationCode.setExpiration_date(LocalDateTime.now().plusMinutes(10));
         verificationCodeRepository.persist(verificationCode);
 
-        try{
-            mailer.send(mailTemplates.verificationMail(newPlayer.getEmail(),verificationCode.getId().toString() ));
-        }catch (Exception e){
+        try {
+            mailer.send(mailTemplates.verificationMail(newPlayer.getEmail(), verificationCode.getId().toString()));
+        } catch (Exception e) {
             e.printStackTrace();
             return Response.status(Response.Status.CONFLICT.getStatusCode(),
                     "Problem sending you the verification mail. Please try again later.").build();
         }
-
-
-
-        // TODO mail verification and verification by admin?
 
         return Response.ok("successfully added").build();
     }
@@ -106,24 +100,22 @@ public class PlayerResource {
     @Path("/verification")
     @Produces(MediaType.TEXT_PLAIN)
     public Response verification(@QueryParam("code") String code) {
-        System.out.println(code);
-        VerificationCode verificationCode = verificationCodeRepository.find("FROM VerificationCode v WHERE v.id = :code",
-                Parameters.with("code", UUID.fromString(code)).map()).firstResultOptional().orElse(null);
-        if (verificationCode == null){
-            System.out.println("ERROR no matching verification code");
-            return Response.status(Response.Status.CONFLICT.getStatusCode(),"This verification code is not correct!").build();
+        VerificationCode verificationCode = verificationCodeRepository.findByUUID(UUID.fromString(code));
+        if (verificationCode == null) {
+            return Response.status(Response.Status.CONFLICT.getStatusCode(),
+                    "This verification code is not correct!").build();
         }
+
         Player player = verificationCode.getPlayer();
         player.setMailVerified(true);
         playerRepository.persist(player);
         verificationCodeRepository.delete(verificationCode);
-        System.out.println("SUCCESS");
-        return Response.status(Response.Status.ACCEPTED.getStatusCode(),"Successfully verified!").build();
+        return Response.status(Response.Status.ACCEPTED.getStatusCode(), "Successfully verified!").build();
     }
 
     @Transactional
-    @Scheduled(every = "30m",identity = "clear-verification-code")
-    void clear(){
+    @Scheduled(every = "30m", identity = "clear-verification-code")
+    void clear() {
         verificationCodeRepository.delete("FROM VerificationCode v WHERE v.expiration_date < NOW()");
     }
 
