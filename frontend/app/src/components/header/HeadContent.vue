@@ -1,9 +1,3 @@
-<script setup>
-import HeaderLeft from './HeaderLeft.vue'
-import HeaderRight from "./HeaderRight.vue"
-import LoadingBar from "./LoadingBar.vue";
-</script>
-
 <template>
   <header>
     <HeaderLeft />
@@ -11,6 +5,13 @@ import LoadingBar from "./LoadingBar.vue";
   </header>
   <LoadingBar />
 </template>
+
+
+<script setup>
+import HeaderLeft from './HeaderLeft.vue'
+import HeaderRight from "./HeaderRight.vue"
+import LoadingBar from "./LoadingBar.vue";
+</script>
 
 <style scoped>
 header {

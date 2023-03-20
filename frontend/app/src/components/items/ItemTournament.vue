@@ -1,3 +1,19 @@
+<template>
+  <div id="item">
+    <div id="content" @click="selected" >
+      <h2>{{ name }}</h2>
+      <p>{{ description }}</p>
+    </div>
+    <font-awesome-icon v-if="canCreate"
+                       @click="settings"
+                       id="settings" :icon="['fas', 'gear']" class="fa-2x" >
+    </font-awesome-icon>
+    <font-awesome-icon v-if="canCreate && !visible"
+                       id="invisible" :icon="['fas', 'eye-slash']" class="fa-2x" >
+    </font-awesome-icon>
+  </div>
+</template>
+
 <script setup>
 
 const props = defineProps({
@@ -23,22 +39,6 @@ function settings() {
   emit('settings', props.name);
 }
 </script>
-
-<template>
-  <div id="item">
-    <div id="content" @click="selected" >
-      <h2>{{ name }}</h2>
-      <p>{{ description }}</p>
-    </div>
-    <font-awesome-icon v-if="canCreate"
-        @click="settings"
-        id="settings" :icon="['fas', 'gear']" class="fa-2x" >
-    </font-awesome-icon>
-    <font-awesome-icon v-if="canCreate && !visible"
-        id="invisible" :icon="['fas', 'eye-slash']" class="fa-2x" >
-    </font-awesome-icon>
-  </div>
-</template>
 
 <style scoped>
   #item {

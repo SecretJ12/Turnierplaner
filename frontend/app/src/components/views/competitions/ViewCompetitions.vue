@@ -1,3 +1,39 @@
+<template>
+  <div id="container">
+    <h2>
+      <font-awesome-icon v-if=canEdit
+                         @click="settings"
+                         id="settings" :icon="['fas', 'gear']" class="fa-1x" >
+      </font-awesome-icon>
+      {{route.params.tourId}}
+    </h2>
+    <div id="content">
+      <div id="competitions">
+        <item v-for="competition in competitions"
+              :name="competition.name"
+              :description="competition.description"
+              :type="competition.type"
+              :can-edit="canEdit"
+              @selected="selected"
+              @settings="settingsItem" />
+        <AddItem v-if="canEdit" @selected="addCompetition"/>
+      </div>
+      <el-steps direction="vertical" :active="progress"
+                :process-status="statusActive"
+                finish-status="success"
+                id="progress">
+        <el-step :title="$t('TournamentSettings.registration_phase')"
+                 :description="beginRegistration.toLocaleString(i18n.global.t('lang'), options)
+            +'\n - '+endRegistration.toLocaleString(i18n.global.t('lang'), options)" />
+        <el-step :title="$t('TournamentSettings.game_phase')"
+                 :description="beginGamePhase.toLocaleString(i18n.global.t('lang'), options)
+            +' - '+endGamePhase.toLocaleString(i18n.global.t('lang'), options)"
+        />
+      </el-steps>
+    </div>
+  </div>
+</template>
+
 <script setup>
 import Item from '../../items/ItemCompetition.vue';
 import {inject, ref, watch} from "vue";
@@ -112,41 +148,6 @@ const options = {
 
 </script>
 
-<template>
-  <div id="container">
-    <h2>
-      <font-awesome-icon v-if=canEdit
-          @click="settings"
-          id="settings" :icon="['fas', 'gear']" class="fa-1x" >
-      </font-awesome-icon>
-      {{route.params.tourId}}
-    </h2>
-    <div id="content">
-      <div id="competitions">
-        <item v-for="competition in competitions"
-              :name="competition.name"
-              :description="competition.description"
-              :type="competition.type"
-              :can-edit="canEdit"
-              @selected="selected"
-              @settings="settingsItem" />
-        <AddItem v-if="canEdit" @selected="addCompetition"/>
-      </div>
-      <el-steps direction="vertical" :active="progress"
-                :process-status="statusActive"
-                finish-status="success"
-                id="progress">
-        <el-step :title="$t('TournamentSettings.registration_phase')"
-          :description="beginRegistration.toLocaleString(i18n.global.t('lang'), options)
-            +'\n - '+endRegistration.toLocaleString(i18n.global.t('lang'), options)" />
-        <el-step :title="$t('TournamentSettings.game_phase')"
-          :description="beginGamePhase.toLocaleString(i18n.global.t('lang'), options)
-            +' - '+endGamePhase.toLocaleString(i18n.global.t('lang'), options)"
-        />
-      </el-steps>
-    </div>
-  </div>
-</template>
 
 <style scoped>
   #settings {

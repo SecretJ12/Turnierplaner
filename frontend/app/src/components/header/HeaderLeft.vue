@@ -1,3 +1,10 @@
+<template>
+  <div id="headerLeft" @click="home">
+    <font-awesome-icon :icon="['fas', 'flag']" class="fa-2x" ></font-awesome-icon>
+    <h1>{{$t("title")}}</h1>
+  </div>
+</template>
+
 <script setup>
 import { router } from '/src/main'
 
@@ -5,13 +12,6 @@ function home() {
   router.replace({path:"/"})
 }
 </script>
-
-<template>
-  <div id="headerLeft" @click="home">
-    <font-awesome-icon :icon="['fas', 'flag']" class="fa-2x" ></font-awesome-icon>
-    <h1>{{$t("title")}}</h1>
-  </div>
-</template>
 
 <style scoped>
   #headerLeft {

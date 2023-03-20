@@ -1,3 +1,18 @@
+<template>
+  <div id="tournaments">
+    <item v-for="tournament in tournaments" :key="tournament.name"
+          :name="tournament.name" :description="tournament.description"
+          :beginRegistration="new Date(tournament.beginRegistration)"
+          :endRegistration="new Date(tournament.endRegistration)"
+          :beginGamePhase="new Date(tournament.beginGamePhase)" :endGamePhase="new Date(tournament.endGamePhase)"
+          :visible="tournament.visible"
+          :canCreate=canCreate
+          @selected="selected"
+          @settings="settingsItem"/>
+    <AddItem v-if="canCreate" @selected="addTournament"/>
+  </div>
+</template>
+
 <script setup>
 import {inject, ref, watch} from 'vue';
 import Item from '../../items/ItemTournament.vue';
@@ -50,21 +65,6 @@ function addTournament() {
   router.push({path: '/createTournament'})
 }
 </script>
-
-<template>
-  <div id="tournaments">
-    <item v-for="tournament in tournaments" :key="tournament.name"
-          :name="tournament.name" :description="tournament.description"
-          :beginRegistration="new Date(tournament.beginRegistration)"
-          :endRegistration="new Date(tournament.endRegistration)"
-          :beginGamePhase="new Date(tournament.beginGamePhase)" :endGamePhase="new Date(tournament.endGamePhase)"
-          :visible="tournament.visible"
-          :canCreate=canCreate
-          @selected="selected"
-          @settings="settingsItem"/>
-    <AddItem v-if="canCreate" @selected="addTournament"/>
-  </div>
-</template>
 
 <style scoped>
 #tournaments {

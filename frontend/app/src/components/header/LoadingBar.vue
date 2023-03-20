@@ -1,3 +1,9 @@
+<template>
+  <div v-if="loading" id="progress">
+    <div id="progress-bar"></div>
+  </div>
+</template>
+
 <script setup>
 import { ref } from 'vue'
 import axios from "axios";
@@ -19,12 +25,6 @@ axios.interceptors.response.use(function (config) {
   return Promise.reject(error);
 })
 </script>
-
-<template>
-  <div v-if="loading" id="progress">
-    <div id="progress-bar"></div>
-  </div>
-</template>
 
 <style scoped>
 

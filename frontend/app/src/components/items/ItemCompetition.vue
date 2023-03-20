@@ -1,3 +1,20 @@
+<template>
+  <div id="item">
+    <div id="content" @click="selected">
+      <h2>{{ name }}</h2>
+      <p>{{ description }}</p>
+    </div>
+    <div id="type">
+      <font-awesome-icon v-if="type==='GROUPS'" :icon="['fas', 'table-cells-large']" class="fa-2x" ></font-awesome-icon>
+      <font-awesome-icon v-else-if="type==='KNOCKOUT'" :icon="['fas', 'user-group']" class="fa-2x" ></font-awesome-icon>
+    </div>
+    <font-awesome-icon v-if="canEdit"
+                       @click="settings"
+                       id="settings" :icon="['fas', 'gear']" class="fa-2x" >
+    </font-awesome-icon>
+  </div>
+</template>
+
 <script setup>
 
 const props = defineProps({
@@ -18,23 +35,6 @@ function settings() {
   emit('settings', props.name);
 }
 </script>
-
-<template>
-  <div id="item">
-    <div id="content" @click="selected">
-      <h2>{{ name }}</h2>
-      <p>{{ description }}</p>
-    </div>
-    <div id="type">
-      <font-awesome-icon v-if="type==='GROUPS'" :icon="['fas', 'table-cells-large']" class="fa-2x" ></font-awesome-icon>
-      <font-awesome-icon v-else-if="type==='KNOCKOUT'" :icon="['fas', 'user-group']" class="fa-2x" ></font-awesome-icon>
-    </div>
-    <font-awesome-icon v-if="canEdit"
-                       @click="settings"
-                       id="settings" :icon="['fas', 'gear']" class="fa-2x" >
-    </font-awesome-icon>
-  </div>
-</template>
 
 <style scoped>
   #item {

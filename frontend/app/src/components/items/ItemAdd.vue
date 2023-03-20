@@ -1,3 +1,9 @@
+<template>
+  <div id="item" @click="selected">
+    <font-awesome-icon id="icon" :icon="['fas', 'plus']" class="fa-10x " ></font-awesome-icon>
+  </div>
+</template>
+
 <script setup>
 
 const props = defineProps();
@@ -8,12 +14,6 @@ function selected() {
   emit('selected');
 }
 </script>
-
-<template>
-  <div id="item" @click="selected">
-    <font-awesome-icon id="icon" :icon="['fas', 'plus']" class="fa-10x " ></font-awesome-icon>
-  </div>
-</template>
 
 <style scoped>
 #item {
