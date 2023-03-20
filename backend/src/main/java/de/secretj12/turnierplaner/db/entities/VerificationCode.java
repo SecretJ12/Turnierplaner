@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "verificationcode")
+@Table(name = "verificationcodes")
 public class VerificationCode {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -35,11 +35,11 @@ public class VerificationCode {
         this.player = player;
     }
 
-    public LocalDateTime getExpiration_date() {
+    public LocalDateTime getExpirationDate() {
         return expiration_date;
     }
 
-    public void setExpiration_date(LocalDateTime expiration_date) {
+    public void setExpirationDate(LocalDateTime expiration_date) {
         this.expiration_date = expiration_date;
     }
 }

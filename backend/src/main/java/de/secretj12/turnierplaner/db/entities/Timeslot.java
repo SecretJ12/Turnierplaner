@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "timeslot")
+@Table(name = "timeslots")
 public class Timeslot {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

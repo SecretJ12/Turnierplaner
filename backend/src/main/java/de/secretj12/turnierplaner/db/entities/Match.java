@@ -1,25 +1,27 @@
 package de.secretj12.turnierplaner.db.entities;
 
+import de.secretj12.turnierplaner.db.entities.knockout.NextMatch;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "matches")
 public class Match {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    private Long id;
+    private UUID id;
 
     @ManyToOne(cascade = { CascadeType.ALL })
     @JoinColumns({
             @JoinColumn(name = "competition_id")
     })
-    private Competition competitionId;
+    private Competition competition;
     @ManyToOne
     @JoinColumn(name = "court")
-    private Court courts;
+    private Court court;
 
     @Column(name = "begin_time")
     private LocalDateTime begin;
@@ -31,7 +33,6 @@ public class Match {
     @Column(name = "winner")
     private Boolean winner;
 
-
     @ManyToOne
     @JoinColumn(name = "player_a")
     private Player playerA;
@@ -39,36 +40,31 @@ public class Match {
     @JoinColumn(name = "player_b")
     private Player playerB;
 
-    @ManyToMany
-    @JoinTable(
-            name = "dependent_on",
-            joinColumns = {@JoinColumn(name = "dependant")},
-            inverseJoinColumns = {@JoinColumn(name = "dependency")}
-    )
-    private List<Match> dependentOn;
+    @OneToOne(mappedBy = "nextMatch")
+    private NextMatch dependentOn;
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
-    public Competition getCompetitionId() {
-        return competitionId;
+    public Competition getCompetition() {
+        return competition;
     }
 
-    public void setCompetitionId(Competition competitionId) {
-        this.competitionId = competitionId;
+    public void setCompetition(Competition competitionId) {
+        this.competition = competitionId;
     }
 
-    public Court getCourts() {
-        return courts;
+    public Court getCourt() {
+        return court;
     }
 
-    public void setCourts(Court courts) {
-        this.courts = courts;
+    public void setCourt(Court courts) {
+        this.court = courts;
     }
 
     public LocalDateTime getBegin() {
@@ -117,13 +113,5 @@ public class Match {
 
     public void setPlayerB(Player playerB) {
         this.playerB = playerB;
-    }
-
-    public List<Match> getDependentOn() {
-        return dependentOn;
-    }
-
-    public void setDependentOn(List<Match> dependentOn) {
-        this.dependentOn = dependentOn;
     }
 }

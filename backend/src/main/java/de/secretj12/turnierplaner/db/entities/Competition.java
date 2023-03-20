@@ -45,6 +45,10 @@ public class Competition {
     )
     private List<Player> players;
 
+    @OneToMany
+    private List<Match> matches;
+
+
     public List<Player> getPlayers() {
         return players;
     }
@@ -91,5 +95,13 @@ public class Competition {
 
     public void setType(CompetitionType type) {
         this.type = type;
+    }
+
+    public List<Match> getMatches() {
+        return matches;
+    }
+
+    public void setMatches(List<Match> matches) {
+        this.matches = matches;
     }
 }
