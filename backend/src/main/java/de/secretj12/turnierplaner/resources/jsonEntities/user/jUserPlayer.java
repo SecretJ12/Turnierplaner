@@ -7,7 +7,6 @@ import java.util.UUID;
 public class jUserPlayer {
     private UUID id;
     private String firstName;
-
     private String lastName;
 
     public jUserPlayer(UUID id, String firstName, String lastName) {
@@ -42,7 +41,7 @@ public class jUserPlayer {
         return lastName;
     }
 
-    public void setLast_name(String lastName) {
+    public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 }

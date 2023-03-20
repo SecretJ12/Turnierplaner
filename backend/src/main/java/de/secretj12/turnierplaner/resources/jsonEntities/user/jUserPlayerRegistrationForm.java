@@ -6,7 +6,7 @@ public class jUserPlayerRegistrationForm {
 
     String firstName;
     String lastName;
-    String sex;
+    jSex sex;
     LocalDate birthday;
     String email;
     String phone;
@@ -27,11 +27,11 @@ public class jUserPlayerRegistrationForm {
         this.lastName = lastName;
     }
 
-    public String getSex() {
+    public jSex getSex() {
         return sex;
     }
 
-    public void setSex(String sex) {
+    public void setSex(jSex sex) {
         this.sex = sex;
     }
 

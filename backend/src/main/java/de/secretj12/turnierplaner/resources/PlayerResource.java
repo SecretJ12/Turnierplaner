@@ -18,7 +18,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 @Path("/player")
@@ -60,17 +59,16 @@ public class PlayerResource {
                     "A player already exists with this name").build();
         // TODO check phone number (only valid phone number)
         Player newPlayer = new Player();
-        if (Objects.equals(playerForm.getSex(), "woman")) {
-            newPlayer.setSex(SexType.male);
-        } else if (Objects.equals(playerForm.getSex(), "men")) {
-            newPlayer.setSex(SexType.male);
-        } else {
-            return Response.status(Response.Status.CONFLICT.getStatusCode(),
-                    "Gender not recognized").build();
-        }
         newPlayer.setFirstName(playerForm.getFirstName());
         newPlayer.setLastName(playerForm.getLastName());
         newPlayer.setBirthday(playerForm.getBirthday());
+        switch (playerForm.getSex()) {
+            case male -> newPlayer.setSex(SexType.male);
+            case female -> newPlayer.setSex(SexType.female);
+            default -> {
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+        }
         newPlayer.setEmail(playerForm.getEmail());
         newPlayer.setPhone(playerForm.getPhone());
         newPlayer.setMailVerified(false);
@@ -80,12 +78,14 @@ public class PlayerResource {
 
         VerificationCode verificationCode = new VerificationCode();
         verificationCode.setPlayer(newPlayer);
-        verificationCode.setExpiration_date(LocalDateTime.now().plusMinutes(10));
+        verificationCode.setExpiration_date(LocalDateTime.now().plusMinutes(30));
         verificationCodeRepository.persist(verificationCode);
 
+        // TODO check for valid mail
         try {
             mailer.send(mailTemplates.verificationMail(newPlayer.getEmail(), verificationCode.getId().toString()));
         } catch (Exception e) {
+            // TODO print by logger
             e.printStackTrace();
             return Response.status(Response.Status.CONFLICT.getStatusCode(),
                     "Problem sending you the verification mail. Please try again later.").build();
