@@ -1,49 +1,3 @@
-<script setup>
-import {reactive, ref} from 'vue'
-import {i18n, router} from "@/main";
-import axios from "axios";
-import {ElMessage} from "element-plus";
-
-
-const formRef = ref()
-
-const submitForm = (formEl) => {
-  if (!formEl) return
-  formEl.validate((valid) => {
-    if (valid) {
-      console.log('submit!')
-      axios.post(`/player/registration`, data)
-          .then((result) => {
-            if (result.status === 200) {
-              ElMessage.success(i18n.global.t("ViewPlayerRegistration.registration_successful"))
-              router.back()
-            } else {
-              ElMessage.error(i18n.global.t("ViewPlayerRegistration.registration_failed"))
-            }
-          })
-          .catch((error) => {
-            console.log(error)
-            ElMessage.error(i18n.global.t("ViewPlayerRegistration.registration_failed"))
-          })
-    } else {
-      console.log('error submit!')
-      return false
-    }
-  })
-}
-
-const data = reactive({
-  firstName: '',
-  lastName: '',
-  sex: '',
-  birthday: null,
-  email: '',
-  phone: '',
-})
-
-</script>
-
-
 <template>
   <div id="container">
     <div>
@@ -181,6 +135,50 @@ const data = reactive({
     </div>
   </div>
 </template>
+
+<script setup>
+
+import {reactive, ref} from 'vue'
+import {i18n, router} from "@/main";
+import axios from "axios";
+import {ElMessage} from "element-plus";
+
+const formRef = ref()
+
+const data = reactive({
+  firstName: '',
+  lastName: '',
+  sex: '',
+  birthday: null,
+  email: '',
+  phone: '',
+})
+const submitForm = (formEl) => {
+  if (!formEl) return
+  formEl.validate((valid) => {
+    if (valid) {
+      axios.post(`/player/registration`, data)
+          .then((result) => {
+            if (result.status === 200) {
+              ElMessage.success(i18n.global.t("ViewPlayerRegistration.registration_successful"))
+              router.push({path: "/player/registration/confirmation"})
+            } else {
+              ElMessage.error(i18n.global.t("ViewPlayerRegistration.registration_failed"))
+            }
+          })
+          .catch((error) => {
+            console.log(error)
+            ElMessage.error(i18n.global.t("ViewPlayerRegistration.registration_failed"))
+          })
+    } else {
+      console.log('error submit!')
+      return false
+    }
+  })
+}
+
+</script>
+
 
 <style scoped>
 #form {

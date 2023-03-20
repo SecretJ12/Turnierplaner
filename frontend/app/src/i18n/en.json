@@ -8,10 +8,15 @@
     "description": "Description",
     "name_missing": "Please input a name",
     "signUp": "sign up",
-    "register": "register"
+    "register": "register",
+    "success": "Success!",
+    "failure": "Failure!"
   },
   "ViewPlayerRegistration": {
     "headline": "Player Registration",
+    "after": "Thank you for registration! Please confirm your email with the verification link, we sent you to your email.",
+    "verification_sucess": "You have successfully verified yourself!",
+    "verification_failed": "This verification link doesn't seem to be correct.",
     "first_name": {
       "field": "First name",
       "prompt": "Please input your first name"

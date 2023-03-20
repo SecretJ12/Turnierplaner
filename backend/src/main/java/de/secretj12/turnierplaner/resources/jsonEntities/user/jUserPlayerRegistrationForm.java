@@ -7,7 +7,7 @@ public class jUserPlayerRegistrationForm {
     String firstName;
     String lastName;
     String sex;
-    LocalDate birthdate;
+    LocalDate birthday;
     String email;
     String phone;
 
@@ -35,12 +35,12 @@ public class jUserPlayerRegistrationForm {
         this.sex = sex;
     }
 
-    public LocalDate getBirthdate() {
-        return birthdate;
+    public LocalDate getBirthday() {
+        return birthday;
     }
 
-    public void setBirthdate(LocalDate birthdate) {
-        this.birthdate = birthdate;
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
     }
 
     public String getEmail() {

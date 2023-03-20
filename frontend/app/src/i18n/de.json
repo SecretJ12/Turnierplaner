@@ -8,10 +8,15 @@
     "description": "Beschreibung",
     "name_missing": "Bitte gib einen Namen ein",
     "signUp": "Anmelden",
-    "register": "Registrieren"
+    "register": "Registrieren",
+    "success": "Erfolg",
+    "failure": "Fehler"
   },
   "ViewPlayerRegistration": {
     "headline": "Spielerregistrierung",
+    "after": "Vielen Dank für die Registrierung. Bitte bestätigen Sie ihre Email mit dem Link in ihrer Verifizierungsmail.",
+    "verification_success": "Sie haben sich erfolgreich verifiziert!",
+    "verification_failed": "Der Verifizierungslink scheint nicht zu stimmen!",
     "first_name": {
       "field": "Vorname",
       "prompt": "Bitte geben Sie Ihren Vornamen an"
