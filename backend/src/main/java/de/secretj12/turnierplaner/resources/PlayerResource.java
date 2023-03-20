@@ -78,7 +78,7 @@ public class PlayerResource {
 
         VerificationCode verificationCode = new VerificationCode();
         verificationCode.setPlayer(newPlayer);
-        verificationCode.setExpiration_date(LocalDateTime.now().plusMinutes(30));
+        verificationCode.setExpirationDate(LocalDateTime.now().plusMinutes(30));
         verificationCodeRepository.persist(verificationCode);
 
         // TODO check for valid mail
