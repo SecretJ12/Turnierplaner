@@ -112,11 +112,7 @@ public class PlayerResource {
             System.out.println("ERROR no matching verification code");
             return Response.status(Response.Status.CONFLICT.getStatusCode(),"This verification code is not correct!").build();
         }
-        Player player = playerRepository.find("FROM Player p where p.id= :code",Parameters.with("code",verificationCode.getPlayer().getId()).map()).firstResultOptional().orElse(null);
-        if (player == null){
-            System.out.println("ERROR no matching player");
-            return Response.status(Response.Status.CONFLICT.getStatusCode(),"ERROR could not find a matching player with this verification code!").build();
-        }
+        Player player = verificationCode.getPlayer();
         player.setMailVerified(true);
         playerRepository.persist(player);
         verificationCodeRepository.delete(verificationCode);
