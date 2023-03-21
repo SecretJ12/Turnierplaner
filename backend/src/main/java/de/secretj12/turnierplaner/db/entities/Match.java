@@ -9,10 +9,10 @@ import java.util.UUID;
 @Entity
 @Table(name = "matches")
 @NamedQueries(
-        @NamedQuery(name = "findFinal",
+        @NamedQuery(name = "findHead",
             query = "FROM Match m WHERE m.competition.id = :compId " +
                     "AND NOT EXISTS (FROM NextMatch n WHERE n.previousA = m OR n.previousB = m) " +
-                    "AND EXISTS (FROM NextMatch n WHERE m.id = n.nextMatch AND n.winner = true)")
+                    "AND EXISTS (FROM NextMatch n WHERE m.id = n.nextMatch AND n.winner = :finale)")
 )
 public class Match {
     @Id

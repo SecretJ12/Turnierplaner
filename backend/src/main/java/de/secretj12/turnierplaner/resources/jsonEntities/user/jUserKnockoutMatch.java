@@ -19,8 +19,11 @@ public class jUserKnockoutMatch {
     private jUserKnockoutMatch previousA;
     private jUserKnockoutMatch previousB;
 
-
     public jUserKnockoutMatch(Match match) {
+        this(match, true);
+    }
+
+    public jUserKnockoutMatch(Match match, boolean dependant) {
         this.court = match.getCourt().getName();
         this.begin = match.getBegin();
         this.end = match.getEnd();
@@ -33,7 +36,7 @@ public class jUserKnockoutMatch {
         if (match.getPlayerB() != null)
             this.playerB = new jUserPlayer(match.getPlayerB());
 
-        if (match.getDependentOn() != null) {
+        if (dependant && match.getDependentOn() != null) {
             this.previousA = new jUserKnockoutMatch(match.getDependentOn().getPreviousA());
             this.previousB = new jUserKnockoutMatch(match.getDependentOn().getPreviousB());
         }

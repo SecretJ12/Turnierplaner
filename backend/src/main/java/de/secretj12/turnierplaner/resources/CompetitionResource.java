@@ -1,18 +1,12 @@
 package de.secretj12.turnierplaner.resources;
 
-import de.secretj12.turnierplaner.db.entities.Competition;
-import de.secretj12.turnierplaner.db.entities.CompetitionType;
-import de.secretj12.turnierplaner.db.entities.Player;
-import de.secretj12.turnierplaner.db.entities.Tournament;
+import de.secretj12.turnierplaner.db.entities.*;
 import de.secretj12.turnierplaner.db.repositories.CompetitionRepository;
 import de.secretj12.turnierplaner.db.repositories.MatchRepository;
 import de.secretj12.turnierplaner.db.repositories.TournamentRepository;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.jDirectorCompetitionAdd;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.jDirectorCompetitionUpdate;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserCompetition;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserKnockoutMatch;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayer;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayerSignUpForm;
+import de.secretj12.turnierplaner.resources.jsonEntities.user.*;
 import io.quarkus.security.identity.SecurityIdentity;
 
 import javax.annotation.security.RolesAllowed;
@@ -176,7 +170,9 @@ public class CompetitionResource {
         if (competition.getType() != CompetitionType.KNOCKOUT)
             return Response.status(Response.Status.METHOD_NOT_ALLOWED).build();
 
-        return Response.ok(new jUserKnockoutMatch(matches.getFinal(competition))).build();
+        Match finale = matches.getFinal(competition);
+        Match thirdPlace = matches.getThirdPlace(competition);
+        return Response.ok(new jKnockoutSystem(finale, thirdPlace)).build();
     }
 
     @GET
