@@ -1,6 +1,7 @@
 package de.secretj12.turnierplaner.resources;
 
 import de.secretj12.turnierplaner.db.entities.*;
+import de.secretj12.turnierplaner.db.entities.groups.Group;
 import de.secretj12.turnierplaner.db.repositories.CompetitionRepository;
 import de.secretj12.turnierplaner.db.repositories.MatchRepository;
 import de.secretj12.turnierplaner.db.repositories.TournamentRepository;
@@ -179,7 +180,17 @@ public class CompetitionResource {
     @Path("/groupMatches")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getGroupMatches(@QueryParam("tourName") String tourName, @QueryParam("compName") String compName) {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+        Competition competition = competitions.getByName(tourName, compName);
+        if (competition == null)
+            return Response.status(Response.Status.NOT_FOUND).build();
+        if (competition.getType() != CompetitionType.GROUPS)
+            return Response.status(Response.Status.METHOD_NOT_ALLOWED).build();
+
+        List<Group> groups = competition.getGroups();
+        if (groups == null)
+            return Response.status(Response.Status.NOT_FOUND).build();
+
+        return Response.ok(new jGroupSystem(groups)).build();
     }
 
     private boolean canSee(String tourName) {
