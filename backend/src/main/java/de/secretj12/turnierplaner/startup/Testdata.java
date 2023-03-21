@@ -1,6 +1,7 @@
 package de.secretj12.turnierplaner.startup;
 
 import de.secretj12.turnierplaner.db.entities.*;
+import de.secretj12.turnierplaner.db.entities.groups.Group;
 import de.secretj12.turnierplaner.db.entities.knockout.NextMatch;
 import de.secretj12.turnierplaner.db.repositories.*;
 
@@ -9,6 +10,7 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -27,6 +29,8 @@ public class Testdata {
     CourtRepositiory courts;
     @Inject
     NextMatchRepository nextMatches;
+    @Inject
+    GroupRepository groups;
 
     public Testdata() {
 
@@ -110,7 +114,43 @@ public class Testdata {
         comp1.setPlayers(List.of(p));
         competitions.persist(comp1);
 
-        // TODO add example for group system
+        Player[] groupPlayers = new Player[8];
+        for (int i = 0; i < 8; i++) {
+            String fn = String.valueOf((char) ('a'+i));
+            String ln = "group" + String.valueOf((char) ('A'+i));
+            groupPlayers[i] = new Player();
+            groupPlayers[i].setFirstName(fn);
+            groupPlayers[i].setLastName(ln);
+            groupPlayers[i].setBirthday(LocalDate.now());
+            groupPlayers[i].setSex(SexType.male);
+            groupPlayers[i].setEmail(fn + "." + ln + "@mail.de");
+            groupPlayers[i].setPhone("+49 123 456789");
+            groupPlayers[i].setMailVerified(true);
+            groupPlayers[i].setAdminVerified(true);
+            players.persist(groupPlayers[i]);
+        }
+
+        Group[] groups = new Group[2];
+        for (int i = 0; i < 2; i++) {
+            groups[i] = new Group();
+            groups[i].setIndex(i+1);
+            groups[i].setCompetition(comp1);
+            List<Match> groupMatches = new ArrayList<>();
+            for (int x = 4*i; x < 4*i+4; x++) {
+                for (int y = x+1; y < 4*i+4; y++) {
+                    Match match = createMatch(c1, comp1);
+                    match.setPlayerA(groupPlayers[x]);
+                    match.setPlayerB(groupPlayers[y]);
+                    matches.persist(match);
+                    groupMatches.add(match);
+                }
+            }
+            groups[i].setMatches(groupMatches);
+            this.groups.persist(groups[i]);
+        }
+
+        // TODO add finals
+
 
         Competition comp2 = new Competition();
         comp2.setName("Herren");
@@ -123,7 +163,7 @@ public class Testdata {
         Player[] knockoutPlayers = new Player[8];
         for (int i = 0; i < 8; i++) {
             String fn = String.valueOf((char) ('a'+i));
-            String ln = String.valueOf((char) ('A'+i));
+            String ln = "knockout" + String.valueOf((char) ('A'+i));
             knockoutPlayers[i] = new Player();
             knockoutPlayers[i].setFirstName(fn);
             knockoutPlayers[i].setLastName(ln);
