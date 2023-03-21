@@ -14,14 +14,14 @@ public class NextMatch {
 
     @MapsId
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "next_match", referencedColumnName = "id")
+    @JoinColumn(name = "next_match", referencedColumnName = "id", nullable = false)
     private Match nextMatch;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "previous_a", referencedColumnName = "id")
+    @JoinColumn(name = "previous_a", referencedColumnName = "id", nullable = false)
     private Match previousA;
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "previous_b", referencedColumnName = "id")
+    @JoinColumn(name = "previous_b", referencedColumnName = "id", nullable = false)
     private Match previousB;
 
     @JoinColumn(name = "winner")

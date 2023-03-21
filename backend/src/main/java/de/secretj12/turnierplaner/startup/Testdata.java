@@ -43,6 +43,9 @@ public class Testdata {
         Court c3 = new Court();
         c3.setName("Platz 3");
         courts.persist(c3);
+        Court c4 = new Court();
+        c4.setName("Platz 4");
+        courts.persist(c4);
 
         // too good to be left out
         Player p = new Player();
@@ -119,8 +122,8 @@ public class Testdata {
 
         Player[] knockoutPlayers = new Player[8];
         for (int i = 0; i < 8; i++) {
-            String fn = String.valueOf('a'+i);
-            String ln = String.valueOf('A'+i);
+            String fn = String.valueOf((char) ('a'+i));
+            String ln = String.valueOf((char) ('A'+i));
             knockoutPlayers[i] = new Player();
             knockoutPlayers[i].setFirstName(fn);
             knockoutPlayers[i].setLastName(ln);
@@ -142,22 +145,22 @@ public class Testdata {
         }
         Match[] semiFinal = new Match[2];
         for (int i = 0; i < 2; i++) {
-            semiFinal[i] = createMatch(c1, comp2);
+            semiFinal[i] = createMatch(c2, comp2);
 
             NextMatch next = new NextMatch();
             next.setPreviousA(quarterFinal[2*i]);
             next.setPreviousB(quarterFinal[2*i+1]);
-            next.setNextMatch(quarterFinal[i]);
+            next.setNextMatch(semiFinal[i]);
             nextMatches.persist(next);
         }
-        Match finalMatch = createMatch(c1, comp2);
+        Match finalMatch = createMatch(c3, comp2);
         NextMatch nextFinal = new NextMatch();
         nextFinal.setPreviousA(semiFinal[0]);
         nextFinal.setPreviousB(semiFinal[1]);
         nextFinal.setNextMatch(finalMatch);
         nextMatches.persist(nextFinal);
 
-        Match thirdPlaceMatch = createMatch(c1, comp2);
+        Match thirdPlaceMatch = createMatch(c4, comp2);
         NextMatch nextThirdPlace = new NextMatch();
         nextThirdPlace.setPreviousA(semiFinal[0]);
         nextThirdPlace.setPreviousB(semiFinal[1]);

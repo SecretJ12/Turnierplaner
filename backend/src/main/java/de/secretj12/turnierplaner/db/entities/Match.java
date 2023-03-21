@@ -8,6 +8,12 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "matches")
+@NamedQueries(
+        @NamedQuery(name = "findFinal",
+            query = "FROM Match m WHERE m.competition.id = :compId " +
+                    "AND NOT EXISTS (FROM NextMatch n WHERE n.previousA = m OR n.previousB = m) " +
+                    "AND EXISTS (FROM NextMatch n WHERE m.id = n.nextMatch AND n.winner = true)")
+)
 public class Match {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -83,7 +89,7 @@ public class Match {
         this.end = end;
     }
 
-    public Boolean getFinished() {
+    public Boolean isFinished() {
         return finished;
     }
 
@@ -113,5 +119,13 @@ public class Match {
 
     public void setPlayerB(Player playerB) {
         this.playerB = playerB;
+    }
+
+    public NextMatch getDependentOn() {
+        return dependentOn;
+    }
+
+    public void setDependentOn(NextMatch dependentOn) {
+        this.dependentOn = dependentOn;
     }
 }

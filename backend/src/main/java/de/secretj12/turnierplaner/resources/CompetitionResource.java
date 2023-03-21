@@ -1,13 +1,16 @@
 package de.secretj12.turnierplaner.resources;
 
 import de.secretj12.turnierplaner.db.entities.Competition;
+import de.secretj12.turnierplaner.db.entities.CompetitionType;
 import de.secretj12.turnierplaner.db.entities.Player;
 import de.secretj12.turnierplaner.db.entities.Tournament;
 import de.secretj12.turnierplaner.db.repositories.CompetitionRepository;
+import de.secretj12.turnierplaner.db.repositories.MatchRepository;
 import de.secretj12.turnierplaner.db.repositories.TournamentRepository;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.jDirectorCompetitionAdd;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.jDirectorCompetitionUpdate;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserCompetition;
+import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserKnockoutMatch;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayer;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayerSignUpForm;
 import io.quarkus.security.identity.SecurityIdentity;
@@ -31,6 +34,8 @@ public class CompetitionResource {
     TournamentRepository tournaments;
     @Inject
     SecurityIdentity securityIdentity;
+    @Inject
+    MatchRepository matches;
 
     @GET
     @Path("/list")
@@ -159,6 +164,26 @@ public class CompetitionResource {
         // TODO verify by mail?
 
         return Response.ok().build();
+    }
+
+    @GET
+    @Path("/knockoutMatches")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getKnockoutMatches(@QueryParam("tourName") String tourName, @QueryParam("compName") String compName) {
+        Competition competition = competitions.getByName(tourName, compName);
+        if (competition == null)
+            return Response.status(Response.Status.NOT_FOUND).build();
+        if (competition.getType() != CompetitionType.KNOCKOUT)
+            return Response.status(Response.Status.METHOD_NOT_ALLOWED).build();
+
+        return Response.ok(new jUserKnockoutMatch(matches.getFinal(competition))).build();
+    }
+
+    @GET
+    @Path("/groupMatches")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getGroupMatches(@QueryParam("tourName") String tourName, @QueryParam("compName") String compName) {
+        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
     }
 
     private boolean canSee(String tourName) {

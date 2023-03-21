@@ -59,8 +59,8 @@
           }]"
             >
               <el-select v-model="data.sex" :placeholder="$t('ViewPlayerRegistration.sex.select')">
-                <el-option :label="$t('ViewPlayerRegistration.sex.Option1')" value="men"/>
-                <el-option :label="$t('ViewPlayerRegistration.sex.Option2')" value="woman"/>
+                <el-option :label="$t('ViewPlayerRegistration.sex.Option1')" value="male"/>
+                <el-option :label="$t('ViewPlayerRegistration.sex.Option2')" value="female"/>
               </el-select>
             </el-form-item>
           </el-col>
