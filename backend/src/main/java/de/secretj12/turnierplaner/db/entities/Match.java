@@ -49,6 +49,7 @@ public class Match {
     @OneToOne(mappedBy = "nextMatch")
     private NextMatch dependentOn;
 
+
     public UUID getId() {
         return id;
     }

@@ -1,5 +1,7 @@
 package de.secretj12.turnierplaner.db.entities;
 
+import de.secretj12.turnierplaner.db.entities.groups.Group;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.UUID;
@@ -45,8 +47,11 @@ public class Competition {
     )
     private List<Player> players;
 
-    @OneToMany
+    @OneToMany(mappedBy = "competition")
     private List<Match> matches;
+
+    @OneToMany(mappedBy = "competition")
+    private List<Group> groups;
 
 
     public List<Player> getPlayers() {
@@ -103,5 +108,13 @@ public class Competition {
 
     public void setMatches(List<Match> matches) {
         this.matches = matches;
+    }
+
+    public List<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
     }
 }
