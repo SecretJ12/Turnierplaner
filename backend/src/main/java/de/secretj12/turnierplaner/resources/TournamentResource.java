@@ -13,6 +13,7 @@ import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Comparator;
 
 @Path("/tournament")
 public class TournamentResource {
@@ -27,11 +28,12 @@ public class TournamentResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllTournaments() {
-        // TODO think about sorting them, creation date?
         if (securityIdentity.hasRole("director"))
-            return Response.ok(tournaments.listAll().stream().map(jDirectorTournamentAdd::new).toList()).build();
+            return Response.ok(tournaments.listAll().stream().map(jDirectorTournamentAdd::new)
+                    .sorted(Comparator.comparing(jUserTournament::getBeginGamePhase)).toList()).build();
         else
-            return Response.ok(tournaments.listAllVisible().stream().map(jUserTournament::new).toList()).build();
+            return Response.ok(tournaments.listAllVisible().stream().map(jUserTournament::new)
+                    .sorted(Comparator.comparing(jUserTournament::getBeginGamePhase)).toList()).build();
     }
 
     @GET
