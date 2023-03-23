@@ -97,6 +97,12 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-quartz</artifactId>
         </dependency>
+
+        <!-- openapi and swagger ui -->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-smallrye-openapi</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
