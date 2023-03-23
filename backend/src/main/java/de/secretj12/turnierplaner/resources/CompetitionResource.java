@@ -111,7 +111,7 @@ public class CompetitionResource {
     }
 
     @GET
-    @Path("/signUpedPlayers") //TODO signUped rename?
+    @Path("/signedUpPlayers")
     @Produces(MediaType.APPLICATION_JSON)
     public List<jUserPlayer> getSignedUpPlayers(@QueryParam("tourName") String tourName,
                                                 @QueryParam("compName") String compName) {

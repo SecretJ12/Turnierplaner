@@ -79,7 +79,7 @@ function update() {
         })
     }
   });
-  axios.get(`/competition/signUpedPlayers?tourName=${route.params.tourId}&compName=${route.params.compId}`)
+  axios.get(`/competition/signedUpPlayers?tourName=${route.params.tourId}&compName=${route.params.compId}`)
     .then((response) => {
       if (response.status !== 200)
         players.value = []
