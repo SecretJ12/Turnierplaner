@@ -159,7 +159,7 @@ public class CompetitionResource {
         if (regPlayers == null)
             regPlayers = List.of(player);
         else if (regPlayers.contains(player)) {
-            return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
+            return Response.status(Response.Status.CONFLICT.getStatusCode())
                     .entity("Player already registered!").build();
         } else {
             regPlayers.add(player);

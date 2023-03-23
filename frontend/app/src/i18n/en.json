@@ -10,7 +10,8 @@
     "signUp": "sign up",
     "register": "register",
     "success": "Success!",
-    "failure": "Failure!"
+    "failure": "Failure!",
+    "loading": "Loading..."
   },
   "ViewPlayerRegistration": {
     "headline": "Player Registration",
@@ -86,6 +87,13 @@
     "no_registration": "It seems that no one has registered yet...",
     "query_search_failed": "Querying player failed",
     "query_player_failed": "Querying participants failed"
+  },
+  "Player": {
+    "too_many_results": "Result ist not unique enough",
+    "no_result": "No player found",
+    "already_exists": "Player is already registered",
+    "register_success": "Successful registered",
+    "register_failed": "Registration failed"
   }
 }
 

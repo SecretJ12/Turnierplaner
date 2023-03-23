@@ -22,12 +22,13 @@ import axios from "axios";
 import {ElLoading} from 'element-plus';
 import {ref} from 'vue'
 import {useRoute} from "vue-router";
+import {i18n} from "@/main";
 
 const route = useRoute()
 
 const loadingAnimation = ElLoading.service({
   lock: true,
-  text: 'Loading', // TODO i18n
+  text: i18n.global.t("general.loading"),
   background: 'rgba(0, 0, 0, 0.7)'
 })
 const verified = ref(false)

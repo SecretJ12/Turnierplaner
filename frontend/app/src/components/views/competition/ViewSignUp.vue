@@ -121,11 +121,11 @@ function signUp() {
     return p.value.includes(playerSearch.value)
   })
   if (validPlayers.length > 1) {
-    ElMessage.error("zu viele ergebnisse") // TODO i18n
+    ElMessage.error(i18n.global.t("Player.too_many_results"))
     return
   }
   if (validPlayers.length === 0) {
-    ElMessage.error("niemanden gefunden") // TODO i18n
+    ElMessage.error(i18n.global.t("Player.no_result"))
     return
   }
   const player = validPlayers[0]
@@ -135,17 +135,15 @@ function signUp() {
     lastName: player.lastName
   }
   axios.post(`/tournament/${route.params.tourId}/competition/${route.params.compId}/signUp`, form)
-      .then((response) => {
-        if (response.status === 200)
-          ElMessage.success("erfolgreich erstellt") // TODO i18n
-        else
-          ElMessage.error("ne irgendwie passt da was nich") // TODO i18n
+      .then((_) => {
+        ElMessage.success("Player.register_success")
         update()
       })
       .catch((error) => {
-        console.log(error)
-        // z.b. spieler schon vorhanden
-        ElMessage.error("ne irgendwie passt da was nicht") // TODO i18n
+        if (error.response.status === 409)
+          ElMessage.error(i18n.global.t("Player.already_exists"))
+        else
+          ElMessage.error(i18n.global.t("Player.register_failed"))
       })
 
 }

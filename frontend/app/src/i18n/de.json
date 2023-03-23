@@ -10,7 +10,8 @@
     "signUp": "Anmelden",
     "register": "Registrieren",
     "success": "Erfolg",
-    "failure": "Fehler"
+    "failure": "Fehler",
+    "loading": "Lädt..."
   },
   "ViewPlayerRegistration": {
     "headline": "Spielerregistrierung",
@@ -86,6 +87,13 @@
     "no_registration": "Es scheint sich noch niemand angemeldet zu haben...",
     "query_search_failed": "Abrufen der Spieler ist fehlgeschlagen",
     "query_player_failed": "Abrufen der Teilnehmer ist fehlgeschlagen"
+  },
+  "Player": {
+    "too_many_results": "Die Eingabe ist nicht eindeutig",
+    "no_result": "Keinen Spieler gefunden",
+    "already_exists": "Der Spieler ist bereits für das Turnier registriert",
+    "register_success": "Der Spieler wurde erfolgreich registriert",
+    "register_failed": "Fehler beim Hinzufügen des Spielers"
   }
 }
 
