@@ -49,9 +49,6 @@ const i18n = createI18n({
 /* add font awesome icon component */
 const app = createApp(App);
 
-/* add alle global variables here */
-app.config.globalProperties.backend = "http://localhost:2000"
-
 import viewTournaments from '@/components/views/tournaments/ViewTournaments.vue'
 import createTournament from '@/components/views/tournaments/ViewCreateTournament.vue'
 import editTournament from '@/components/views/tournaments/ViewEditTournament.vue'

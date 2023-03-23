@@ -22,9 +22,7 @@
     </el-row>
     <el-row id="" :gutter="20" class="row-bg" justify="space-between">
       <el-col :span="16">
-        <el-text size="small" type="info">{{ $t('ViewPlayerRegistration.not_found') }}</el-text>
-        <!--TODO only show warning when text is empty? And smaller in red?-->
-        <!-- Why does text formatting not work above??? -->
+        <span id="notice_register">{{ $t('ViewPlayerRegistration.not_found') }}</span>
       </el-col>
       <el-col :span="8">
         <el-button
@@ -69,7 +67,7 @@ function update() {
   canEdit.value = false
   auth.getUser().then((user) => {
     if (user !== null) {
-      axios.get(`/tournament//competition/canEdit`)
+      axios.get(`/tournament/${route.params.tourId}/competition/canEdit`)
           .then((response) => {
             canEdit.value = response.status === 200
           })
@@ -159,5 +157,8 @@ function playerRegistration() {
 </script>
 
 <style scoped>
-
+#notice_register {
+  font-size: 14px;
+  color: #404040;
+}
 </style>
