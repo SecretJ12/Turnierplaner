@@ -36,11 +36,9 @@ public class TournamentResource {
 
     @GET
     @Path("/canCreate")
-    @RolesAllowed("director")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response canCreate() {
-        // TODO don't return via status code but via text
-        return Response.ok("Authorized").build();
+    public boolean canCreate() {
+        return securityIdentity.hasRole("director");
     }
 
     @GET

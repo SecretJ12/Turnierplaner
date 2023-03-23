@@ -70,7 +70,7 @@ function update() {
     if (user !== null) {
       axios.get(`/tournament/${route.params.tourId}/competition/canEdit`)
           .then((response) => {
-            canEdit.value = response.status === 200
+            canEdit.value = response.data
           })
           .catch((_) => {
             canEdit.value = false

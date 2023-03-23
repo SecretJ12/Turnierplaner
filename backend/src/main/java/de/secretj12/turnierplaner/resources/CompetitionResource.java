@@ -58,12 +58,8 @@ public class CompetitionResource {
     @GET
     @Path("/canEdit")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response canEdit(@PathParam("tourName") String tourName) {
-        // TODO don't return via status code but via text
-        if (securityIdentity.hasRole("director"))
-            return Response.ok("Authorized").build();
-        else
-            return Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized").build();
+    public boolean canEdit(@PathParam("tourName") String tourName) {
+        return securityIdentity.hasRole("director");
     }
 
     @POST
