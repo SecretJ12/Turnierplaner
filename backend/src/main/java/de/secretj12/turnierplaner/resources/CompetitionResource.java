@@ -16,6 +16,7 @@ import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Path("/tournament/{tourName}/competition")
@@ -118,10 +119,14 @@ public class CompetitionResource {
         if (!canSee(tourName))
             return Response.status(Response.Status.UNAUTHORIZED).build();
 
-        // TODO only allow for if role > director or current date after begin of registration phase
         Competition competition = competitions.getByName(tourName, compName);
         if (competition == null)
             return null;
+
+        if (!securityIdentity.hasRole("director") &&
+                (competition.getTournament().getBeginRegistration().isAfter(LocalDateTime.now())
+                        || competition.getTournament().getBeginGamePhase().isBefore(LocalDateTime.now())))
+            return Response.status(Response.Status.UNAUTHORIZED).build();
 
         return Response.ok(competition.getPlayers().stream().map(jUserPlayer::new)
                 .sorted((A, B) -> {
@@ -142,12 +147,17 @@ public class CompetitionResource {
         if (!canSee(tourName))
             return Response.status(Response.Status.UNAUTHORIZED).build();
 
-        // TODO only allow for role > director or current date in registration phase
         Competition competition = competitions.getByName(tourName, compName);
-        Player player = players.playerRepository.getByName(reg.getFirstName(), reg.getLastName());
         if (competition == null)
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
                     .entity("Competition doesn't exist").build();
+
+        if (!securityIdentity.hasRole("director") &&
+                (competition.getTournament().getBeginRegistration().isAfter(LocalDateTime.now())
+                || competition.getTournament().getEndRegistration().isBefore(LocalDateTime.now())))
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+
+        Player player = players.playerRepository.getByName(reg.getFirstName(), reg.getLastName());
         if (player == null)
             return Response.status(Response.Status.BAD_REQUEST).entity("Player doesn't exist").build();
 
@@ -162,7 +172,8 @@ public class CompetitionResource {
         }
         competition.setPlayers(regPlayers);
         competitions.persist(competition);
-        // TODO verify by mail?
+
+        // TODO notify by mail?
 
         return Response.ok().build();
     }
