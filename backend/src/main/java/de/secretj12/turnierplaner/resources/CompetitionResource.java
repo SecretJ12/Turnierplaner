@@ -190,7 +190,7 @@ public class CompetitionResource {
         if (groups == null)
             return Response.status(Response.Status.NOT_FOUND).build();
 
-        return Response.ok(new jGroupSystem(groups)).build();
+        return Response.ok(new jUserGroupSystem(groups)).build();
     }
 
     private boolean canSee(String tourName) {

@@ -3,6 +3,7 @@ package de.secretj12.turnierplaner.resources.jsonEntities.user;
 import de.secretj12.turnierplaner.db.entities.Match;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class jUserGroupMatch {
 
@@ -13,8 +14,8 @@ public class jUserGroupMatch {
     private Boolean finished;
     private Boolean winner;
 
-    private jUserPlayer playerA;
-    private jUserPlayer playerB;
+    private UUID playerA;
+    private UUID playerB;
 
     public jUserGroupMatch(Match match) {
         this.court = match.getCourt().getName();
@@ -25,9 +26,9 @@ public class jUserGroupMatch {
         this.winner = match.getWinner();
 
         if (match.getPlayerA() != null)
-            this.playerA = new jUserPlayer(match.getPlayerA());
+            this.playerA = match.getPlayerA().getId();
         if (match.getPlayerB() != null)
-            this.playerB = new jUserPlayer(match.getPlayerB());
+            this.playerB = match.getPlayerB().getId();
     }
 
     public String getCourt() {
@@ -70,19 +71,19 @@ public class jUserGroupMatch {
         this.winner = winner;
     }
 
-    public jUserPlayer getPlayerA() {
+    public UUID getPlayerA() {
         return playerA;
     }
 
-    public void setPlayerA(jUserPlayer playerA) {
+    public void setPlayerA(UUID playerA) {
         this.playerA = playerA;
     }
 
-    public jUserPlayer getPlayerB() {
+    public UUID getPlayerB() {
         return playerB;
     }
 
-    public void setPlayerB(jUserPlayer playerB) {
+    public void setPlayerB(UUID playerB) {
         this.playerB = playerB;
     }
 }

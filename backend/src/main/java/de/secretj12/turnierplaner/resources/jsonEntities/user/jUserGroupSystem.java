@@ -4,11 +4,12 @@ import de.secretj12.turnierplaner.db.entities.groups.Group;
 
 import java.util.List;
 
-public class jGroupSystem {
+public class jUserGroupSystem {
 
     private List<jUserGroup> groups;
+    // TODO knockout matches
 
-    public jGroupSystem(List<Group> groups) {
+    public jUserGroupSystem(List<Group> groups) {
         this.groups = groups.stream().map(jUserGroup::new).toList();
     }
 

@@ -16,8 +16,7 @@ public class CompetitionRepository implements PanacheRepository<Competition> {
     }
 
     public Competition getByName(String tourName, String compName) {
-        return find("#compByName",
-                tourName, compName)
+        return find("#compByName", tourName, compName)
                 .firstResultOptional().orElse(null);
     }
 
