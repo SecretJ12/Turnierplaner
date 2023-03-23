@@ -101,7 +101,7 @@ let queriedPlayer = []
 
 function queryPlayer(search, callback) {
   queriedPlayer = queriedPlayer.filter((item) => {
-    return item.value.includes(search)
+    return item.value.toLowerCase().includes(search.toLowerCase())
   })
   callback(queriedPlayer)
   axios.get(`/player/find?search=${search}`)
@@ -146,7 +146,8 @@ function signUp() {
       })
       .catch((error) => {
         console.log(error)
-        ElMessage.error("ne irgendwie passt da was nich") // TODO i18n
+        // z.b. spieler schon vorhanden
+        ElMessage.error("ne irgendwie passt da was nicht") // TODO i18n
       })
 
 }

@@ -9,8 +9,9 @@ import java.util.UUID;
 @NamedQueries({
         @NamedQuery(name = "filter",
                 query = "SELECT p FROM Player p " +
-                        "WHERE p.firstName like CONCAT('%', ?1, '%') OR p.lastName = CONCAT('%', ?1, '%')" +
-                        "OR CONCAT(p.firstName, ' ', p.lastName) like CONCAT('%', ?1, '%')" +
+                        "WHERE lower(p.firstName) like CONCAT('%', lower(?1), '%') " +
+                        "OR lower(p.lastName) = CONCAT('%', lower(?1), '%')" +
+                        "OR lower(CONCAT(p.firstName, ' ', p.lastName)) like CONCAT('%', lower(?1), '%')" +
                         "ORDER BY p.firstName, p.lastName")
 })
 public class Player {
