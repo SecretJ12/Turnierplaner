@@ -126,6 +126,8 @@
           <el-input v-model="data.phone"/>
         </el-form-item>
 
+        <!-- TODO ich bin einverstanden, dass meine Daten gespeichert werden... (checkbox) -->
+
         <el-row class="row-bg" justify="end">
           <el-form-item>
             <el-button type="primary" @click="submitForm(formRef)">Submit</el-button>
