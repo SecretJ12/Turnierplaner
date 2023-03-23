@@ -10,6 +10,6 @@ import java.util.UUID;
 public class VerificationCodeRepository implements PanacheRepository<VerificationCode> {
 
     public VerificationCode findByUUID(UUID uuid) {
-        return find("FROM VerificationCode v WHERE v.id == ?1", uuid).firstResultOptional().orElse(null);
+        return find("FROM VerificationCode v WHERE v.id = ?1", uuid).firstResultOptional().orElse(null);
     }
 }
