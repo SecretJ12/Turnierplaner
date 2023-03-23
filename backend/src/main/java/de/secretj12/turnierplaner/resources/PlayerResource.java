@@ -54,8 +54,8 @@ public class PlayerResource {
     @Produces(MediaType.TEXT_PLAIN)
     public Response playerRegistration(jUserPlayerRegistrationForm playerForm) {
         if (playerRepository.getByName(playerForm.getFirstName(), playerForm.getLastName()) != null)
-            return Response.status(Response.Status.CONFLICT.getStatusCode(),
-                    "A player already exists with this name").build();
+            return Response.status(Response.Status.CONFLICT.getStatusCode())
+                    .entity("A player already exists with this name").build();
         // TODO check phone number (only valid phone number)
         Player newPlayer = new Player();
         newPlayer.setFirstName(playerForm.getFirstName());
@@ -86,8 +86,8 @@ public class PlayerResource {
         } catch (Exception e) {
             // TODO print by logger
             e.printStackTrace();
-            return Response.status(Response.Status.CONFLICT.getStatusCode(),
-                    "Problem sending you the verification mail. Please try again later.").build();
+            return Response.status(Response.Status.CONFLICT.getStatusCode())
+                    .entity("Problem sending you the verification mail. Please try again later.").build();
         }
 
         return Response.ok("successfully added").build();
@@ -101,15 +101,16 @@ public class PlayerResource {
     public Response verification(@QueryParam("code") String code) {
         VerificationCode verificationCode = verificationCodeRepository.findByUUID(UUID.fromString(code));
         if (verificationCode == null) {
-            return Response.status(Response.Status.CONFLICT.getStatusCode(),
-                    "This verification code is not correct!").build();
+            return Response.status(Response.Status.CONFLICT.getStatusCode())
+                    .entity("This verification code is not correct!").build();
         }
 
         Player player = verificationCode.getPlayer();
         player.setMailVerified(true);
         playerRepository.persist(player);
         verificationCodeRepository.delete(verificationCode);
-        return Response.status(Response.Status.ACCEPTED.getStatusCode(), "Successfully verified!").build();
+        return Response.status(Response.Status.ACCEPTED.getStatusCode())
+                .entity("Successfully verified!").build();
     }
 
     @Transactional

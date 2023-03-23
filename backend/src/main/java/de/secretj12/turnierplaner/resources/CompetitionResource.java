@@ -74,16 +74,16 @@ public class CompetitionResource {
     @Produces(MediaType.TEXT_PLAIN)
     public Response addCompetition(@PathParam("tourName") String tourName, jDirectorCompetitionAdd competition) {
         if (competition.getName() == null)
-            return Response.status(Response.Status.BAD_REQUEST.getStatusCode(),
-                    "No tournament specified").build();
+            return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
+                    .entity("No tournament specified").build();
 
         if (competitions.getByName(tourName, competition.getName()) != null)
             return Response.status(Response.Status.CONFLICT).build();
 
         Tournament tournament = tournaments.getByName(tourName);
         if (tournament == null)
-            return Response.status(Response.Status.BAD_REQUEST.getStatusCode(),
-                    "Tournament doesn't exist").build();
+            return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
+                    .entity("Tournament doesn't exist").build();
 
         Competition dbCompetition = competition.toDB();
         dbCompetition.setTournament(tournament);
@@ -103,8 +103,8 @@ public class CompetitionResource {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(),
                     "Competition doesn't exist").build();
         if (!dbCompetition.getTournament().getName().equals(tourName))
-            return Response.status(Response.Status.BAD_REQUEST.getStatusCode(),
-                    "Tournament of competition is not the given").build();
+            return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
+                    .entity("Tournament of competition is not the given").build();
 
         dbCompetition.setName(competition.getName());
         dbCompetition.setDescription(competition.getDescription());
@@ -150,17 +150,17 @@ public class CompetitionResource {
         Competition competition = competitions.getByName(tourName, compName);
         Player player = players.playerRepository.getByName(reg.getFirstName(), reg.getLastName());
         if (competition == null)
-            return Response.status(Response.Status.BAD_REQUEST.getStatusCode(),
-                    "Competition doesn't exist").build();
+            return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
+                    .entity("Competition doesn't exist").build();
         if (player == null)
-            return Response.status(Response.Status.BAD_REQUEST.getStatusCode(),
-                    "Player doesn't exist").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Player doesn't exist").build();
 
         List<Player> regPlayers = competition.getPlayers();
         if (regPlayers == null)
             regPlayers = List.of(player);
         else if (regPlayers.contains(player)) {
-            return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), "Player already registered!").build();
+            return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
+                    .entity("Player already registered!").build();
         } else {
             regPlayers.add(player);
         }

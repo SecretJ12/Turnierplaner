@@ -58,17 +58,14 @@ public class TournamentResource {
 
     private Response checkDates(jDirectorTournamentAdd tournament) {
         if (tournament.getBeginRegistration().isAfter(tournament.getEndRegistration()))
-            return Response.status(Response.Status.BAD_REQUEST.getStatusCode(),
-                            "Begin of registration phase needs to be before it's end")
-                    .build();
+            return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
+                    .entity("Begin of registration phase needs to be before it's end").build();
         if (tournament.getEndRegistration().isAfter(tournament.getBeginGamePhase()))
-            return Response.status(Response.Status.BAD_REQUEST.getStatusCode(),
-                            "End of registration phase needs to be before begin of game phase")
-                    .build();
+            return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
+                    .entity("End of registration phase needs to be before begin of game phase").build();
         if (tournament.getBeginGamePhase().isAfter(tournament.getEndGamePhase()))
-            return Response.status(Response.Status.BAD_REQUEST.getStatusCode(),
-                            "Begin of game phase needs to be before it's end")
-                    .build();
+            return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
+                    .entity("Begin of game phase needs to be before it's end").build();
         return null;
     }
 
