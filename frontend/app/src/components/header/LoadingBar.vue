@@ -1,5 +1,5 @@
 <template>
-  <div v-if="loading" id="progress">
+  <div v-if="loading > 0" id="progress">
     <div id="progress-bar"></div>
   </div>
 </template>
@@ -8,29 +8,28 @@
 import {ref} from 'vue'
 import axios from "axios";
 
-let loading = ref(false)
+let loading = ref(0)
 
 axios.interceptors.request.use(function (config) {
-  loading.value = true
+  loading.value++
   return config
 }, function (error) {
-  loading.value = false
+  loading.value++
   return Promise.reject(error)
 })
 axios.interceptors.response.use(function (config) {
-  loading.value = false
+  loading.value --
   return config
 }, function (error) {
-  loading.value = false
+  loading.value--
   return Promise.reject(error);
 })
-// TODO count for multiple requests
 </script>
 
 <style scoped>
 
 #progress {
-  margin: 0 0 -4px 0;
+  margin: 0 0 -6px 0;
   height: 6px;
   background-color: lightblue; /* add8e6 */
 }
