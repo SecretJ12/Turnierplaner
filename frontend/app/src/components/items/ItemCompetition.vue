@@ -5,12 +5,12 @@
       <p>{{ description }}</p>
     </div>
     <div id="type">
-      <font-awesome-icon v-if="type==='GROUPS'" :icon="['fas', 'table-cells-large']" class="fa-2x" ></font-awesome-icon>
-      <font-awesome-icon v-else-if="type==='KNOCKOUT'" :icon="['fas', 'user-group']" class="fa-2x" ></font-awesome-icon>
+      <font-awesome-icon v-if="type==='GROUPS'" :icon="['fas', 'table-cells-large']" class="fa-2x"></font-awesome-icon>
+      <font-awesome-icon v-else-if="type==='KNOCKOUT'" :icon="['fas', 'user-group']" class="fa-2x"></font-awesome-icon>
     </div>
     <font-awesome-icon v-if="canEdit"
-                       @click="settings"
-                       id="settings" :icon="['fas', 'gear']" class="fa-2x" >
+                       id="settings"
+                       :icon="['fas', 'gear']" class="fa-2x" @click="settings">
     </font-awesome-icon>
   </div>
 </template>
@@ -37,59 +37,59 @@ function settings() {
 </script>
 
 <style scoped>
-  #item {
-    border-radius: 10px;
-    padding: 0;
-    width: 420px;
-    height: 300px;
-    position: relative;
-    overflow: hidden;
-  }
+#item {
+  border-radius: 10px;
+  padding: 0;
+  width: 420px;
+  height: 300px;
+  position: relative;
+  overflow: hidden;
+}
 
-  #content {
-    padding: 20px 10px 0 10px;
-    background-color: #D0D0D0;
-    box-shadow: 0 0 5px #909090;
-    width: 400px;
-    height: 400px;
-  }
+#content {
+  padding: 20px 10px 0 10px;
+  background-color: #D0D0D0;
+  box-shadow: 0 0 5px #909090;
+  width: 400px;
+  height: 400px;
+}
 
-  #type {
-    position: absolute;
-    left: 10px;
-    bottom: 10px;
-    color: #303030;
-  }
+#type {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  color: #303030;
+}
 
-  h2 {
-    text-align: center;
-  }
+h2 {
+  text-align: center;
+}
 
-  p {
-    text-align: center;
-  }
+p {
+  text-align: center;
+}
 
-  #item:hover {
-    box-shadow: 0 0 10px black;
-    cursor: pointer;
-  }
+#item:hover {
+  box-shadow: 0 0 10px black;
+  cursor: pointer;
+}
 
-  #item:active {
-    background-color: #C0C0C0;
-  }
+#item:active {
+  background-color: #C0C0C0;
+}
 
-  #settings {
-    position: absolute;
-    right: 10px;
-    bottom: 10px;
-    color: #303030;
-  }
+#settings {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  color: #303030;
+}
 
-  #settings:hover {
-    filter: drop-shadow(0 0 10px #808080);
-  }
+#settings:hover {
+  filter: drop-shadow(0 0 10px #808080);
+}
 
-  #settings:active {
-    color: #404040;
-  }
+#settings:active {
+  color: #404040;
+}
 </style>

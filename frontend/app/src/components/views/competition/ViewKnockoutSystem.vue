@@ -1,5 +1,5 @@
 <template>
-<p>Knockout system</p>
+  <p>Knockout system</p>
 </template>
 
 <script setup>

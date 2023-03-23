@@ -1,6 +1,6 @@
-import { UserManager } from "oidc-client-ts";
-import { auth_settings, popup } from "./settings";
-import { ref } from 'vue'
+import {UserManager} from "oidc-client-ts";
+import {auth_settings, popup} from "./settings";
+import {ref} from 'vue'
 
 class AuthService {
     userManager
@@ -50,6 +50,7 @@ class AuthService {
     addUserLoadedListener(cb) {
         this.userManager.events.addUserLoaded(cb)
     }
+
     addUserUnloadedListener(cb) {
         this.userManager.events.addUserUnloaded(cb)
     }

@@ -1,6 +1,6 @@
 <template>
   <div id="item" @click="selected">
-    <font-awesome-icon id="icon" :icon="['fas', 'plus']" class="fa-10x " ></font-awesome-icon>
+    <font-awesome-icon id="icon" :icon="['fas', 'plus']" class="fa-10x "></font-awesome-icon>
   </div>
 </template>
 

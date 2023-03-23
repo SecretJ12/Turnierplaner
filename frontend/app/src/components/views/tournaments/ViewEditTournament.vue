@@ -4,17 +4,16 @@
         ref="formRef"
         :disabled="disabled"
         :model="data"
-        label-width="120px"
-        size="large"
-        scroll-to-error="scroll-to-error"
         label-position="top"
+        label-width="120px"
+        scroll-to-error="scroll-to-error"
+        size="large"
     >
       <el-row :gutter="20" class="row-bg" justify="space-between">
         <el-col :span="20">
           <!-- Tournament name -->
           <el-form-item
               :label="$t('general.name')"
-              prop="name"
               :rules="[
                   {
                     required: true,
@@ -22,11 +21,12 @@
                     trigger: 'blur',
                   }
               ]"
+              prop="name"
           >
             <el-input
                 v-model="data.name"
-                show-word-limit
                 maxlength="30"
+                show-word-limit
             />
           </el-form-item>
         </el-col>
@@ -50,21 +50,20 @@
           prop="description"
       >
         <el-input
-            type="textarea"
-            :autosize="{minRows: 3, maxRows: 5}"
             v-model="data.description"
-            show-word-limit
-            maxlength="100"
+            :autosize="{minRows: 3, maxRows: 5}"
             autosize
+            maxlength="100"
+            show-word-limit
+            type="textarea"
         />
       </el-form-item>
 
       <!-- Times -->
-      <el-divider />
+      <el-divider/>
       <!-- Begin -> End registration -->
       <el-form-item
           :label="$t('TournamentSettings.registration_phase')"
-          prop="registration_phase"
           :rules="[
             {
               required: true,
@@ -72,18 +71,18 @@
               trigger: 'blur',
             }
     ]"
+          prop="registration_phase"
       >
         <el-date-picker
             v-model="data.registration_phase"
-            type="datetimerange"
-            start-placeholder="Start date"
             end-placeholder="End date"
+            start-placeholder="Start date"
+            type="datetimerange"
         />
       </el-form-item>
       <!-- Begin -> End game phase -->
       <el-form-item
           :label="$t('TournamentSettings.game_phase')"
-          prop="game_phase"
           :rules="[
             {
               required: true,
@@ -91,12 +90,13 @@
               trigger: 'blur',
             }
     ]"
+          prop="game_phase"
       >
         <el-date-picker
             v-model="data.game_phase"
-            type="datetimerange"
-            start-placeholder="Start date"
             end-placeholder="End date"
+            start-placeholder="Start date"
+            type="datetimerange"
         />
       </el-form-item>
 
@@ -112,12 +112,11 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import {reactive, ref} from 'vue'
 import axios from "axios";
-import { i18n } from "@/main";
-import { ElMessage } from "element-plus";
-import { router } from "@/main";
-import { useRoute } from "vue-router";
+import {i18n, router} from "@/main";
+import {ElMessage} from "element-plus";
+import {useRoute} from "vue-router";
 
 const route = useRoute()
 

@@ -1,5 +1,5 @@
 <template>
-  <div id="container" v-if="!registered">
+  <div v-if="!registered" id="container">
     <div>
       <h2>
         {{ $t('ViewPlayerRegistration.headline') }}
@@ -9,15 +9,14 @@
       <el-form
           ref="formRef"
           :model="data"
+          label-position="top"
           label-width="120px"
           scroll-to-error="scroll-to-error"
-          label-position="top"
       >
         <el-row :gutter="20" class="row-bg" justify="space-between">
           <el-col :span="12">
             <el-form-item
                 :label="$t('ViewPlayerRegistration.first_name.field')"
-                prop="firstName"
                 :rules="[
               {
                 required: true,
@@ -25,6 +24,7 @@
                 trigger: 'blur',
               }
           ]"
+                prop="firstName"
             >
               <el-input v-model="data.firstName"/>
             </el-form-item>
@@ -32,7 +32,6 @@
           <el-col :span="12">
             <el-form-item
                 :label="$t('ViewPlayerRegistration.last_name.field')"
-                prop="lastName"
                 :rules="[
               {
                 required: true,
@@ -40,6 +39,7 @@
                 trigger: 'blur',
               }
           ]"
+                prop="lastName"
             >
               <el-input v-model="data.lastName"/>
             </el-form-item>
@@ -50,13 +50,13 @@
           <el-col :span="12">
             <el-form-item
                 :label="$t('ViewPlayerRegistration.sex.field')"
-                prop="sex"
                 :rules="[
               {
                 required: true,
                 message: i18n.global.t('ViewPlayerRegistration.sex.prompt'),
                 trigger: 'blur',
           }]"
+                prop="sex"
             >
               <el-select v-model="data.sex" :placeholder="$t('ViewPlayerRegistration.sex.select')">
                 <el-option :label="$t('ViewPlayerRegistration.sex.Option1')" value="male"/>
@@ -69,7 +69,6 @@
                 :label="$t('ViewPlayerRegistration.birthdate.field')"
                 required>
               <el-form-item
-                  prop="birthday"
                   :rules="[
                   {
                     type: 'date',
@@ -78,6 +77,7 @@
                     trigger: 'blur',
                   }
                   ]"
+                  prop="birthday"
               >
                 <el-date-picker
                     v-model="data.birthday"
@@ -89,7 +89,6 @@
         </el-row>
 
         <el-form-item
-            prop="email"
             :label="$t('ViewPlayerRegistration.email.field')"
             :rules="[
           {
@@ -103,12 +102,12 @@
             trigger: ['blur', 'change'],
           },
         ]"
+            prop="email"
         >
           <el-input v-model="data.email"/>
         </el-form-item>
 
         <el-form-item
-            prop="phone"
             :label="$t('ViewPlayerRegistration.phone.field')"
             :rules="[
           {
@@ -122,6 +121,7 @@
             trigger: ['blur', 'change'],
           },
         ]"
+            prop="phone"
         >
           <el-input v-model="data.phone"/>
         </el-form-item>
@@ -136,12 +136,12 @@
       </el-form>
     </div>
   </div>
-  <div id="container" v-else>
+  <div v-else id="container">
     <h2>
-      {{$t('general.success')}}
+      {{ $t('general.success') }}
     </h2>
     <p>
-      {{$t('ViewPlayerRegistration.after')}}
+      {{ $t('ViewPlayerRegistration.after') }}
     </p>
   </div>
 </template>

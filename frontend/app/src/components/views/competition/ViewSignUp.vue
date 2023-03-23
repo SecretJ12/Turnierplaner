@@ -6,12 +6,12 @@
             v-model="playerSearch"
             :fetch-suggestions="queryPlayer"
             :placeholder="i18n.global.t('general.name')"
-            @keyup.enter="signUp"
             hide-loading
             style="width: 100%"
+            @keyup.enter="signUp"
         />
       </el-col>
-      <el-col :span="8" >
+      <el-col :span="8">
         <el-button
             style="width: 100%"
             @click="signUp"
@@ -22,11 +22,11 @@
     </el-row>
     <el-row id="" :gutter="20" class="row-bg" justify="space-between">
       <el-col :span="16">
-        <el-text size="small" type="info" >{{ $t('ViewPlayerRegistration.not_found') }}</el-text>
-<!--TODO only show warning when text is empty? And smaller in red?-->
-<!-- Why does text formatting not work above??? -->
+        <el-text size="small" type="info">{{ $t('ViewPlayerRegistration.not_found') }}</el-text>
+        <!--TODO only show warning when text is empty? And smaller in red?-->
+        <!-- Why does text formatting not work above??? -->
       </el-col>
-      <el-col :span="8" >
+      <el-col :span="8">
         <el-button
             style="width: 100%"
             @click="playerRegistration"
@@ -37,8 +37,8 @@
     </el-row>
     <el-row :gutter="20" class="row-bg" justify="center">
       <el-col :span="24">
-        <el-table stripe border :data="players" :empty-text="$t('ViewCompetition.no_registration')">
-          <el-table-column sortable="custom" prop="name" :label="i18n.global.t('general.name')" />
+        <el-table :data="players" :empty-text="$t('ViewCompetition.no_registration')" border stripe>
+          <el-table-column :label="i18n.global.t('general.name')" prop="name" sortable="custom"/>
           <!-- TODO add delete for admin -->
         </el-table>
       </el-col>
@@ -51,8 +51,8 @@ import {inject, ref, watch} from "vue"
 import {i18n, router} from '@/main'
 import {auth} from "@/security/AuthService";
 import axios from "axios";
-import { useRoute } from "vue-router";
-import { ElMessage } from "element-plus";
+import {useRoute} from "vue-router";
+import {ElMessage} from "element-plus";
 
 const route = useRoute()
 const isLoggedIn = inject('loggedIn', ref(false))
@@ -60,7 +60,7 @@ const canEdit = ref(false)
 
 const players = ref([])
 
-watch (isLoggedIn, async () => {
+watch(isLoggedIn, async () => {
   update()
 })
 update()
@@ -70,51 +70,52 @@ function update() {
   auth.getUser().then((user) => {
     if (user !== null) {
       axios.get(`/tournament//competition/canEdit`)
-        .then((response) => {
-          canEdit.value = response.status === 200
-        })
-        .catch((error) => {
-          canEdit.value = false
-          console.log(error)
-        })
+          .then((response) => {
+            canEdit.value = response.status === 200
+          })
+          .catch((error) => {
+            canEdit.value = false
+            console.log(error)
+          })
     }
   });
   axios.get(`/tournament/${route.params.tourId}/competition/${route.params.compId}/signedUpPlayers`)
-    .then((response) => {
-      if (response.status !== 200)
-        players.value = []
-      else
-        players.value = response.data.map((player) => {
-          player.name = player.firstName + ' ' + player.lastName
-          return player
-        })
-    })
-    .catch((error) => {
-      ElMessage.error(i18n.global.t("ViewCompetition.query_player_failed"))
-      console.log(error)
-    })
+      .then((response) => {
+        if (response.status !== 200)
+          players.value = []
+        else
+          players.value = response.data.map((player) => {
+            player.name = player.firstName + ' ' + player.lastName
+            return player
+          })
+      })
+      .catch((error) => {
+        ElMessage.error(i18n.global.t("ViewCompetition.query_player_failed"))
+        console.log(error)
+      })
 }
 
 const playerSearch = ref("")
 
 let queriedPlayer = []
+
 function queryPlayer(search, callback) {
   queriedPlayer = queriedPlayer.filter((item) => {
     return item.value.includes(search)
   })
   callback(queriedPlayer)
   axios.get(`/player/find?search=${search}`)
-    .then((result) => {
-      queriedPlayer = result.data.map((item) => {
-        item.value = item.firstName + ' ' + item.lastName
-        return item
+      .then((result) => {
+        queriedPlayer = result.data.map((item) => {
+          item.value = item.firstName + ' ' + item.lastName
+          return item
+        })
+        callback(queriedPlayer)
       })
-      callback(queriedPlayer)
-    })
-    .catch((error) => {
-      ElMessage.error(i18n.global.t("ViewCompetition.query_search_failed"))
-      console.log(error)
-    })
+      .catch((error) => {
+        ElMessage.error(i18n.global.t("ViewCompetition.query_search_failed"))
+        console.log(error)
+      })
 }
 
 function signUp() {
@@ -149,7 +150,8 @@ function signUp() {
       })
 
 }
-function playerRegistration(){
+
+function playerRegistration() {
   router.push({path: "/player/registration"})
 }
 

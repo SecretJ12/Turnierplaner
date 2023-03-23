@@ -1,9 +1,9 @@
 <template>
   <header>
-    <HeaderLeft />
-    <HeaderRight />
+    <HeaderLeft/>
+    <HeaderRight/>
   </header>
-  <LoadingBar />
+  <LoadingBar/>
 </template>
 
 

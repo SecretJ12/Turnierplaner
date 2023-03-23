@@ -1,5 +1,5 @@
-import { UserManager } from "oidc-client-ts";
-import { auth_settings, popup } from "./settings";
+import {UserManager} from "oidc-client-ts";
+import {auth_settings, popup} from "./settings";
 
 const mgr = new UserManager(auth_settings);
 

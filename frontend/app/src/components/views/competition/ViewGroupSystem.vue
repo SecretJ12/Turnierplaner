@@ -1,5 +1,5 @@
 <template>
-<p>Group system</p>
+  <p>Group system</p>
 </template>
 
 <script setup>

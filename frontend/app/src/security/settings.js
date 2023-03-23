@@ -1,4 +1,4 @@
-import { settings } from '@/settings'
+import {settings} from '@/settings'
 
 export const auth_settings = {
     authority: settings.AUTH_DOMAIN,

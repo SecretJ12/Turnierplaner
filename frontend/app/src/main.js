@@ -1,19 +1,20 @@
-import { createApp } from 'vue'
+import {createApp} from 'vue'
 import App from './App.vue'
-import { createI18n } from "vue-i18n"
+import {createI18n} from "vue-i18n"
 import * as VueRouter from 'vue-router'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 
 /* import the fontawesome core */
-import { library } from '@fortawesome/fontawesome-svg-core'
+import {library} from '@fortawesome/fontawesome-svg-core'
 import {settings} from "@/settings";
 
 /* https request */
 import VueAxios from 'vue-axios'
 import axios from 'axios'
 
-import { access_token } from '@/security/AuthService'
+import {access_token} from '@/security/AuthService'
+
 axios.defaults.baseURL = settings.BACKEND
 
 axios.interceptors.request.use(function (config) {
@@ -25,15 +26,15 @@ axios.interceptors.request.use(function (config) {
 });
 
 /* import specific icons */
-import { faFlag, faRightToBracket, faRightFromBracket, faTableCellsLarge, faUserGroup, faPlus, faGear, faEyeSlash }
+import {faFlag, faRightToBracket, faRightFromBracket, faTableCellsLarge, faUserGroup, faPlus, faGear, faEyeSlash}
     from '@fortawesome/free-solid-svg-icons'
-import { } from '@fortawesome/free-regular-svg-icons'
+import {} from '@fortawesome/free-regular-svg-icons'
 
 /* add icons to the library */
 library.add(faFlag, faRightToBracket, faRightFromBracket, faTableCellsLarge, faUserGroup, faPlus, faGear, faEyeSlash)
 
 /* import font awesome icon component */
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 
 import languages from './i18n';
 
@@ -132,4 +133,4 @@ app
     .use(ElementPlus)
     .mount('#app')
 
-export { router, i18n }
+export {router, i18n}

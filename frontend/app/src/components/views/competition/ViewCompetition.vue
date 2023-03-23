@@ -3,8 +3,8 @@
     <div>
       <font-awesome-icon
           v-if=canEdit
-          @click="settings"
-          id="settings" :icon="['fas', 'gear']" class="fa-1x" >
+          id="settings"
+          :icon="['fas', 'gear']" class="fa-1x" @click="settings">
       </font-awesome-icon>
       <div id="tourName">
         {{ route.params.tourId }}
@@ -26,23 +26,23 @@
       <template v-if="!game_started">
         <!-- TODO only if registration phase has started -->
         <!-- show registration page -->
-        <ViewSignUp />
+        <ViewSignUp/>
       </template>
       <template v-else>
         <!-- TODO show after plan has been published -->
         <!-- show game page -->
-        <ViewGame :type="type" />
+        <ViewGame :type="type"/>
       </template>
     </template>
   </div>
 </template>
 
 <script setup>
-import { useRoute } from 'vue-router'
-import { inject, ref, watch } from "vue";
-import { auth } from "@/security/AuthService";
+import {useRoute} from 'vue-router'
+import {inject, ref, watch} from "vue";
+import {auth} from "@/security/AuthService";
 import axios from "axios";
-import { router } from "@/main";
+import {router} from "@/main";
 
 import ViewSignUp from "@/components/views/competition/ViewSignUp.vue";
 import ViewGame from "@/components/views/competition/ViewGame.vue";
@@ -58,7 +58,7 @@ const type = ref("knockout")
 const tournamentLoaded = ref(false)
 const game_started = ref(false)
 
-watch (isLoggedIn, async () => {
+watch(isLoggedIn, async () => {
   update()
 })
 update()
@@ -68,24 +68,24 @@ function update() {
   auth.getUser().then((user) => {
     if (user !== null) {
       axios.get(`/tournament/${route.params.tourId}/competition/canEdit`)
-        .then((response) => {
-          canEdit.value = response.status === 200
-        })
-        .catch((error) => {
-          canEdit.value = false
-          console.log(error)
-        })
+          .then((response) => {
+            canEdit.value = response.status === 200
+          })
+          .catch((error) => {
+            canEdit.value = false
+            console.log(error)
+          })
     }
   });
   axios.get(`/tournament/${route.params.tourId}/competition/${route.params.compId}/details`)
-    .then((response) => {
-      description.value = response.data.description
-      type.value = response.data.type.toLowerCase()
-      detailsLoaded.value = true
-    })
-    .catch((error) => {
+      .then((response) => {
+        description.value = response.data.description
+        type.value = response.data.type.toLowerCase()
+        detailsLoaded.value = true
+      })
+      .catch((error) => {
         console.log(error)
-    })
+      })
   axios.get(`/tournament/${route.params.tourId}/details`)
       .then((response) => {
         game_started.value = Date.parse(response.data.beginGamePhase) < new Date()
@@ -102,35 +102,35 @@ function settings() {
 </script>
 
 <style scoped>
-  #container {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
+#container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-  h2 {
-    font-size: 30px;
-    display: inline;
-    margin-left: 15px;
-  }
+h2 {
+  font-size: 30px;
+  display: inline;
+  margin-left: 15px;
+}
 
-  #settings {
-    color: #303030;
-    margin-right: 5px;
-  }
+#settings {
+  color: #303030;
+  margin-right: 5px;
+}
 
-  #settings:hover {
-    filter: drop-shadow(0 0 6px #808080);
-  }
+#settings:hover {
+  filter: drop-shadow(0 0 6px #808080);
+}
 
-  #settings:active {
-    color: #505050;
-  }
+#settings:active {
+  color: #505050;
+}
 
-  #tourName {
-    display: inline;
-    color: gray;
-    font-size: 18px;
-  }
+#tourName {
+  display: inline;
+  color: gray;
+  font-size: 18px;
+}
 </style>

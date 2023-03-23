@@ -1,10 +1,10 @@
 <script setup>
 import HeadContent from "@/components/header/HeadContent.vue";
-import { ref, provide } from 'vue'
+import {provide, ref} from 'vue'
+import {access_token, auth} from "@/security/AuthService"
 
 let aside = false;
 
-import {access_token, auth} from "@/security/AuthService"
 auth.silentLogin()
 
 
@@ -33,10 +33,10 @@ function updateToken() {
 </script>
 
 <template>
-  <HeadContent />
+  <HeadContent/>
 
   <div id="body">
-    <router-view />
+    <router-view/>
     <aside v-if="aside">
       <h2>Aside content</h2>
     </aside>

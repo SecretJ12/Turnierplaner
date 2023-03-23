@@ -3,15 +3,14 @@
     <el-form
         ref="formRef"
         :model="data"
-        label-width="120px"
-        size="large"
-        scroll-to-error="scroll-to-error"
         label-position="top"
+        label-width="120px"
+        scroll-to-error="scroll-to-error"
+        size="large"
     >
       <!-- Competition name -->
       <el-form-item
           :label="$t('general.name')"
-          prop="name"
           :rules="[
                   {
                     required: true,
@@ -19,11 +18,12 @@
                     trigger: 'blur',
                   }
               ]"
+          prop="name"
       >
         <el-input
             v-model="data.name"
-            show-word-limit
             maxlength="30"
+            show-word-limit
         />
       </el-form-item>
 
@@ -33,12 +33,12 @@
           prop="description"
       >
         <el-input
-            type="textarea"
-            :autosize="{minRows: 3, maxRows: 5}"
             v-model="data.description"
-            show-word-limit
-            maxlength="100"
+            :autosize="{minRows: 3, maxRows: 5}"
             autosize
+            maxlength="100"
+            show-word-limit
+            type="textarea"
         />
       </el-form-item>
 
@@ -46,18 +46,18 @@
       <el-form-item
           :label="$t('CompetitionSettings.type')"
           prop="description"
-        >
-        <el-select class="full-width"
-          v-model="data.type"
+      >
+        <el-select v-model="data.type"
+                   class="full-width"
         >
           <el-option
               :key="'KNOCKOUT'"
               :label='$t("CompetitionSettings.knockout")'
-              :value="'KNOCKOUT'" />
+              :value="'KNOCKOUT'"/>
           <el-option
               :key="'GROUPS'"
               :label='$t("CompetitionSettings.groups")'
-              :value="'GROUPS'" />
+              :value="'GROUPS'"/>
         </el-select>
       </el-form-item>
 
@@ -73,12 +73,11 @@
 </template>
 
 <script setup>
-import { i18n } from "@/main";
-import { reactive, ref } from "vue";
-import { router } from "@/main";
+import {i18n, router} from "@/main";
+import {reactive, ref} from "vue";
 import axios from "axios";
-import { ElMessage } from "element-plus";
-import { useRoute } from "vue-router";
+import {ElMessage} from "element-plus";
+import {useRoute} from "vue-router";
 
 const route = useRoute()
 
@@ -102,12 +101,12 @@ function submit(formRef) {
       }
 
       axios.post(`/tournament/${route.params.tourId}/competition/add`, server_data)
-        .then(_ => {
-          router.push({path: "/tournament/" + route.params.tourId})
-        })
-        .catch(_ => {
-          ElMessage.error(i18n.global.t("ViewCreateCompetition.creationFailed"))
-        })
+          .then(_ => {
+            router.push({path: "/tournament/" + route.params.tourId})
+          })
+          .catch(_ => {
+            ElMessage.error(i18n.global.t("ViewCreateCompetition.creationFailed"))
+          })
     } else {
       console.log('validation failed')
     }
