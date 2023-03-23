@@ -20,7 +20,8 @@ class AuthService {
                         access_token.value = null
                     })
             // already load before logging in to avoid errors
-            access_token.value = user.access_token
+            if (user !== null)
+                access_token.value = user.access_token
         })
     }
 

@@ -13,7 +13,6 @@ import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.List;
 
 @Path("/tournament")
 public class TournamentResource {
@@ -45,10 +44,10 @@ public class TournamentResource {
     }
 
     @GET
-    @Path("/details")
+    @Path("/{tourName}/details")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getTournament(@QueryParam("tourName") String name) {
+    public Response getTournament(@PathParam("tourName") String name) {
         Tournament tournament = tournaments.getByName(name);
         if (securityIdentity.hasRole("director"))
             return Response.ok(new jDirectorTournamentUpdate(tournament)).build();

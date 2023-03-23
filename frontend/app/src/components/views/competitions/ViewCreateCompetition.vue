@@ -101,7 +101,7 @@ function submit(formRef) {
         tourName: route.params.tourId
       }
 
-      axios.post("/competition/add", server_data)
+      axios.post(`/tournament/${route.params.tourId}/competition/add`, server_data)
         .then(_ => {
           router.push({path: "/tournament/" + route.params.tourId})
         })

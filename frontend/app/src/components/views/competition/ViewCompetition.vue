@@ -67,7 +67,7 @@ function update() {
   canEdit.value = false
   auth.getUser().then((user) => {
     if (user !== null) {
-      axios.get('/competition/canEdit')
+      axios.get(`/tournament/${route.params.tourId}/competition/canEdit`)
         .then((response) => {
           canEdit.value = response.status === 200
         })
@@ -77,7 +77,7 @@ function update() {
         })
     }
   });
-  axios.get(`/competition/details?tourName=${route.params.tourId}&compName=${route.params.compId}`)
+  axios.get(`/tournament/${route.params.tourId}/competition/${route.params.compId}/details`)
     .then((response) => {
       description.value = response.data.description
       type.value = response.data.type.toLowerCase()
@@ -86,7 +86,7 @@ function update() {
     .catch((error) => {
         console.log(error)
     })
-  axios.get(`/tournament/details?tourName=${route.params.tourId}`)
+  axios.get(`/tournament/${route.params.tourId}/details`)
       .then((response) => {
         game_started.value = Date.parse(response.data.beginGamePhase) < new Date()
         tournamentLoaded.value = true
@@ -97,7 +97,7 @@ function update() {
 }
 
 function settings() {
-  router.push({path: '/tournament/' + route.params.tourId + '/competition/' + route.params.compId + '/edit'})
+  router.push({path: `/tournament/${route.params.tourId}/competition/${route.params.compId}/edit`})
 }
 </script>
 

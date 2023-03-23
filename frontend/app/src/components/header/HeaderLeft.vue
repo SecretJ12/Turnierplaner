@@ -6,7 +6,7 @@
 </template>
 
 <script setup>
-import { router } from '/src/main'
+import { router } from '@/main'
 
 function home() {
   router.replace({path:"/"})

@@ -133,7 +133,7 @@ const data = reactive({
 
 const disabled = ref(true)
 
-axios.get(`/tournament/details?tourName=${route.params.tourId}`)
+axios.get(`/tournament/${route.params.tourId}/details`)
     .then((response) => {
       data.id = response.data.id
       data.name = response.data.name

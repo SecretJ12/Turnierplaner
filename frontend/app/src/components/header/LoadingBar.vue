@@ -24,13 +24,14 @@ axios.interceptors.response.use(function (config) {
   loading.value = false
   return Promise.reject(error);
 })
+// TODO count for multiple requests
 </script>
 
 <style scoped>
 
 #progress {
   margin: 0 0 -4px 0;
-  height: 4px;
+  height: 6px;
   background-color: lightblue; /* add8e6 */
 }
 

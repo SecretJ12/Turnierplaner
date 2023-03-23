@@ -26,13 +26,17 @@ public class PlayerResource {
     PlayerRepository playerRepository;
     @Inject
     VerificationCodeRepository verificationCodeRepository;
+    @Inject
+    Mailer mailer;
+    MailTemplates mailTemplates = new MailTemplates();
 
     // TODO add search parameters like name and sex
     // TODO only return verified accounts (except for admins)
     // TODO add endpoint for players to competition
+
     @GET
     @Transactional
-    @Path("/players")
+    @Path("/find")
     @Produces(MediaType.APPLICATION_JSON)
     public List<jUserPlayer> listPlayer(@QueryParam("search") String search) {
         if (search.length() == 0)
@@ -41,11 +45,6 @@ public class PlayerResource {
                 .filter(search).map(jUserPlayer::new)
                 .toList();
     }
-
-    @Inject
-    Mailer mailer;
-
-    MailTemplates mailTemplates = new MailTemplates();
 
     @POST
     @Transactional

@@ -18,7 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-@Path("/competition")
+@Path("/tournament/{tourName}/competition")
 public class CompetitionResource {
 
     @Inject
@@ -36,17 +36,18 @@ public class CompetitionResource {
     @Path("/list")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public List<jUserCompetition> getAllCompetitions(@QueryParam("tourName") String tourName) {
+    public List<jUserCompetition> getAllCompetitions(@PathParam("tourName") String tourName) {
         if (canSee(tourName))
             return competitions.listByName(tourName).stream().map(jUserCompetition::new).toList();
         return null;
     }
 
     @GET
-    @Path("/details")
+    @Path("/{compName}/details")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public jUserCompetition getCompetition(@QueryParam("tourName") String tourName, @QueryParam("compName") String compName) {
+    public jUserCompetition getCompetition(@PathParam("tourName") String tourName,
+                                           @PathParam("compName") String compName) {
         if (securityIdentity.hasRole("director"))
             return new jDirectorCompetitionUpdate(competitions.getByName(tourName, compName));
         if (canSee(tourName))
@@ -57,7 +58,7 @@ public class CompetitionResource {
     @GET
     @Path("/canEdit")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response canEdit() {
+    public Response canEdit(@PathParam("tourName") String tourName) {
         // TODO don't return via status code but via text
         if (securityIdentity.hasRole("director"))
             return Response.ok("Authorized").build();
@@ -71,15 +72,15 @@ public class CompetitionResource {
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response addCompetition(jDirectorCompetitionAdd competition) {
+    public Response addCompetition(@PathParam("tourName") String tourName, jDirectorCompetitionAdd competition) {
         if (competition.getName() == null)
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(),
                     "No tournament specified").build();
 
-        if (competitions.getByName(competition.getTourName(), competition.getName()) != null)
+        if (competitions.getByName(tourName, competition.getName()) != null)
             return Response.status(Response.Status.CONFLICT).build();
 
-        Tournament tournament = tournaments.getByName(competition.getTourName());
+        Tournament tournament = tournaments.getByName(tourName);
         if (tournament == null)
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(),
                     "Tournament doesn't exist").build();
@@ -96,47 +97,57 @@ public class CompetitionResource {
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response updateCompetition(jDirectorCompetitionUpdate competition) {
+    public Response updateCompetition(@PathParam("tourName") String tourName, jDirectorCompetitionUpdate competition) {
         Competition dbCompetition = competitions.getById(competition.getId());
         if (dbCompetition == null)
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(),
                     "Competition doesn't exist").build();
+        if (!dbCompetition.getTournament().getName().equals(tourName))
+            return Response.status(Response.Status.BAD_REQUEST.getStatusCode(),
+                    "Tournament of competition is not the given").build();
 
-        competitions.persist(dbCompetition);
         dbCompetition.setName(competition.getName());
         dbCompetition.setDescription(competition.getDescription());
         dbCompetition.setType(competition.getType());
+        competitions.persist(dbCompetition);
 
         return Response.ok("successfully changed").build();
     }
 
     @GET
-    @Path("/signedUpPlayers")
+    @Path("/{compName}/signedUpPlayers")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<jUserPlayer> getSignedUpPlayers(@QueryParam("tourName") String tourName,
-                                                @QueryParam("compName") String compName) {
+    public Response getSignedUpPlayers(@PathParam("tourName") String tourName,
+                                                @PathParam("compName") String compName) {
+        if (!canSee(tourName))
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+
         // TODO only allow for if role > director or current date after begin of registration phase
         Competition competition = competitions.getByName(tourName, compName);
         if (competition == null)
             return null;
 
-        return competition.getPlayers().stream().map(jUserPlayer::new)
+        return Response.ok(competition.getPlayers().stream().map(jUserPlayer::new)
                 .sorted((A, B) -> {
                     if (A.getFirstName().equals(B.getFirstName()))
                         return A.getLastName().compareTo(B.getLastName());
                     else
                         return A.getFirstName().compareTo(B.getFirstName());
-                }).toList();
+                }).toList()).build();
     }
 
     @POST
-    @Path("/signUp")
+    @Path("/{compName}/signUp")
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response signUpPlayer(jUserPlayerSignUpForm reg) {
+    public Response signUpPlayer(@PathParam("tourName") String tourName, @PathParam("compName") String compName,
+                                 jUserPlayerSignUpForm reg) {
+        if (!canSee(tourName))
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+
         // TODO only allow for role > director or current date in registration phase
-        Competition competition = competitions.getByName(reg.getTourName(), reg.getCompName());
+        Competition competition = competitions.getByName(tourName, compName);
         Player player = players.playerRepository.getByName(reg.getFirstName(), reg.getLastName());
         if (competition == null)
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(),
@@ -162,9 +173,12 @@ public class CompetitionResource {
     }
 
     @GET
-    @Path("/knockoutMatches")
+    @Path("/{compName}/knockoutMatches")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getKnockoutMatches(@QueryParam("tourName") String tourName, @QueryParam("compName") String compName) {
+    public Response getKnockoutMatches(@PathParam("tourName") String tourName, @PathParam("compName") String compName) {
+        if (!canSee(tourName))
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+
         Competition competition = competitions.getByName(tourName, compName);
         if (competition == null)
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -177,9 +191,12 @@ public class CompetitionResource {
     }
 
     @GET
-    @Path("/groupMatches")
+    @Path("/{compName}/groupMatches")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getGroupMatches(@QueryParam("tourName") String tourName, @QueryParam("compName") String compName) {
+    public Response getGroupMatches(@PathParam("tourName") String tourName, @PathParam("compName") String compName) {
+        if (!canSee(tourName))
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+
         Competition competition = competitions.getByName(tourName, compName);
         if (competition == null)
             return Response.status(Response.Status.NOT_FOUND).build();

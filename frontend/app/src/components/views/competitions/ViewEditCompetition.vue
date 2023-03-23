@@ -93,7 +93,7 @@ const data = reactive({
 
 const disabled = ref(true)
 
-axios.get(`/competition/details?tourName=${route.params.tourId}&compName=${route.params.compId}`)
+axios.get(`/tournament/${route.params.tourId}/competition/${route.params.compId}/details`)
     .then((response) => {
       data.id = response.data.id
       data.name = response.data.name
@@ -119,7 +119,7 @@ function submit(formRef) {
         type: data.type
       }
 
-      axios.post("/competition/update", server_data)
+      axios.post(`/tournament/${route.params.tourId}/competition/update`, server_data)
         .then(_ => {
           router.push({path: "/tournament/" + route.params.tourId})
         })

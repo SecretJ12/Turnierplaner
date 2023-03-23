@@ -6,8 +6,6 @@
 
 <script setup>
 
-const props = defineProps();
-
 const emit = defineEmits(['selected']);
 
 function selected() {

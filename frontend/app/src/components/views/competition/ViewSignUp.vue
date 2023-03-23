@@ -22,7 +22,7 @@
     </el-row>
     <el-row id="" :gutter="20" class="row-bg" justify="space-between">
       <el-col :span="16">
-        <el-text class="mx-1" size="small" type="danger" >{{ $t('ViewPlayerRegistration.not_found') }}</el-text>
+        <el-text size="small" type="info" >{{ $t('ViewPlayerRegistration.not_found') }}</el-text>
 <!--TODO only show warning when text is empty? And smaller in red?-->
 <!-- Why does text formatting not work above??? -->
       </el-col>
@@ -38,7 +38,7 @@
     <el-row :gutter="20" class="row-bg" justify="center">
       <el-col :span="24">
         <el-table stripe border :data="players" :empty-text="$t('ViewCompetition.no_registration')">
-          <el-table-column sortable prop="name" :label="i18n.global.t('general.name')" />
+          <el-table-column sortable="custom" prop="name" :label="i18n.global.t('general.name')" />
           <!-- TODO add delete for admin -->
         </el-table>
       </el-col>
@@ -69,7 +69,7 @@ function update() {
   canEdit.value = false
   auth.getUser().then((user) => {
     if (user !== null) {
-      axios.get('/competition/canEdit')
+      axios.get(`/tournament//competition/canEdit`)
         .then((response) => {
           canEdit.value = response.status === 200
         })
@@ -79,7 +79,7 @@ function update() {
         })
     }
   });
-  axios.get(`/competition/signedUpPlayers?tourName=${route.params.tourId}&compName=${route.params.compId}`)
+  axios.get(`/tournament/${route.params.tourId}/competition/${route.params.compId}/signedUpPlayers`)
     .then((response) => {
       if (response.status !== 200)
         players.value = []
@@ -103,7 +103,7 @@ function queryPlayer(search, callback) {
     return item.value.includes(search)
   })
   callback(queriedPlayer)
-  axios.get(`/player/players?search=${search}`)
+  axios.get(`/player/find?search=${search}`)
     .then((result) => {
       queriedPlayer = result.data.map((item) => {
         item.value = item.firstName + ' ' + item.lastName
