@@ -12,6 +12,24 @@ public class FinalOfGroup {
 
     @EmbeddedId
     private FinalOfGroupKey finalofGroupKey;
+    @Column(name = "position")
+    private int end;
+
+    public FinalOfGroupKey getFinalofGroupKey() {
+        return finalofGroupKey;
+    }
+
+    public void setFinalofGroupKey(FinalOfGroupKey finalofGroupKey) {
+        this.finalofGroupKey = finalofGroupKey;
+    }
+
+    public int getEnd() {
+        return end;
+    }
+
+    public void setEnd(int end) {
+        this.end = end;
+    }
 
     @Embeddable
     public static class FinalOfGroupKey implements Serializable {
@@ -52,24 +70,5 @@ public class FinalOfGroup {
         public void setGroup(Group group) {
             this.group = group;
         }
-    }
-
-    @Column(name = "position")
-    private int end;
-
-    public FinalOfGroupKey getFinalofGroupKey() {
-        return finalofGroupKey;
-    }
-
-    public void setFinalofGroupKey(FinalOfGroupKey finalofGroupKey) {
-        this.finalofGroupKey = finalofGroupKey;
-    }
-
-    public int getEnd() {
-        return end;
-    }
-
-    public void setEnd(int end) {
-        this.end = end;
     }
 }

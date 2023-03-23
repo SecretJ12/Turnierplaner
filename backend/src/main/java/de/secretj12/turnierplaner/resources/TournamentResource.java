@@ -29,7 +29,7 @@ public class TournamentResource {
     public Response getAllTournaments() {
         // TODO think about sorting them, creation date?
         if (securityIdentity.hasRole("director"))
-             return Response.ok(tournaments.listAll().stream().map(jDirectorTournamentAdd::new).toList()).build();
+            return Response.ok(tournaments.listAll().stream().map(jDirectorTournamentAdd::new).toList()).build();
         else
             return Response.ok(tournaments.listAllVisible().stream().map(jUserTournament::new).toList()).build();
     }

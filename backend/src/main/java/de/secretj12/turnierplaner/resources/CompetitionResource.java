@@ -118,7 +118,7 @@ public class CompetitionResource {
     @Path("/{compName}/signedUpPlayers")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getSignedUpPlayers(@PathParam("tourName") String tourName,
-                                                @PathParam("compName") String compName) {
+                                       @PathParam("compName") String compName) {
         if (!canSee(tourName))
             return Response.status(Response.Status.UNAUTHORIZED).build();
 
@@ -159,10 +159,9 @@ public class CompetitionResource {
         List<Player> regPlayers = competition.getPlayers();
         if (regPlayers == null)
             regPlayers = List.of(player);
-        else if(regPlayers.contains(player)){
-            return Response.status(Response.Status.BAD_REQUEST.getStatusCode(),"Player already registered!").build();
-        }
-        else{
+        else if (regPlayers.contains(player)) {
+            return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), "Player already registered!").build();
+        } else {
             regPlayers.add(player);
         }
         competition.setPlayers(regPlayers);

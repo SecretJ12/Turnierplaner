@@ -12,7 +12,8 @@ public class jUserTournament {
     private LocalDateTime beginGamePhase;
     private LocalDateTime endGamePhase;
 
-    public jUserTournament() {}
+    public jUserTournament() {
+    }
 
     public jUserTournament(Tournament dbTournament) {
         this.name = dbTournament.getName();

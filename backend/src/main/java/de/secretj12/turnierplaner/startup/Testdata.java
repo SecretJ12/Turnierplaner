@@ -116,8 +116,8 @@ public class Testdata {
 
         Player[] groupPlayers = new Player[8];
         for (int i = 0; i < 8; i++) {
-            String fn = String.valueOf((char) ('a'+i));
-            String ln = "group" + String.valueOf((char) ('A'+i));
+            String fn = String.valueOf((char) ('a' + i));
+            String ln = "group" + (char) ('A' + i);
             groupPlayers[i] = new Player();
             groupPlayers[i].setFirstName(fn);
             groupPlayers[i].setLastName(ln);
@@ -133,11 +133,11 @@ public class Testdata {
         Group[] groups = new Group[2];
         for (int i = 0; i < 2; i++) {
             groups[i] = new Group();
-            groups[i].setIndex(i+1);
+            groups[i].setIndex(i + 1);
             groups[i].setCompetition(comp1);
             List<Match> groupMatches = new ArrayList<>();
-            for (int x = 4*i; x < 4*i+4; x++) {
-                for (int y = x+1; y < 4*i+4; y++) {
+            for (int x = 4 * i; x < 4 * i + 4; x++) {
+                for (int y = x + 1; y < 4 * i + 4; y++) {
                     Match match = createMatch(c1, comp1);
                     match.setPlayerA(groupPlayers[x]);
                     match.setPlayerB(groupPlayers[y]);
@@ -162,8 +162,8 @@ public class Testdata {
 
         Player[] knockoutPlayers = new Player[8];
         for (int i = 0; i < 8; i++) {
-            String fn = String.valueOf((char) ('a'+i));
-            String ln = "knockout" + String.valueOf((char) ('A'+i));
+            String fn = String.valueOf((char) ('a' + i));
+            String ln = "knockout" + (char) ('A' + i);
             knockoutPlayers[i] = new Player();
             knockoutPlayers[i].setFirstName(fn);
             knockoutPlayers[i].setLastName(ln);
@@ -179,8 +179,8 @@ public class Testdata {
         Match[] quarterFinal = new Match[4];
         for (int i = 0; i < 4; i++) {
             quarterFinal[i] = createMatch(c1, comp2);
-            quarterFinal[i].setPlayerA(knockoutPlayers[2*i]);
-            quarterFinal[i].setPlayerB(knockoutPlayers[2*i+1]);
+            quarterFinal[i].setPlayerA(knockoutPlayers[2 * i]);
+            quarterFinal[i].setPlayerB(knockoutPlayers[2 * i + 1]);
             matches.persist(quarterFinal[i]);
         }
         Match[] semiFinal = new Match[2];
@@ -188,8 +188,8 @@ public class Testdata {
             semiFinal[i] = createMatch(c2, comp2);
 
             NextMatch next = new NextMatch();
-            next.setPreviousA(quarterFinal[2*i]);
-            next.setPreviousB(quarterFinal[2*i+1]);
+            next.setPreviousA(quarterFinal[2 * i]);
+            next.setPreviousB(quarterFinal[2 * i + 1]);
             next.setNextMatch(semiFinal[i]);
             nextMatches.persist(next);
         }

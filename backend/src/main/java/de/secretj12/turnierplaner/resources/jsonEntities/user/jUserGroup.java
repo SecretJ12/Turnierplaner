@@ -14,7 +14,7 @@ public class jUserGroup {
     public jUserGroup(Group group) {
         this.index = group.getIndex();
         this.player = group.getMatches().stream()
-                .flatMap(match -> Stream.of(match.getPlayerA(),match.getPlayerB())).distinct()
+                .flatMap(match -> Stream.of(match.getPlayerA(), match.getPlayerB())).distinct()
                 .map(jUserPlayer::new).toList();
         this.matches = group.getMatches().stream().map(jUserGroupMatch::new).toList();
     }

@@ -3,12 +3,11 @@ package de.secretj12.turnierplaner.resources.jsonEntities.director;
 import de.secretj12.turnierplaner.db.entities.Tournament;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserTournament;
 
-import java.time.LocalDateTime;
-
 public class jDirectorTournamentAdd extends jUserTournament {
     private boolean visible;
 
-    public jDirectorTournamentAdd() {}
+    public jDirectorTournamentAdd() {
+    }
 
     public jDirectorTournamentAdd(Tournament dbTournament) {
         super(dbTournament);

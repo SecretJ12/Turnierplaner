@@ -11,11 +11,11 @@ import java.util.UUID;
 @Entity
 @Table(name = "competitions")
 @NamedQueries({
-        @NamedQuery(name="compByName",
-                query="SELECT c FROM Competition c LEFT JOIN Tournament t ON c.tournament = t " +
+        @NamedQuery(name = "compByName",
+                query = "SELECT c FROM Competition c LEFT JOIN Tournament t ON c.tournament = t " +
                         "WHERE t.name = ?1 AND c.name = ?2"),
-        @NamedQuery(name="listByName",
-                query="SELECT c FROM Competition c LEFT JOIN Tournament t ON c.tournament = t WHERE t.name=  ?1")
+        @NamedQuery(name = "listByName",
+                query = "SELECT c FROM Competition c LEFT JOIN Tournament t ON c.tournament = t WHERE t.name=  ?1")
 })
 public class Competition {
     @Id
@@ -26,7 +26,7 @@ public class Competition {
     @Column(name = "name")
     private String name;
 
-    @ManyToOne(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     @JoinColumn(name = "tournament_id")
     private Tournament tournament;
 

@@ -8,7 +8,8 @@ public class jDirectorCompetitionUpdate extends jDirectorCompetitionAdd {
 
     private UUID id;
 
-    public jDirectorCompetitionUpdate() {}
+    public jDirectorCompetitionUpdate() {
+    }
 
     public jDirectorCompetitionUpdate(Competition competition) {
         super(competition);

@@ -10,9 +10,9 @@ import java.util.UUID;
 @Table(name = "matches")
 @NamedQueries(
         @NamedQuery(name = "findHead",
-            query = "FROM Match m WHERE m.competition.id = :compId " +
-                    "AND NOT EXISTS (FROM NextMatch n WHERE n.previousA = m OR n.previousB = m) " +
-                    "AND EXISTS (FROM NextMatch n WHERE m.id = n.nextMatch AND n.winner = :finale)")
+                query = "FROM Match m WHERE m.competition.id = :compId " +
+                        "AND NOT EXISTS (FROM NextMatch n WHERE n.previousA = m OR n.previousB = m) " +
+                        "AND EXISTS (FROM NextMatch n WHERE m.id = n.nextMatch AND n.winner = :finale)")
 )
 public class Match {
     @Id
@@ -20,7 +20,7 @@ public class Match {
     @Column(name = "id")
     private UUID id;
 
-    @ManyToOne(cascade = { CascadeType.ALL })
+    @ManyToOne(cascade = {CascadeType.ALL})
     @JoinColumns({
             @JoinColumn(name = "competition_id")
     })

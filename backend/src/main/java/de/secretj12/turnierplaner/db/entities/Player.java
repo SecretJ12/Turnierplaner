@@ -7,8 +7,8 @@ import java.util.UUID;
 @Entity
 @Table(name = "players")
 @NamedQueries({
-        @NamedQuery(name="filter",
-                query="SELECT p FROM Player p " +
+        @NamedQuery(name = "filter",
+                query = "SELECT p FROM Player p " +
                         "WHERE p.firstName like CONCAT('%', ?1, '%') OR p.lastName = CONCAT('%', ?1, '%')" +
                         "OR CONCAT(p.firstName, ' ', p.lastName) like CONCAT('%', ?1, '%')" +
                         "ORDER BY p.firstName, p.lastName")

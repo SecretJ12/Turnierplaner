@@ -5,7 +5,8 @@ import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserCompetition;
 
 public class jDirectorCompetitionAdd extends jUserCompetition {
 
-    public jDirectorCompetitionAdd() {}
+    public jDirectorCompetitionAdd() {
+    }
 
     public jDirectorCompetitionAdd(Competition competition) {
         super(competition);

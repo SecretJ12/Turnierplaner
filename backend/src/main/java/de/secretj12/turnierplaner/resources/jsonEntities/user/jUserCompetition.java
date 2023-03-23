@@ -3,18 +3,13 @@ package de.secretj12.turnierplaner.resources.jsonEntities.user;
 import de.secretj12.turnierplaner.db.entities.Competition;
 import de.secretj12.turnierplaner.db.entities.CompetitionType;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.util.UUID;
-
 public class jUserCompetition {
     private String name;
     private String description;
     private CompetitionType type;
 
-    public jUserCompetition() {}
+    public jUserCompetition() {
+    }
 
     public jUserCompetition(Competition competition) {
         this.name = competition.getName();
