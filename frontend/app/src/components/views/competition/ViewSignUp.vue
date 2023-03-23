@@ -133,11 +133,9 @@ function signUp() {
 
   const form = {
     firstName: player.firstName,
-    lastName: player.lastName,
-    tourName: route.params.tourId,
-    compName: route.params.compId
+    lastName: player.lastName
   }
-  axios.post(`/competition/signUp`, form)
+  axios.post(`/tournament/${route.params.tourId}/competition/${route.params.compId}/signUp`, form)
       .then((response) => {
         if (response.status === 200)
           ElMessage.success("erfolgreich erstellt") // TODO i18n
