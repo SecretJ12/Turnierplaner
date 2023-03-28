@@ -39,12 +39,25 @@ const disabled = ref(true)
 
 axios.get(`/tournament/${route.params.tourId}/competition/${route.params.compId}/details`)
     .then((response) => {
-      data.id = response.data.id
-      data.name = response.data.name
-      data.description = response.data.description
-      data.tourType = response.data.type
-      disabled.value = false
-        // TODO receive all the data
+        console.log(response.data)
+        data.id = response.data.id
+        data.name = response.data.name
+        data.description = response.data.description
+        data.tourType = response.data.type
+        data.mode = response.data.mode
+        data.signup = response.data.signUp
+        data.playerA.sex = response.data.playerA.sex
+        data.playerA.hasMinAge = response.data.playerA.hasMinAge
+        data.playerA.minAge = response.data.playerA.minAge
+        data.playerA.hasMaxAge = response.data.playerA.hasMaxAge
+        data.playerA.maxAge = response.data.playerA.maxAge
+        data.playerB.different = response.data.playerB.different
+        data.playerB.sex = response.data.playerB.sex
+        data.playerB.hasMinAge = response.data.playerB.hasMinAge
+        data.playerB.minAge = response.data.playerB.minAge
+        data.playerB.hasMaxAge = response.data.playerB.hasMaxAge
+        data.playerB.maxAge = response.data.playerB.maxAge
+        disabled.value = false
     })
     .catch((error) => {
       ElMessage.error(i18n.global.t("ViewEditCompetition.loadingDetailsFailed"))
@@ -57,10 +70,10 @@ function submit(server_data) {
 
   axios.post(`/tournament/${route.params.tourId}/competition/update`, server_data)
       .then(_ => {
-        router.push({path: "/tournament/" + route.params.tourId})
+          ElMessage.success(i18n.global.t("ViewEditCompetition.saved"))
       })
       .catch(_ => {
-        ElMessage.error(i18n.global.t("ViewCreateCompetition.creationFailed"))
+        ElMessage.error(i18n.global.t("ViewEditCompetition.saving_failed"))
       })
 }
 </script>

@@ -87,7 +87,7 @@
     "sex": "Sex",
     "male": "Male",
     "female": "Female",
-    "both": "Any",
+    "any": "Any",
     "minAge": "Minimum age",
     "maxAge": "Maximum age",
     "missingAge": "Please choose a date"
@@ -96,6 +96,8 @@
     "creationFailed": "Couldn't create competition"
   },
   "ViewEditCompetition": {
+    "saved": "Competition saved",
+    "saving_failed": "Someting went wrong while saving",
     "loadingDetailsFailed": "Couldn't load competition details"
   },
   "ViewCompetition": {

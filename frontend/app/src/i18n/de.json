@@ -87,7 +87,7 @@
     "sex": "Geschlecht",
     "male": "Männlich",
     "female": "Weiblich",
-    "both": "Egal",
+    "any": "Egal",
     "minAge": "Mindestalter",
     "maxAge": "Maximalalter",
     "missingAge": "Bitte wähle ein Datum"
@@ -96,6 +96,8 @@
     "creationFailed": "Konkurrenz konnte nicht erstellt werden"
   },
   "ViewEditCompetition": {
+    "saved": "Konkurrenz wurde gespeichert",
+    "saving_failed": "Beim Speichern hat etwas nicht funktioniert",
     "loadingDetailsFailed": "Details der Konkurrenz konnten nicht geladen werden"
   },
   "ViewCompetition": {

@@ -56,13 +56,13 @@
                         >
                             <el-select v-model="props.data.tourType" class="full-width">
                                 <el-option
-                                        :key="'KNOCKOUT'"
-                                        :label='$t("CompetitionSettings.knockout")'
-                                        :value="'KNOCKOUT'"/>
+                                    :key="'KNOCKOUT'"
+                                    :label='$t("CompetitionSettings.knockout")'
+                                    value="KNOCKOUT"/>
                                 <el-option
-                                        :key="'GROUPS'"
-                                        :label='$t("CompetitionSettings.groups")'
-                                        :value="'GROUPS'"/>
+                                    :key="'GROUPS'"
+                                    :label='$t("CompetitionSettings.groups")'
+                                    value="GROUPS"/>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -77,13 +77,13 @@
                                        class="full-width"
                             >
                                 <el-option
-                                        :key="'SINGLE'"
-                                        :label='$t("CompetitionSettings.single")'
-                                        :value="'SINGLE'"/>
+                                    :key="'SINGLE'"
+                                    :label='$t("CompetitionSettings.single")'
+                                    value="SINGLE"/>
                                 <el-option
-                                        :key="'DOUBLE'"
-                                        :label='$t("CompetitionSettings.double")'
-                                        :value="'DOUBLE'"/>
+                                    :key="'DOUBLE'"
+                                    :label='$t("CompetitionSettings.double")'
+                                    value="DOUBLE"/>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -97,13 +97,13 @@
                                        class="full-width"
                             >
                                 <el-option
-                                        :key="'INDIVIDUAL'"
-                                        :label='$t("CompetitionSettings.individual")'
-                                        :value="'INDIVIDUAL'"/>
+                                    :key="'INDIVIDUAL'"
+                                    :label='$t("CompetitionSettings.individual")'
+                                    value="INDIVIDUAL"/>
                                 <el-option
-                                        :key="'TOGETHER'"
-                                        :label='$t("CompetitionSettings.together")'
-                                        :value="'TOGETHER'"/>
+                                    :key="'TOGETHER'"
+                                    :label='$t("CompetitionSettings.together")'
+                                    value="TOGETHER"/>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -119,17 +119,17 @@
                             <el-select v-model="props.data.playerA.sex"
                                        class="full-width">
                                 <el-option
-                                        :key="'MALE'"
-                                        :label='$t("CompetitionSettings.male")'
-                                        :value="'MALE'"/>
+                                    key="MALE"
+                                    :label='$t("CompetitionSettings.male")'
+                                    value="MALE"/>
                                 <el-option
-                                        :key="'FEMALE'"
-                                        :label='$t("CompetitionSettings.female")'
-                                        :value="'FEMALE'"/>
+                                    :key="'FEMALE'"
+                                    :label='$t("CompetitionSettings.female")'
+                                    value="FEMALE"/>
                                 <el-option
-                                        :key="'BOTH'"
-                                        :label='$t("CompetitionSettings.both")'
-                                        :value="'BOTH'"/>
+                                    :key="'ANY'"
+                                    :label='$t("CompetitionSettings.any")'
+                                    value="ANY"/>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -199,17 +199,17 @@
                                     <el-select v-model="props.data.playerB.sex"
                                                class="full-width">
                                         <el-option
-                                                :key="'MALE'"
-                                                :label='$t("CompetitionSettings.male")'
-                                                :value="'MALE'"/>
+                                            :key="'MALE'"
+                                            :label='$t("CompetitionSettings.male")'
+                                            value="MALE"/>
                                         <el-option
-                                                :key="'FEMALE'"
-                                                :label='$t("CompetitionSettings.female")'
-                                                :value="'FEMALE'"/>
+                                            :key="'FEMALE'"
+                                            :label='$t("CompetitionSettings.female")'
+                                            value="FEMALE"/>
                                         <el-option
-                                                :key="'BOTH'"
-                                                :label='$t("CompetitionSettings.both")'
-                                                :value="'BOTH'"/>
+                                            :key="'ANY'"
+                                            :label='$t("CompetitionSettings.any")'
+                                            value="ANY"/>
                                     </el-select>
                                 </el-form-item>
                             </el-col>
@@ -280,7 +280,7 @@
 
 <script setup>
 import {i18n} from "@/main"
-import {reactive, ref} from 'vue'
+import {ref} from 'vue'
 
 let windowWidth = ref(window.innerWidth)
 window.addEventListener('resize', () => {
@@ -288,7 +288,7 @@ window.addEventListener('resize', () => {
 })
 
 const formRef = ref()
-const props = defineProps(reactive({
+const props = defineProps({
     submitText: String,
     disabled: Boolean,
     data: {
@@ -313,7 +313,7 @@ const props = defineProps(reactive({
             maxAge: Date
         }
     }
-}))
+})
 
 const emit = defineEmits(['submit'])
 
@@ -323,11 +323,27 @@ function submit(formRef) {
   formRef.validate((valid) => {
     if (valid) {
       const server_data = {
-        name: props.data.name,
-        description: props.data.description,
-        type: props.data.tourType
+          name: props.data.name,
+          description: props.data.description,
+          type: props.data.tourType,
+          mode: props.data.mode,
+          signUp: props.data.signup,
+          playerA: {
+              sex: props.data.playerA.sex,
+              hasMinAge: props.data.playerA.hasMinAge,
+              minAge: props.data.playerA.minAge,
+              hasMaxAge: props.data.playerA.hasMaxAge,
+              maxAge: props.data.playerA.maxAge
+          },
+          playerB: {
+              different: props.data.playerB.different,
+              sex: props.data.playerB.sex,
+              hasMinAge: props.data.playerB.hasMinAge,
+              minAge: props.data.playerB.minAge,
+              hasMaxAge: props.data.playerB.hasMaxAge,
+              maxAge: props.data.playerB.maxAge
+          }
       }
-        // TODO send all the data
       emit('submit', server_data)
     } else {
       console.log('validation failed')

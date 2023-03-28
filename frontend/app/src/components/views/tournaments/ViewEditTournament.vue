@@ -44,9 +44,11 @@ function submit(server_data) {
 
   axios.post("/tournament/update", server_data)
       .then(_ => {
+          // TODO internalization
         ElMessage.success("Tournament saved")
       })
       .catch(_ => {
+          // TODO internalization
         ElMessage.error("Couldn't create tournament")
       })
 }
