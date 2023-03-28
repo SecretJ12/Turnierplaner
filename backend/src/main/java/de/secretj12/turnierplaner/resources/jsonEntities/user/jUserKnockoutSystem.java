@@ -2,12 +2,12 @@ package de.secretj12.turnierplaner.resources.jsonEntities.user;
 
 import de.secretj12.turnierplaner.db.entities.Match;
 
-public class jKnockoutSystem {
+public class jUserKnockoutSystem {
 
     private jUserKnockoutMatch finale;
     private jUserKnockoutMatch thirdPlace;
 
-    public jKnockoutSystem(Match finale, Match thirdPlace) {
+    public jUserKnockoutSystem(Match finale, Match thirdPlace) {
         this.finale = new jUserKnockoutMatch(finale);
         this.thirdPlace = new jUserKnockoutMatch(thirdPlace, false);
     }

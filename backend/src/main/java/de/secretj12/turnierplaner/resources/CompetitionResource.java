@@ -1,12 +1,14 @@
 package de.secretj12.turnierplaner.resources;
 
 import de.secretj12.turnierplaner.db.entities.*;
+import de.secretj12.turnierplaner.db.entities.competition.Competition;
+import de.secretj12.turnierplaner.db.entities.competition.CompetitionType;
 import de.secretj12.turnierplaner.db.entities.groups.Group;
 import de.secretj12.turnierplaner.db.repositories.CompetitionRepository;
 import de.secretj12.turnierplaner.db.repositories.MatchRepository;
 import de.secretj12.turnierplaner.db.repositories.TournamentRepository;
-import de.secretj12.turnierplaner.resources.jsonEntities.director.jDirectorCompetitionAdd;
-import de.secretj12.turnierplaner.resources.jsonEntities.director.jDirectorCompetitionUpdate;
+import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorCompetition;
+import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorCompetitionUpdate;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.*;
 import io.quarkus.security.identity.SecurityIdentity;
 
@@ -69,7 +71,7 @@ public class CompetitionResource {
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response addCompetition(@PathParam("tourName") String tourName, jDirectorCompetitionAdd competition) {
+    public Response addCompetition(@PathParam("tourName") String tourName, jDirectorCompetition competition) {
         if (competition.getName() == null)
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
                     .entity("No tournament specified").build();
@@ -82,7 +84,25 @@ public class CompetitionResource {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
                     .entity("Tournament doesn't exist").build();
 
-        Competition dbCompetition = competition.toDB();
+        if (competition.getPlayerA().isHasMinAge() && competition.getPlayerA().getMinAge() == null) {
+            return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
+                    .entity("Player A: Min age null although has min age").build();
+        }
+        if (competition.getPlayerA().isHasMaxAge() && competition.getPlayerA().getMaxAge() == null) {
+            return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
+                    .entity("Player A: Max age null although has max age").build();
+        }
+        if (competition.getPlayerB().isHasMinAge() && competition.getPlayerB().getMinAge() == null) {
+            return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
+                    .entity("Player B: Min age null although has min age").build();
+        }
+        if (competition.getPlayerB().isHasMaxAge() && competition.getPlayerB().getMaxAge() == null) {
+            return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
+                    .entity("Player B: Max age null although has max age").build();
+        }
+
+        Competition dbCompetition = new Competition();
+        competition.toDB(dbCompetition);
         dbCompetition.setTournament(tournament);
         competitions.persist(dbCompetition);
         return Response.ok("successfully added").build();
@@ -103,9 +123,7 @@ public class CompetitionResource {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
                     .entity("Tournament of competition is not the given").build();
 
-        dbCompetition.setName(competition.getName());
-        dbCompetition.setDescription(competition.getDescription());
-        dbCompetition.setType(competition.getType());
+        competition.toDB(dbCompetition);
         competitions.persist(dbCompetition);
 
         return Response.ok("successfully changed").build();
@@ -193,7 +211,7 @@ public class CompetitionResource {
 
         Match finale = matches.getFinal(competition);
         Match thirdPlace = matches.getThirdPlace(competition);
-        return Response.ok(new jKnockoutSystem(finale, thirdPlace)).build();
+        return Response.ok(new jUserKnockoutSystem(finale, thirdPlace)).build();
     }
 
     @GET

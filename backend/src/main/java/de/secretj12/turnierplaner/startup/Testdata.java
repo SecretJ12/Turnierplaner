@@ -1,6 +1,8 @@
 package de.secretj12.turnierplaner.startup;
 
 import de.secretj12.turnierplaner.db.entities.*;
+import de.secretj12.turnierplaner.db.entities.competition.Competition;
+import de.secretj12.turnierplaner.db.entities.competition.CompetitionType;
 import de.secretj12.turnierplaner.db.entities.groups.Group;
 import de.secretj12.turnierplaner.db.entities.knockout.NextMatch;
 import de.secretj12.turnierplaner.db.repositories.*;
@@ -266,6 +268,8 @@ public class Testdata {
         comp2.setType(CompetitionType.KNOCKOUT);
         comp2.setPlayers(List.of(p));
         competitions.persist(comp2);
+
+         // TODO add new settings
     }
 }
 

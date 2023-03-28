@@ -1,12 +1,11 @@
 package de.secretj12.turnierplaner.resources.jsonEntities.user;
 
-import de.secretj12.turnierplaner.db.entities.Competition;
-import de.secretj12.turnierplaner.db.entities.CompetitionType;
+import de.secretj12.turnierplaner.db.entities.competition.Competition;
 
 public class jUserCompetition {
     private String name;
     private String description;
-    private CompetitionType type;
+    private jUserCompetitionType type;
 
     public jUserCompetition() {
     }
@@ -14,7 +13,10 @@ public class jUserCompetition {
     public jUserCompetition(Competition competition) {
         this.name = competition.getName();
         this.description = competition.getDescription();
-        this.type = competition.getType();
+        switch (competition.getType()) {
+            case GROUPS -> this.type = jUserCompetitionType.GROUPS;
+            case KNOCKOUT -> this.type = jUserCompetitionType.KNOCKOUT;
+        }
     }
 
     public String getName() {
@@ -33,11 +35,11 @@ public class jUserCompetition {
         this.description = description;
     }
 
-    public CompetitionType getType() {
+    public jUserCompetitionType getType() {
         return type;
     }
 
-    public void setType(CompetitionType type) {
+    public void setType(jUserCompetitionType type) {
         this.type = type;
     }
 }

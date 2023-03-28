@@ -1,6 +1,6 @@
 package de.secretj12.turnierplaner.db.repositories;
 
-import de.secretj12.turnierplaner.db.entities.Competition;
+import de.secretj12.turnierplaner.db.entities.competition.Competition;
 import de.secretj12.turnierplaner.db.entities.Match;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;

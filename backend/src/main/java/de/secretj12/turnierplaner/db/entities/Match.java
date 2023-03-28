@@ -1,5 +1,6 @@
 package de.secretj12.turnierplaner.db.entities;
 
+import de.secretj12.turnierplaner.db.entities.competition.Competition;
 import de.secretj12.turnierplaner.db.entities.knockout.NextMatch;
 
 import javax.persistence.*;

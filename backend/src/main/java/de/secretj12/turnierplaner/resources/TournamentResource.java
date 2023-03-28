@@ -76,7 +76,6 @@ public class TournamentResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     public Response addTournament(jDirectorTournamentAdd tournament) {
-        System.out.println(tournament);
         if (tournament.getName() == null)
             return Response.status(Response.Status.BAD_REQUEST).build();
         if (tournaments.getByName(tournament.getName()) != null)

@@ -1,10 +1,10 @@
-package de.secretj12.turnierplaner.resources.jsonEntities.director;
+package de.secretj12.turnierplaner.resources.jsonEntities.director.competition;
 
-import de.secretj12.turnierplaner.db.entities.Competition;
+import de.secretj12.turnierplaner.db.entities.competition.Competition;
 
 import java.util.UUID;
 
-public class jDirectorCompetitionUpdate extends jDirectorCompetitionAdd {
+public class jDirectorCompetitionUpdate extends jDirectorCompetition {
 
     private UUID id;
 
