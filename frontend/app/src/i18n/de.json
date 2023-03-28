@@ -72,9 +72,25 @@
     "loadingFailed": "Konkurrenzen konnten nicht geladen werden"
   },
   "CompetitionSettings": {
-    "type": "Typ",
+    "tournament_settings": "Turniereinstellungen",
+    "type": "Turniertyp",
     "knockout": "KO-System",
-    "groups": "Gruppenphase"
+    "groups": "Gruppenphase",
+    "mode": "Spielmodus",
+    "single": "Einzel",
+    "double": "Doppel",
+    "signup": "Anmeldung",
+    "individual": "einzeln",
+    "together": "als Team",
+    "player": "Spielereinstellungen",
+    "differentB": "Verschiedene Einstellungen für Spieler 2",
+    "sex": "Geschlecht",
+    "male": "Männlich",
+    "female": "Weiblich",
+    "both": "Egal",
+    "minAge": "Mindestalter",
+    "maxAge": "Maximalalter",
+    "missingAge": "Bitte wähle ein Datum"
   },
   "ViewCreateCompetition": {
     "creationFailed": "Konkurrenz konnte nicht erstellt werden"

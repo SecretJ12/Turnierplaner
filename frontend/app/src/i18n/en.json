@@ -72,9 +72,25 @@
     "loadingFailed": "Couldn't load competitions"
   },
   "CompetitionSettings": {
-    "type": "Type",
+    "tournament_settings": "Tournament settings",
+    "type": "Tournament type",
     "knockout": "Knockout",
-    "groups": "Group system"
+    "groups": "Group system",
+    "mode": "Gamemode",
+    "single": "Single",
+    "double": "Double",
+    "signup": "Signup",
+    "individual": "individual",
+    "together": "as team",
+    "player": "Player settings",
+    "differentB": "Different settings for player 2",
+    "sex": "Sex",
+    "male": "Male",
+    "female": "Female",
+    "both": "Any",
+    "minAge": "Minimum age",
+    "maxAge": "Maximum age",
+    "missingAge": "Please choose a date"
   },
   "ViewCreateCompetition": {
     "creationFailed": "Couldn't create competition"

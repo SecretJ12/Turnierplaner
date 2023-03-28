@@ -13,10 +13,26 @@ import FormCompetition from "@/components/views/competitions/FormCompetition.vue
 const route = useRoute()
 
 const data = reactive({
-  id: null,
   name: '',
   description: '',
-  type: 'KNOCKOUT'
+  tourType: 'KNOCKOUT',
+  mode: 'SINGLE',
+  signup: 'INDIVIDUAL',
+  playerA: {
+      sex: "MALE",
+      hasMinAge: false,
+      minAge: new Date(),
+      hasMaxAge: false,
+      maxAge: new Date()
+  },
+  playerB: {
+      different: Boolean,
+      sex: "MALE",
+      hasMinAge: false,
+      minAge: new Date(),
+      hasMaxAge: false,
+      maxAge: new Date()
+  }
 })
 
 const disabled = ref(true)
@@ -26,8 +42,9 @@ axios.get(`/tournament/${route.params.tourId}/competition/${route.params.compId}
       data.id = response.data.id
       data.name = response.data.name
       data.description = response.data.description
-      data.type = response.data.type
+      data.tourType = response.data.type
       disabled.value = false
+        // TODO receive all the data
     })
     .catch((error) => {
       ElMessage.error(i18n.global.t("ViewEditCompetition.loadingDetailsFailed"))

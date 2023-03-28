@@ -103,13 +103,13 @@ function update() {
           statusActive.value = "wait"
         } else if (date < endRegistration.value) {
           progress.value = 0
-          statusActive.value = "progress"
+          statusActive.value = "process"
         } else if (date < beginGamePhase.value) {
           progress.value = 1
           statusActive.value = "wait"
         } else if (date < endGamePhase.value) {
           progress.value = 1
-          statusActive.value = "progress"
+          statusActive.value = "process"
         } else {
           progress.value = 1
           statusActive.value = "success"

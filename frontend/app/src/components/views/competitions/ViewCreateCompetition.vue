@@ -15,7 +15,24 @@ const route = useRoute()
 const data = reactive({
   name: '',
   description: '',
-  type: 'KNOCKOUT'
+  tourType: 'KNOCKOUT',
+  mode: 'SINGLE',
+  signup: 'INDIVIDUAL',
+  playerA: {
+    sex: "MALE",
+    hasMinAge: false,
+    minAge: new Date(),
+    hasMaxAge: false,
+    maxAge: new Date()
+  },
+  playerB: {
+      different: Boolean,
+    sex: "MALE",
+    hasMinAge: false,
+    minAge: new Date(),
+    hasMaxAge: false,
+    maxAge: new Date()
+  }
 })
 
 function submit(server_data) {
