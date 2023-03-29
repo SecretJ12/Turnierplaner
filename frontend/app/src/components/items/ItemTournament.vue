@@ -30,12 +30,10 @@ const props = defineProps({
 const emit = defineEmits(['selected', 'settings']);
 
 function selected() {
-  console.log("click");
   emit('selected', props.name);
 }
 
 function settings() {
-  console.log("settings");
   emit('settings', props.name);
 }
 </script>
