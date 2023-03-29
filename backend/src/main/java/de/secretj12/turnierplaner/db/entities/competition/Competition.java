@@ -10,7 +10,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
-// TODO add attributes to allow setting age and sex restrictions (but optional!) -> implement everywhere
 // TODO add attributes to set something like a plan published bit -> implement everywhere
 @Entity
 @Table(name = "competitions")
