@@ -107,7 +107,12 @@
     "registration_over": "Die Anmeldephase ist vorbei.",
     "no_registration": "Es scheint sich noch niemand angemeldet zu haben...",
     "query_search_failed": "Abrufen der Spieler ist fehlgeschlagen",
-    "query_player_failed": "Abrufen der Teilnehmer ist fehlgeschlagen"
+    "query_player_failed": "Abrufen der Teilnehmer ist fehlgeschlagen",
+    "requirements": "Bedingungen",
+    "born": "Geboren",
+    "before": "vor",
+    "and": "und",
+    "after": "nach"
   },
   "Player": {
     "too_many_results": "Die Eingabe ist nicht eindeutig",

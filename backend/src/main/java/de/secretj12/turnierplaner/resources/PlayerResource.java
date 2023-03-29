@@ -1,5 +1,6 @@
 package de.secretj12.turnierplaner.resources;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import de.secretj12.turnierplaner.db.entities.Player;
 import de.secretj12.turnierplaner.db.entities.SexType;
 import de.secretj12.turnierplaner.db.entities.VerificationCode;
@@ -7,6 +8,7 @@ import de.secretj12.turnierplaner.db.repositories.PlayerRepository;
 import de.secretj12.turnierplaner.db.repositories.VerificationCodeRepository;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayer;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayerRegistrationForm;
+import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserSex;
 import io.quarkus.mailer.Mailer;
 import io.quarkus.scheduler.Scheduled;
 import io.smallrye.common.annotation.Blocking;
@@ -16,6 +18,7 @@ import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -30,19 +33,28 @@ public class PlayerResource {
     Mailer mailer;
     MailTemplates mailTemplates = new MailTemplates();
 
-    // TODO add search parameters like name and sex
-    // TODO only return verified accounts (except for admins)
-    // TODO add endpoint for players to competition
 
     @GET
     @Transactional
     @Path("/find")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<jUserPlayer> listPlayer(@QueryParam("search") String search) {
+    public List<jUserPlayer> listPlayer(@QueryParam("search") String search,
+                                        @QueryParam("sex") jUserSex sex,
+                                        @QueryParam("minAge") @JsonFormat(pattern = "yyyy-MM-dd") String minAgeS,
+                                        @QueryParam("maxAge") @JsonFormat(pattern = "yyyy-MM-dd") String maxAgeS) {
+        // TODO instead of filtering by params of client, better filter by given competition, prevents leak of birthday
+        // TODO only return verified accounts (except for admins)
+        LocalDate minAge = minAgeS != null ? LocalDate.parse(minAgeS) : null;
+        LocalDate maxAge = maxAgeS != null ? LocalDate.parse(maxAgeS) : null;
+
+        SexType dbSex = sex == null ? null : switch (sex) {
+            case MALE -> SexType.MALE;
+            case FEMALE -> SexType.FEMALE;
+        };
         if (search.length() == 0)
             return List.of();
         return playerRepository
-                .filter(search).map(jUserPlayer::new)
+                .filter(search, dbSex, minAge, maxAge).map(jUserPlayer::new)
                 .toList();
     }
 
@@ -62,8 +74,8 @@ public class PlayerResource {
         newPlayer.setLastName(playerForm.getLastName());
         newPlayer.setBirthday(playerForm.getBirthday());
         switch (playerForm.getSex()) {
-            case male -> newPlayer.setSex(SexType.male);
-            case female -> newPlayer.setSex(SexType.female);
+            case MALE -> newPlayer.setSex(SexType.MALE);
+            case FEMALE -> newPlayer.setSex(SexType.FEMALE);
             default -> {
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }

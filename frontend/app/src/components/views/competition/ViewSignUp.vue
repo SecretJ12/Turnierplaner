@@ -12,8 +12,8 @@
                 </el-col>
                 <el-col :span="8">
                     <el-button
-                            style="width: 100%"
-                            @click="playerRegistration"
+                        style="width: 100%"
+                        @click="playerRegistration"
                     >
                         {{ i18n.global.t('general.register') }}
                     </el-button>
@@ -21,15 +21,37 @@
             </el-row>
 
             <!-- Registration player A -->
+            <span>{{ i18n.global.t("ViewCompetition.requirements") }}:
+                <template v-if="compDetails.playerA.sex !== 'ANY'">
+                    {{ i18n.global.t("CompetitionSettings." + compDetails.playerA.sex.toLowerCase()) }}
+                </template>
+                <template v-if="compDetails.playerA.sex !== 'ANY'
+                    && (compDetails.playerA.hasMinAge || compDetails.playerA.hasMaxAge)">,
+                </template>
+                <template v-if="compDetails.playerA.hasMinAge || compDetails.playerA.hasMaxAge">
+                    {{ i18n.global.t("ViewCompetition.born") + " " }}
+                </template>
+                <template v-if="compDetails.playerA.hasMaxAge">
+                    {{ i18n.global.t("ViewCompetition.after") + " " }}
+                    {{ compDetails.playerA.minAge.toLocaleString(i18n.global.t('lang'), dateOptions) + " " }}
+                </template>
+                <template v-if="compDetails.playerA.hasMinAge && compDetails.playerA.hasMaxAge">
+                    {{ i18n.global.t("ViewCompetition.and") + " " }}
+                </template>
+                <template v-if="compDetails.playerA.hasMinAge">
+                    {{ i18n.global.t("ViewCompetition.before") + " " }}
+                    {{ compDetails.playerA.maxAge.toLocaleString(i18n.global.t('lang'), dateOptions) }}
+                </template>
+            </span>
             <el-row :gutter="20" class="row-bg" justify="space-between">
                 <el-col :span="16">
                     <el-autocomplete
-                            v-model="playerSearch"
-                            :fetch-suggestions="queryPlayer"
-                            :placeholder="i18n.global.t('general.name')"
-                            hide-loading
-                            style="width: 100%"
-                            @keyup.enter="signUp"
+                        v-model="playerSearchA"
+                        :fetch-suggestions="queryPlayerA"
+                        :placeholder="i18n.global.t('general.name')"
+                        hide-loading
+                        style="width: 100%"
+                        @keyup.enter="signUp"
                     />
                 </el-col>
                 <el-col :span="8">
@@ -71,6 +93,7 @@ const props = defineProps({
         mode: String,
         signup: String,
         playerA: {
+            type: Object,
             sex: String,
             hasMinAge: Boolean,
             minAge: Date,
@@ -78,6 +101,7 @@ const props = defineProps({
             maxAge: Date
         },
         playerB: {
+            type: Object,
             different: Boolean,
             sex: String,
             hasMinAge: Boolean,
@@ -120,48 +144,50 @@ function update() {
           })
       })
       .catch((error) => {
-        players.value = []
-        ElMessage.error(i18n.global.t("ViewCompetition.query_player_failed"))
-        console.log(error)
+          players.value = []
+          ElMessage.error(i18n.global.t("ViewCompetition.query_player_failed"))
+          console.log(error)
       })
 }
 
-const playerSearch = ref("")
+const playerSearchA = ref("")
+let queriedPlayerA = []
 
-let queriedPlayer = []
-
-function queryPlayer(search, callback) {
-  queriedPlayer = queriedPlayer.filter((item) => {
-    return item.value.toLowerCase().includes(search.toLowerCase())
-  })
-  callback(queriedPlayer)
-  axios.get(`/player/find?search=${search}`)
-      .then((result) => {
-        queriedPlayer = result.data.map((item) => {
-          item.value = item.firstName + ' ' + item.lastName
-          return item
+function queryPlayerA(search, callback) {
+    queriedPlayerA = queriedPlayerA.filter((item) => {
+        return item.value.toLowerCase().includes(search.toLowerCase())
+    })
+    callback(queriedPlayerA)
+    axios.get(`/player/find?search=${search}`
+        + (props.compDetails.playerA.sex !== 'ANY' ? `&sex=${props.compDetails.playerA.sex}` : '')
+        + (props.compDetails.playerA.hasMinAge ? `&minAge=${props.compDetails.playerA.minAge.toISOString().slice(0, 10)}` : '')
+        + (props.compDetails.playerA.hasMaxAge ? `&minAge=${props.compDetails.playerA.maxAge.toISOString().slice(0, 10)}` : ''))
+        .then((result) => {
+            queriedPlayerA = result.data.map((item) => {
+                item.value = item.firstName + ' ' + item.lastName
+                return item
+            })
+            callback(queriedPlayerA)
         })
-        callback(queriedPlayer)
-      })
-      .catch((error) => {
-        ElMessage.error(i18n.global.t("ViewCompetition.query_search_failed"))
-        console.log(error)
+        .catch((error) => {
+            ElMessage.error(i18n.global.t("ViewCompetition.query_search_failed"))
+            console.log(error)
       })
 }
 
 function signUp() {
-  const validPlayers = queriedPlayer.filter((p) => {
-    return p.value.includes(playerSearch.value)
-  })
-  if (validPlayers.length > 1) {
-    ElMessage.error(i18n.global.t("Player.too_many_results"))
-    return
-  }
-  if (validPlayers.length === 0) {
-    ElMessage.error(i18n.global.t("Player.no_result"))
-    return
-  }
-  const player = validPlayers[0]
+    const validPlayers = queriedPlayerA.filter((p) => {
+        return p.value.includes(playerSearchA.value)
+    })
+    if (validPlayers.length > 1) {
+        ElMessage.error(i18n.global.t("Player.too_many_results"))
+        return
+    }
+    if (validPlayers.length === 0) {
+        ElMessage.error(i18n.global.t("Player.no_result"))
+        return
+    }
+    const player = validPlayers[0]
 
   const form = {
     firstName: player.firstName,
@@ -185,6 +211,11 @@ function playerRegistration() {
   router.push({path: "/player/registration"})
 }
 
+const dateOptions = {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric"
+};
 </script>
 
 <style scoped>

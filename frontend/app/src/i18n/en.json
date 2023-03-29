@@ -76,7 +76,7 @@
     "type": "Tournament type",
     "knockout": "Knockout",
     "groups": "Group system",
-    "mode": "Gamemode",
+    "mode": "Game mode",
     "single": "Single",
     "double": "Double",
     "signup": "Signup",
@@ -97,7 +97,7 @@
   },
   "ViewEditCompetition": {
     "saved": "Competition saved",
-    "saving_failed": "Someting went wrong while saving",
+    "saving_failed": "Something went wrong while saving",
     "loadingDetailsFailed": "Couldn't load competition details"
   },
   "ViewCompetition": {
@@ -107,7 +107,12 @@
     "registration_over": "Registration phase is over.",
     "no_registration": "It seems that no one has registered yet...",
     "query_search_failed": "Querying player failed",
-    "query_player_failed": "Querying participants failed"
+    "query_player_failed": "Querying participants failed",
+    "requirements": "Requirements",
+    "born": "Born",
+    "before": "before",
+    "and": "and",
+    "after": "after"
   },
   "Player": {
     "too_many_results": "Result ist not unique enough",

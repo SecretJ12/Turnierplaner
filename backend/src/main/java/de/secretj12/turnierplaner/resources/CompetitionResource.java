@@ -180,6 +180,8 @@ public class CompetitionResource {
         if (player == null)
             return Response.status(Response.Status.BAD_REQUEST).entity("Player doesn't exist").build();
 
+        // TODO check condition for player (sex, birthday)
+
         List<Player> regPlayers = competition.getPlayers();
         if (regPlayers == null)
             regPlayers = List.of(player);

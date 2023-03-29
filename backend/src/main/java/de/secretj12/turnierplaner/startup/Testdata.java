@@ -57,7 +57,7 @@ public class Testdata {
         p.setFirstName("Rainer");
         p.setLastName("Zufall");
         p.setBirthday(LocalDate.now());
-        p.setSex(SexType.male);
+        p.setSex(SexType.MALE);
         p.setEmail("abc@def.ghi");
         p.setPhone("+49 123 456789");
         p.setMailVerified(true);
@@ -132,7 +132,7 @@ public class Testdata {
             groupPlayers[i].setFirstName(fn);
             groupPlayers[i].setLastName(ln);
             groupPlayers[i].setBirthday(LocalDate.now());
-            groupPlayers[i].setSex(SexType.male);
+            groupPlayers[i].setSex(SexType.MALE);
             groupPlayers[i].setEmail(fn + "." + ln + "@mail.de");
             groupPlayers[i].setPhone("+49 123 456789");
             groupPlayers[i].setMailVerified(true);
@@ -187,7 +187,7 @@ public class Testdata {
             knockoutPlayers[i].setFirstName(fn);
             knockoutPlayers[i].setLastName(ln);
             knockoutPlayers[i].setBirthday(LocalDate.now());
-            knockoutPlayers[i].setSex(SexType.male);
+            knockoutPlayers[i].setSex(SexType.MALE);
             knockoutPlayers[i].setEmail(fn + "." + ln + "@mail.de");
             knockoutPlayers[i].setPhone("+49 123 456789");
             knockoutPlayers[i].setMailVerified(true);
@@ -251,7 +251,7 @@ public class Testdata {
             pl.setFirstName(fn);
             pl.setLastName(ln);
             pl.setBirthday(LocalDate.now());
-            pl.setSex(male?SexType.male:SexType.female);
+            pl.setSex(male?SexType.MALE :SexType.FEMALE);
             pl.setEmail(fn + "." + ln + "@mail.de");
             pl.setPhone("+49 123 456789");
             pl.setMailVerified(true);
