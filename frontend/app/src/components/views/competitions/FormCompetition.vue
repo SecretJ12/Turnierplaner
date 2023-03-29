@@ -292,12 +292,14 @@ const props = defineProps({
     submitText: String,
     disabled: Boolean,
     data: {
+        type: Object,
         name: String,
         description: String,
         tourType: String,
         mode: String,
         signup: String,
         playerA: {
+            type: Object,
             sex: String,
             hasMinAge: Boolean,
             minAge: Date,
@@ -305,6 +307,7 @@ const props = defineProps({
             maxAge: Date
         },
         playerB: {
+            type: Object,
             different: Boolean,
             sex: String,
             hasMinAge: Boolean,

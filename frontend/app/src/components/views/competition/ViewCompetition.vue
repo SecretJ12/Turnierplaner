@@ -14,27 +14,25 @@
       </h2>
     </div>
     <p v-if="detailsLoaded">
-      {{ $t("ViewCompetition.tournament_system") }}: {{ $t("CompetitionSettings." + type) }}<br>
-      <template v-if="detailsLoaded && description.length > 0">
-        {{ $t("general.description") }}: {{ description }}<br>
+      {{ $t("ViewCompetition.tournament_system") }}: {{ $t("CompetitionSettings." + compDetails.tourType.toLowerCase()) }}<br>
+      <template v-if="detailsLoaded && compDetails.description.length > 0">
+        {{ $t("general.description") }}: {{ compDetails.description }}<br>
       </template>
-      {{ $t("ViewCompetition.game_mode") }}: {{ $t("CompetitionSettings." + mode) }}<br>
+      {{ $t("ViewCompetition.game_mode") }}: {{ $t("CompetitionSettings." + compDetails.mode.toLowerCase()) }}<br>
     </p>
 
     <template v-if="tournamentLoaded">
       <template v-if="!registration_started">
-          <!-- TODO -->
           {{ i18n.global.t("ViewCompetition.registration_not_started") }} {{ beginRegistration.toLocaleString(i18n.global.t('lang'), dateOptions) }}
       </template>
       <template v-else-if="!game_started">
-        <!-- TODO only if registration phase has started -->
         <!-- show registration page -->
-        <ViewSignUp :allowRegistration="allow_registration" />
+        <ViewSignUp :allowRegistration="allow_registration" :compDetails="compDetails" />
       </template>
       <template v-else>
         <!-- TODO show after plan has been published -->
         <!-- show game page -->
-        <ViewGame :type="type"/>
+        <ViewGame :type="compDetails.tourType"/>
       </template>
     </template>
   </div>
@@ -55,9 +53,28 @@ const isLoggedIn = inject('loggedIn', ref(false))
 const canEdit = ref(false)
 
 const detailsLoaded = ref(false)
-const description = ref("")
-const type = ref("knockout")
-const mode = ref('single')
+const compDetails = reactive({
+    name: '',
+    description: '',
+    tourType: 'KNOCKOUT',
+    mode: 'SINGLE',
+    signup: 'INDIVIDUAL',
+    playerA: {
+        sex: "MALE",
+        hasMinAge: false,
+        minAge: new Date(),
+        hasMaxAge: false,
+        maxAge: new Date()
+    },
+    playerB: {
+        different: Boolean,
+        sex: "MALE",
+        hasMinAge: false,
+        minAge: new Date(),
+        hasMaxAge: false,
+        maxAge: new Date()
+    }
+})
 
 const tournamentLoaded = ref(false)
 const registration_started = ref(false)
@@ -85,9 +102,23 @@ function update() {
   });
   axios.get(`/tournament/${route.params.tourId}/competition/${route.params.compId}/details`)
       .then((response) => {
-          description.value = response.data.description
-          type.value = response.data.type.toLowerCase()
-          mode.value = response.data.mode.toLowerCase()
+          compDetails.id = response.data.id
+          compDetails.name = response.data.name
+          compDetails.description = response.data.description
+          compDetails.tourType = response.data.type
+          compDetails.mode = response.data.mode
+          compDetails.signup = response.data.signUp
+          compDetails.playerA.sex = response.data.playerA.sex
+          compDetails.playerA.hasMinAge = response.data.playerA.hasMinAge
+          compDetails.playerA.minAge = new Date(response.data.playerA.minAge)
+          compDetails.playerA.hasMaxAge = response.data.playerA.hasMaxAge
+          compDetails.playerA.maxAge = new Date(response.data.playerA.maxAge)
+          compDetails.playerB.different = response.data.playerB.different
+          compDetails.playerB.sex = response.data.playerB.sex
+          compDetails.playerB.hasMinAge = response.data.playerB.hasMinAge
+          compDetails.playerB.minAge = new Date(response.data.playerB.minAge)
+          compDetails.playerB.hasMaxAge = response.data.playerB.hasMaxAge
+          compDetails.playerB.maxAge = new Date(response.data.playerB.maxAge)
           detailsLoaded.value = true
       })
       .catch((error) => {

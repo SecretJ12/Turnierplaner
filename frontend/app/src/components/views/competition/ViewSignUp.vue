@@ -1,50 +1,56 @@
 <template>
-  <el-space direction="vertical" fill>
-      <p v-if="!allowRegistration" style="text-align: center">
-          {{ i18n.global.t("ViewCompetition.registration_over") }}
-      </p>
-    <el-row v-if="allowRegistration" :gutter="20" class="row-bg" justify="space-between">
-      <el-col :span="16">
-        <el-autocomplete
-            v-model="playerSearch"
-            :fetch-suggestions="queryPlayer"
-            :placeholder="i18n.global.t('general.name')"
-            hide-loading
-            style="width: 100%"
-            @keyup.enter="signUp"
-        />
-      </el-col>
-      <el-col :span="8">
-        <el-button
-            style="width: 100%"
-            @click="signUp"
-        >
-          {{ i18n.global.t('general.signUp') }}
-        </el-button>
-      </el-col>
-    </el-row>
-    <el-row v-if="allowRegistration" :gutter="20" class="row-bg" justify="space-between">
-      <el-col :span="16">
-        <span id="notice_register">{{ $t('ViewPlayerRegistration.not_found') }}</span>
-      </el-col>
-      <el-col :span="8">
-        <el-button
-            style="width: 100%"
-            @click="playerRegistration"
-        >
-          {{ i18n.global.t('general.register') }}
-        </el-button>
-      </el-col>
-    </el-row>
-    <el-row :gutter="20" class="row-bg" justify="center">
-      <el-col :span="24">
-        <el-table :data="players" :empty-text="$t('ViewCompetition.no_registration')" border stripe>
-          <el-table-column :label="i18n.global.t('general.name')" prop="name" sortable="custom"/>
-          <!-- TODO add delete for admin -->
-        </el-table>
-      </el-col>
-    </el-row>
-  </el-space>
+    <el-space direction="vertical" fill>
+        <!-- Show registration is over -->
+        <p v-if="!allowRegistration" style="text-align: center">
+            {{ i18n.global.t("ViewCompetition.registration_over") }}
+        </p>
+        <template v-else>
+            <!-- Notice to register -->
+            <el-row :gutter="20" class="row-bg" justify="space-between">
+                <el-col :span="16">
+                    <span id="notice_register">{{ $t('ViewPlayerRegistration.not_found') }}</span>
+                </el-col>
+                <el-col :span="8">
+                    <el-button
+                            style="width: 100%"
+                            @click="playerRegistration"
+                    >
+                        {{ i18n.global.t('general.register') }}
+                    </el-button>
+                </el-col>
+            </el-row>
+
+            <!-- Registration player A -->
+            <el-row :gutter="20" class="row-bg" justify="space-between">
+                <el-col :span="16">
+                    <el-autocomplete
+                            v-model="playerSearch"
+                            :fetch-suggestions="queryPlayer"
+                            :placeholder="i18n.global.t('general.name')"
+                            hide-loading
+                            style="width: 100%"
+                            @keyup.enter="signUp"
+                    />
+                </el-col>
+                <el-col :span="8">
+                    <el-button
+                            style="width: 100%"
+                            @click="signUp"
+                    >
+                        {{ i18n.global.t('general.signUp') }}
+                    </el-button>
+                </el-col>
+            </el-row>
+            <el-row :gutter="20" class="row-bg" justify="center">
+                <el-col :span="24">
+                    <el-table :data="players" :empty-text="$t('ViewCompetition.no_registration')" border stripe>
+                        <el-table-column :label="i18n.global.t('general.name')" prop="name" sortable="custom"/>
+                        <!-- TODO add delete for admin -->
+                    </el-table>
+                </el-col>
+            </el-row>
+        </template>
+    </el-space>
 </template>
 
 <script setup>
@@ -56,7 +62,30 @@ import {useRoute} from "vue-router";
 import {ElMessage} from "element-plus";
 
 const props = defineProps({
-    allowRegistration: Boolean
+    allowRegistration: Boolean,
+    compDetails: {
+        type: Object,
+        name: String,
+        description: String,
+        tourType: String,
+        mode: String,
+        signup: String,
+        playerA: {
+            sex: String,
+            hasMinAge: Boolean,
+            minAge: Date,
+            hasMaxAge: Boolean,
+            maxAge: Date
+        },
+        playerB: {
+            different: Boolean,
+            sex: String,
+            hasMinAge: Boolean,
+            minAge: Date,
+            hasMaxAge: Boolean,
+            maxAge: Date
+        }
+    }
 })
 
 const route = useRoute()

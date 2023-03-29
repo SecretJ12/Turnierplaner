@@ -1,6 +1,6 @@
 <template>
-  <ViewGroupSystem v-if="props.type === 'groups'"/>
-  <ViewKnockoutSystem v-else-if="props.type === 'knockout'"/>
+  <ViewGroupSystem v-if="props.type === 'GROUPS'"/>
+  <ViewKnockoutSystem v-else-if="props.type === 'KNOCKOUT'"/>
   <p v-else>Invalid type</p>
 </template>
 
