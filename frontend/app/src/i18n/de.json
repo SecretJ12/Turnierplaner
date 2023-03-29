@@ -102,6 +102,9 @@
   },
   "ViewCompetition": {
     "tournament_system": "Turniersystem",
+    "game_mode": "Spielmodus",
+    "registration_not_started": "Die Anmeldung ist noch nicht verfügbar. Die Anmeldephase started am",
+    "registration_over": "Die Anmeldephase ist vorbei.",
     "no_registration": "Es scheint sich noch niemand angemeldet zu haben...",
     "query_search_failed": "Abrufen der Spieler ist fehlgeschlagen",
     "query_player_failed": "Abrufen der Teilnehmer ist fehlgeschlagen"

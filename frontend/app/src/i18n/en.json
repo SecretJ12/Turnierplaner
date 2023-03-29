@@ -102,6 +102,9 @@
   },
   "ViewCompetition": {
     "tournament_system": "Tournament system",
+    "game_mode": "Game mode",
+    "registration_not_started": "Registration hasn't started yet. Registration phase starts on",
+    "registration_over": "Registration phase is over.",
     "no_registration": "It seems that no one has registered yet...",
     "query_search_failed": "Querying player failed",
     "query_player_failed": "Querying participants failed"

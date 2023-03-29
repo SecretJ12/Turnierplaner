@@ -1,6 +1,9 @@
 <template>
   <el-space direction="vertical" fill>
-    <el-row id="" :gutter="20" class="row-bg" justify="space-between">
+      <p v-if="!allowRegistration" style="text-align: center">
+          {{ i18n.global.t("ViewCompetition.registration_over") }}
+      </p>
+    <el-row v-if="allowRegistration" :gutter="20" class="row-bg" justify="space-between">
       <el-col :span="16">
         <el-autocomplete
             v-model="playerSearch"
@@ -20,7 +23,7 @@
         </el-button>
       </el-col>
     </el-row>
-    <el-row id="" :gutter="20" class="row-bg" justify="space-between">
+    <el-row v-if="allowRegistration" :gutter="20" class="row-bg" justify="space-between">
       <el-col :span="16">
         <span id="notice_register">{{ $t('ViewPlayerRegistration.not_found') }}</span>
       </el-col>
@@ -52,6 +55,10 @@ import axios from "axios";
 import {useRoute} from "vue-router";
 import {ElMessage} from "element-plus";
 
+const props = defineProps({
+    allowRegistration: Boolean
+})
+
 const route = useRoute()
 const isLoggedIn = inject('loggedIn', ref(false))
 const canEdit = ref(false)
@@ -78,15 +85,13 @@ function update() {
   });
   axios.get(`/tournament/${route.params.tourId}/competition/${route.params.compId}/signedUpPlayers`)
       .then((response) => {
-        if (response.status !== 200)
-          players.value = []
-        else
           players.value = response.data.map((player) => {
-            player.name = player.firstName + ' ' + player.lastName
-            return player
+              player.name = player.firstName + ' ' + player.lastName
+              return player
           })
       })
       .catch((error) => {
+        players.value = []
         ElMessage.error(i18n.global.t("ViewCompetition.query_player_failed"))
         console.log(error)
       })

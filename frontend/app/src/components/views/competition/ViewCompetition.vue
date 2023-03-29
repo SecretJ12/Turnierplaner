@@ -13,20 +13,23 @@
         {{ route.params.compId }}
       </h2>
     </div>
-    <p>
-      <template v-if="detailsLoaded">
-        {{ $t("ViewCompetition.tournament_system") }}: {{ $t("CompetitionSettings." + type) }}<br>
-      </template>
+    <p v-if="detailsLoaded">
+      {{ $t("ViewCompetition.tournament_system") }}: {{ $t("CompetitionSettings." + type) }}<br>
       <template v-if="detailsLoaded && description.length > 0">
-        {{ $t("general.description") }}: {{ description }}
+        {{ $t("general.description") }}: {{ description }}<br>
       </template>
+      {{ $t("ViewCompetition.game_mode") }}: {{ $t("CompetitionSettings." + mode) }}<br>
     </p>
 
     <template v-if="tournamentLoaded">
-      <template v-if="!game_started">
+      <template v-if="!registration_started">
+          <!-- TODO -->
+          {{ i18n.global.t("ViewCompetition.registration_not_started") }} {{ beginRegistration.toLocaleString(i18n.global.t('lang'), dateOptions) }}
+      </template>
+      <template v-else-if="!game_started">
         <!-- TODO only if registration phase has started -->
         <!-- show registration page -->
-        <ViewSignUp/>
+        <ViewSignUp :allowRegistration="allow_registration" />
       </template>
       <template v-else>
         <!-- TODO show after plan has been published -->
@@ -39,10 +42,10 @@
 
 <script setup>
 import {useRoute} from 'vue-router'
-import {inject, ref, watch} from "vue";
+import {inject, reactive, ref, watch} from "vue";
 import {auth} from "@/security/AuthService";
 import axios from "axios";
-import {router} from "@/main";
+import {i18n, router} from "@/main";
 
 import ViewSignUp from "@/components/views/competition/ViewSignUp.vue";
 import ViewGame from "@/components/views/competition/ViewGame.vue";
@@ -54,9 +57,13 @@ const canEdit = ref(false)
 const detailsLoaded = ref(false)
 const description = ref("")
 const type = ref("knockout")
+const mode = ref('single')
 
 const tournamentLoaded = ref(false)
+const registration_started = ref(false)
+const allow_registration = ref(false)
 const game_started = ref(false)
+let beginRegistration = ref(new Date())
 
 watch(isLoggedIn, async () => {
   update()
@@ -78,26 +85,40 @@ function update() {
   });
   axios.get(`/tournament/${route.params.tourId}/competition/${route.params.compId}/details`)
       .then((response) => {
-        description.value = response.data.description
-        type.value = response.data.type.toLowerCase()
-        detailsLoaded.value = true
+          description.value = response.data.description
+          type.value = response.data.type.toLowerCase()
+          mode.value = response.data.mode.toLowerCase()
+          detailsLoaded.value = true
       })
       .catch((error) => {
-        console.log(error)
+          console.log(error)
       })
   axios.get(`/tournament/${route.params.tourId}/details`)
       .then((response) => {
-        game_started.value = Date.parse(response.data.beginGamePhase) < new Date()
-        tournamentLoaded.value = true
+          registration_started.value = new Date(response.data.beginRegistration) < new Date()
+          allow_registration.value = registration_started.value
+              && new Date(response.data.endRegistration) > new Date()
+          game_started.value = new Date(response.data.beginGamePhase) < new Date()
+          beginRegistration.value = new Date(response.data.beginRegistration)
+          tournamentLoaded.value = true
       })
       .catch((error) => {
-        console.log(error)
+          console.log(error)
       })
 }
 
 function settings() {
   router.push({path: `/tournament/${route.params.tourId}/competition/${route.params.compId}/edit`})
 }
+
+const dateOptions = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+};
 </script>
 
 <style scoped>
