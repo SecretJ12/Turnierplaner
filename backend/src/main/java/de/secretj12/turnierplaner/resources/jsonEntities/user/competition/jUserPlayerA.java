@@ -1,8 +1,10 @@
-package de.secretj12.turnierplaner.resources.jsonEntities.director.competition;
+package de.secretj12.turnierplaner.resources.jsonEntities.user.competition;
+
+import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorValidSex;
 
 import java.time.LocalDate;
 
-public class jDirectorPlayerA {
+public class jUserPlayerA {
     private jDirectorValidSex sex;
     private boolean hasMinAge;
     private LocalDate minAge;

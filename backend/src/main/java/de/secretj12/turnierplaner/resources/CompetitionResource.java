@@ -7,9 +7,10 @@ import de.secretj12.turnierplaner.db.entities.groups.Group;
 import de.secretj12.turnierplaner.db.repositories.CompetitionRepository;
 import de.secretj12.turnierplaner.db.repositories.MatchRepository;
 import de.secretj12.turnierplaner.db.repositories.TournamentRepository;
-import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorCompetition;
+import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorCompetitionAdd;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorCompetitionUpdate;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.*;
+import de.secretj12.turnierplaner.resources.jsonEntities.user.competition.jUserCompetition;
 import io.quarkus.security.identity.SecurityIdentity;
 
 import javax.annotation.security.RolesAllowed;
@@ -71,7 +72,7 @@ public class CompetitionResource {
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response addCompetition(@PathParam("tourName") String tourName, jDirectorCompetition competition) {
+    public Response addCompetition(@PathParam("tourName") String tourName, jDirectorCompetitionAdd competition) {
         if (competition.getName() == null)
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
                     .entity("No tournament specified").build();

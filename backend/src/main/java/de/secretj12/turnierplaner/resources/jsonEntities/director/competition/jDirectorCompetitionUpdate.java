@@ -4,7 +4,7 @@ import de.secretj12.turnierplaner.db.entities.competition.Competition;
 
 import java.util.UUID;
 
-public class jDirectorCompetitionUpdate extends jDirectorCompetition {
+public class jDirectorCompetitionUpdate extends jDirectorCompetitionAdd {
 
     private UUID id;
 
