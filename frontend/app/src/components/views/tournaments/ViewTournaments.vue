@@ -1,23 +1,16 @@
 <template>
-  <el-container >
-    <el-header id="head">
-      {{ i18n.global.t('ViewTournaments.overview') }}
-    </el-header>
-    <el-main id="tournaments">
-    <el-row>
-    <item v-for="tournament in tournaments" :key="tournament.name"
-          :beginGamePhase="new Date(tournament.beginGamePhase)" :beginRegistration="new Date(tournament.beginRegistration)"
-          :canCreate=canCreate
-          :description="tournament.description"
-          :endGamePhase="new Date(tournament.endGamePhase)" :endRegistration="new Date(tournament.endRegistration)"
-          :name="tournament.name"
-          :visible="tournament.visible"
-          @selected="selected"
-          @settings="settingsItem"/>
-    <AddItem v-if="canCreate" @selected="addTournament"/>
-    </el-row>
-    </el-main>
-  </el-container>
+    <div id="tournaments">
+        <item v-for="tournament in tournaments" :key="tournament.name"
+              :beginGamePhase="new Date(tournament.beginGamePhase)" :beginRegistration="new Date(tournament.beginRegistration)"
+              :canCreate=canCreate
+              :description="tournament.description"
+              :endGamePhase="new Date(tournament.endGamePhase)" :endRegistration="new Date(tournament.endRegistration)"
+              :name="tournament.name"
+              :visible="tournament.visible"
+              @selected="selected"
+              @settings="settingsItem"/>
+        <AddItem v-if="canCreate" @selected="addTournament"/>
+    </div>
 </template>
 
 <script setup>
@@ -35,65 +28,57 @@ const isLoggedIn = inject('loggedIn', ref(false))
 const canCreate = ref(false)
 
 watch(isLoggedIn, async () => {
-  update()
+    update()
 })
 update()
 
 function update() {
-  canCreate.value = false
-  axios.get('/tournament/list')
-      .then((response) => {
-          tournaments.value = response.data
-      })
-      .catch((error) => {
-        ElMessage.error(i18n.global.t("ViewTournaments.loadingFailed"))
-        console.log(error)
-      })
-  auth.getUser().then((user) => {
-    if (user !== null) {
-      axios.get('/tournament/canCreate')
-          .then((response) => {
-              canCreate.value = response.data
-          })
-          .catch((_) => {
-            canCreate.value = false
-          })
-    }
-  })
+    canCreate.value = false
+    axios.get('/tournament/list')
+        .then((response) => {
+            tournaments.value = response.data
+        })
+        .catch((error) => {
+            ElMessage.error(i18n.global.t("ViewTournaments.loadingFailed"))
+            console.log(error)
+        })
+    auth.getUser().then((user) => {
+        if (user !== null) {
+            axios.get('/tournament/canCreate')
+                .then((response) => {
+                    canCreate.value = response.data
+                })
+                .catch((_) => {
+                    canCreate.value = false
+                })
+        }
+    })
 }
 
 function selected(tournament) {
-  router.push({path: '/tournament/' + tournament})
+    router.push({path: '/tournament/' + tournament})
 }
 
 function settingsItem(tournament) {
-  router.push({path: '/tournament/' + tournament + '/edit'})
+    router.push({path: '/tournament/' + tournament + '/edit'})
 }
 
 function addTournament() {
-  router.push({path: '/createTournament'})
+    router.push({path: '/createTournament'})
 }
 </script>
 
 <style scoped>
 #tournaments {
-  width: 80%;
-  margin-left: auto;
-  margin-right: auto;
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-  justify-content: center;
-}
-
-#head{
-  margin-left: auto;
-  margin-right: auto;
-  justify-content: center;
-  font-size: xx-large;
+    width: calc(100% - 20px);
+    margin: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
 }
 
 #tournaments > * {
-  margin: 0 10px 20px 10px;
+    margin: 0 10px 20px 10px;
 }
 </style>
