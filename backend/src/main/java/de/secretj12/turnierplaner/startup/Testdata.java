@@ -1,8 +1,7 @@
 package de.secretj12.turnierplaner.startup;
 
 import de.secretj12.turnierplaner.db.entities.*;
-import de.secretj12.turnierplaner.db.entities.competition.Competition;
-import de.secretj12.turnierplaner.db.entities.competition.CompetitionType;
+import de.secretj12.turnierplaner.db.entities.competition.*;
 import de.secretj12.turnierplaner.db.entities.groups.Group;
 import de.secretj12.turnierplaner.db.entities.knockout.NextMatch;
 import de.secretj12.turnierplaner.db.repositories.*;
@@ -114,6 +113,15 @@ public class Testdata {
         comp1.setDescription("Damen-Konkurrenz");
         comp1.setType(CompetitionType.GROUPS);
         comp1.setPlayers(List.of(p));
+        comp1.setMode(CompetitionMode.SINGLES);
+        comp1.setSignup(CompetitionSignUp.INDIVIDUAL);
+        comp1.setPlayerASex(Sex.FEMALE);
+        comp1.setPlayerAhasMinAge(false);
+        comp1.setPlayerAhasMaxAge(false);
+        comp1.setPlayerBSex(Sex.FEMALE);
+        comp1.setPlayerBdifferent(false);
+        comp1.setPlayerBhasMinAge(false);
+        comp1.setPlayerBhasMaxAge(false);
         competitions.persist(comp1);
 
         Player[] groupPlayers = new Player[8];
@@ -160,6 +168,15 @@ public class Testdata {
         comp2.setDescription("Herren-Konkurrenz");
         comp2.setType(CompetitionType.KNOCKOUT);
         comp2.setPlayers(List.of(p));
+        comp2.setMode(CompetitionMode.SINGLES);
+        comp2.setSignup(CompetitionSignUp.INDIVIDUAL);
+        comp2.setPlayerASex(Sex.MALE);
+        comp2.setPlayerAhasMinAge(false);
+        comp2.setPlayerAhasMaxAge(false);
+        comp2.setPlayerBSex(Sex.MALE);
+        comp2.setPlayerBdifferent(false);
+        comp2.setPlayerBhasMinAge(false);
+        comp2.setPlayerBhasMaxAge(false);
         competitions.persist(comp2);
 
         Player[] knockoutPlayers = new Player[8];
@@ -226,13 +243,15 @@ public class Testdata {
 
         Random rn = new Random();
         for (int i = 0; i < 500; i++) {
-            String fn = firstNames[rn.nextInt(firstNames.length)];
+            boolean male = rn.nextBoolean();
+
+            String fn = firstNames[rn.nextInt(firstNames.length)] + (male?'m':'f');
             String ln = lastNames[rn.nextInt(lastNames.length)];
             Player pl = new Player();
             pl.setFirstName(fn);
             pl.setLastName(ln);
             pl.setBirthday(LocalDate.now());
-            pl.setSex(SexType.male);
+            pl.setSex(male?SexType.male:SexType.female);
             pl.setEmail(fn + "." + ln + "@mail.de");
             pl.setPhone("+49 123 456789");
             pl.setMailVerified(true);
@@ -259,6 +278,15 @@ public class Testdata {
         comp1.setDescription("Damen-Konkurrenz");
         comp1.setType(CompetitionType.GROUPS);
         comp1.setPlayers(List.of(p));
+        comp1.setMode(CompetitionMode.SINGLES);
+        comp1.setSignup(CompetitionSignUp.INDIVIDUAL);
+        comp1.setPlayerASex(Sex.FEMALE);
+        comp1.setPlayerAhasMinAge(false);
+        comp1.setPlayerAhasMaxAge(false);
+        comp1.setPlayerBSex(Sex.FEMALE);
+        comp1.setPlayerBdifferent(false);
+        comp1.setPlayerBhasMinAge(false);
+        comp1.setPlayerBhasMaxAge(false);
         competitions.persist(comp1);
 
         Competition comp2 = new Competition();
@@ -267,6 +295,15 @@ public class Testdata {
         comp2.setDescription("Herren-Konkurrenz");
         comp2.setType(CompetitionType.KNOCKOUT);
         comp2.setPlayers(List.of(p));
+        comp2.setMode(CompetitionMode.SINGLES);
+        comp2.setSignup(CompetitionSignUp.INDIVIDUAL);
+        comp2.setPlayerASex(Sex.MALE);
+        comp2.setPlayerAhasMinAge(false);
+        comp2.setPlayerAhasMaxAge(false);
+        comp2.setPlayerBSex(Sex.MALE);
+        comp2.setPlayerBdifferent(false);
+        comp2.setPlayerBhasMinAge(false);
+        comp2.setPlayerBhasMaxAge(false);
         competitions.persist(comp2);
 
          // TODO add new settings
