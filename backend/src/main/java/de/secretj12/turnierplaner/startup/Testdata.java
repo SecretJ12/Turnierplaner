@@ -32,6 +32,8 @@ public class Testdata {
     NextMatchRepository nextMatches;
     @Inject
     GroupRepository groups;
+    @Inject
+    TeamRepository teams;
 
     public Testdata() {
 
@@ -52,7 +54,6 @@ public class Testdata {
         c4.setName("Platz 4");
         courts.persist(c4);
 
-        // too good to be left out
         Player p = new Player();
         p.setFirstName("Rainer");
         p.setLastName("Zufall");
@@ -112,7 +113,9 @@ public class Testdata {
         comp1.setTournament(tour4);
         comp1.setDescription("Damen-Konkurrenz");
         comp1.setType(CompetitionType.GROUPS);
-        comp1.setPlayers(List.of(p));
+        Team t1 = new Team();
+        t1.setPlayerA(p);
+        comp1.setTeams(List.of(t1));
         comp1.setMode(CompetitionMode.SINGLES);
         comp1.setSignup(CompetitionSignUp.INDIVIDUAL);
         comp1.setPlayerASex(Sex.FEMALE);
@@ -167,7 +170,9 @@ public class Testdata {
         comp2.setTournament(tour4);
         comp2.setDescription("Herren-Konkurrenz");
         comp2.setType(CompetitionType.KNOCKOUT);
-        comp2.setPlayers(List.of(p));
+        Team t2 = new Team();
+        t2.setPlayerA(p);
+        comp2.setTeams(List.of(t2));
         comp2.setMode(CompetitionMode.SINGLES);
         comp2.setSignup(CompetitionSignUp.INDIVIDUAL);
         comp2.setPlayerASex(Sex.MALE);
@@ -277,7 +282,6 @@ public class Testdata {
         comp1.setTournament(t);
         comp1.setDescription("Damen-Konkurrenz");
         comp1.setType(CompetitionType.GROUPS);
-        comp1.setPlayers(List.of(p));
         comp1.setMode(CompetitionMode.SINGLES);
         comp1.setSignup(CompetitionSignUp.INDIVIDUAL);
         comp1.setPlayerASex(Sex.FEMALE);
@@ -288,13 +292,16 @@ public class Testdata {
         comp1.setPlayerBhasMinAge(false);
         comp1.setPlayerBhasMaxAge(false);
         competitions.persist(comp1);
+        Team t1 = new Team();
+        t1.setCompetition(comp1);
+        t1.setPlayerA(p);
+        teams.persist(t1);
 
         Competition comp2 = new Competition();
         comp2.setName("Herren");
         comp2.setTournament(t);
         comp2.setDescription("Herren-Konkurrenz");
         comp2.setType(CompetitionType.KNOCKOUT);
-        comp2.setPlayers(List.of(p));
         comp2.setMode(CompetitionMode.SINGLES);
         comp2.setSignup(CompetitionSignUp.INDIVIDUAL);
         comp2.setPlayerASex(Sex.MALE);
@@ -305,8 +312,10 @@ public class Testdata {
         comp2.setPlayerBhasMinAge(false);
         comp2.setPlayerBhasMaxAge(false);
         competitions.persist(comp2);
-
-         // TODO add new settings
+        Team t2 = new Team();
+        t2.setPlayerA(p);
+        t2.setCompetition(comp2);
+        teams.persist(t2);
     }
 }
 

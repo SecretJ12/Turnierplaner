@@ -56,22 +56,23 @@
                 </el-col>
                 <el-col :span="8">
                     <el-button
-                            style="width: 100%"
-                            @click="signUp"
+                        style="width: 100%"
+                        @click="signUp"
                     >
                         {{ i18n.global.t('general.signUp') }}
                     </el-button>
                 </el-col>
             </el-row>
-            <el-row :gutter="20" class="row-bg" justify="center">
-                <el-col :span="24">
-                    <el-table :data="players" :empty-text="$t('ViewCompetition.no_registration')" border stripe>
-                        <el-table-column :label="i18n.global.t('general.name')" prop="name" sortable="custom"/>
-                        <!-- TODO add delete for admin -->
-                    </el-table>
-                </el-col>
-            </el-row>
         </template>
+        <el-row :gutter="20" class="row-bg" justify="center">
+            <el-col :span="24">
+                <el-table :data="playersA" :empty-text="$t('ViewCompetition.no_registration')" border stripe>
+                    <el-table-column :label="i18n.global.t('general.name')" prop="name" sortable="custom"/>
+                </el-table>
+            </el-col>
+            <!-- TODO lists for other view types -->
+        </el-row>
+        <!-- TODO add delete for admin -->
     </el-space>
 </template>
 
@@ -116,7 +117,9 @@ const route = useRoute()
 const isLoggedIn = inject('loggedIn', ref(false))
 const canEdit = ref(false)
 
-const players = ref([])
+const teams = ref([])
+const playersA = ref([])
+const playersB = ref([])
 
 watch(isLoggedIn, async () => {
   update()
@@ -138,10 +141,33 @@ function update() {
   });
   axios.get(`/tournament/${route.params.tourId}/competition/${route.params.compId}/signedUpPlayers`)
       .then((response) => {
-          players.value = response.data.map((player) => {
-              player.name = player.firstName + ' ' + player.lastName
-              return player
-          })
+          if (props.compDetails.mode === 'SINGLE'
+              || (props.compDetails.mode === 'DOUBLE' && props.compDetails.signup === 'INDIVIDUAL' && !props.compDetails.playerB.different)) {
+              playersA.value = response.data.filter((team) => team.playerA !== null).map((team) => {
+                  let player = team.playerA
+                  player.name = player.firstName + ' ' + player.lastName
+                  return player
+              })
+          } else if (props.compDetails.mode === 'DOUBLE' && props.compDetails.signup === 'INDIVIDUAL' && props.compDetails.playerB.different) {
+              playersA.value = response.data.filter((team) => team.playerA !== null).map((team) => {
+                  let player = team.playerA
+                  player.name = player.firstName + ' ' + player.lastName
+                  return player
+              })
+              playersB.value = response.data.filter((team) => team.playerB !== null).map((team) => {
+                  let player = team.playerB
+                  player.name = player.firstName + ' ' + player.lastName
+                  return player
+              })
+          } else if (props.compDetails.mode === 'DOUBLE' && props.compDetails.signup === 'TOGETHER') {
+              teams.value = response.data.map((team) => {
+                  team.playerA.name = team.playerA.firstName + ' ' + team.playerA.lastName
+                  team.playerB.name = team.playerB.firstName + ' ' + team.playerB.lastName
+                  return team
+              })
+          } else {
+              ElMessage.error("invalid mode")
+          }
       })
       .catch((error) => {
           players.value = []

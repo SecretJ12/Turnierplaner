@@ -1,7 +1,6 @@
 package de.secretj12.turnierplaner.db.entities.competition;
 
 import de.secretj12.turnierplaner.db.entities.Match;
-import de.secretj12.turnierplaner.db.entities.Player;
 import de.secretj12.turnierplaner.db.entities.Tournament;
 import de.secretj12.turnierplaner.db.entities.groups.Group;
 
@@ -67,32 +66,14 @@ public class Competition {
     @Column(name = "playerB_max_age")
     private LocalDate playerBmaxAge;
 
-    @ManyToMany
-    @JoinTable(
-            name = "participating_in",
-            joinColumns = {
-                    @JoinColumn(name = "competition_id")
-            },
-            inverseJoinColumns = {
-                    @JoinColumn(name = "player_id")
-            }
-    )
-    private List<Player> players;
+    @OneToMany(mappedBy = "competition")
+    private List<Team> teams;
 
     @OneToMany(mappedBy = "competition")
     private List<Match> matches;
 
     @OneToMany(mappedBy = "competition")
     private List<Group> groups;
-
-
-    public List<Player> getPlayers() {
-        return players;
-    }
-
-    public void setPlayers(List<Player> players) {
-        this.players = players;
-    }
 
     public UUID getId() {
         return id;
@@ -148,6 +129,14 @@ public class Competition {
 
     public void setGroups(List<Group> groups) {
         this.groups = groups;
+    }
+
+    public List<Team> getTeams() {
+        return teams;
+    }
+
+    public void setTeams(List<Team> teams) {
+        this.teams = teams;
     }
 
     public CompetitionMode getMode() {
