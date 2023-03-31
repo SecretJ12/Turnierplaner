@@ -19,7 +19,7 @@ public class Team {
     private Competition competition;
 
     @ManyToOne
-    @JoinColumn(name = "player_a", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "player_a", referencedColumnName = "id")
     private Player playerA;
     @ManyToOne
     @JoinColumn(name = "player_b", referencedColumnName = "id")

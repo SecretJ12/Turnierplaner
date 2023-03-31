@@ -54,16 +54,27 @@ public class Testdata {
         c4.setName("Platz 4");
         courts.persist(c4);
 
-        Player p = new Player();
-        p.setFirstName("Rainer");
-        p.setLastName("Zufall");
-        p.setBirthday(LocalDate.now());
-        p.setSex(SexType.MALE);
-        p.setEmail("abc@def.ghi");
-        p.setPhone("+49 123 456789");
-        p.setMailVerified(true);
-        p.setAdminVerified(true);
-        players.persist(p);
+        Player pm = new Player();
+        pm.setFirstName("Rainer");
+        pm.setLastName("Zufall");
+        pm.setBirthday(LocalDate.now());
+        pm.setSex(SexType.MALE);
+        pm.setEmail("abc@def.ghi");
+        pm.setPhone("+49 123 456789");
+        pm.setMailVerified(true);
+        pm.setAdminVerified(true);
+        players.persist(pm);
+
+        Player pw = new Player();
+        pw.setFirstName("Klara");
+        pw.setLastName("Fall");
+        pw.setBirthday(LocalDate.now());
+        pw.setSex(SexType.FEMALE);
+        pw.setEmail("abc@def.ghi");
+        pw.setPhone("+49 123 456789");
+        pw.setMailVerified(true);
+        pw.setAdminVerified(true);
+        players.persist(pw);
 
         Tournament tour1 = new Tournament();
         tour1.setName("Clubmeisterschaft 2021");
@@ -74,7 +85,7 @@ public class Testdata {
         tour1.setEndGamePhase(LocalDateTime.now().plusDays(13));
         tour1.setVisible(true);
         tournaments.persist(tour1);
-        addDefaultCompetitions(tour1, p);
+        addDefaultCompetitions(tour1, pm);
 
         Tournament tour2 = new Tournament();
         tour2.setName("Clubmeisterschaft 2022");
@@ -85,7 +96,103 @@ public class Testdata {
         tour2.setEndGamePhase(LocalDateTime.now().plusDays(12));
         tour2.setVisible(true);
         tournaments.persist(tour2);
-        addDefaultCompetitions(tour2, p);
+
+        Competition compSingle = new Competition();
+        compSingle.setName("Single");
+        compSingle.setTournament(tour2);
+        compSingle.setDescription("Einzelkonkurrenz");
+        compSingle.setType(CompetitionType.GROUPS);
+        compSingle.setMode(CompetitionMode.SINGLES);
+        compSingle.setSignup(CompetitionSignUp.INDIVIDUAL);
+        compSingle.setPlayerASex(Sex.ANY);
+        compSingle.setPlayerAhasMinAge(false);
+        compSingle.setPlayerAhasMaxAge(false);
+        compSingle.setPlayerBdifferent(false);
+        compSingle.setPlayerBSex(Sex.FEMALE);
+        compSingle.setPlayerBdifferent(false);
+        compSingle.setPlayerBhasMinAge(false);
+        compSingle.setPlayerBhasMaxAge(false);
+        competitions.persist(compSingle);
+        Team singleT1 = new Team();
+        singleT1.setCompetition(compSingle);
+        singleT1.setPlayerA(pm);
+        teams.persist(singleT1);
+        Team singleT2 = new Team();
+        singleT2.setCompetition(compSingle);
+        singleT2.setPlayerA(pw);
+        teams.persist(singleT2);
+
+        Competition compDoubleIndSame = new Competition();
+        compDoubleIndSame.setName("DoubleIndSame");
+        compDoubleIndSame.setTournament(tour2);
+        compDoubleIndSame.setDescription("Doppel, individualle Anmeldung, gleiche Bedingungen");
+        compDoubleIndSame.setType(CompetitionType.GROUPS);
+        compDoubleIndSame.setMode(CompetitionMode.DOUBLES);
+        compDoubleIndSame.setSignup(CompetitionSignUp.INDIVIDUAL);
+        compDoubleIndSame.setPlayerASex(Sex.ANY);
+        compDoubleIndSame.setPlayerAhasMinAge(false);
+        compDoubleIndSame.setPlayerAhasMaxAge(false);
+        compDoubleIndSame.setPlayerBdifferent(false);
+        compDoubleIndSame.setPlayerBSex(Sex.FEMALE);
+        compDoubleIndSame.setPlayerBdifferent(false);
+        compDoubleIndSame.setPlayerBhasMinAge(false);
+        compDoubleIndSame.setPlayerBhasMaxAge(false);
+        competitions.persist(compDoubleIndSame);
+        Team doubleIndSameT1 = new Team();
+        doubleIndSameT1.setCompetition(compDoubleIndSame);
+        doubleIndSameT1.setPlayerA(pm);
+        teams.persist(doubleIndSameT1);
+        Team doubleIndSameT2 = new Team();
+        doubleIndSameT2.setCompetition(compDoubleIndSame);
+        doubleIndSameT2.setPlayerA(pw);
+        teams.persist(doubleIndSameT2);
+
+        Competition compDoubleIndDif = new Competition();
+        compDoubleIndDif.setName("DoubleIndDif");
+        compDoubleIndDif.setTournament(tour2);
+        compDoubleIndDif.setDescription("Doppel, individualle Anmeldung, verschiedene Bedingungen");
+        compDoubleIndDif.setType(CompetitionType.GROUPS);
+        compDoubleIndDif.setMode(CompetitionMode.DOUBLES);
+        compDoubleIndDif.setSignup(CompetitionSignUp.INDIVIDUAL);
+        compDoubleIndDif.setPlayerASex(Sex.MALE);
+        compDoubleIndDif.setPlayerAhasMinAge(false);
+        compDoubleIndDif.setPlayerAhasMaxAge(false);
+        compDoubleIndDif.setPlayerBdifferent(true);
+        compDoubleIndDif.setPlayerBSex(Sex.FEMALE);
+        compDoubleIndDif.setPlayerBdifferent(false);
+        compDoubleIndDif.setPlayerBhasMinAge(false);
+        compDoubleIndDif.setPlayerBhasMaxAge(false);
+        competitions.persist(compDoubleIndDif);
+        Team doubleIndSameDifT1 = new Team();
+        doubleIndSameDifT1.setCompetition(compDoubleIndDif);
+        doubleIndSameDifT1.setPlayerA(pm);
+        teams.persist(doubleIndSameDifT1);
+        Team doubleIndSameDifT2 = new Team();
+        doubleIndSameDifT2.setCompetition(compDoubleIndDif);
+        doubleIndSameDifT2.setPlayerB(pw);
+        teams.persist(doubleIndSameDifT2);
+
+        Competition compDoubleTog = new Competition();
+        compDoubleTog.setName("DoubleTog");
+        compDoubleTog.setTournament(tour2);
+        compDoubleTog.setDescription("Doppel, gemeinsame Anmeldung");
+        compDoubleTog.setType(CompetitionType.GROUPS);
+        compDoubleTog.setMode(CompetitionMode.DOUBLES);
+        compDoubleTog.setSignup(CompetitionSignUp.TOGETHER);
+        compDoubleTog.setPlayerASex(Sex.MALE);
+        compDoubleTog.setPlayerAhasMinAge(false);
+        compDoubleTog.setPlayerAhasMaxAge(false);
+        compDoubleTog.setPlayerBdifferent(true);
+        compDoubleTog.setPlayerBSex(Sex.FEMALE);
+        compDoubleTog.setPlayerBdifferent(false);
+        compDoubleTog.setPlayerBhasMinAge(false);
+        compDoubleTog.setPlayerBhasMaxAge(false);
+        competitions.persist(compDoubleTog);
+        Team doubleTogT1 = new Team();
+        doubleTogT1.setCompetition(compDoubleTog);
+        doubleTogT1.setPlayerA(pm);
+        doubleTogT1.setPlayerB(pw);
+        teams.persist(doubleTogT1);
 
         Tournament tour3 = new Tournament();
         tour3.setName("Clubmeisterschaft 2023");
@@ -96,7 +203,7 @@ public class Testdata {
         tour3.setEndGamePhase(LocalDateTime.now().plusDays(11));
         tour3.setVisible(true);
         tournaments.persist(tour3);
-        addDefaultCompetitions(tour3, p);
+        addDefaultCompetitions(tour3, pm);
 
         Tournament tour4 = new Tournament();
         tour4.setName("Clubmeisterschaft 2024");
@@ -114,7 +221,7 @@ public class Testdata {
         comp1.setDescription("Damen-Konkurrenz");
         comp1.setType(CompetitionType.GROUPS);
         Team t1 = new Team();
-        t1.setPlayerA(p);
+        t1.setPlayerA(pm);
         comp1.setTeams(List.of(t1));
         comp1.setMode(CompetitionMode.SINGLES);
         comp1.setSignup(CompetitionSignUp.INDIVIDUAL);
@@ -171,7 +278,7 @@ public class Testdata {
         comp2.setDescription("Herren-Konkurrenz");
         comp2.setType(CompetitionType.KNOCKOUT);
         Team t2 = new Team();
-        t2.setPlayerA(p);
+        t2.setPlayerA(pm);
         comp2.setTeams(List.of(t2));
         comp2.setMode(CompetitionMode.SINGLES);
         comp2.setSignup(CompetitionSignUp.INDIVIDUAL);
@@ -241,7 +348,7 @@ public class Testdata {
         tour5.setEndGamePhase(LocalDateTime.now().minusDays(1));
         tour5.setVisible(true);
         tournaments.persist(tour5);
-        addDefaultCompetitions(tour5, p);
+        addDefaultCompetitions(tour5, pm);
 
         String[] firstNames = new String[]{"Charlene", "Amado", "Goldie", "Louis", "Carrol", "Everette", "Laverne", "Robt", "Abby", "German", "Katharine", "Vanessa", "Emilio", "Adela", "Mel", "Guy", "Cassandra", "Antonia", "Angie", "Mindy", "Brice", "Deshawn", "Shawna", "Bryant", "Zachariah", "Bernie", "Selena", "Lacey", "Darnell", "Cory", "Socorro", "Belinda", "Stephan", "Korey", "Josefina", "Joe", "Clyde", "Silas", "Moses", "Christian", "Dalton", "Adrienne", "Adan", "Helena", "Luann", "Chuck", "Leona", "Emmanuel", "Debra", "Jose", "Eldridge", "Lynnette", "Tony", "Katie", "Amber", "Carmela", "Paige", "Donn", "Alfred", "Reid", "Kerry", "Lillian", "Angel", "Bryant", "Gaylord", "Deidre", "Derrick", "Allison", "Jordon", "Alfreda", "Colby", "Leticia", "Lee", "Janna", "Ivory", "Hilda", "Lindsey", "Boris", "Stanford", "Johnnie", "Maura", "Joan", "Latisha", "Robin", "Letha", "Mariano", "Hong", "Leanna", "Caleb", "Rickey", "Alta", "Kari", "Rueben", "Hugh", "Charlotte", "Willian", "Edmond", "Trent", "Claudia", "Darla"};
         String[] lastNames = new String[]{"Brennan", "Meyers", "Mora", "Bailey", "Burns", "Trevino", "Horton", "Monroe", "Ali", "Jarvis", "Banks", "Leblanc", "Kidd", "Mooney", "Stout", "Kramer", "Galvan", "Barrett", "Steele", "Morgan", "English", "Pitts", "Fowler", "Vaughan", "Livingston", "May", "Holden", "Sandoval", "Freeman", "Hurley", "Lambert", "Watson", "Huff", "Ruiz", "Santana", "Conway", "Mcintosh", "Bates", "Greene", "Castaneda", "Mcclure", "Kemp", "Hanna", "Merritt", "Mccarthy", "Sampson", "Barnett", "Green", "Ewing", "Floyd", "Lambert", "Farley", "Berry", "Suarez", "Spears", "Martinez", "Cameron", "Ponce", "Roth", "Tate", "Reyes", "Mann", "Bell", "Singleton", "Fischer", "Reilly", "Maxwell", "Montoya", "Serrano", "Morrison", "Patrick", "Evans", "Crawford", "Shannon", "Calhoun", "Kemp", "Vasquez", "Dorsey", "Mills", "Bright", "Rivers", "Huffman", "Wiley", "Daugherty", "Mcintyre", "Mcmahon", "Boone", "Walls", "Campos", "Morton", "Avila", "Church", "Watkins", "Keller", "Klein", "Valentine", "Bartlett", "Chaney", "Wall", "Howard"};
