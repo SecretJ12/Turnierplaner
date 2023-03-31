@@ -89,7 +89,6 @@
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-mailer</artifactId>
-            <version>2.16.2.Final</version>
         </dependency>
 
         <!-- scheduled task -->
