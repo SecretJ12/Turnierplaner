@@ -109,7 +109,6 @@ public class Testdata {
         compSingle.setPlayerAhasMaxAge(false);
         compSingle.setPlayerBdifferent(false);
         compSingle.setPlayerBSex(Sex.FEMALE);
-        compSingle.setPlayerBdifferent(false);
         compSingle.setPlayerBhasMinAge(false);
         compSingle.setPlayerBhasMaxAge(false);
         competitions.persist(compSingle);
@@ -134,7 +133,6 @@ public class Testdata {
         compDoubleIndSame.setPlayerAhasMaxAge(false);
         compDoubleIndSame.setPlayerBdifferent(false);
         compDoubleIndSame.setPlayerBSex(Sex.FEMALE);
-        compDoubleIndSame.setPlayerBdifferent(false);
         compDoubleIndSame.setPlayerBhasMinAge(false);
         compDoubleIndSame.setPlayerBhasMaxAge(false);
         competitions.persist(compDoubleIndSame);
@@ -159,7 +157,6 @@ public class Testdata {
         compDoubleIndDif.setPlayerAhasMaxAge(false);
         compDoubleIndDif.setPlayerBdifferent(true);
         compDoubleIndDif.setPlayerBSex(Sex.FEMALE);
-        compDoubleIndDif.setPlayerBdifferent(false);
         compDoubleIndDif.setPlayerBhasMinAge(false);
         compDoubleIndDif.setPlayerBhasMaxAge(false);
         competitions.persist(compDoubleIndDif);
@@ -184,7 +181,6 @@ public class Testdata {
         compDoubleTog.setPlayerAhasMaxAge(false);
         compDoubleTog.setPlayerBdifferent(true);
         compDoubleTog.setPlayerBSex(Sex.FEMALE);
-        compDoubleTog.setPlayerBdifferent(false);
         compDoubleTog.setPlayerBhasMinAge(false);
         compDoubleTog.setPlayerBhasMaxAge(false);
         competitions.persist(compDoubleTog);

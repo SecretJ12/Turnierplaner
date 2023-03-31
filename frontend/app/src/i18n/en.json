@@ -112,7 +112,9 @@
     "born": "Born",
     "before": "before",
     "and": "and",
-    "after": "after"
+    "after": "after",
+    "playerA": "Player A",
+    "playerB": "Player B"
   },
   "Player": {
     "too_many_results": "Result ist not unique enough",

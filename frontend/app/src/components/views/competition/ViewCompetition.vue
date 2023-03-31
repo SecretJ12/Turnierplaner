@@ -45,7 +45,7 @@ import {auth} from "@/security/AuthService";
 import axios from "axios";
 import {i18n, router} from "@/main";
 
-import ViewSignUp from "@/components/views/competition/ViewSignUp.vue";
+import ViewSignUp from "@/components/views/competition/signup/ViewSignUp.vue";
 import ViewGame from "@/components/views/competition/ViewGame.vue";
 
 const route = useRoute()

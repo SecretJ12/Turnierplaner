@@ -50,7 +50,7 @@
     "sign_up": "Registrieren",
     "registration_failed": "Player registration failed",
     "registration_successful": "Player registered successfully",
-    "not_found": "Du kannst dich nicht finden? Hast du dich schon registriert?"
+    "not_found": "Bevor du dich anmelden kannst musst du dich einmalig registrieren"
   },
   "TournamentSettings": {
     "visible": "Sichtbar",
@@ -112,7 +112,9 @@
     "born": "Geboren",
     "before": "vor",
     "and": "und",
-    "after": "nach"
+    "after": "nach",
+    "playerA": "Spieler A",
+    "playerB": "Spieler B"
   },
   "Player": {
     "too_many_results": "Die Eingabe ist nicht eindeutig",
