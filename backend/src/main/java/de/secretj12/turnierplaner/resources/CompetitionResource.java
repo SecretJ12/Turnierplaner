@@ -17,6 +17,8 @@ import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserKnockoutSyste
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayerSignUpForm;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserTeam;
 import io.quarkus.security.identity.SecurityIdentity;
+import org.jboss.resteasy.reactive.RestResponse;
+import org.jboss.resteasy.reactive.RestResponse.ResponseBuilder;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
@@ -55,20 +57,24 @@ public class CompetitionResource {
     @Path("/{compName}/details")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public jUserCompetition getCompetition(@PathParam("tourName") String tourName,
+    public RestResponse<jUserCompetition> getCompetition(@PathParam("tourName") String tourName,
                                            @PathParam("compName") String compName) {
         if (securityIdentity.hasRole("director"))
-            return new jDirectorCompetitionUpdate(competitions.getByName(tourName, compName));
+            return ResponseBuilder
+                    .ok((jUserCompetition) new jDirectorCompetitionUpdate(competitions.getByName(tourName, compName)))
+                    .build();
         if (canSee(tourName))
-            return new jUserCompetition(competitions.getByName(tourName, compName));
+            return ResponseBuilder
+                    .ok(new jUserCompetition(competitions.getByName(tourName, compName)))
+                    .build();
         return null;
     }
 
     @GET
     @Path("/canEdit")
     @Produces(MediaType.TEXT_PLAIN)
-    public boolean canEdit(@PathParam("tourName") String tourName) {
-        return securityIdentity.hasRole("director");
+    public RestResponse<Boolean> canEdit(@PathParam("tourName") String tourName) {
+        return ResponseBuilder.ok(securityIdentity.hasRole("director")).build();
     }
 
     @POST
@@ -77,41 +83,40 @@ public class CompetitionResource {
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response addCompetition(@PathParam("tourName") String tourName, jDirectorCompetitionAdd competition) {
+    public RestResponse<String> addCompetition(@PathParam("tourName") String tourName, jDirectorCompetitionAdd competition) {
         if (competition.getName() == null)
-            return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
-                    .entity("No tournament specified").build();
+            return ResponseBuilder.create(RestResponse.Status.BAD_REQUEST, "No competition specified")
+                    .build();
 
         if (competitions.getByName(tourName, competition.getName()) != null)
-            return Response.status(Response.Status.CONFLICT).build();
+            return ResponseBuilder.create(RestResponse.Status.CONFLICT, "Competition already exists").build();
 
         Tournament tournament = tournaments.getByName(tourName);
         if (tournament == null)
-            return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
-                    .entity("Tournament doesn't exist").build();
+            return ResponseBuilder.create(RestResponse.Status.BAD_REQUEST, "Tournament doesn't exist").build();
 
-        if (competition.getPlayerA().isHasMinAge() && competition.getPlayerA().getMinAge() == null) {
-            return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
-                    .entity("Player A: Min age null although has min age").build();
-        }
-        if (competition.getPlayerA().isHasMaxAge() && competition.getPlayerA().getMaxAge() == null) {
-            return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
-                    .entity("Player A: Max age null although has max age").build();
-        }
-        if (competition.getPlayerB().isHasMinAge() && competition.getPlayerB().getMinAge() == null) {
-            return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
-                    .entity("Player B: Min age null although has min age").build();
-        }
-        if (competition.getPlayerB().isHasMaxAge() && competition.getPlayerB().getMaxAge() == null) {
-            return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
-                    .entity("Player B: Max age null although has max age").build();
-        }
+        if (competition.getPlayerA().isHasMinAge() && competition.getPlayerA().getMinAge() == null)
+            return ResponseBuilder
+                    .create(RestResponse.Status.BAD_REQUEST, "Player A: Min age null although has min age")
+                    .build();
+        if (competition.getPlayerA().isHasMaxAge() && competition.getPlayerA().getMaxAge() == null)
+            return ResponseBuilder
+                    .create(RestResponse.Status.BAD_REQUEST, "Player A: Max age null although has max age")
+                    .build();
+        if (competition.getPlayerB().isHasMinAge() && competition.getPlayerB().getMinAge() == null)
+            return ResponseBuilder
+                    .create(RestResponse.Status.BAD_REQUEST, "Player B: Min age null although has min age")
+                    .build();
+        if (competition.getPlayerB().isHasMaxAge() && competition.getPlayerB().getMaxAge() == null)
+            return ResponseBuilder
+                    .create(RestResponse.Status.BAD_REQUEST, "Player B: Max age null although has max age")
+                    .build();
 
         Competition dbCompetition = new Competition();
         competition.toDB(dbCompetition);
         dbCompetition.setTournament(tournament);
         competitions.persist(dbCompetition);
-        return Response.ok("successfully added").build();
+        return ResponseBuilder.ok("successfully added").build();
     }
 
     @POST
@@ -120,30 +125,30 @@ public class CompetitionResource {
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response updateCompetition(@PathParam("tourName") String tourName, jDirectorCompetitionUpdate competition) {
+    public RestResponse<String> updateCompetition(@PathParam("tourName") String tourName, jDirectorCompetitionUpdate competition) {
         Competition dbCompetition = competitions.getById(competition.getId());
         if (dbCompetition == null)
-            return Response.status(Response.Status.BAD_REQUEST.getStatusCode(),
-                    "Competition doesn't exist").build();
+            return ResponseBuilder.create(RestResponse.Status.BAD_REQUEST, "Competition doesn't exist").build();
         if (!dbCompetition.getTournament().getName().equals(tourName))
-            return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
-                    .entity("Tournament of competition is not the given").build();
+            return ResponseBuilder
+                    .create(RestResponse.Status.BAD_REQUEST, "Tournament of competition is not the given")
+                    .build();
 
         competition.toDB(dbCompetition);
         competitions.persist(dbCompetition);
 
         // TODO update players (remove all not fitting, warn in frontend if conditions are changed!)
 
-        return Response.ok("successfully changed").build();
+        return ResponseBuilder.ok("successfully changed").build();
     }
 
     @GET
     @Path("/{compName}/signedUpPlayers")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getSignedUpPlayers(@PathParam("tourName") String tourName,
+    public RestResponse<List<jUserTeam>> getSignedUpPlayers(@PathParam("tourName") String tourName,
                                        @PathParam("compName") String compName) {
         if (!canSee(tourName))
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+            return RestResponse.status(RestResponse.Status.UNAUTHORIZED);
 
         Competition competition = competitions.getByName(tourName, compName);
         if (competition == null)
@@ -152,9 +157,9 @@ public class CompetitionResource {
         if (!securityIdentity.hasRole("director") &&
                 (competition.getTournament().getBeginRegistration().isAfter(LocalDateTime.now())
                         || competition.getTournament().getBeginGamePhase().isBefore(LocalDateTime.now())))
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+            return RestResponse.status(RestResponse.Status.UNAUTHORIZED);
 
-        return Response.ok(competition.getTeams().stream().map(jUserTeam::new).toList()).build();
+        return ResponseBuilder.ok(competition.getTeams().stream().map(jUserTeam::new).toList()).build();
     }
 
     @POST
@@ -162,21 +167,20 @@ public class CompetitionResource {
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response signUpPlayer(@PathParam("tourName") String tourName, @PathParam("compName") String compName,
+    public RestResponse<String> signUpPlayer(@PathParam("tourName") String tourName, @PathParam("compName") String compName,
                                  jUserPlayerSignUpForm reg) {
 
         if (!canSee(tourName))
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+            return RestResponse.status(RestResponse.Status.UNAUTHORIZED);
 
         Competition competition = competitions.getByName(tourName, compName);
         if (competition == null)
-            return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
-                    .entity("Competition doesn't exist").build();
+            return ResponseBuilder.create(RestResponse.Status.BAD_REQUEST, "Competition doesn't exist").build();
 
         if (!securityIdentity.hasRole("director") && // or registration phase
                 (competition.getTournament().getBeginRegistration().isAfter(LocalDateTime.now())
                         || competition.getTournament().getEndRegistration().isBefore(LocalDateTime.now())))
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+            return RestResponse.status(RestResponse.Status.UNAUTHORIZED);
 
         if (competition.getMode() == CompetitionMode.SINGLES
                 || (competition.getSignup() == CompetitionSignUp.INDIVIDUAL && !competition.isPlayerBdifferent())) {
@@ -184,20 +188,19 @@ public class CompetitionResource {
             // -> every registration as player A and player B is null
 
             if (reg.getPlayerA() == null)
-                return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
-                        .entity("Player A is null").build();
+                return ResponseBuilder.create(RestResponse.Status.BAD_REQUEST, "Player A is null").build();
             if (reg.getPlayerB() != null)
-                return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
-                        .entity("Player B is not null").build();
+                return ResponseBuilder.create(RestResponse.Status.BAD_REQUEST, "Player B is not null").build();
 
-            Player playerA = players.playerRepository.getByName(reg.getPlayerA().getFirstName(), reg.getPlayerA().getLastName());
+            Player playerA = players.playerRepository
+                    .getByName(reg.getPlayerA().getFirstName(), reg.getPlayerA().getLastName());
             if (playerA == null)
-                return Response.status(Response.Status.BAD_REQUEST).entity("Player A doesn't exist").build();
+                return ResponseBuilder.create(RestResponse.Status.BAD_REQUEST, "Player A doesn't exist").build();
 
-            if (conditionsFailA(competition, playerA)) {
-                return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
-                        .entity("Player A is does not meet the conditions").build();
-            }
+            if (conditionsFailA(competition, playerA))
+                return ResponseBuilder
+                        .create(RestResponse.Status.BAD_REQUEST, "Player A is does not meet the conditions")
+                        .build();
 
             List<Team> regTeams = competition.getTeams();
             if (regTeams == null) {
@@ -205,8 +208,7 @@ public class CompetitionResource {
                 team.setPlayerA(playerA);
                 competition.setTeams(List.of(team));
             } else if (regTeams.stream().anyMatch(t -> t.getPlayerA().getId().equals(playerA.getId()))) {
-                return Response.status(Response.Status.CONFLICT.getStatusCode())
-                        .entity("Player already registered!").build();
+                return ResponseBuilder.create(RestResponse.Status.CONFLICT, "Player already registered").build();
             } else {
                 Team team = new Team();
                 team.setPlayerA(playerA);
@@ -220,20 +222,25 @@ public class CompetitionResource {
                 // -> each registration needs to be player A xor player B null
 
                 if (reg.getPlayerA() == null && reg.getPlayerB() == null)
-                    return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
-                            .entity("Player A and player B are null").build();
+                    return ResponseBuilder
+                            .create(RestResponse.Status.BAD_REQUEST, "Player A and player B are null")
+                            .build();
                 if (reg.getPlayerA() != null && reg.getPlayerB() != null)
-                    return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
-                            .entity("Player A and player B are not null").build();
+                    return ResponseBuilder
+                            .create(RestResponse.Status.BAD_REQUEST, "Player A and player B are not null")
+                            .build();
 
                 if (reg.getPlayerA() != null) {
                     Player playerA = players.playerRepository.getByName(reg.getPlayerA().getFirstName(), reg.getPlayerA().getLastName());
                     if (playerA == null)
-                        return Response.status(Response.Status.BAD_REQUEST).entity("Player A doesn't exist").build();
+                        return ResponseBuilder
+                                .create(RestResponse.Status.BAD_REQUEST, "Player A doesn't exist")
+                                .build();
 
                     if (conditionsFailA(competition, playerA))
-                        return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
-                                .entity("Player A is does not meet the conditions").build();
+                        return ResponseBuilder
+                                .create(RestResponse.Status.BAD_REQUEST, "Player A is does not meet the conditions")
+                                .build();
 
                     List<Team> regTeams = competition.getTeams();
                     if (regTeams == null) {
@@ -244,8 +251,8 @@ public class CompetitionResource {
                             t.getPlayerA().getId().equals(playerA.getId())
                                     || t.getPlayerB().getId().equals(playerA.getId()))
                     ) {
-                        return Response.status(Response.Status.CONFLICT.getStatusCode())
-                                .entity("Player already registered!").build();
+                        return ResponseBuilder
+                                .create(RestResponse.Status.CONFLICT, "Player already registered").build();
                     } else {
                         Team team = new Team();
                         team.setPlayerA(playerA);
@@ -256,11 +263,15 @@ public class CompetitionResource {
                 if (reg.getPlayerB() != null) {
                     Player playerB = players.playerRepository.getByName(reg.getPlayerB().getFirstName(), reg.getPlayerB().getLastName());
                     if (playerB == null)
-                        return Response.status(Response.Status.BAD_REQUEST).entity("Player B doesn't exist").build();
+                        return ResponseBuilder
+                                .create(RestResponse.Status.BAD_REQUEST, "Player B doesn't exist")
+                                .build();
 
                     if (conditionsFailB(competition, playerB))
-                        return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
-                                .entity("Player B is does not meet the conditions").build();
+                        return ResponseBuilder
+                                .create(RestResponse.Status.BAD_REQUEST,
+                                        "Player B is does not meet the conditions")
+                                .build();
 
                     List<Team> regTeams = competition.getTeams();
                     if (regTeams == null) {
@@ -271,8 +282,8 @@ public class CompetitionResource {
                             t.getPlayerA().getId().equals(playerB.getId())
                                     || t.getPlayerB().getId().equals(playerB.getId()))
                     ) {
-                        return Response.status(Response.Status.CONFLICT.getStatusCode())
-                                .entity("Player already registered!").build();
+                        return ResponseBuilder
+                                .create(RestResponse.Status.CONFLICT, "Player already registered").build();
                     } else {
                         Team team = new Team();
                         team.setPlayerB(playerB);
@@ -285,25 +296,27 @@ public class CompetitionResource {
                 // -> needs player A and player B to be not null
 
                 if (reg.getPlayerA() == null)
-                    return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
-                            .entity("Player A is null").build();
+                    return ResponseBuilder.create(RestResponse.Status.BAD_REQUEST, "Player A is null").build();
                 if (reg.getPlayerB() == null)
-                    return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
-                            .entity("Player B is null").build();
+                    return ResponseBuilder.create(RestResponse.Status.BAD_REQUEST, "Player B is null").build();
 
                 Player playerA = players.playerRepository.getByName(reg.getPlayerA().getFirstName(), reg.getPlayerA().getLastName());
                 if (playerA == null)
-                    return Response.status(Response.Status.BAD_REQUEST).entity("Player A doesn't exist").build();
+                    return ResponseBuilder
+                            .create(RestResponse.Status.BAD_REQUEST, "Player A doesn't exist").build();
                 Player playerB = players.playerRepository.getByName(reg.getPlayerB().getFirstName(), reg.getPlayerB().getLastName());
                 if (playerB == null)
-                    return Response.status(Response.Status.BAD_REQUEST).entity("Player B doesn't exist").build();
+                    return ResponseBuilder
+                            .create(RestResponse.Status.BAD_REQUEST, "Player B doesn't exist").build();
 
                 if (conditionsFailA(competition, playerA))
-                    return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
-                            .entity("Player A is does not meet the conditions").build();
+                    return ResponseBuilder
+                            .create(RestResponse.Status.BAD_REQUEST, "Player A is does not meet the conditions")
+                            .build();
                 if (conditionsFailB(competition, playerB))
-                    return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
-                            .entity("Player B is does not meet the conditions").build();
+                    return ResponseBuilder
+                            .create(RestResponse.Status.BAD_REQUEST, "Player B is does not meet the conditions")
+                            .build();
 
                 List<Team> regTeams = competition.getTeams();
                 if (regTeams == null) {
@@ -315,14 +328,16 @@ public class CompetitionResource {
                         t.getPlayerA().getId().equals(playerA.getId())
                                 || t.getPlayerB().getId().equals(playerA.getId()))
                 ) {
-                    return Response.status(Response.Status.CONFLICT.getStatusCode())
-                            .entity("Player A already registered!").build();
+                    return ResponseBuilder
+                            .create(RestResponse.Status.CONFLICT, "Player A already registered")
+                            .build();
                 } else if (regTeams.stream().anyMatch(t ->
                         t.getPlayerA().getId().equals(playerB.getId())
                                 || t.getPlayerB().getId().equals(playerB.getId()))
                 ) {
-                    return Response.status(Response.Status.CONFLICT.getStatusCode())
-                            .entity("Player B already registered!").build();
+                    return ResponseBuilder
+                            .create(RestResponse.Status.CONFLICT, "Player B already registered")
+                            .build();
                 } else {
                     Team team = new Team();
                     team.setPlayerA(playerA);
@@ -334,7 +349,7 @@ public class CompetitionResource {
         }
 
         // TODO notify by mail?
-        return Response.ok().build();
+        return ResponseBuilder.ok("Player registered").build();
     }
 
     private boolean conditionsFailA(Competition comp, Player player) {
@@ -354,39 +369,39 @@ public class CompetitionResource {
     @GET
     @Path("/{compName}/knockoutMatches")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getKnockoutMatches(@PathParam("tourName") String tourName, @PathParam("compName") String compName) {
+    public RestResponse<jUserKnockoutSystem> getKnockoutMatches(@PathParam("tourName") String tourName, @PathParam("compName") String compName) {
         if (!canSee(tourName))
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+            return RestResponse.status(Response.Status.UNAUTHORIZED);
 
         Competition competition = competitions.getByName(tourName, compName);
         if (competition == null)
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return RestResponse.status(Response.Status.NOT_FOUND);
         if (competition.getType() != CompetitionType.KNOCKOUT)
-            return Response.status(Response.Status.METHOD_NOT_ALLOWED).build();
+            return RestResponse.status(Response.Status.METHOD_NOT_ALLOWED);
 
         Match finale = matches.getFinal(competition);
         Match thirdPlace = matches.getThirdPlace(competition);
-        return Response.ok(new jUserKnockoutSystem(finale, thirdPlace)).build();
+        return ResponseBuilder.ok(new jUserKnockoutSystem(finale, thirdPlace)).build();
     }
 
     @GET
     @Path("/{compName}/groupMatches")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getGroupMatches(@PathParam("tourName") String tourName, @PathParam("compName") String compName) {
+    public RestResponse<jUserGroupSystem> getGroupMatches(@PathParam("tourName") String tourName, @PathParam("compName") String compName) {
         if (!canSee(tourName))
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+            return RestResponse.status(Response.Status.UNAUTHORIZED);
 
         Competition competition = competitions.getByName(tourName, compName);
         if (competition == null)
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return RestResponse.status(Response.Status.NOT_FOUND);
         if (competition.getType() != CompetitionType.GROUPS)
-            return Response.status(Response.Status.METHOD_NOT_ALLOWED).build();
+            return RestResponse.status(Response.Status.METHOD_NOT_ALLOWED);
 
         List<Group> groups = competition.getGroups();
         if (groups == null)
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return RestResponse.status(Response.Status.NOT_FOUND);
 
-        return Response.ok(new jUserGroupSystem(groups)).build();
+        return ResponseBuilder.ok(new jUserGroupSystem(groups)).build();
     }
 
     private boolean canSee(String tourName) {

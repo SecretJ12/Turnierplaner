@@ -12,6 +12,8 @@ import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserSex;
 import io.quarkus.mailer.Mailer;
 import io.quarkus.scheduler.Scheduled;
 import io.smallrye.common.annotation.Blocking;
+import org.jboss.resteasy.reactive.RestResponse;
+import org.jboss.resteasy.reactive.RestResponse.ResponseBuilder;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -38,7 +40,7 @@ public class PlayerResource {
     @Transactional
     @Path("/find")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<jUserPlayer> listPlayer(@QueryParam("search") String search,
+    public RestResponse<List<jUserPlayer>> listPlayer(@QueryParam("search") String search,
                                         @QueryParam("sex") jUserSex sex,
                                         @QueryParam("minAge") @JsonFormat(pattern = "yyyy-MM-dd") String minAgeS,
                                         @QueryParam("maxAge") @JsonFormat(pattern = "yyyy-MM-dd") String maxAgeS) {
@@ -51,11 +53,13 @@ public class PlayerResource {
             case MALE -> SexType.MALE;
             case FEMALE -> SexType.FEMALE;
         };
-        if (search.length() == 0)
-            return List.of();
-        return playerRepository
+        if (search.length() == 0) {
+            List<jUserPlayer> emptyList = List.of();
+            return ResponseBuilder.ok(emptyList).build();
+        }
+        return ResponseBuilder.ok(playerRepository
                 .filter(search, dbSex, minAge, maxAge).map(jUserPlayer::new)
-                .toList();
+                .toList()).build();
     }
 
     @POST
@@ -64,10 +68,11 @@ public class PlayerResource {
     @Blocking
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response playerRegistration(jUserPlayerRegistrationForm playerForm) {
+    public RestResponse<String> playerRegistration(jUserPlayerRegistrationForm playerForm) {
         if (playerRepository.getByName(playerForm.getFirstName(), playerForm.getLastName()) != null)
-            return Response.status(Response.Status.CONFLICT.getStatusCode())
-                    .entity("A player already exists with this name").build();
+            return ResponseBuilder.create(RestResponse.Status.CONFLICT, "A player already exists with this name")
+                    .build();
+
         // TODO check phone number (only valid phone number)
         Player newPlayer = new Player();
         newPlayer.setFirstName(playerForm.getFirstName());
@@ -77,7 +82,7 @@ public class PlayerResource {
             case MALE -> newPlayer.setSex(SexType.MALE);
             case FEMALE -> newPlayer.setSex(SexType.FEMALE);
             default -> {
-                return Response.status(Response.Status.BAD_REQUEST).build();
+                return RestResponse.status(Response.Status.BAD_REQUEST);
             }
         }
         newPlayer.setEmail(playerForm.getEmail());
@@ -97,12 +102,13 @@ public class PlayerResource {
             mailer.send(mailTemplates.verificationMail(newPlayer.getEmail(), verificationCode.getId().toString()));
         } catch (Exception e) {
             // TODO print by logger
-            e.printStackTrace();
-            return Response.status(Response.Status.CONFLICT.getStatusCode())
-                    .entity("Problem sending you the verification mail. Please try again later.").build();
+            return ResponseBuilder
+                    .create(RestResponse.Status.CONFLICT,
+                            "Problem sending you the verification mail. Please try again later.")
+                    .build();
         }
 
-        return Response.ok("successfully added").build();
+        return ResponseBuilder.ok("successfully added").build();
     }
 
 
@@ -110,19 +116,17 @@ public class PlayerResource {
     @Transactional
     @Path("/verification")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response verification(@QueryParam("code") String code) {
+    public RestResponse<String> verification(@QueryParam("code") String code) {
         VerificationCode verificationCode = verificationCodeRepository.findByUUID(UUID.fromString(code));
-        if (verificationCode == null) {
-            return Response.status(Response.Status.CONFLICT.getStatusCode())
-                    .entity("This verification code is not correct!").build();
-        }
+        if (verificationCode == null)
+            return ResponseBuilder.create(RestResponse.Status.CONFLICT, "This verification code is not correct!")
+                    .build();
 
         Player player = verificationCode.getPlayer();
         player.setMailVerified(true);
         playerRepository.persist(player);
         verificationCodeRepository.delete(verificationCode);
-        return Response.status(Response.Status.ACCEPTED.getStatusCode())
-                .entity("Successfully verified!").build();
+        return ResponseBuilder.create(RestResponse.Status.ACCEPTED, "Successfully verified!").build();
     }
 
     @Transactional
