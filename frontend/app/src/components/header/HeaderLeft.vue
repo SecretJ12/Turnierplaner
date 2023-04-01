@@ -25,4 +25,14 @@ function home() {
 #headerLeft > * {
   margin-left: 20px;
 }
+
+h1 {
+    font-weight: 900;
+}
+
+@media only screen and (max-width: 750px) {
+    h1 {
+        font-size: 1.0em;
+    }
+}
 </style>

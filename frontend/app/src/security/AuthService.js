@@ -14,6 +14,7 @@ class AuthService {
             if (user != null && !user.expired)
                 this.userManager.signinSilent()
                     .then(() => {
+                        access_token.value = user.access_token
                         console.log("successfully logged in")
                     })
                     .catch(() => {
@@ -41,6 +42,7 @@ class AuthService {
     }
 
     logout() {
+        access_token.value = null
         if (popup)
             return this.userManager.signoutPopup()
         else
