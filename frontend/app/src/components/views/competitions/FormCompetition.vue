@@ -334,17 +334,17 @@ function submit(formRef) {
           playerA: {
               sex: props.data.playerA.sex,
               hasMinAge: props.data.playerA.hasMinAge,
-              minAge: props.data.playerA.minAge,
+              minAge: dateToJson(props.data.playerA.minAge),
               hasMaxAge: props.data.playerA.hasMaxAge,
-              maxAge: props.data.playerA.maxAge
+              maxAge: dateToJson(props.data.playerA.maxAge)
           },
           playerB: {
               different: props.data.playerB.different,
               sex: props.data.playerB.sex,
               hasMinAge: props.data.playerB.hasMinAge,
-              minAge: props.data.playerB.minAge,
+              minAge: dateToJson(props.data.playerB.minAge),
               hasMaxAge: props.data.playerB.hasMaxAge,
-              maxAge: props.data.playerB.maxAge
+              maxAge: dateToJson(props.data.playerB.maxAge)
           }
       }
       emit('submit', server_data)
@@ -373,6 +373,10 @@ const checkBMax = (rule, value, callback) => {
     if (props.data.playerB.hasMaxAge && props.data.playerB.maxAge === null)
         callback(new Error(i18n.global.t("CompetitionSettings.missingAge")))
     callback()
+}
+
+function dateToJson(d) {
+    return `${d.getFullYear()}-${d.getMonth() < 9 ? '0' : ''}${d.getMonth()+1}-${d.getDate() < 10 ? '0':''}${d.getDate()}`
 }
 </script>
 
