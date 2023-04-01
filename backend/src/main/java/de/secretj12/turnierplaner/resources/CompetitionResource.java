@@ -8,6 +8,7 @@ import de.secretj12.turnierplaner.db.entities.competition.*;
 import de.secretj12.turnierplaner.db.entities.groups.Group;
 import de.secretj12.turnierplaner.db.repositories.CompetitionRepository;
 import de.secretj12.turnierplaner.db.repositories.MatchRepository;
+import de.secretj12.turnierplaner.db.repositories.TeamRepository;
 import de.secretj12.turnierplaner.db.repositories.TournamentRepository;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorCompetitionAdd;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorCompetitionUpdate;
@@ -42,6 +43,8 @@ public class CompetitionResource {
     SecurityIdentity securityIdentity;
     @Inject
     MatchRepository matches;
+    @Inject
+    TeamRepository teams;
 
     @GET
     @Path("/list")
@@ -203,18 +206,15 @@ public class CompetitionResource {
                         .build();
 
             List<Team> regTeams = competition.getTeams();
-            if (regTeams == null) {
-                Team team = new Team();
-                team.setPlayerA(playerA);
-                competition.setTeams(List.of(team));
-            } else if (regTeams.stream().anyMatch(t -> t.getPlayerA().getId().equals(playerA.getId()))) {
+            if (regTeams != null && regTeams.stream()
+                    .anyMatch(t -> (t.getPlayerA() != null && t.getPlayerA().getId().equals(playerA.getId()))
+                            || (t.getPlayerB() != null && t.getPlayerB().getId().equals(playerA.getId()))))
                 return ResponseBuilder.create(RestResponse.Status.CONFLICT, "Player already registered").build();
-            } else {
-                Team team = new Team();
-                team.setPlayerA(playerA);
-                regTeams.add(team);
-            }
-            competitions.persist(competition);
+
+            Team team = new Team();
+            team.setPlayerA(playerA);
+            team.setCompetition(competition);
+            teams.persist(team);
         } else {
             // double mode
             if (competition.getSignup() == CompetitionSignUp.INDIVIDUAL && competition.isPlayerBdifferent()) {
@@ -243,22 +243,16 @@ public class CompetitionResource {
                                 .build();
 
                     List<Team> regTeams = competition.getTeams();
-                    if (regTeams == null) {
-                        Team team = new Team();
-                        team.setPlayerA(playerA);
-                        competition.setTeams(List.of(team));
-                    } else if (regTeams.stream().anyMatch(t ->
-                            t.getPlayerA().getId().equals(playerA.getId())
-                                    || t.getPlayerB().getId().equals(playerA.getId()))
-                    ) {
+                    if (regTeams != null && regTeams.stream()
+                            .anyMatch(t -> (t.getPlayerA() != null && t.getPlayerA().getId().equals(playerA.getId()))
+                                    || (t.getPlayerB() != null && t.getPlayerB().getId().equals(playerA.getId()))))
                         return ResponseBuilder
                                 .create(RestResponse.Status.CONFLICT, "Player already registered").build();
-                    } else {
-                        Team team = new Team();
-                        team.setPlayerA(playerA);
-                        regTeams.add(team);
-                    }
-                    competitions.persist(competition);
+
+                    Team team = new Team();
+                    team.setPlayerA(playerA);
+                    team.setCompetition(competition);
+                    teams.persist(team);
                 }
                 if (reg.getPlayerB() != null) {
                     Player playerB = players.playerRepository.getByName(reg.getPlayerB().getFirstName(), reg.getPlayerB().getLastName());
@@ -274,22 +268,16 @@ public class CompetitionResource {
                                 .build();
 
                     List<Team> regTeams = competition.getTeams();
-                    if (regTeams == null) {
-                        Team team = new Team();
-                        team.setPlayerB(playerB);
-                        competition.setTeams(List.of(team));
-                    } else if (regTeams.stream().anyMatch(t ->
-                            t.getPlayerA().getId().equals(playerB.getId())
-                                    || t.getPlayerB().getId().equals(playerB.getId()))
-                    ) {
+                    if (regTeams != null && regTeams.stream()
+                            .anyMatch(t -> (t.getPlayerA() != null && t.getPlayerA().getId().equals(playerB.getId()))
+                                    || (t.getPlayerB() != null && t.getPlayerB().getId().equals(playerB.getId()))))
                         return ResponseBuilder
                                 .create(RestResponse.Status.CONFLICT, "Player already registered").build();
-                    } else {
-                        Team team = new Team();
-                        team.setPlayerB(playerB);
-                        regTeams.add(team);
-                    }
-                    competitions.persist(competition);
+
+                    Team team = new Team();
+                    team.setPlayerB(playerB);
+                    team.setCompetition(competition);
+                    teams.persist(team);
                 }
             } else {
                 // double mode with registration together and any constraints
@@ -319,32 +307,24 @@ public class CompetitionResource {
                             .build();
 
                 List<Team> regTeams = competition.getTeams();
-                if (regTeams == null) {
-                    Team team = new Team();
-                    team.setPlayerA(playerA);
-                    team.setPlayerB(playerB);
-                    competition.setTeams(List.of(team));
-                } else if (regTeams.stream().anyMatch(t ->
-                        t.getPlayerA().getId().equals(playerA.getId())
-                                || t.getPlayerB().getId().equals(playerA.getId()))
-                ) {
+                if (regTeams != null && regTeams.stream()
+                        .anyMatch(t -> (t.getPlayerA() != null && t.getPlayerA().getId().equals(playerA.getId()))
+                                || (t.getPlayerB() != null && t.getPlayerB().getId().equals(playerA.getId()))))
                     return ResponseBuilder
                             .create(RestResponse.Status.CONFLICT, "Player A already registered")
                             .build();
-                } else if (regTeams.stream().anyMatch(t ->
-                        t.getPlayerA().getId().equals(playerB.getId())
-                                || t.getPlayerB().getId().equals(playerB.getId()))
-                ) {
+                if (regTeams != null && regTeams.stream()
+                        .anyMatch(t -> (t.getPlayerA() != null && t.getPlayerA().getId().equals(playerB.getId()))
+                                || (t.getPlayerB() != null && t.getPlayerB().getId().equals(playerB.getId()))))
                     return ResponseBuilder
                             .create(RestResponse.Status.CONFLICT, "Player B already registered")
                             .build();
-                } else {
-                    Team team = new Team();
-                    team.setPlayerA(playerA);
-                    team.setPlayerB(playerB);
-                    regTeams.add(team);
-                }
-                competitions.persist(competition);
+
+                Team team = new Team();
+                team.setPlayerA(playerA);
+                team.setPlayerB(playerB);
+                team.setCompetition(competition);
+                teams.persist(team);
             }
         }
 

@@ -79,7 +79,6 @@
                             :placeholder="i18n.global.t('general.name')"
                             hide-loading
                             style="width: 100%"
-                            @keyup.enter="signUpDoubleIndSame"
                     />
                 </el-col>
                 <el-col :span="8">
@@ -108,7 +107,6 @@
                                     :placeholder="i18n.global.t('ViewCompetition.playerA')"
                                     hide-loading
                                     style="width: 100%"
-                                    @keyup.enter="signUpSingleA"
                             />
                         </el-col>
                         <el-col :span="8">
@@ -134,7 +132,6 @@
                                     :placeholder="i18n.global.t('ViewCompetition.playerB')"
                                     hide-loading
                                     style="width: 100%"
-                                    @keyup.enter="signUpDoubleIndDifB"
                             />
                         </el-col>
                         <el-col :span="8">
@@ -158,8 +155,11 @@ import {defineProps, ref} from "vue";
 import axios from "axios";
 import {ElMessage} from "element-plus";
 import ViewConditions from "@/components/views/competition/signup/ViewConditions.vue";
+import {useRoute} from "vue-router";
 
+const route = useRoute()
 
+const emit = defineEmits(['registered'])
 const props = defineProps({
     compDetails: {
         type: Object,
@@ -218,17 +218,17 @@ function queryPlayerB(search, callback) {
     queriedPlayerB = queriedPlayerB.filter((item) => {
         return item.value.toLowerCase().includes(search.toLowerCase())
     })
-    callback(queriedPlayerA)
+    callback(queriedPlayerB)
     axios.get(`/player/find?search=${search}`
         + (props.compDetails.playerB.sex !== 'ANY' ? `&sex=${props.compDetails.playerB.sex}` : '')
         + (props.compDetails.playerB.hasMinAge ? `&minAge=${props.compDetails.playerB.minAge.toISOString().slice(0, 10)}` : '')
         + (props.compDetails.playerB.hasMaxAge ? `&minAge=${props.compDetails.playerB.maxAge.toISOString().slice(0, 10)}` : ''))
         .then((result) => {
-            queriedPlayerA = result.data.map((item) => {
+            queriedPlayerB = result.data.map((item) => {
                 item.value = item.firstName + ' ' + item.lastName
                 return item
             })
-            callback(queriedPlayerA)
+            callback(queriedPlayerB)
         })
         .catch((error) => {
             ElMessage.error(i18n.global.t("ViewCompetition.query_search_failed"))
@@ -236,26 +236,9 @@ function queryPlayerB(search, callback) {
         })
 }
 
-// TODO
-function signUpSingle() {
-
-}
-function signUpDoubleIndSame(){
-    signUpSingle()
-}
-function signUpDoubleIndDifA() {
-
-}
-function signUpDoubleIndDifB() {
-
-}
-function signUpDoubleTog() {
-
-}
-
-function signUp() {
-    const validPlayers = queriedPlayerA.filter((p) => {
-        return p.value.includes(playerSearchA.value)
+function signUpPlayer(queriedPlayer, playerSearch, playerName) {
+    const validPlayers = queriedPlayer.filter((p) => {
+        return p.value.includes(playerSearch.value)
     })
     if (validPlayers.length > 1) {
         ElMessage.error(i18n.global.t("Player.too_many_results"))
@@ -267,13 +250,17 @@ function signUp() {
     }
     const player = validPlayers[0]
 
-    const form = {
+
+    const form = {}
+    form[playerName] = {
         firstName: player.firstName,
         lastName: player.lastName
     }
+
     axios.post(`/tournament/${route.params.tourId}/competition/${route.params.compId}/signUp`, form)
         .then((_) => {
-            ElMessage.success("Player.register_success")
+            ElMessage.success(i18n.global.t("Player.register_success"))
+            emit('registered', '')
         })
         .catch((error) => {
             if (error.response.status === 409)
@@ -281,7 +268,68 @@ function signUp() {
             else
                 ElMessage.error(i18n.global.t("Player.register_failed"))
         })
+}
+function signUpSingle() {
+    signUpPlayer(queriedPlayerA, playerSearchA, "playerA")
+}
+function signUpDoubleIndSame(){
+    signUpPlayer(queriedPlayerA, playerSearchA, "playerA")
+}
+function signUpDoubleIndDifA() {
+    signUpPlayer(queriedPlayerA, playerSearchA, "playerA")
+}
+function signUpDoubleIndDifB() {
+    signUpPlayer(queriedPlayerB, playerSearchB, "playerB")
+}
+function signUpDoubleTog() {
+    const validPlayersA = queriedPlayerA.filter((p) => {
+        return p.value.includes(playerSearchA.value)
+    })
+    if (validPlayersA.length > 1) {
+        ElMessage.error(i18n.global.t("Player.too_many_results"))
+        return
+    }
+    if (validPlayersA.length === 0) {
+        ElMessage.error(i18n.global.t("Player.no_result"))
+        return
+    }
+    const playerA = validPlayersA[0]
 
+    const validPlayersB = queriedPlayerB.filter((p) => {
+        return p.value.includes(playerSearchB.value)
+    })
+    if (validPlayersB.length > 1) {
+        ElMessage.error(i18n.global.t("Player.too_many_results"))
+        return
+    }
+    if (validPlayersB.length === 0) {
+        ElMessage.error(i18n.global.t("Player.no_result"))
+        return
+    }
+    const playerB = validPlayersB[0]
+
+    const form = {
+        playerA: {
+            firstName: playerA.firstName,
+            lastName: playerA.lastName
+        },
+        playerB: {
+            firstName: playerB.firstName,
+            lastName: playerB.lastName
+        }
+    }
+
+    axios.post(`/tournament/${route.params.tourId}/competition/${route.params.compId}/signUp`, form)
+        .then((_) => {
+            ElMessage.success(i18n.global.t("Player.register_success"))
+            emit('registered', '')
+        })
+        .catch((error) => {
+            if (error.response.status === 409)
+                ElMessage.error(i18n.global.t("Player.already_exists"))
+            else
+                ElMessage.error(i18n.global.t("Player.register_failed"))
+        })
 }
 </script>
 

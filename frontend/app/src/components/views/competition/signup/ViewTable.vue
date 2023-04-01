@@ -12,7 +12,7 @@
     </el-table>
     <!-- DOUBLE INDIVIDUAL SAME -->
     <el-table v-else-if="!props.compDetails.playerB.different"
-              :empty-text="$t('ViewCompetition.no_registration')" :data="props.playersA" border stripe>
+              :empty-text="$t('ViewCompetition.no_registration')" :data="playersA" border stripe>
         <el-table-column :label="i18n.global.t('general.name')" prop="name" sortable="custom"/>
     </el-table>
     <!-- DOUBLE INDIVIDUAL DIFFERENT -->

@@ -6,7 +6,8 @@
         </p>
         <template v-else>
 
-            <ViewSignUpForm :compDetails="props.compDetails" />
+            <ViewSignUpForm :compDetails="props.compDetails"
+                @registered="childUpdate" />
 
             <ViewRegistrationNotice v-if="false" :compDetails="props.compDetails" />
         </template>
@@ -81,6 +82,9 @@ function update() {
   });
 
   updateChildren.value++
+}
+function childUpdate() {
+    updateChildren.value++
 }
 
 </script>

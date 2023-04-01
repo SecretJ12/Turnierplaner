@@ -124,7 +124,7 @@ public class Testdata {
         Competition compDoubleIndSame = new Competition();
         compDoubleIndSame.setName("DoubleIndSame");
         compDoubleIndSame.setTournament(tour2);
-        compDoubleIndSame.setDescription("Doppel, individualle Anmeldung, gleiche Bedingungen");
+        compDoubleIndSame.setDescription("Doppel, individuelle Anmeldung, gleiche Bedingungen");
         compDoubleIndSame.setType(CompetitionType.GROUPS);
         compDoubleIndSame.setMode(CompetitionMode.DOUBLES);
         compDoubleIndSame.setSignup(CompetitionSignUp.INDIVIDUAL);
