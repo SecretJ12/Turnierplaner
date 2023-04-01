@@ -1,6 +1,8 @@
 import {UserManager} from "oidc-client-ts";
 import {auth_settings, popup} from "./settings";
 import {ref} from 'vue'
+import {ElLoading} from "element-plus";
+import {i18n} from "@/main";
 
 class AuthService {
     userManager
@@ -10,19 +12,29 @@ class AuthService {
     }
 
     silentLogin() {
-        this.userManager.getUser().then((user) => {
-            if (user != null && !user.expired)
-                this.userManager.signinSilent()
-                    .then(() => {
-                        access_token.value = user.access_token
-                        console.log("successfully logged in")
+        return new Promise((resolve, reject) => {
+            this.userManager.getUser().then((user) => {
+                if (user != null && !user.expired) {
+                    const loadingAnimation = ElLoading.service({
+                        lock: true,
+                        text: i18n.global.t("general.loading"),
+                        background: 'rgba(0, 0, 0, 0.7)'
                     })
-                    .catch(() => {
-                        access_token.value = null
-                    })
-            // already load before logging in to avoid errors
-            if (user !== null)
-                access_token.value = user.access_token
+                    this.userManager.signinSilent()
+                        .then(() => {
+                            console.log("update token silently")
+                            access_token.value = user.access_token
+                            loadingAnimation.close()
+                            resolve()
+                        })
+                        .catch(() => {
+                            access_token.value = null
+                            loadingAnimation.close()
+                            reject()
+                        })
+                } else
+                    resolve()
+            })
         })
     }
 

@@ -23,7 +23,7 @@ axios.interceptors.request.use(function (config) {
     return config;
 }, function (error) {
     return Promise.reject(error);
-});
+})
 
 /* import specific icons */
 import {faFlag, faRightToBracket, faRightFromBracket, faTableCellsLarge, faUserGroup, faPlus, faGear, faEyeSlash}

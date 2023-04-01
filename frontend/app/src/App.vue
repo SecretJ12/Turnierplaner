@@ -5,37 +5,39 @@ import {access_token, auth} from "@/security/AuthService"
 
 let aside = false;
 
+const silentLoginCompleted = ref(false)
 auth.silentLogin()
+    .then(() => {
+        silentLoginCompleted.value = true
+    })
+    .catch(() => {
+        silentLoginCompleted.value = true
+        console.log("Error logging in")
+    })
 
 
 const loggedIn = ref(false);
 provide('loggedIn', loggedIn)
 auth.addUserLoadedListener(() => {
-  updateToken()
-  loggedIn.value = true
+    auth.getUser().then((user) => {
+        if (user !== null) {
+            access_token.value = user.access_token
+            loggedIn.value = true
+        } else {
+            access_token.value = null
+        }
+    });
 })
 auth.addUserUnloadedListener(() => {
-  updateToken()
-  loggedIn.value = false
+    access_token.value = null
+    loggedIn.value = false
 })
-
-function updateToken() {
-  auth.getUser().then((user) => {
-    if (user !== null) {
-      console.log("token loaded")
-      access_token.value = user.access_token
-    } else {
-      console.log("token unloaded")
-      access_token.value = null
-    }
-  });
-}
 </script>
 
 <template>
   <HeadContent/>
 
-  <div id="body">
+  <div id="body" v-if="silentLoginCompleted">
     <router-view/>
     <aside v-if="aside">
       <h2>Aside content</h2>

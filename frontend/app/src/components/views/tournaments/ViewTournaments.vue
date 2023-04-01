@@ -36,7 +36,7 @@ function update() {
   canCreate.value = false
   axios.get('/tournament/list')
       .then((response) => {
-        tournaments.value = response.data
+          tournaments.value = response.data
       })
       .catch((error) => {
         ElMessage.error(i18n.global.t("ViewTournaments.loadingFailed"))
@@ -46,7 +46,7 @@ function update() {
     if (user !== null) {
       axios.get('/tournament/canCreate')
           .then((response) => {
-            canCreate.value = response.status === 200
+              canCreate.value = response.data
           })
           .catch((_) => {
             canCreate.value = false
