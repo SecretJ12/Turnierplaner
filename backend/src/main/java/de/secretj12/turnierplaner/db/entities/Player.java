@@ -15,7 +15,11 @@ import java.util.UUID;
                         "AND (lower(p.firstName) like CONCAT('%', lower(:search), '%') " +
                         "OR lower(p.lastName) = CONCAT('%', lower(:search), '%')" +
                         "OR lower(CONCAT(p.firstName, ' ', p.lastName)) like CONCAT('%', lower(:search), '%'))" +
-                        "ORDER BY p.firstName, p.lastName")
+                        "ORDER BY CASE " +
+                        "WHEN lower(p.firstName) like CONCAT(lower(:search), '%') THEN 0 " +
+                        "WHEN lower(p.lastName) like CONCAT(lower(:search), '%') THEN 1 " +
+                        "ELSE 2 " +
+                        "END, p.firstName, p.lastName")
 })
 public class Player {
     @Id
