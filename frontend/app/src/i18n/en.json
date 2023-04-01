@@ -109,10 +109,8 @@
     "query_search_failed": "Querying player failed",
     "query_player_failed": "Querying participants failed",
     "requirements": "Requirements",
-    "born": "Born",
-    "before": "before",
-    "and": "and",
-    "after": "after",
+    "born_before": "Born before",
+    "born_after": "Born after",
     "playerA": "Player A",
     "playerB": "Player B"
   },

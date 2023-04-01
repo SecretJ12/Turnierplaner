@@ -1,12 +1,38 @@
 <template>
     <el-space direction="vertical" fill>
+        <el-descriptions border :column="windowWidth < 600 ? 1 : 2"
+            :direction="windowWidth < 400 ? 'vertical' : 'horizontal'">
+            <el-descriptions-item :span="windowWidth < 600 ? 1 : 2">
+                <template #label>
+                    {{ $t("general.description") }}
+                </template>
+                {{ props.compDetails.description }}
+            </el-descriptions-item>
+            <el-descriptions-item>
+                <template #label>
+                    {{ $t("ViewCompetition.tournament_system") }}
+                </template>
+                {{ $t("CompetitionSettings." + props.compDetails.tourType.toLowerCase()) }}
+            </el-descriptions-item>
+            <el-descriptions-item>
+                <template #label>
+                    {{ $t("ViewCompetition.game_mode") }}
+                </template>
+                {{ $t("CompetitionSettings." + compDetails.mode.toLowerCase()) }}
+            </el-descriptions-item>
+        </el-descriptions>
+
+        <el-space />
+        <el-space />
+        <el-space />
+
         <!-- Show registration is over -->
         <p v-if="!allowRegistration" style="text-align: center">
             {{ i18n.global.t("ViewCompetition.registration_over") }}
         </p>
         <template v-else>
 
-            <ViewSignUpForm :compDetails="props.compDetails"
+            <ViewSignUpForm :beginGamePhase="props.beginGamePhase" :compDetails="props.compDetails"
                 @registered="childUpdate" />
 
             <ViewRegistrationNotice v-if="false" :compDetails="props.compDetails" />
@@ -28,8 +54,14 @@ import ViewTable from "@/components/views/competition/signup/ViewTable.vue";
 import ViewRegistrationNotice from "@/components/views/competition/signup/ViewRegistrationNotice.vue";
 import ViewSignUpForm from "@/components/views/competition/signup/ViewSignUpForm.vue";
 
+let windowWidth = ref(window.innerWidth)
+window.addEventListener('resize', () => {
+    windowWidth.value = window.innerWidth
+})
+
 const props = defineProps({
     allowRegistration: Boolean,
+    beginGamePhase: Date,
     compDetails: {
         type: Object,
         name: String,

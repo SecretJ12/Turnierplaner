@@ -1,10 +1,9 @@
 <template>
-  <!-- TODO mobile view (use css grid?) -->
     <!-- SINGLE -->
     <template v-if="props.compDetails.mode === 'SINGLE'">
         <!-- Registration player A -->
         <el-space direction="vertical" fill style="width: 100%;">
-            <ViewConditions :player="props.compDetails.playerA" />
+            <ViewConditions :beginGamePhase="props.beginGamePhase" :player="props.compDetails.playerA" />
             <el-row :gutter="20" class="row-bg" justify="space-between">
                 <el-col :span="16">
                     <el-autocomplete
@@ -13,7 +12,6 @@
                             :placeholder="i18n.global.t('general.name')"
                             hide-loading
                             style="width: 100%"
-                            @keyup.enter="signUpSingle"
                     />
                 </el-col>
                 <el-col :span="8">
@@ -32,30 +30,30 @@
         <el-space direction="vertical" fill style="width: 100%;">
             <el-row :gutter="20" class="row-bg" justify="space-between">
                 <el-col :span="12">
-                    <el-space direction="vertical" fill style="width: 100%;">
-                        <!-- Registration player A -->
-                        <ViewConditions :player="props.compDetails.playerA" />
-                        <el-autocomplete
-                                v-model="playerSearchA"
-                                :fetch-suggestions="queryPlayerA"
-                                :placeholder="i18n.global.t('ViewCompetition.playerA')"
-                                hide-loading
-                                style="width: 100%"
-                        />
-                    </el-space>
+                    <ViewConditions :beginGamePhase="props.beginGamePhase"  :player="props.compDetails.playerA" />
                 </el-col>
                 <el-col :span="12">
-                    <el-space direction="vertical" fill style="width: 100%;">
-                        <!-- Registration player B -->
-                        <ViewConditions :player="props.compDetails.playerB" />
-                        <el-autocomplete
-                                v-model="playerSearchB"
-                                :fetch-suggestions="queryPlayerB"
-                                :placeholder="i18n.global.t('ViewCompetition.playerB')"
-                                hide-loading
-                                style="width: 100%"
-                        />
-                    </el-space>
+                    <ViewConditions :beginGamePhase="props.beginGamePhase"  :player="props.compDetails.playerB" />
+                </el-col>
+            </el-row>
+            <el-row :gutter="20" class="row-bg" justify="space-between">
+                <el-col :span="12">
+                    <el-autocomplete
+                        v-model="playerSearchA"
+                        :fetch-suggestions="queryPlayerA"
+                        :placeholder="i18n.global.t('ViewCompetition.playerA')"
+                        hide-loading
+                        style="width: 100%"
+                    />
+                </el-col>
+                <el-col :span="12">
+                    <el-autocomplete
+                        v-model="playerSearchB"
+                        :fetch-suggestions="queryPlayerB"
+                        :placeholder="i18n.global.t('ViewCompetition.playerB')"
+                        hide-loading
+                        style="width: 100%"
+                    />
                 </el-col>
             </el-row>
             <el-button
@@ -70,7 +68,7 @@
     <template v-else-if="!props.compDetails.playerB.different">
         <el-space direction="vertical" fill style="width: 100%;">
             <!-- Registration player A -->
-            <ViewConditions :player="props.compDetails.playerA" />
+            <ViewConditions :beginGamePhase="props.beginGamePhase" :player="props.compDetails.playerA" />
             <el-row :gutter="20" class="row-bg" justify="space-between">
                 <el-col :span="16">
                     <el-autocomplete
@@ -94,58 +92,51 @@
     </template>
     <!-- DOUBLE INDIVIDUAL DIFFERENT -->
     <template v-else>
-        <el-row :gutter="20" class="row-bg" justify="space-between">
-            <el-col :span="12">
-                <el-space direction="vertical" fill style="width: 100%;">
-                    <!-- Registration player A -->
-                    <ViewConditions :player="props.compDetails.playerA" />
-                    <el-row :gutter="20" class="row-bg" justify="space-between">
-                        <el-col :span="16">
-                            <el-autocomplete
-                                    v-model="playerSearchA"
-                                    :fetch-suggestions="queryPlayerA"
-                                    :placeholder="i18n.global.t('ViewCompetition.playerA')"
-                                    hide-loading
-                                    style="width: 100%"
-                            />
-                        </el-col>
-                        <el-col :span="8">
-                            <el-button
-                                    style="width: 100%"
-                                    @click="signUpDoubleIndDifA"
-                            >
-                                {{ i18n.global.t('general.signUp') }}
-                            </el-button>
-                        </el-col>
-                    </el-row>
-                </el-space>
-            </el-col>
-            <el-col :span="12">
-                <el-space direction="vertical" fill style="width: 100%;">
-                    <!-- Registration player B -->
-                    <ViewConditions :player="props.compDetails.playerB" />
-                    <el-row :gutter="20" class="row-bg" justify="space-between">
-                        <el-col :span="16">
-                            <el-autocomplete
-                                    v-model="playerSearchB"
-                                    :fetch-suggestions="queryPlayerB"
-                                    :placeholder="i18n.global.t('ViewCompetition.playerB')"
-                                    hide-loading
-                                    style="width: 100%"
-                            />
-                        </el-col>
-                        <el-col :span="8">
-                            <el-button
-                                    style="width: 100%"
-                                    @click="signUpDoubleIndDifB"
-                            >
-                                {{ i18n.global.t('general.signUp') }}
-                            </el-button>
-                        </el-col>
-                    </el-row>
-                </el-space>
-            </el-col>
-        </el-row>
+        <div id="regDoubIndDif">
+            <ViewConditions id="regDoubIndDifCondA"
+                            :beginGamePhase="props.beginGamePhase"  :player="props.compDetails.playerA" />
+            <el-row id="regDoubIndDifRegA" :gutter="20" class="row-bg" justify="space-between">
+                <el-col :span="16">
+                    <el-autocomplete
+                        v-model="playerSearchA"
+                        :fetch-suggestions="queryPlayerA"
+                        :placeholder="i18n.global.t('ViewCompetition.playerA')"
+                        hide-loading
+                        style="width: 100%"
+                    />
+                </el-col>
+                <el-col :span="8">
+                    <el-button
+                        style="width: 100%"
+                        @click="signUpDoubleIndDifA"
+                    >
+                        {{ i18n.global.t('general.signUp') }}
+                    </el-button>
+                </el-col>
+            </el-row>
+
+            <ViewConditions id="regDoubIndDifCondB"
+                            :beginGamePhase="props.beginGamePhase" :player="props.compDetails.playerB" />
+            <el-row id="regDoubIndDifRegB" :gutter="20" class="row-bg" justify="space-between">
+                <el-col :span="16">
+                    <el-autocomplete
+                        v-model="playerSearchB"
+                        :fetch-suggestions="queryPlayerB"
+                        :placeholder="i18n.global.t('ViewCompetition.playerB')"
+                        hide-loading
+                        style="width: 100%"
+                    />
+                </el-col>
+                <el-col :span="8">
+                    <el-button
+                        style="width: 100%"
+                        @click="signUpDoubleIndDifB"
+                    >
+                        {{ i18n.global.t('general.signUp') }}
+                    </el-button>
+                </el-col>
+            </el-row>
+        </div>
     </template>
 </template>
 
@@ -161,6 +152,7 @@ const route = useRoute()
 
 const emit = defineEmits(['registered'])
 const props = defineProps({
+    beginGamePhase: Date,
     compDetails: {
         type: Object,
         name: String,
@@ -334,5 +326,57 @@ function signUpDoubleTog() {
 </script>
 
 <style scoped>
+#regDoubIndDif {
+    display: grid;
+    grid-template-columns: 1fr 20px 1fr;
+    grid-template-rows: auto 2px auto;
+}
 
+#regDoubIndDifCondA {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+#regDoubIndDifRegA {
+    grid-column: 1;
+    grid-row: 3;
+}
+
+#regDoubIndDifCondB {
+    grid-column: 3;
+    grid-row: 1;
+}
+
+#regDoubIndDifRegB {
+    grid-column: 3;
+    grid-row: 3;
+}
+
+@media only screen and (max-width: 750px) {
+    #regDoubIndDif {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto auto;
+    }
+
+    #regDoubIndDifCondA {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    #regDoubIndDifRegA {
+        grid-column: 1;
+        grid-row: 2;
+        margin-bottom: 10px;
+    }
+
+    #regDoubIndDifCondB {
+        grid-column: 1;
+        grid-row: 3;
+    }
+
+    #regDoubIndDifRegB {
+        grid-column: 1;
+        grid-row: 4;
+    }
+}
 </style>

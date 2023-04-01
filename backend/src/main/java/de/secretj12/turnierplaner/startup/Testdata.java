@@ -148,7 +148,7 @@ public class Testdata {
         Competition compDoubleIndDif = new Competition();
         compDoubleIndDif.setName("DoubleIndDif");
         compDoubleIndDif.setTournament(tour2);
-        compDoubleIndDif.setDescription("Doppel, individualle Anmeldung, verschiedene Bedingungen");
+        compDoubleIndDif.setDescription("Doppel, individuelle Anmeldung, verschiedene Bedingungen");
         compDoubleIndDif.setType(CompetitionType.GROUPS);
         compDoubleIndDif.setMode(CompetitionMode.DOUBLES);
         compDoubleIndDif.setSignup(CompetitionSignUp.INDIVIDUAL);

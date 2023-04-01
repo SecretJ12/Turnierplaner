@@ -16,8 +16,8 @@
         <el-table-column :label="i18n.global.t('general.name')" prop="name" sortable="custom"/>
     </el-table>
     <!-- DOUBLE INDIVIDUAL DIFFERENT -->
-    <el-row v-else :gutter="20" class="row-bg" justify="space-between">
-        <el-col span="12">
+    <el-row v-else :gutter="20" justify="space-between">
+        <el-col :span="12">
             <el-table :data="playersA" :empty-text="$t('ViewCompetition.no_registration')" border stripe>
                 <el-table-column :label="i18n.global.t('ViewCompetition.playerA')"
                                  prop="name" sortable="custom"/>

@@ -13,13 +13,6 @@
         {{ route.params.compId }}
       </h2>
     </div>
-    <p v-if="detailsLoaded">
-      {{ $t("ViewCompetition.tournament_system") }}: {{ $t("CompetitionSettings." + compDetails.tourType.toLowerCase()) }}<br>
-      <template v-if="detailsLoaded && compDetails.description.length > 0">
-        {{ $t("general.description") }}: {{ compDetails.description }}<br>
-      </template>
-      {{ $t("ViewCompetition.game_mode") }}: {{ $t("CompetitionSettings." + compDetails.mode.toLowerCase()) }}<br>
-    </p>
 
     <template v-if="tournamentLoaded">
       <template v-if="!registration_started">
@@ -27,7 +20,7 @@
       </template>
       <template v-else-if="!game_started">
         <!-- show registration page -->
-        <ViewSignUp :allowRegistration="allow_registration" :compDetails="compDetails" />
+        <ViewSignUp :beginGamePhase="beginGamePhase" :allowRegistration="allow_registration" :compDetails="compDetails" />
       </template>
       <template v-else>
         <!-- TODO show after plan has been published -->
@@ -81,6 +74,7 @@ const registration_started = ref(false)
 const allow_registration = ref(false)
 const game_started = ref(false)
 let beginRegistration = ref(new Date())
+let beginGamePhase = ref(new Date())
 
 watch(isLoggedIn, async () => {
   update()
@@ -131,6 +125,7 @@ function update() {
               && new Date(response.data.endRegistration) > new Date()
           game_started.value = new Date(response.data.beginGamePhase) < new Date()
           beginRegistration.value = new Date(response.data.beginRegistration)
+          beginGamePhase.value = new Date(response.data.beginGamePhase)
           tournamentLoaded.value = true
       })
       .catch((error) => {
@@ -155,6 +150,7 @@ const dateOptions = {
 <style scoped>
 #container {
   width: 100%;
+  margin: 0 10px 0 10px;
   display: flex;
   flex-direction: column;
   align-items: center;

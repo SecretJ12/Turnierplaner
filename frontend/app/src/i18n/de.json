@@ -109,10 +109,8 @@
     "query_search_failed": "Abrufen der Spieler ist fehlgeschlagen",
     "query_player_failed": "Abrufen der Teilnehmer ist fehlgeschlagen",
     "requirements": "Bedingungen",
-    "born": "Geboren",
-    "before": "vor",
-    "and": "und",
-    "after": "nach",
+    "born_before": "Geboren vor dem",
+    "born_after": "Geboren nach dem",
     "playerA": "Spieler A",
     "playerB": "Spieler B"
   },

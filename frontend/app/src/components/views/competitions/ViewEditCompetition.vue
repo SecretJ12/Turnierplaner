@@ -48,15 +48,15 @@ axios.get(`/tournament/${route.params.tourId}/competition/${route.params.compId}
         data.signup = response.data.signUp
         data.playerA.sex = response.data.playerA.sex
         data.playerA.hasMinAge = response.data.playerA.hasMinAge
-        data.playerA.minAge = response.data.playerA.minAge
+        data.playerA.minAge = new Date(response.data.playerA.minAge)
         data.playerA.hasMaxAge = response.data.playerA.hasMaxAge
-        data.playerA.maxAge = response.data.playerA.maxAge
+        data.playerA.maxAge = new Date(response.data.playerA.maxAge)
         data.playerB.different = response.data.playerB.different
         data.playerB.sex = response.data.playerB.sex
         data.playerB.hasMinAge = response.data.playerB.hasMinAge
-        data.playerB.minAge = response.data.playerB.minAge
+        data.playerB.minAge = new Date(response.data.playerB.minAge)
         data.playerB.hasMaxAge = response.data.playerB.hasMaxAge
-        data.playerB.maxAge = response.data.playerB.maxAge
+        data.playerB.maxAge = new Date(response.data.playerB.maxAge)
         disabled.value = false
     })
     .catch((error) => {
