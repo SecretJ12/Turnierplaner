@@ -167,6 +167,8 @@ const submitForm = (formEl) => {
   if (!formEl) return
   formEl.validate((valid) => {
     if (valid) {
+      console.log(dateToJson(data.birthday))
+      data.birthday = dateToJson(data.birthday)
       axios.post(`/player/registration`, data)
           .then((result) => {
             if (result.status === 200) {
@@ -187,6 +189,9 @@ const submitForm = (formEl) => {
   })
 }
 
+function dateToJson(d) {
+    return `${d.getFullYear()}-${d.getMonth() < 9 ? '0' : ''}${d.getMonth()+1}-${d.getDate() < 10 ? '0':''}${d.getDate()}`
+}
 </script>
 
 
