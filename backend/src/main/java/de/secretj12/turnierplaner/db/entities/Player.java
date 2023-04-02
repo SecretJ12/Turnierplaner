@@ -1,7 +1,11 @@
 package de.secretj12.turnierplaner.db.entities;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -50,6 +54,10 @@ public class Player {
 
     @Column(name = "admin_verified")
     private boolean adminVerified;
+
+    @OneToMany(mappedBy = "player")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private List<VerificationCode> verificationCodes;
 
     public Player() {}
 

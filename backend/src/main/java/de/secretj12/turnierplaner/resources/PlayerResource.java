@@ -74,6 +74,7 @@ public class PlayerResource {
                     .build();
 
         // TODO check phone number (only valid phone number)
+        // TODO check fields are not empty!
         Player newPlayer = new Player();
         newPlayer.setFirstName(playerForm.getFirstName());
         newPlayer.setLastName(playerForm.getLastName());
@@ -118,7 +119,7 @@ public class PlayerResource {
     public RestResponse<String> verification(@QueryParam("code") String code) {
         VerificationCode verificationCode = verificationCodeRepository.findByUUID(UUID.fromString(code));
         if (verificationCode == null)
-            return ResponseBuilder.create(RestResponse.Status.CONFLICT, "This verification code is not correct!")
+            return ResponseBuilder.create(RestResponse.Status.BAD_REQUEST, "This verification code is not correct!")
                     .build();
 
         Player player = verificationCode.getPlayer();
@@ -131,6 +132,7 @@ public class PlayerResource {
     @Transactional
     @Scheduled(every = "30m", identity = "clear-verification-code")
     void clear() {
+        // TODO also delete player? otherwise not verified player, but no new one can be created because of duplicate
         verificationCodeRepository.delete("FROM VerificationCode v WHERE v.expiration_date < NOW()");
     }
 
