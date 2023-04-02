@@ -11,8 +11,8 @@ import java.util.UUID;
                 query = "SELECT p FROM Player p " +
                         "WHERE p.mailVerified is TRUE " +
                         "AND (p.sex = :sex OR :ignoreSex is TRUE) " +
-                        "AND (p.birthday >= :minAge OR :ignoreMinAge is True) " +
-                        "AND (p.birthday <= :maxAge OR :ignoreMaxAge is True) " +
+                        "AND (p.birthday <= :minAge OR :ignoreMinAge is True) " +
+                        "AND (p.birthday >= :maxAge OR :ignoreMaxAge is True) " +
                         "AND (lower(p.firstName) like CONCAT('%', lower(:search), '%') " +
                         "OR lower(p.lastName) = CONCAT('%', lower(:search), '%')" +
                         "OR lower(CONCAT(p.firstName, ' ', p.lastName)) like CONCAT('%', lower(:search), '%'))" +

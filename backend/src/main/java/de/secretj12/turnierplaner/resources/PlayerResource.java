@@ -111,7 +111,6 @@ public class PlayerResource {
         return ResponseBuilder.ok("successfully added").build();
     }
 
-
     @GET
     @Transactional
     @Path("/verification")
