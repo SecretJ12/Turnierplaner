@@ -9,7 +9,8 @@ import java.util.UUID;
 @NamedQueries({
         @NamedQuery(name = "filter",
                 query = "SELECT p FROM Player p " +
-                        "WHERE (p.sex = :sex OR :ignoreSex is TRUE) " +
+                        "WHERE p.mailVerified is TRUE " +
+                        "AND (p.sex = :sex OR :ignoreSex is TRUE) " +
                         "AND (p.birthday >= :minAge OR :ignoreMinAge is True) " +
                         "AND (p.birthday <= :maxAge OR :ignoreMaxAge is True) " +
                         "AND (lower(p.firstName) like CONCAT('%', lower(:search), '%') " +
@@ -49,6 +50,19 @@ public class Player {
 
     @Column(name = "admin_verified")
     private boolean adminVerified;
+
+    public Player() {}
+
+    public Player(String firstName, String lastName, SexType sex, LocalDate birthday, String email, String phone, boolean mailVerified, boolean adminVerified) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.sex = sex;
+        this.birthday = birthday;
+        this.email = email;
+        this.phone = phone;
+        this.mailVerified = mailVerified;
+        this.adminVerified = adminVerified;
+    }
 
     public UUID getId() {
         return id;
