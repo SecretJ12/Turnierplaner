@@ -79,12 +79,11 @@ public class PlayerResource {
         newPlayer.setFirstName(playerForm.getFirstName());
         newPlayer.setLastName(playerForm.getLastName());
         newPlayer.setBirthday(playerForm.getBirthday());
+        if (playerForm.getSex() == null)
+            return RestResponse.status(Response.Status.BAD_REQUEST);
         switch (playerForm.getSex()) {
             case MALE -> newPlayer.setSex(SexType.MALE);
             case FEMALE -> newPlayer.setSex(SexType.FEMALE);
-            default -> {
-                return RestResponse.status(Response.Status.BAD_REQUEST);
-            }
         }
         newPlayer.setEmail(playerForm.getEmail());
         newPlayer.setPhone(playerForm.getPhone());
@@ -104,7 +103,7 @@ public class PlayerResource {
         } catch (Exception e) {
             // TODO print by logger
             return ResponseBuilder
-                    .create(RestResponse.Status.CONFLICT,
+                    .create(RestResponse.Status.BAD_REQUEST,
                             "Problem sending you the verification mail. Please try again later.")
                     .build();
         }

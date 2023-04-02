@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import javax.ws.rs.core.Response;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.is;
 
 @QuarkusTest
 public class TestTournamentResource {
@@ -15,8 +16,9 @@ public class TestTournamentResource {
     public void testCanCreateUnauthorized() {
         given()
                 .get("/tournament/canCreate")
-                .then()
-                .statusCode(Response.Status.UNAUTHORIZED.getStatusCode());
+                .then().assertThat()
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body(is("false"));
     }
 
     @Test
@@ -24,8 +26,10 @@ public class TestTournamentResource {
     public void testCanCreateAuthorized() {
         given()
                 .get("/tournament/canCreate")
-                .then()
-                .statusCode(Response.Status.OK.getStatusCode());
+                .then().assertThat()
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body(is("true"));
     }
 
+    // TODO Tests
 }
