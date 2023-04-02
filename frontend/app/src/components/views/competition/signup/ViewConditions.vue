@@ -1,7 +1,6 @@
 <template>
     <el-space style="margin-bottom: 2px;">
         <el-tag v-if="props.player.sex !== 'ANY'"
-                type="info"
                 effect="plain"
                 size="small"
                 round
@@ -17,7 +16,6 @@
                     placement="top-start"
         >
             <el-tag
-                type="info"
                 effect="plain"
                 size="small"
                 round
@@ -33,7 +31,6 @@
                     placement="top-start"
         >
             <el-tag
-                type="info"
                 effect="plain"
                 size="small"
                 round
