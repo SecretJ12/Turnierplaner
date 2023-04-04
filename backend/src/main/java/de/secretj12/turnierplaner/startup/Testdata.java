@@ -230,20 +230,22 @@ public class Testdata {
         comp1.setPlayerBhasMaxAge(false);
         competitions.persist(comp1);
 
-        Player[] groupPlayers = new Player[8];
+        Team[] groupTeams = new Team[8];
         for (int i = 0; i < 8; i++) {
             String fn = String.valueOf((char) ('a' + i));
             String ln = "group" + (char) ('A' + i);
-            groupPlayers[i] = new Player();
-            groupPlayers[i].setFirstName(fn);
-            groupPlayers[i].setLastName(ln);
-            groupPlayers[i].setBirthday(LocalDate.now());
-            groupPlayers[i].setSex(SexType.MALE);
-            groupPlayers[i].setEmail(fn + "." + ln + "@mail.de");
-            groupPlayers[i].setPhone("+49 123 456789");
-            groupPlayers[i].setMailVerified(true);
-            groupPlayers[i].setAdminVerified(true);
-            players.persist(groupPlayers[i]);
+            Player player = new Player();
+            player.setFirstName(fn);
+            player.setLastName(ln);
+            player.setBirthday(LocalDate.now());
+            player.setSex(SexType.MALE);
+            player.setEmail(fn + "." + ln + "@mail.de");
+            player.setPhone("+49 123 456789");
+            player.setMailVerified(true);
+            player.setAdminVerified(true);
+            groupTeams[i] = new Team();
+            groupTeams[i].setPlayerA(player);
+            teams.persist(groupTeams[i]);
         }
 
         Group[] groups = new Group[2];
@@ -255,8 +257,8 @@ public class Testdata {
             for (int x = 4 * i; x < 4 * i + 4; x++) {
                 for (int y = x + 1; y < 4 * i + 4; y++) {
                     Match match = createMatch(c1, comp1);
-                    match.setPlayerA(groupPlayers[x]);
-                    match.setPlayerB(groupPlayers[y]);
+                    match.setTeamA(groupTeams[x]);
+                    match.setTeamB(groupTeams[y]);
                     matches.persist(match);
                     groupMatches.add(match);
                 }
@@ -287,27 +289,29 @@ public class Testdata {
         comp2.setPlayerBhasMaxAge(false);
         competitions.persist(comp2);
 
-        Player[] knockoutPlayers = new Player[8];
+        Team[] knockoutTeams = new Team[8];
         for (int i = 0; i < 8; i++) {
             String fn = String.valueOf((char) ('a' + i));
             String ln = "knockout" + (char) ('A' + i);
-            knockoutPlayers[i] = new Player();
-            knockoutPlayers[i].setFirstName(fn);
-            knockoutPlayers[i].setLastName(ln);
-            knockoutPlayers[i].setBirthday(LocalDate.now());
-            knockoutPlayers[i].setSex(SexType.MALE);
-            knockoutPlayers[i].setEmail(fn + "." + ln + "@mail.de");
-            knockoutPlayers[i].setPhone("+49 123 456789");
-            knockoutPlayers[i].setMailVerified(true);
-            knockoutPlayers[i].setAdminVerified(true);
-            players.persist(knockoutPlayers[i]);
+            Player player = new Player();
+            player.setFirstName(fn);
+            player.setLastName(ln);
+            player.setBirthday(LocalDate.now());
+            player.setSex(SexType.MALE);
+            player.setEmail(fn + "." + ln + "@mail.de");
+            player.setPhone("+49 123 456789");
+            player.setMailVerified(true);
+            player.setAdminVerified(true);
+            knockoutTeams[i] = new Team();
+            knockoutTeams[i].setPlayerA(player);
+            teams.persist(knockoutTeams[i]);
         }
 
         Match[] quarterFinal = new Match[4];
         for (int i = 0; i < 4; i++) {
             quarterFinal[i] = createMatch(c1, comp2);
-            quarterFinal[i].setPlayerA(knockoutPlayers[2 * i]);
-            quarterFinal[i].setPlayerB(knockoutPlayers[2 * i + 1]);
+            quarterFinal[i].setTeamA(knockoutTeams[2 * i]);
+            quarterFinal[i].setTeamB(knockoutTeams[2 * i + 1]);
             matches.persist(quarterFinal[i]);
         }
         Match[] semiFinal = new Match[2];

@@ -1,6 +1,7 @@
 package de.secretj12.turnierplaner.db.entities;
 
 import de.secretj12.turnierplaner.db.entities.competition.Competition;
+import de.secretj12.turnierplaner.db.entities.competition.Team;
 import de.secretj12.turnierplaner.db.entities.knockout.NextMatch;
 
 import javax.persistence.*;
@@ -41,11 +42,11 @@ public class Match {
     private Boolean winner;
 
     @ManyToOne
-    @JoinColumn(name = "player_a")
-    private Player playerA;
+    @JoinColumn(name = "team_a")
+    private Team teamA;
     @ManyToOne
-    @JoinColumn(name = "player_b")
-    private Player playerB;
+    @JoinColumn(name = "team_b")
+    private Team teamB;
 
     @OneToOne(mappedBy = "nextMatch")
     private NextMatch dependentOn;
@@ -107,20 +108,24 @@ public class Match {
         this.winner = winner;
     }
 
-    public Player getPlayerA() {
-        return playerA;
+    public Boolean getFinished() {
+        return finished;
     }
 
-    public void setPlayerA(Player playerA) {
-        this.playerA = playerA;
+    public Team getTeamA() {
+        return teamA;
     }
 
-    public Player getPlayerB() {
-        return playerB;
+    public void setTeamA(Team teamA) {
+        this.teamA = teamA;
     }
 
-    public void setPlayerB(Player playerB) {
-        this.playerB = playerB;
+    public Team getTeamB() {
+        return teamB;
+    }
+
+    public void setTeamB(Team teamB) {
+        this.teamB = teamB;
     }
 
     public NextMatch getDependentOn() {
