@@ -12,11 +12,22 @@ public class Court {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "courtType")
+    private CourtType courtType;
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public CourtType getCourtType() {
+        return courtType;
+    }
+
+    public void setCourtType(CourtType courtType) {
+        this.courtType = courtType;
     }
 }
