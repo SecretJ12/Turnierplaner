@@ -8,14 +8,14 @@ import java.util.stream.Stream;
 public class jUserGroup {
 
     private long index;
-    private List<jUserPlayer> player;
+    private List<jUserTeam> teams;
     private List<jUserGroupMatch> matches;
 
     public jUserGroup(Group group) {
         this.index = group.getIndex();
-        this.player = group.getMatches().stream()
-                .flatMap(match -> Stream.of(match.getTeamA().getPlayerA(), match.getTeamA().getPlayerB(), match.getTeamB().getPlayerB(), match.getTeamB().getPlayerA())).distinct()
-                .map(jUserPlayer::new).toList();
+        this.teams = group.getMatches().stream()
+                .flatMap(match -> Stream.of(match.getTeamA(), match.getTeamB())).distinct()
+                .map(jUserTeam::new).toList();
         this.matches = group.getMatches().stream().map(jUserGroupMatch::new).toList();
     }
 
@@ -27,12 +27,12 @@ public class jUserGroup {
         this.index = index;
     }
 
-    public List<jUserPlayer> getPlayer() {
-        return player;
+    public List<jUserTeam> getTeams() {
+        return teams;
     }
 
-    public void setPlayer(List<jUserPlayer> player) {
-        this.player = player;
+    public void setTeams(List<jUserTeam> teams) {
+        this.teams = teams;
     }
 
     public List<jUserGroupMatch> getMatches() {
