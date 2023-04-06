@@ -2,7 +2,8 @@
   <el-col id="item">
     <div id="content" @click="selected">
       <h2>{{ name }}</h2>
-      <p v-if="registrationPhase">{{ description }} | {{props.beginRegistration.toLocaleDateString()}} - {{props.endRegistration.toLocaleDateString()}}</p>
+      <p v-if="tournamentPhase"> {{ description }} | {{props.beginRegistration.toLocaleDateString()}} - {{props.endRegistration.toLocaleDateString()}}</p>
+      <p v-else v-if="registrationPhase">{{ description }} | {{props.beginRegistration.toLocaleDateString()}} - {{props.endRegistration.toLocaleDateString()}}</p>
       <p v-else>{{ description }} | {{props.beginRegistration.toLocaleDateString()}} - {{props.endRegistration.toLocaleDateString()}}</p>
     </div>
     <font-awesome-icon v-if="canCreate"
@@ -29,6 +30,7 @@ const props = defineProps({
 })
 
 const registrationPhase =  Date.now() >= props.endRegistration
+const tournamentPhase =  Date.now() >= props.endGamePhase
 
 const emit = defineEmits(['selected', 'settings']);
 
@@ -52,8 +54,8 @@ function settings() {
 }
 
 #content {
-  padding: 10px 5px 0 5px;
-  background-color: #ffffff;
+  padding: 5px 5px 0 5px;
+  background-color: #e3dfdf;
   /*width: 400px;*/
   /*height: 400px;*/
 }
