@@ -15,13 +15,13 @@ public class Team {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "competition", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "competition", referencedColumnName = "id")
     private Competition competition;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "player_a", referencedColumnName = "id")
     private Player playerA;
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "player_b", referencedColumnName = "id")
     private Player playerB;
 

@@ -1,8 +1,9 @@
 <template>
-  <div id="item">
+  <el-col id="item">
     <div id="content" @click="selected">
       <h2>{{ name }}</h2>
-      <p>{{ description }}</p>
+      <p v-if="registrationPhase">{{ description }} | {{props.beginRegistration.toLocaleDateString()}} - {{props.endRegistration.toLocaleDateString()}}</p>
+      <p v-else>{{ description }} | {{props.beginRegistration.toLocaleDateString()}} - {{props.endRegistration.toLocaleDateString()}}</p>
     </div>
     <font-awesome-icon v-if="canCreate"
                        id="settings"
@@ -11,7 +12,7 @@
     <font-awesome-icon v-if="canCreate && !visible"
                        id="invisible" :icon="['fas', 'eye-slash']" class="fa-2x">
     </font-awesome-icon>
-  </div>
+  </el-col>
 </template>
 
 <script setup>
@@ -27,6 +28,8 @@ const props = defineProps({
   canCreate: Boolean
 })
 
+const registrationPhase =  Date.now() >= props.endRegistration
+
 const emit = defineEmits(['selected', 'settings']);
 
 function selected() {
@@ -40,33 +43,32 @@ function settings() {
 
 <style scoped>
 #item {
-  border-radius: 10px;
+  border-radius: 5px;
   padding: 0;
-  width: 420px;
-  height: 300px;
+  /*width: 420px;*/
+  /*height: 300px;*/
   position: relative;
   overflow: hidden;
 }
 
 #content {
-  padding: 20px 10px 0 10px;
-  background-color: #D0D0D0;
-  box-shadow: 0 0 5px #909090;
-  width: 400px;
-  height: 400px;
+  padding: 10px 5px 0 5px;
+  background-color: #ffffff;
+  /*width: 400px;*/
+  /*height: 400px;*/
 }
 
 #settings {
   position: absolute;
-  right: 10px;
-  bottom: 10px;
+  right: 5px;
+  bottom: 5px;
   color: #303030;
 }
 
 #invisible {
   position: absolute;
-  left: 10px;
-  bottom: 10px;
+  /*left: 10px;*/
+  /*bottom: 10px;*/
   color: #303030;
 }
 
@@ -90,7 +92,7 @@ p {
 }
 
 #item:hover {
-  box-shadow: 0 0 10px black;
+  box-shadow: 0 0 5px black;
   cursor: pointer;
 }
 

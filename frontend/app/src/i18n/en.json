@@ -60,7 +60,8 @@
     "wrong_dates": "Begin of game phase needs to be after end of registration phase"
   },
   "ViewTournaments": {
-    "loadingFailed": "Couldn't load tournaments"
+    "loadingFailed": "Couldn't load tournaments",
+    "overview": "Tournament overview"
   },
   "ViewCreateTournament": {
     "creationFailed": "Couldn't create tournament"

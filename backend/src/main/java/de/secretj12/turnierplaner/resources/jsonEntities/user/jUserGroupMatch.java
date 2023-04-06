@@ -14,8 +14,8 @@ public class jUserGroupMatch {
     private Boolean finished;
     private Boolean winner;
 
-    private UUID playerA;
-    private UUID playerB;
+    private UUID teamA;
+    private UUID teamB;
 
     public jUserGroupMatch(Match match) {
         this.court = match.getCourt().getName();
@@ -25,10 +25,10 @@ public class jUserGroupMatch {
         this.finished = match.isFinished();
         this.winner = match.getWinner();
 
-        if (match.getPlayerA() != null)
-            this.playerA = match.getPlayerA().getId();
-        if (match.getPlayerB() != null)
-            this.playerB = match.getPlayerB().getId();
+        if (match.getTeamA() != null)
+            this.teamA = match.getTeamA().getId();
+        if (match.getTeamB() != null)
+            this.teamB = match.getTeamB().getId();
     }
 
     public String getCourt() {
@@ -71,19 +71,19 @@ public class jUserGroupMatch {
         this.winner = winner;
     }
 
-    public UUID getPlayerA() {
-        return playerA;
+    public UUID getTeamA() {
+        return teamA;
     }
 
-    public void setPlayerA(UUID playerA) {
-        this.playerA = playerA;
+    public void setTeamA(UUID teamA) {
+        this.teamA = teamA;
     }
 
-    public UUID getPlayerB() {
-        return playerB;
+    public UUID getTeamB() {
+        return teamB;
     }
 
-    public void setPlayerB(UUID playerB) {
-        this.playerB = playerB;
+    public void setTeamB(UUID teamB) {
+        this.teamB = teamB;
     }
 }

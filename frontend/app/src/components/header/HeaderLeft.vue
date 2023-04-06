@@ -1,7 +1,7 @@
 <template>
   <div id="headerLeft" @click="home">
-    <font-awesome-icon :icon="['fas', 'flag']" class="fa-2x"></font-awesome-icon>
-    <h1>{{ $t("title") }}</h1>
+    <font-awesome-icon :icon="['fas', 'flag']" class="fa-2x" id="colorIcon"></font-awesome-icon>
+    <h1 id="colorHeadLine">{{ $t("title") }}</h1>
   </div>
 </template>
 
@@ -20,6 +20,14 @@ function home() {
   flex-direction: row;
   align-items: center;
   cursor: pointer;
+}
+
+#colorIcon{
+  color: #3bb0ff;
+}
+
+#colorHeadLine{
+  color: #044154;
 }
 
 #headerLeft > * {

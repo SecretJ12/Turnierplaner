@@ -6,7 +6,6 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 
 /* import the fontawesome core */
-import {library} from '@fortawesome/fontawesome-svg-core'
 import {settings} from "@/settings";
 
 /* https request */
@@ -25,16 +24,16 @@ axios.interceptors.request.use(function (config) {
     return Promise.reject(error);
 })
 
+import {library} from '@fortawesome/fontawesome-svg-core'
+/* import font awesome icon component */
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 /* import specific icons */
 import {faFlag, faRightToBracket, faRightFromBracket, faTableCellsLarge, faUserGroup, faPlus, faGear, faEyeSlash}
     from '@fortawesome/free-solid-svg-icons'
-import {} from '@fortawesome/free-regular-svg-icons'
-
+import { faUserSecret } from '@fortawesome/free-solid-svg-icons'
 /* add icons to the library */
-library.add(faFlag, faRightToBracket, faRightFromBracket, faTableCellsLarge, faUserGroup, faPlus, faGear, faEyeSlash)
+library.add(faFlag, faRightToBracket, faRightFromBracket, faTableCellsLarge, faUserGroup, faPlus, faGear, faEyeSlash, faUserSecret)
 
-/* import font awesome icon component */
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 
 import languages from './i18n';
 

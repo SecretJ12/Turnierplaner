@@ -1,5 +1,10 @@
 <template>
-  <div id="tournaments">
+  <el-container >
+    <el-header id="head">
+      {{ i18n.global.t('ViewTournaments.overview') }}
+    </el-header>
+    <el-main id="tournaments">
+    <el-row>
     <item v-for="tournament in tournaments" :key="tournament.name"
           :beginGamePhase="new Date(tournament.beginGamePhase)" :beginRegistration="new Date(tournament.beginRegistration)"
           :canCreate=canCreate
@@ -10,7 +15,9 @@
           @selected="selected"
           @settings="settingsItem"/>
     <AddItem v-if="canCreate" @selected="addTournament"/>
-  </div>
+    </el-row>
+    </el-main>
+  </el-container>
 </template>
 
 <script setup>
@@ -70,12 +77,20 @@ function addTournament() {
 
 <style scoped>
 #tournaments {
-  width: 100%;
-  margin: 10px;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
   justify-content: center;
+}
+
+#head{
+  margin-left: auto;
+  margin-right: auto;
+  justify-content: center;
+  font-size: xx-large;
 }
 
 #tournaments > * {

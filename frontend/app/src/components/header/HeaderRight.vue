@@ -8,11 +8,11 @@
                 :value="locale"
             />
         </el-select>
-        <font-awesome-icon v-if="!isLoggedIn" :icon="['fas', 'right-to-bracket']" class="fa-2x clickable" @click="login"/>
+        <font-awesome-icon v-if="!isLoggedIn" :icon="['fas', 'right-to-bracket']" class="fa-2x clickable" @click="login" id="colorIcon"/>
 
         <span v-if="isLoggedIn && windowWidth > 600">{{ currentUser }}</span>
         <font-awesome-icon v-if="isLoggedIn"
-                           :icon="['fas', 'right-from-bracket']" class="fa-2x clickable" @click="logout" />
+                           :icon="['fas', 'right-from-bracket']" class="fa-2x clickable" @click="logout" id="colorIcon"/>
     </div>
 </template>
 
@@ -92,6 +92,10 @@ export default {
     margin-right: 20px;
     flex-grow: 0;
     flex-shrink: 1;
+}
+
+#colorIcon{
+  color: #044154;
 }
 
 .clickable {

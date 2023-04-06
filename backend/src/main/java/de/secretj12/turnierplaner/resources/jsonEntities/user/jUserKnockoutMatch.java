@@ -1,8 +1,10 @@
 package de.secretj12.turnierplaner.resources.jsonEntities.user;
 
 import de.secretj12.turnierplaner.db.entities.Match;
+import de.secretj12.turnierplaner.db.entities.competition.Team;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class jUserKnockoutMatch {
 
@@ -13,8 +15,8 @@ public class jUserKnockoutMatch {
     private Boolean finished;
     private Boolean winner;
 
-    private jUserPlayer playerA;
-    private jUserPlayer playerB;
+    private jUserTeam teamA;
+    private jUserTeam teamB;
 
     private jUserKnockoutMatch previousA;
     private jUserKnockoutMatch previousB;
@@ -31,10 +33,10 @@ public class jUserKnockoutMatch {
         this.finished = match.isFinished();
         this.winner = match.getWinner();
 
-        if (match.getPlayerA() != null)
-            this.playerA = new jUserPlayer(match.getPlayerA());
-        if (match.getPlayerB() != null)
-            this.playerB = new jUserPlayer(match.getPlayerB());
+        if (match.getTeamA() != null)
+            this.teamA = new jUserTeam(match.getTeamA());
+        if (match.getTeamB() != null)
+            this.teamB = new jUserTeam(match.getTeamB());
 
         if (dependant && match.getDependentOn() != null) {
             this.previousA = new jUserKnockoutMatch(match.getDependentOn().getPreviousA());
@@ -82,20 +84,20 @@ public class jUserKnockoutMatch {
         this.winner = winner;
     }
 
-    public jUserPlayer getPlayerA() {
-        return playerA;
+    public jUserTeam getTeamA() {
+        return teamA;
     }
 
-    public void setPlayerA(jUserPlayer playerA) {
-        this.playerA = playerA;
+    public void setTeamA(jUserTeam teamA) {
+        this.teamA = teamA;
     }
 
-    public jUserPlayer getPlayerB() {
-        return playerB;
+    public jUserTeam getTeamB() {
+        return teamB;
     }
 
-    public void setPlayerB(jUserPlayer playerB) {
-        this.playerB = playerB;
+    public void setTeamB(jUserTeam teamB) {
+        this.teamB = teamB;
     }
 
     public jUserKnockoutMatch getPreviousA() {

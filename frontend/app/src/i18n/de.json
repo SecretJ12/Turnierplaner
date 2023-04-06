@@ -60,7 +60,8 @@
     "wrong_dates": "Beginn der Spielphase muss vor dem Ende der Anmeldephase sein"
   },
   "ViewTournaments": {
-    "loadingFailed": "Turniere konnten nicht geladen werden"
+    "loadingFailed": "Turniere konnten nicht geladen werden",
+    "overview": "Turnierübersicht"
   },
   "ViewCreateTournament": {
     "creationFailed": "Turnier konnte nicht erstellt werden"
