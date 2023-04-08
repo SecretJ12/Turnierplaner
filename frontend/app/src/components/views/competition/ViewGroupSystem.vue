@@ -1,18 +1,17 @@
-<template id="container">
-  <div class="container text-center" v-for="group in groupDetails.groups">
+<template>
+  <div class="container text-center" v-for="group in groupDetails.groups" >
     <div>Group</div>
-    <div class="row">
-      <div class="col"></div>
-      <div class="col" v-for="team in group.teams">
+    <div class="row" >
+      <div class="col" id="grid"></div>
+      <div class="col" v-for="team in group.teams" id="grid">
         <!-- TODO second player       -->
         <div>{{ team.playerA.firstName }} {{ team.playerA.lastName }}</div>
       </div>
     </div>
-    <div class="row" v-for="team in group.teams">
+    <div class="row" v-for="team in group.teams" >
       <!--      TODO second player-->
-      <div class="col">{{ team.playerA.firstName }} {{ team.playerA.lastName }}</div>
-      <div class="col" v-for="team in group.teams">
-        <div></div>
+      <div class="col" id="grid">{{ team.playerA.firstName }} {{ team.playerA.lastName }}</div>
+      <div class="col" v-for="team in group.teams" id="grid">
       </div>
     </div>
   </div>
@@ -42,5 +41,10 @@ console.log(groupDetails.groups)
 </script>
 
 <style lang="scss">
+
+#grid {
+  border: 1px solid #0a0a0a;
+  border-radius: 2px;
+}
 
 </style>
