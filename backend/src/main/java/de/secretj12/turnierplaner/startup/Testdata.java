@@ -233,7 +233,7 @@ public class Testdata {
         Team[] groupTeams = new Team[8];
         for (int i = 0; i < 8; i++) {
             String fn = String.valueOf((char) ('a' + i));
-            String ln = "group" + (char) ('A' + i);
+            String ln = "LAST" + (char) ('A' + i);
             Player player = new Player();
             player.setFirstName(fn);
             player.setLastName(ln);
