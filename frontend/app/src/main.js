@@ -116,6 +116,10 @@ const routes = [
     }
 ]
 
+// Bootstrap
+import './scss/style.scss'
+import * as bootstrap from 'bootstrap'
+
 const router = VueRouter.createRouter({
     history: VueRouter.createWebHashHistory(),
     routes
