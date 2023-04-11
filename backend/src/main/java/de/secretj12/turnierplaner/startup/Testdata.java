@@ -2,7 +2,9 @@ package de.secretj12.turnierplaner.startup;
 
 import de.secretj12.turnierplaner.db.entities.*;
 import de.secretj12.turnierplaner.db.entities.competition.*;
+import de.secretj12.turnierplaner.db.entities.groups.FinalOfGroup;
 import de.secretj12.turnierplaner.db.entities.groups.Group;
+import de.secretj12.turnierplaner.db.entities.groups.MatchOfGroup;
 import de.secretj12.turnierplaner.db.entities.knockout.NextMatch;
 import de.secretj12.turnierplaner.db.repositories.*;
 
@@ -11,7 +13,6 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -34,6 +35,10 @@ public class Testdata {
     GroupRepository groups;
     @Inject
     TeamRepository teams;
+    @Inject
+    MatchOfGroupRepository matchOfGroupRepository;
+    @Inject
+    FinalOfGroupRepository finalOfGroupRepository;
 
     public Testdata() {
 
@@ -243,7 +248,9 @@ public class Testdata {
             player.setPhone("+49 123 456789");
             player.setMailVerified(true);
             player.setAdminVerified(true);
+            players.persist(player);
             groupTeams[i] = new Team();
+            groupTeams[i].setCompetition(comp1);
             groupTeams[i].setPlayerA(player);
             teams.persist(groupTeams[i]);
         }
@@ -253,22 +260,37 @@ public class Testdata {
             groups[i] = new Group();
             groups[i].setIndex(i + 1);
             groups[i].setCompetition(comp1);
-            List<Match> groupMatches = new ArrayList<>();
+            this.groups.persist(groups[i]);
             for (int x = 4 * i; x < 4 * i + 4; x++) {
                 for (int y = x + 1; y < 4 * i + 4; y++) {
                     Match match = createMatch(c1, comp1);
                     match.setTeamA(groupTeams[x]);
                     match.setTeamB(groupTeams[y]);
                     matches.persist(match);
-                    groupMatches.add(match);
+                    MatchOfGroup matchOfGroup = new MatchOfGroup();
+                    matchOfGroup.setGroup(groups[i]);
+                    matchOfGroup.setMatch(match);
+                    matchOfGroupRepository.persist(matchOfGroup);
                 }
             }
-            groups[i].setMatches(groupMatches);
-            this.groups.persist(groups[i]);
         }
 
-        // TODO add finals
-
+        Match finalOfGroupMatch1 = createMatch(c1, comp1);
+        matches.persist(finalOfGroupMatch1);
+        FinalOfGroup finalOfGroup1 = new FinalOfGroup();
+        finalOfGroup1.setNextMatch(finalOfGroupMatch1);
+        finalOfGroup1.setGroupA(groups[0]);
+        finalOfGroup1.setGroupB(groups[1]);
+        finalOfGroup1.setPos(1);
+        finalOfGroupRepository.persist(finalOfGroup1);
+        Match finalOfGroupMatch2 = createMatch(c1, comp1);
+        matches.persist(finalOfGroupMatch2);
+        FinalOfGroup finalOfGroup2 = new FinalOfGroup();
+        finalOfGroup2.setNextMatch(finalOfGroupMatch2);
+        finalOfGroup2.setGroupA(groups[0]);
+        finalOfGroup2.setGroupB(groups[1]);
+        finalOfGroup2.setPos(2);
+        finalOfGroupRepository.persist(finalOfGroup2);
 
         Competition comp2 = new Competition();
         comp2.setName("Herren");
@@ -302,7 +324,9 @@ public class Testdata {
             player.setPhone("+49 123 456789");
             player.setMailVerified(true);
             player.setAdminVerified(true);
+            players.persist(player);
             knockoutTeams[i] = new Team();
+            knockoutTeams[i].setCompetition(comp2);
             knockoutTeams[i].setPlayerA(player);
             teams.persist(knockoutTeams[i]);
         }

@@ -11,8 +11,8 @@ public class jUserCompetition {
     private jUserCompetitionType type;
     private jDirectorMode mode;
     private jDirectorSignUp signUp;
-    private jUserPlayerA playerA;
-    private jUserPlayerB playerB;
+    private jUserConfigPlayerA playerA;
+    private jUserConfigPlayerB playerB;
 
     public jUserCompetition() {
     }
@@ -32,7 +32,7 @@ public class jUserCompetition {
             case INDIVIDUAL -> this.signUp = jDirectorSignUp.INDIVIDUAL;
             case TOGETHER -> this.signUp = jDirectorSignUp.TOGETHER;
         }
-        this.playerA = new jUserPlayerA();
+        this.playerA = new jUserConfigPlayerA();
         switch (competition.getPlayerASex()) {
             case MALE -> this.playerA.setSex(jDirectorValidSex.MALE);
             case FEMALE -> this.playerA.setSex(jDirectorValidSex.FEMALE);
@@ -42,7 +42,7 @@ public class jUserCompetition {
         this.playerA.setMinAge(competition.getPlayerAminAge());
         this.playerA.setHasMaxAge(competition.playerAhasMaxAge());
         this.playerA.setMaxAge(competition.getPlayerAmaxAge());
-        this.playerB = new jUserPlayerB();
+        this.playerB = new jUserConfigPlayerB();
         this.playerB.setDifferent(competition.isPlayerBdifferent());
         switch (competition.getPlayerBSex()) {
             case MALE -> this.playerB.setSex(jDirectorValidSex.MALE);
@@ -95,19 +95,19 @@ public class jUserCompetition {
         this.signUp = signUp;
     }
 
-    public jUserPlayerA getPlayerA() {
+    public jUserConfigPlayerA getPlayerA() {
         return playerA;
     }
 
-    public void setPlayerA(jUserPlayerA playerA) {
+    public void setPlayerA(jUserConfigPlayerA playerA) {
         this.playerA = playerA;
     }
 
-    public jUserPlayerB getPlayerB() {
+    public jUserConfigPlayerB getPlayerB() {
         return playerB;
     }
 
-    public void setPlayerB(jUserPlayerB playerB) {
+    public void setPlayerB(jUserConfigPlayerB playerB) {
         this.playerB = playerB;
     }
 }

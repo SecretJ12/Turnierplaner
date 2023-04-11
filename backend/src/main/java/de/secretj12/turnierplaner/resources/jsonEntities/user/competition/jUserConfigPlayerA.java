@@ -4,7 +4,7 @@ import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jD
 
 import java.time.LocalDate;
 
-public class jUserPlayerA {
+public class jUserConfigPlayerA {
     private jDirectorValidSex sex;
     private boolean hasMinAge;
     private LocalDate minAge;

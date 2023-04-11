@@ -2,6 +2,8 @@ package de.secretj12.turnierplaner.db.entities;
 
 import de.secretj12.turnierplaner.db.entities.competition.Competition;
 import de.secretj12.turnierplaner.db.entities.competition.Team;
+import de.secretj12.turnierplaner.db.entities.groups.FinalOfGroup;
+import de.secretj12.turnierplaner.db.entities.groups.MatchOfGroup;
 import de.secretj12.turnierplaner.db.entities.knockout.NextMatch;
 
 import javax.persistence.*;
@@ -14,7 +16,11 @@ import java.util.UUID;
         @NamedQuery(name = "findHead",
                 query = "FROM Match m WHERE m.competition.id = :compId " +
                         "AND NOT EXISTS (FROM NextMatch n WHERE n.previousA = m OR n.previousB = m) " +
-                        "AND EXISTS (FROM NextMatch n WHERE m.id = n.nextMatch AND n.winner = :finale)")
+                        "AND (EXISTS (FROM NextMatch n WHERE m.id = n.nextMatch AND n.winner = :finale) " +
+                        "   OR EXISTS (FROM FinalOfGroup f WHERE m.id = f.nextMatch AND " +
+                        "       (f.pos = 1 AND :finale = true " +
+                        "         OR f.pos = 2 AND :finale = false))) " +
+                        "AND NOT EXISTS (FROM MatchOfGroup mog WHERE mog.match = m.id)")
 )
 public class Match {
     @Id
@@ -51,6 +57,11 @@ public class Match {
     @OneToOne(mappedBy = "nextMatch")
     private NextMatch dependentOn;
 
+    @OneToOne(mappedBy = "nextMatch")
+    private FinalOfGroup finalOfGroup;
+
+    @OneToOne(mappedBy = "match")
+    private MatchOfGroup group;
 
     public UUID getId() {
         return id;
@@ -134,5 +145,21 @@ public class Match {
 
     public void setDependentOn(NextMatch dependentOn) {
         this.dependentOn = dependentOn;
+    }
+
+    public FinalOfGroup getFinalOfGroup() {
+        return finalOfGroup;
+    }
+
+    public void setFinalOfGroup(FinalOfGroup finalOfGroup) {
+        this.finalOfGroup = finalOfGroup;
+    }
+
+    public MatchOfGroup getGroup() {
+        return group;
+    }
+
+    public void setGroup(MatchOfGroup group) {
+        this.group = group;
     }
 }

@@ -15,9 +15,8 @@ public class Group {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     private UUID id;
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "game_in_group")
-    private List<Match> matches;
+    @OneToMany(mappedBy = "group", fetch = FetchType.EAGER)
+    private List<MatchOfGroup> matchesOfGroup;
     @Column(name = "index")
     private long index;
     @ManyToOne
@@ -48,11 +47,15 @@ public class Group {
         this.index = index;
     }
 
-    public List<Match> getMatches() {
-        return matches;
+    public List<MatchOfGroup> getMatchesOfGroup() {
+        return matchesOfGroup;
     }
 
-    public void setMatches(List<Match> matches) {
-        this.matches = matches;
+    public void setMatchesOfGroup(List<MatchOfGroup> matchesOfGroup) {
+        this.matchesOfGroup = matchesOfGroup;
+    }
+
+    public List<Match> getMatches() {
+        return matchesOfGroup.stream().map(MatchOfGroup::getMatch).toList();
     }
 }

@@ -1,6 +1,6 @@
 package de.secretj12.turnierplaner.resources.jsonEntities.user.competition;
 
-public class jUserPlayerB extends jUserPlayerA {
+public class jUserConfigPlayerB extends jUserConfigPlayerA {
     private boolean different;
 
     public boolean isDifferent() {

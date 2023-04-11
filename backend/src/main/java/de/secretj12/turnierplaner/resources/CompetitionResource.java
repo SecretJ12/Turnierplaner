@@ -13,10 +13,10 @@ import de.secretj12.turnierplaner.db.repositories.TournamentRepository;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorCompetitionAdd;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorCompetitionUpdate;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.competition.jUserCompetition;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserGroupSystem;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserKnockoutSystem;
+import de.secretj12.turnierplaner.resources.jsonEntities.user.group.jUserGroupSystem;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayerSignUpForm;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserTeam;
+import de.secretj12.turnierplaner.resources.jsonEntities.user.knockout.jUserKnockoutSystem;
 import io.quarkus.security.identity.SecurityIdentity;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.RestResponse.ResponseBuilder;
@@ -381,7 +381,11 @@ public class CompetitionResource {
         if (groups == null)
             return RestResponse.status(Response.Status.NOT_FOUND);
 
-        return ResponseBuilder.ok(new jUserGroupSystem(groups)).build();
+        Match finale = matches.getFinal(competition);
+        Match thirdPlace = matches.getThirdPlace(competition);
+        if (finale == null || thirdPlace == null)
+            throw new InternalServerErrorException("Finale or thirdPlace is null");
+        return ResponseBuilder.ok(new jUserGroupSystem(groups, finale, thirdPlace)).build();
     }
 
     private boolean canSee(String tourName) {

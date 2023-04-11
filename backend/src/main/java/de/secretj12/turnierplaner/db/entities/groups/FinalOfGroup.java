@@ -3,72 +3,67 @@ package de.secretj12.turnierplaner.db.entities.groups;
 import de.secretj12.turnierplaner.db.entities.Match;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "final_of_group")
 public class FinalOfGroup {
 
-    @EmbeddedId
-    private FinalOfGroupKey finalofGroupKey;
+    @Id
+    private UUID id;
+
     @Column(name = "position")
-    private int end;
+    private int pos;
 
-    public FinalOfGroupKey getFinalofGroupKey() {
-        return finalofGroupKey;
+    @MapsId
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "next_match", referencedColumnName = "id", nullable = false)
+    private Match nextMatch;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "group_a", referencedColumnName = "id", nullable = false)
+    private Group groupA;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "group_b", referencedColumnName = "id", nullable = false)
+    private Group groupB;
+
+    public UUID getId() {
+        return id;
     }
 
-    public void setFinalofGroupKey(FinalOfGroupKey finalofGroupKey) {
-        this.finalofGroupKey = finalofGroupKey;
+    public void setId(UUID id) {
+        this.id = id;
     }
 
-    public int getEnd() {
-        return end;
+    public int getPos() {
+        return pos;
     }
 
-    public void setEnd(int end) {
-        this.end = end;
+    public void setPos(int pos) {
+        this.pos = pos;
     }
 
-    @Embeddable
-    public static class FinalOfGroupKey implements Serializable {
-        @OneToOne
-        @JoinColumn(name = "match_id", nullable = false)
-        private Match match;
-        @OneToOne
-        @JoinColumns({
-                @JoinColumn(name = "group_id", nullable = false)
-        })
-        private Group group;
+    public Match getNextMatch() {
+        return nextMatch;
+    }
 
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            FinalOfGroupKey that = (FinalOfGroupKey) o;
-            return match.equals(that.match) && group.equals(that.group);
-        }
+    public void setNextMatch(Match nextMatch) {
+        this.nextMatch = nextMatch;
+    }
 
-        @Override
-        public int hashCode() {
-            return Objects.hash(match, group);
-        }
+    public Group getGroupA() {
+        return groupA;
+    }
 
-        public Match getMatch() {
-            return match;
-        }
+    public void setGroupA(Group groupA) {
+        this.groupA = groupA;
+    }
 
-        public void setMatch(Match match) {
-            this.match = match;
-        }
+    public Group getGroupB() {
+        return groupB;
+    }
 
-        public Group getGroup() {
-            return group;
-        }
-
-        public void setGroup(Group group) {
-            this.group = group;
-        }
+    public void setGroupB(Group groupB) {
+        this.groupB = groupB;
     }
 }

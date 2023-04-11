@@ -1,10 +1,9 @@
-package de.secretj12.turnierplaner.resources.jsonEntities.user;
+package de.secretj12.turnierplaner.resources.jsonEntities.user.knockout;
 
 import de.secretj12.turnierplaner.db.entities.Match;
-import de.secretj12.turnierplaner.db.entities.competition.Team;
+import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserTeam;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class jUserKnockoutMatch {
 

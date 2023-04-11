@@ -5,7 +5,7 @@ import de.secretj12.turnierplaner.db.entities.Match;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public class jUserGroupMatch {
+public class jUserMatch {
 
     private String court;
     private LocalDateTime begin;
@@ -17,7 +17,7 @@ public class jUserGroupMatch {
     private UUID teamA;
     private UUID teamB;
 
-    public jUserGroupMatch(Match match) {
+    public jUserMatch(Match match) {
         this.court = match.getCourt().getName();
         this.begin = match.getBegin();
         this.end = match.getEnd();
