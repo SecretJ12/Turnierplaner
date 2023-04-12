@@ -46,14 +46,11 @@ const groupDetails = reactive({
 await axios.get(`tournament/${route.params.tourId}/competition/${route.params.compId}/groupMatches`)
     .then((response) => {
       groupDetails.groups = response.data.groups
-      console.log(groupDetails.groups)
     })
     .catch((_) => {
     })
 
-console.log(groupDetails.groups)
-
-// TODO
+// TODO update progress array
 const progress = [false, true]
 function selected (group){
   router.push({path: `/tournament/${route.params.tourId}/competition/${route.params.compId}/${group}`})

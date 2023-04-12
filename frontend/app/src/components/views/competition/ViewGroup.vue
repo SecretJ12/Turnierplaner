@@ -21,14 +21,6 @@
     </tbody>
   </table>
 </div>
-<!--  <div class="container text-center">-->
-<!--    <ul class="list-group">-->
-<!--      <li class="list-group-item active" aria-current="true">{{ $t("ViewGroupSystem.group") }} {{group}}</li>-->
-<!--      <li class="list-group-item" v-for="match in currentGroup.matches">-->
-<!--        {{match}}-->
-<!--      </li>-->
-<!--    </ul>-->
-<!--  </div>-->
 </template>
 
 <script setup>
@@ -48,20 +40,14 @@ const currentGroup = reactive({
 })
 
 const group = Number(route.params.groupId)
-console.log(group)
 
 await axios.get(`tournament/${route.params.tourId}/competition/${route.params.compId}/groupMatches`)
     .then((response) => {
       groupDetails.groups = response.data.groups
       currentGroup.matches = groupDetails.groups[group].matches
-      console.log(groupDetails.groups)
-      console.log(currentGroup.matches)
     })
     .catch((_) => {
     })
-
-console.log("something")
-
 </script>
 
 <style scoped>
