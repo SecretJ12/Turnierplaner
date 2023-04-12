@@ -1,17 +1,17 @@
 <template>
-  <div class="container text-center" v-for="(group,index_group) in groupDetails.groups">
-    <table class="table">
+  <div class="container text-center hover-effect"  v-for="(group,index_group) in groupDetails.groups">
+    <table class="table" @click="selected(index_group)">
       <thead class="table-light">
       <th scope="col">
         {{ $t("ViewGroupSystem.group") }} {{ index_group +1}}
       </th>
-      <th scope="col" v-for="(team) in group.teams" id="table-header"> {{ team.playerA.firstName }}
-        {{ team.playerA.lastName }}
+      <th scope="col" v-for="(team) in group.teams" id="table-header">
+        {{ team.playerA.firstName }}, {{ team.playerA.lastName }}
       </th>
       </thead>
       <tbody class="table-group-divider">
       <tr v-for="(team,index_t1) in group.teams">
-        <th>{{ team.playerA.firstName }} {{ team.playerA.lastName }}</th>
+        <th>{{ team.playerA.firstName }}, {{ team.playerA.lastName }}</th>
         <td v-for="(team,index_t2) in group.teams">
           <div v-if="index_t1===index_t2">
             /
@@ -53,9 +53,14 @@ await axios.get(`tournament/${route.params.tourId}/competition/${route.params.co
 
 console.log(groupDetails.groups)
 
+// TODO
 const progress = [false, true]
+function selected (group){
+  router.push({path: `/tournament/${route.params.tourId}/competition/${route.params.compId}/${group}`})
+}
 
 </script>
+
 
 <style lang="scss">
 
@@ -67,6 +72,10 @@ const progress = [false, true]
 
 #table-header {
   font-weight: normal;
+}
+
+.hover-effect:hover {
+  opacity: 0.7;
 }
 
 </style>

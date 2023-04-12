@@ -1,9 +1,7 @@
 <template>
-  <Suspense>
-    <ViewGroupSystem v-if="props.type === 'GROUPS'"/>
+  <ViewGroupSystem v-if="props.type === 'GROUPS'"/>
   <ViewKnockoutSystem v-else-if="props.type === 'KNOCKOUT'"/>
   <p v-else>Invalid type</p>
-  </Suspense>
 </template>
 
 <script setup>

@@ -8,29 +8,29 @@ let aside = false;
 const silentLoginCompleted = ref(false)
 auth.silentLogin()
     .then(() => {
-        silentLoginCompleted.value = true
+      silentLoginCompleted.value = true
     })
     .catch(() => {
-        silentLoginCompleted.value = true
-        console.log("Error logging in")
+      silentLoginCompleted.value = true
+      console.log("Error logging in")
     })
 
 
 const loggedIn = ref(false);
 provide('loggedIn', loggedIn)
 auth.addUserLoadedListener(() => {
-    auth.getUser().then((user) => {
-        if (user !== null) {
-            access_token.value = user.access_token
-            loggedIn.value = true
-        } else {
-            access_token.value = null
-        }
-    });
+  auth.getUser().then((user) => {
+    if (user !== null) {
+      access_token.value = user.access_token
+      loggedIn.value = true
+    } else {
+      access_token.value = null
+    }
+  });
 })
 auth.addUserUnloadedListener(() => {
-    access_token.value = null
-    loggedIn.value = false
+  access_token.value = null
+  loggedIn.value = false
 })
 </script>
 
@@ -38,7 +38,12 @@ auth.addUserUnloadedListener(() => {
   <HeadContent/>
 
   <div id="body" v-if="silentLoginCompleted">
-    <router-view/>
+    <Suspense>
+      <router-view/>
+      <template #fallback>
+        Loading...
+      </template>
+    </Suspense>
     <aside v-if="aside">
       <h2>Aside content</h2>
     </aside>
