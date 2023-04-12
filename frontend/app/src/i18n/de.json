@@ -72,6 +72,11 @@
   "ViewCompetitions": {
     "loadingFailed": "Konkurrenzen konnten nicht geladen werden"
   },
+  "ViewGroupSystem": {
+    "group": "Gruppe",
+    "progress":"Spiele am laufen...",
+    "finished":"Spiele abgeschlossen!"
+  },
   "CompetitionSettings": {
     "tournament_settings": "Turniereinstellungen",
     "type": "Turniertyp",
