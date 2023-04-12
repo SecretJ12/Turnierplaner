@@ -1,17 +1,17 @@
 <template>
   <div class="container text-center hover-effect"  v-for="(group,index_group) in groupDetails.groups">
     <table class="table" @click="selected(index_group)">
-      <thead class="table-light">
-      <th scope="col">
-        {{ $t("ViewGroupSystem.group") }} {{ index_group +1}}
-      </th>
-      <th scope="col" v-for="(team) in group.teams" id="table-header">
-        {{ team.playerA.firstName }}, {{ team.playerA.lastName }}
-      </th>
-      </thead>
+      <tr class="table-light">
+        <th scope="col">
+          {{ $t("ViewGroupSystem.group") }} {{ index_group + 1 }}
+        </th>
+        <th scope="col" v-for="(team) in group.teams" id="table-header">
+          {{ teams.get(team).playerA.firstName }}, {{ teams.get(team).playerA.lastName }}
+        </th>
+      </tr>
       <tbody class="table-group-divider">
       <tr v-for="(team,index_t1) in group.teams">
-        <th>{{ team.playerA.firstName }}, {{ team.playerA.lastName }}</th>
+        <th>{{ teams.get(team).playerA.firstName }}, {{ teams.get(team).playerA.lastName }}</th>
         <td v-for="(team,index_t2) in group.teams">
           <div v-if="index_t1===index_t2">
             /
@@ -35,17 +35,21 @@
 <script setup>
 import {useRoute} from 'vue-router'
 import axios from "axios";
-import {i18n, router} from "@/main";
-import {inject, reactive, ref, watch} from "vue";
+import {router} from "@/main";
+import {reactive} from "vue";
 
 const route = useRoute()
 const groupDetails = reactive({
   groups: []
 })
+const teams = new Map()
 
 await axios.get(`tournament/${route.params.tourId}/competition/${route.params.compId}/groupMatches`)
     .then((response) => {
       groupDetails.groups = response.data.groups
+        response.data.teams.forEach(team => {
+            teams.set(team.id, team)
+        })
     })
     .catch((_) => {
     })
