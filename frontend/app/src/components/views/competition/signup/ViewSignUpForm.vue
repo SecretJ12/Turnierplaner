@@ -9,7 +9,7 @@
                     <el-autocomplete
                             v-model="playerSearchA"
                             :fetch-suggestions="queryPlayerA"
-                            :placeholder="i18n.global.t('general.name')"
+                            :placeholder="t('general.name')"
                             hide-loading
                             style="width: 100%"
                     />
@@ -19,7 +19,7 @@
                             style="width: 100%"
                             @click="signUpSingle"
                     >
-                        {{ i18n.global.t('general.signUp') }}
+                        {{ t('general.signUp') }}
                     </el-button>
                 </el-col>
             </el-row>
@@ -41,7 +41,7 @@
                     <el-autocomplete
                         v-model="playerSearchA"
                         :fetch-suggestions="queryPlayerA"
-                        :placeholder="i18n.global.t('ViewCompetition.playerA')"
+                        :placeholder="t('ViewCompetition.playerA')"
                         hide-loading
                         style="width: 100%"
                     />
@@ -50,7 +50,7 @@
                     <el-autocomplete
                         v-model="playerSearchB"
                         :fetch-suggestions="queryPlayerB"
-                        :placeholder="i18n.global.t('ViewCompetition.playerB')"
+                        :placeholder="t('ViewCompetition.playerB')"
                         hide-loading
                         style="width: 100%"
                     />
@@ -60,7 +60,7 @@
                     style="width: 100%"
                     @click="signUpDoubleTog"
             >
-                {{ i18n.global.t('general.signUp') }}
+                {{ t('general.signUp') }}
             </el-button>
         </el-space>
     </template>
@@ -74,7 +74,7 @@
                     <el-autocomplete
                             v-model="playerSearchA"
                             :fetch-suggestions="queryPlayerA"
-                            :placeholder="i18n.global.t('general.name')"
+                            :placeholder="t('general.name')"
                             hide-loading
                             style="width: 100%"
                     />
@@ -84,7 +84,7 @@
                             style="width: 100%"
                             @click="signUpDoubleIndSame"
                     >
-                        {{ i18n.global.t('general.signUp') }}
+                        {{ t('general.signUp') }}
                     </el-button>
                 </el-col>
             </el-row>
@@ -100,7 +100,7 @@
                     <el-autocomplete
                         v-model="playerSearchA"
                         :fetch-suggestions="queryPlayerA"
-                        :placeholder="i18n.global.t('ViewCompetition.playerA')"
+                        :placeholder="t('ViewCompetition.playerA')"
                         hide-loading
                         style="width: 100%"
                     />
@@ -110,7 +110,7 @@
                         style="width: 100%"
                         @click="signUpDoubleIndDifA"
                     >
-                        {{ i18n.global.t('general.signUp') }}
+                        {{ t('general.signUp') }}
                     </el-button>
                 </el-col>
             </el-row>
@@ -122,7 +122,7 @@
                     <el-autocomplete
                         v-model="playerSearchB"
                         :fetch-suggestions="queryPlayerB"
-                        :placeholder="i18n.global.t('ViewCompetition.playerB')"
+                        :placeholder="t('ViewCompetition.playerB')"
                         hide-loading
                         style="width: 100%"
                     />
@@ -132,7 +132,7 @@
                         style="width: 100%"
                         @click="signUpDoubleIndDifB"
                     >
-                        {{ i18n.global.t('general.signUp') }}
+                        {{ t('general.signUp') }}
                     </el-button>
                 </el-col>
             </el-row>
@@ -141,12 +141,13 @@
 </template>
 
 <script setup>
-import {i18n} from "@/main";
-import {defineProps, ref} from "vue";
-import axios from "axios";
-import {ElMessage} from "element-plus";
-import ViewConditions from "@/components/views/competition/signup/ViewConditions.vue";
-import {useRoute} from "vue-router";
+import {defineProps, ref} from "vue"
+import axios from "axios"
+import {ElMessage} from "element-plus"
+import ViewConditions from "@/components/views/competition/signup/ViewConditions.vue"
+import {useRoute} from "vue-router"
+import {useI18n} from "vue-i18n"
+const { t } = useI18n({inheritLocale: true})
 
 const route = useRoute()
 
@@ -202,7 +203,7 @@ function queryPlayerA(search, callback) {
             callback(queriedPlayerA)
         })
         .catch((error) => {
-            ElMessage.error(i18n.global.t("ViewCompetition.query_search_failed"))
+            ElMessage.error(t("ViewCompetition.query_search_failed"))
             console.log(error)
         })
 }
@@ -223,7 +224,7 @@ function queryPlayerB(search, callback) {
             callback(queriedPlayerB)
         })
         .catch((error) => {
-            ElMessage.error(i18n.global.t("ViewCompetition.query_search_failed"))
+            ElMessage.error(t("ViewCompetition.query_search_failed"))
             console.log(error)
         })
 }
@@ -233,11 +234,11 @@ function signUpPlayer(queriedPlayer, playerSearch, playerName) {
         return p.value.includes(playerSearch.value)
     })
     if (validPlayers.length > 1) {
-        ElMessage.error(i18n.global.t("Player.too_many_results"))
+        ElMessage.error(t("Player.too_many_results"))
         return
     }
     if (validPlayers.length === 0) {
-        ElMessage.error(i18n.global.t("Player.no_result"))
+        ElMessage.error(t("Player.no_result"))
         return
     }
     const player = validPlayers[0]
@@ -251,14 +252,14 @@ function signUpPlayer(queriedPlayer, playerSearch, playerName) {
 
     axios.post(`/tournament/${route.params.tourId}/competition/${route.params.compId}/signUp`, form)
         .then((_) => {
-            ElMessage.success(i18n.global.t("Player.register_success"))
+            ElMessage.success(t("Player.register_success"))
             emit('registered', '')
         })
         .catch((error) => {
             if (error.response.status === 409)
-                ElMessage.error(i18n.global.t("Player.already_exists"))
+                ElMessage.error(t("Player.already_exists"))
             else
-                ElMessage.error(i18n.global.t("Player.register_failed"))
+                ElMessage.error(t("Player.register_failed"))
         })
 }
 function signUpSingle() {
@@ -278,11 +279,11 @@ function signUpDoubleTog() {
         return p.value.includes(playerSearchA.value)
     })
     if (validPlayersA.length > 1) {
-        ElMessage.error(i18n.global.t("Player.too_many_results"))
+        ElMessage.error(t("Player.too_many_results"))
         return
     }
     if (validPlayersA.length === 0) {
-        ElMessage.error(i18n.global.t("Player.no_result"))
+        ElMessage.error(t("Player.no_result"))
         return
     }
     const playerA = validPlayersA[0]
@@ -291,11 +292,11 @@ function signUpDoubleTog() {
         return p.value.includes(playerSearchB.value)
     })
     if (validPlayersB.length > 1) {
-        ElMessage.error(i18n.global.t("Player.too_many_results"))
+        ElMessage.error(t("Player.too_many_results"))
         return
     }
     if (validPlayersB.length === 0) {
-        ElMessage.error(i18n.global.t("Player.no_result"))
+        ElMessage.error(t("Player.no_result"))
         return
     }
     const playerB = validPlayersB[0]
@@ -313,14 +314,14 @@ function signUpDoubleTog() {
 
     axios.post(`/tournament/${route.params.tourId}/competition/${route.params.compId}/signUp`, form)
         .then((_) => {
-            ElMessage.success(i18n.global.t("Player.register_success"))
+            ElMessage.success(t("Player.register_success"))
             emit('registered', '')
         })
         .catch((error) => {
             if (error.response.status === 409)
-                ElMessage.error(i18n.global.t("Player.already_exists"))
+                ElMessage.error(t("Player.already_exists"))
             else
-                ElMessage.error(i18n.global.t("Player.register_failed"))
+                ElMessage.error(t("Player.register_failed"))
         })
 }
 </script>

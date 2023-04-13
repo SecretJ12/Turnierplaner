@@ -24,11 +24,11 @@
 </template>
 
 <script setup>
-
 import {useRoute} from 'vue-router'
-import axios from "axios";
-import {i18n, router} from "@/main";
-import {inject, reactive, ref, watch} from "vue";
+import axios from "axios"
+import {reactive} from "vue"
+import {useI18n} from "vue-i18n"
+const { t } = useI18n({inheritLocale: true})
 
 const route = useRoute()
 const groupDetails = reactive({

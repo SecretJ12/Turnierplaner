@@ -20,7 +20,7 @@
                 :rules="[
               {
                 required: true,
-                message: i18n.global.t('ViewPlayerRegistration.first_name.prompt'),
+                message: t('ViewPlayerRegistration.first_name.prompt'),
                 trigger: 'blur',
               }
           ]"
@@ -35,7 +35,7 @@
                 :rules="[
               {
                 required: true,
-                message: i18n.global.t('ViewPlayerRegistration.last_name.prompt'),
+                message: t('ViewPlayerRegistration.last_name.prompt'),
                 trigger: 'blur',
               }
           ]"
@@ -53,7 +53,7 @@
                 :rules="[
               {
                 required: true,
-                message: i18n.global.t('ViewPlayerRegistration.sex.prompt'),
+                message: t('ViewPlayerRegistration.sex.prompt'),
                 trigger: 'blur',
           }]"
                 prop="sex"
@@ -73,7 +73,7 @@
                   {
                     type: 'date',
                     required: true,
-                    message: i18n.global.t('ViewPlayerRegistration.birthdate.prompt'),
+                    message: t('ViewPlayerRegistration.birthdate.prompt'),
                     trigger: 'blur',
                   }
                   ]"
@@ -93,12 +93,12 @@
             :rules="[
           {
             required: true,
-            message: i18n.global.t('ViewPlayerRegistration.email.empty'),
+            message: t('ViewPlayerRegistration.email.empty'),
             trigger: 'blur',
           },
           {
             type: 'email',
-            message: i18n.global.t('ViewPlayerRegistration.email.correct'),
+            message: t('ViewPlayerRegistration.email.correct'),
             trigger: ['blur', 'change'],
           },
         ]"
@@ -112,12 +112,12 @@
             :rules="[
           {
             required: true,
-            message: i18n.global.t('ViewPlayerRegistration.phone.empty'),
+            message: t('ViewPlayerRegistration.phone.empty'),
             trigger: 'blur',
           },
           {
             type: 'tel',
-            message: i18n.global.t('ViewPlayerRegistration.phone.correct'),
+            message: t('ViewPlayerRegistration.phone.correct'),
             trigger: ['blur', 'change'],
           },
         ]"
@@ -147,11 +147,11 @@
 </template>
 
 <script setup>
-
 import {reactive, ref} from 'vue'
-import {i18n} from "@/main";
-import axios from "axios";
-import {ElMessage} from "element-plus";
+import axios from "axios"
+import {ElMessage} from "element-plus"
+import {useI18n} from "vue-i18n"
+const { t } = useI18n({inheritLocale: true})
 
 const formRef = ref()
 const registered = ref(false)
@@ -172,15 +172,15 @@ const submitForm = (formEl) => {
       axios.post(`/player/registration`, data)
           .then((result) => {
             if (result.status === 200) {
-              ElMessage.success(i18n.global.t("ViewPlayerRegistration.registration_successful"))
+              ElMessage.success(t("ViewPlayerRegistration.registration_successful"))
               registered.value = true
             } else {
-              ElMessage.error(i18n.global.t("ViewPlayerRegistration.registration_failed"))
+              ElMessage.error(t("ViewPlayerRegistration.registration_failed"))
             }
           })
           .catch((error) => {
             console.log(error)
-            ElMessage.error(i18n.global.t("ViewPlayerRegistration.registration_failed"))
+            ElMessage.error(t("ViewPlayerRegistration.registration_failed"))
           })
     } else {
       console.log('error submit!')

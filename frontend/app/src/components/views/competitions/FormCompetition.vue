@@ -17,7 +17,7 @@
                         :rules="[
                   {
                     required: true,
-                    message: i18n.global.t('general.name_missing'),
+                    message: t('general.name_missing'),
                     trigger: 'blur',
                   }
               ]"
@@ -47,7 +47,7 @@
 
 
                 <!-- tournament type -->
-                <el-divider>{{ i18n.global.t("CompetitionSettings.tournament_settings") }}</el-divider>
+                <el-divider>{{ t("CompetitionSettings.tournament_settings") }}</el-divider>
                 <el-row :gutter="20" justify="space-between">
                     <el-col :span="12" :xs="24">
                         <el-form-item
@@ -110,7 +110,7 @@
                 </el-row>
 
                 <!-- Player 1 settings -->
-                <el-divider>{{ i18n.global.t("CompetitionSettings.player") }}</el-divider>
+                <el-divider>{{ t("CompetitionSettings.player") }}</el-divider>
                 <!-- sex -->
                 <el-row :gutter="20" justify="space-between">
                     <el-col :span="12" :xs="24">
@@ -279,8 +279,9 @@
 </template>
 
 <script setup>
-import {i18n} from "@/main"
 import {ref} from 'vue'
+import {useI18n} from "vue-i18n"
+const { t } = useI18n({inheritLocale: true})
 
 let windowWidth = ref(window.innerWidth)
 window.addEventListener('resize', () => {
@@ -356,22 +357,22 @@ function submit(formRef) {
 
 const checkAMin = (rule, value, callback) => {
     if (props.data.playerA.hasMinAge && props.data.playerA.minAge === null)
-        callback(new Error(i18n.global.t("CompetitionSettings.missingAge")))
+        callback(new Error(t("CompetitionSettings.missingAge")))
     callback()
 }
 const checkAMax = (rule, value, callback) => {
     if (props.data.playerA.hasMaxAge && props.data.playerA.maxAge === null)
-        callback(new Error(i18n.global.t("CompetitionSettings.missingAge")))
+        callback(new Error(t("CompetitionSettings.missingAge")))
     callback()
 }
 const checkBMin = (rule, value, callback) => {
     if (props.data.playerB.hasMinAge && props.data.playerB.minAge === null)
-        callback(new Error(i18n.global.t("CompetitionSettings.missingAge")))
+        callback(new Error(t("CompetitionSettings.missingAge")))
     callback()
 }
 const checkBMax = (rule, value, callback) => {
     if (props.data.playerB.hasMaxAge && props.data.playerB.maxAge === null)
-        callback(new Error(i18n.global.t("CompetitionSettings.missingAge")))
+        callback(new Error(t("CompetitionSettings.missingAge")))
     callback()
 }
 

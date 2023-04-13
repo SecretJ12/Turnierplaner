@@ -2,41 +2,42 @@
     <!-- SINGLE -->
     <el-table v-if="props.compDetails.mode === 'SINGLE'" :data="playersA"
               :empty-text="$t('ViewCompetition.no_registration')" border stripe>
-        <el-table-column :label="i18n.global.t('general.name')" prop="name" sortable="custom"/>
+        <el-table-column :label="t('general.name')" prop="name" sortable="custom"/>
     </el-table>
     <!-- DOUBLE TOGETHER -->
     <el-table v-else-if="props.compDetails.signup === 'TOGETHER'" :data="teams"
               :empty-text="$t('ViewCompetition.no_registration')" border stripe>
-        <el-table-column :label="i18n.global.t('ViewCompetition.playerA')" prop="playerA.name" sortable="custom"/>
-        <el-table-column :label="i18n.global.t('ViewCompetition.playerB')" prop="playerB.name" sortable="custom"/>
+        <el-table-column :label="t('ViewCompetition.playerA')" prop="playerA.name" sortable="custom"/>
+        <el-table-column :label="t('ViewCompetition.playerB')" prop="playerB.name" sortable="custom"/>
     </el-table>
     <!-- DOUBLE INDIVIDUAL SAME -->
     <el-table v-else-if="!props.compDetails.playerB.different"
               :empty-text="$t('ViewCompetition.no_registration')" :data="playersA" border stripe>
-        <el-table-column :label="i18n.global.t('general.name')" prop="name" sortable="custom"/>
+        <el-table-column :label="t('general.name')" prop="name" sortable="custom"/>
     </el-table>
     <!-- DOUBLE INDIVIDUAL DIFFERENT -->
     <el-row v-else :gutter="20" justify="space-between">
         <el-col :span="12">
             <el-table :data="playersA" :empty-text="$t('ViewCompetition.no_registration')" border stripe>
-                <el-table-column :label="i18n.global.t('ViewCompetition.playerA')"
+                <el-table-column :label="t('ViewCompetition.playerA')"
                                  prop="name" sortable="custom"/>
             </el-table>
         </el-col>
         <el-col :span="12">
             <el-table :data="playersB" :empty-text="$t('ViewCompetition.no_registration')" border stripe>
-                <el-table-column :label="i18n.global.t('ViewCompetition.playerB')" prop="name" sortable="custom"/>
+                <el-table-column :label="t('ViewCompetition.playerB')" prop="name" sortable="custom"/>
             </el-table>
         </el-col>
     </el-row>
 </template>
 
 <script setup>
-import {i18n} from "@/main";
-import axios from "axios";
-import {ElMessage} from "element-plus";
-import {ref, watch} from "vue";
-import {useRoute} from "vue-router";
+import axios from "axios"
+import {ElMessage} from "element-plus"
+import {ref, watch} from "vue"
+import {useRoute} from "vue-router"
+import {useI18n} from "vue-i18n"
+const { t } = useI18n({inheritLocale: true})
 
 const props = defineProps({
     compDetails: {
@@ -111,7 +112,7 @@ function update() {
         })
         .catch((error) => {
             players.value = []
-            ElMessage.error(i18n.global.t("ViewCompetition.query_player_failed"))
+            ElMessage.error(t("ViewCompetition.query_player_failed"))
             console.log(error)
         })
 }

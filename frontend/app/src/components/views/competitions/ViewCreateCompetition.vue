@@ -1,14 +1,16 @@
 <template>
-  <FormCompetition :data="data" :submit-text="i18n.global.t('general.create')" @submit="submit" />
+  <FormCompetition :data="data" :submit-text="t('general.create')" @submit="submit" />
 </template>
 
 <script setup>
-import {i18n, router} from "@/main";
-import {reactive} from "vue";
-import axios from "axios";
-import {ElMessage} from "element-plus";
-import {useRoute} from "vue-router";
-import FormCompetition from "@/components/views/competitions/FormCompetition.vue";
+import {router} from "@/main"
+import {reactive} from "vue"
+import axios from "axios"
+import {ElMessage} from "element-plus"
+import {useRoute} from "vue-router"
+import FormCompetition from "@/components/views/competitions/FormCompetition.vue"
+import {useI18n} from "vue-i18n"
+const { t } = useI18n({inheritLocale: true})
 
 const route = useRoute()
 
@@ -41,7 +43,7 @@ function submit(server_data) {
         router.push({path: "/tournament/" + route.params.tourId})
       })
       .catch(_ => {
-        ElMessage.error(i18n.global.t("ViewCreateCompetition.creationFailed"))
+        ElMessage.error(t("ViewCreateCompetition.creationFailed"))
       })
 }
 </script>

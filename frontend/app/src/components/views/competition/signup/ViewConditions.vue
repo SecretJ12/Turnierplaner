@@ -5,14 +5,14 @@
                 size="small"
                 round
         >
-            {{ i18n.global.t("CompetitionSettings." + props.player.sex.toLowerCase()) }}
+            {{ t("CompetitionSettings." + props.player.sex.toLowerCase()) }}
         </el-tag>
 
         <el-tooltip v-if="props.player.hasMinAge"
                     class="box-item"
                     effect="dark"
-                    :content="i18n.global.t('ViewCompetition.born_before') + ' '
-                    + props.player.minAge.toLocaleString(i18n.global.t('lang'), dateOptions)"
+                    :content="t('ViewCompetition.born_before') + ' '
+                    + props.player.minAge.toLocaleString(t('lang'), dateOptions)"
                     placement="top-start"
         >
             <el-tag
@@ -26,8 +26,8 @@
         <el-tooltip v-if="props.player.hasMaxAge"
                     class="box-item"
                     effect="dark"
-                    :content="i18n.global.t('ViewCompetition.born_after') + ' '
-                    + props.player.maxAge.toLocaleString(i18n.global.t('lang'), dateOptions)"
+                    :content="t('ViewCompetition.born_after') + ' '
+                    + props.player.maxAge.toLocaleString(t('lang'), dateOptions)"
                     placement="top-start"
         >
             <el-tag
@@ -42,8 +42,8 @@
 </template>
 
 <script setup>
-
-import {i18n} from "@/main";
+import {useI18n} from "vue-i18n";
+const { t } = useI18n({inheritLocale: true})
 
 const props = defineProps({
     beginGamePhase: Date,
@@ -69,11 +69,11 @@ const dateOptions = {
     year: "numeric",
     month: "numeric",
     day: "numeric"
-};
+}
 
 const onlyYear = {
     year: "numeric"
-};
+}
 </script>
 
 <style scoped>

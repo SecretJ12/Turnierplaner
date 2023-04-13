@@ -18,17 +18,18 @@
 </template>
 
 <script setup>
-import axios from "axios";
-import {ElLoading} from 'element-plus';
+import axios from "axios"
+import {ElLoading} from 'element-plus'
 import {ref} from 'vue'
-import {useRoute} from "vue-router";
-import {i18n} from "@/main";
+import {useRoute} from "vue-router"
+import {useI18n} from "vue-i18n"
+const { t } = useI18n({inheritLocale: true})
 
 const route = useRoute()
 
 const loadingAnimation = ElLoading.service({
   lock: true,
-  text: i18n.global.t("general.loading"),
+  text: t("general.loading"),
   background: 'rgba(0, 0, 0, 0.7)'
 })
 const verified = ref(false)

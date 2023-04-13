@@ -4,7 +4,7 @@
             <el-option
                 v-for="locale in $i18n.availableLocales"
                 :key="locale"
-                :label="locale"
+                :label="locale.toLocaleString()"
                 :value="locale"
             />
         </el-select>
@@ -16,11 +16,11 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {auth} from '@/security/AuthService'
 import {inject, ref, watch} from 'vue'
 
-const currentUser = ref('')
+const currentUser = ref<string>('')
 const isLoggedIn = inject('loggedIn', ref(false))
 
 let windowWidth = ref(window.innerWidth)
@@ -30,8 +30,8 @@ window.addEventListener('resize', () => {
 
 watch(isLoggedIn, async () => {
   auth.getUser().then((user) => {
-    if (user !== null) {
-      currentUser.value = user.profile.preferred_username;
+    if (user !== null && user.profile.preferred_username) {
+      currentUser.value = user.profile.preferred_username
     }
   });
 })
@@ -46,7 +46,7 @@ function logout() {
 
 </script>
 
-<script>
+<script lang="ts">
 export default {
   name: 'locale-changer',
   data() {

@@ -1,31 +1,30 @@
 <template>
     <div id="tournaments">
         <item v-for="tournament in tournaments" :key="tournament.name"
-              :beginGamePhase="new Date(tournament.beginGamePhase)" :beginRegistration="new Date(tournament.beginRegistration)"
+              :tournament="tournament"
               :canCreate=canCreate
-              :description="tournament.description"
-              :endGamePhase="new Date(tournament.endGamePhase)" :endRegistration="new Date(tournament.endRegistration)"
-              :name="tournament.name"
-              :visible="tournament.visible"
               @selected="selected"
               @settings="settingsItem"/>
         <AddItem v-if="canCreate" @selected="addTournament"/>
     </div>
 </template>
 
-<script setup>
-import {inject, ref, watch} from 'vue';
-import Item from '../../items/ItemTournament.vue';
-import AddItem from '../../items/ItemAdd.vue';
-import {i18n, router} from '@/main'
-import axios from "axios";
+<script setup lang="ts">
+import {inject, ref, watch} from 'vue'
+import Item from '../../items/ItemTournament.vue'
+import AddItem from '../../items/ItemAdd.vue'
+import {router} from '@/main'
+import axios from "axios"
 import {auth} from "@/security/AuthService"
-import {ElMessage} from "element-plus";
+import {ElMessage} from "element-plus"
+import {Tournament, TournamentServer, tournamentServerToClient} from "@/interfaces/tournament";
+import {useI18n} from "vue-i18n"
+const { t } = useI18n({inheritLocale: true})
 
-const tournaments = ref([])
+const tournaments = ref<Tournament[]>([])
 
 const isLoggedIn = inject('loggedIn', ref(false))
-const canCreate = ref(false)
+const canCreate = ref<boolean>(false)
 
 watch(isLoggedIn, async () => {
     update()
@@ -34,17 +33,17 @@ update()
 
 function update() {
     canCreate.value = false
-    axios.get('/tournament/list')
+    axios.get<TournamentServer[]>('/tournament/list')
         .then((response) => {
-            tournaments.value = response.data
+            tournaments.value = response.data.map(tournamentServerToClient)
         })
         .catch((error) => {
-            ElMessage.error(i18n.global.t("ViewTournaments.loadingFailed"))
+            ElMessage.error(t("ViewTournaments.loadingFailed"))
             console.log(error)
         })
     auth.getUser().then((user) => {
         if (user !== null) {
-            axios.get('/tournament/canCreate')
+            axios.get<boolean>('/tournament/canCreate')
                 .then((response) => {
                     canCreate.value = response.data
                 })
@@ -55,11 +54,11 @@ function update() {
     })
 }
 
-function selected(tournament) {
+function selected(tournament: string) {
     router.push({path: '/tournament/' + tournament})
 }
 
-function settingsItem(tournament) {
+function settingsItem(tournament: string) {
     router.push({path: '/tournament/' + tournament + '/edit'})
 }
 

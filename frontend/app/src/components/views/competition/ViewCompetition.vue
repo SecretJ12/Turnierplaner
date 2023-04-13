@@ -16,7 +16,7 @@
 
     <template v-if="tournamentLoaded">
       <template v-if="!registration_started">
-          {{ i18n.global.t("ViewCompetition.registration_not_started") }} {{ beginRegistration.toLocaleString(i18n.global.t('lang'), dateOptions) }}
+          {{ t("ViewCompetition.registration_not_started") }} {{ beginRegistration.toLocaleString(t('lang'), dateOptions) }}
       </template>
       <template v-else-if="!game_started">
         <!-- show registration page -->
@@ -33,13 +33,15 @@
 
 <script setup>
 import {useRoute} from 'vue-router'
-import {inject, reactive, ref, watch} from "vue";
-import {auth} from "@/security/AuthService";
-import axios from "axios";
-import {i18n, router} from "@/main";
+import {inject, reactive, ref, watch} from "vue"
+import {auth} from "@/security/AuthService"
+import axios from "axios"
+import {router} from "@/main"
+import ViewSignUp from "@/components/views/competition/signup/ViewSignUp.vue"
+import ViewGame from "@/components/views/competition/ViewGame.vue"
+import {useI18n} from "vue-i18n"
+const { t } = useI18n({inheritLocale: true})
 
-import ViewSignUp from "@/components/views/competition/signup/ViewSignUp.vue";
-import ViewGame from "@/components/views/competition/ViewGame.vue";
 
 const route = useRoute()
 const isLoggedIn = inject('loggedIn', ref(false))
@@ -93,7 +95,7 @@ function update() {
             canEdit.value = false
           })
     }
-  });
+  })
   axios.get(`/tournament/${route.params.tourId}/competition/${route.params.compId}/details`)
       .then((response) => {
           compDetails.id = response.data.id
@@ -144,7 +146,7 @@ const dateOptions = {
     day: "numeric",
     hour: "numeric",
     minute: "numeric",
-};
+}
 </script>
 
 <style scoped>

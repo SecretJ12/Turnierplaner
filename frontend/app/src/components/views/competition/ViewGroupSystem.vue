@@ -34,9 +34,9 @@
 
 <script setup>
 import {useRoute} from 'vue-router'
-import axios from "axios";
-import {router} from "@/main";
-import {reactive} from "vue";
+import axios from "axios"
+import {router} from "@/main"
+import {reactive} from "vue"
 
 const route = useRoute()
 const groupDetails = reactive({

@@ -64,10 +64,13 @@
     "overview": "Tournament overview"
   },
   "ViewCreateTournament": {
-    "creationFailed": "Couldn't create tournament"
+    "tournamentCreated": "Turnier erstellt",
+    "tournamentCreationFailed": "Couldn't create tournament"
   },
   "ViewEditTournament": {
-    "loadingDetailsFailed": "Couldn't load tournament details"
+    "loadingDetailsFailed": "Couldn't load tournament details",
+    "tournamentUpdated": "Tournament updated",
+    "tournamentUpdateFailed": "Updating tournament failed"
   },
   "ViewCompetitions": {
     "loadingFailed": "Couldn't load competitions"

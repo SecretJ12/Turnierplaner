@@ -6,7 +6,7 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 
 /* import the fontawesome core */
-import {settings} from "@/settings";
+import {settings} from "@/settings"
 
 /* https request */
 import VueAxios from 'vue-axios'
@@ -19,9 +19,9 @@ axios.defaults.baseURL = settings.BACKEND
 axios.interceptors.request.use(function (config) {
     if (access_token.value !== null)
         config.headers.Authorization = `Bearer ${access_token.value}`
-    return config;
+    return config
 }, function (error) {
-    return Promise.reject(error);
+    return Promise.reject(error)
 })
 
 import {library} from '@fortawesome/fontawesome-svg-core'
@@ -35,9 +35,9 @@ import { faUserSecret } from '@fortawesome/free-solid-svg-icons'
 library.add(faFlag, faRightToBracket, faRightFromBracket, faTableCellsLarge, faUserGroup, faPlus, faGear, faEyeSlash, faUserSecret)
 
 
-import languages from './i18n';
+import languages from './i18n'
 
-const messages = Object.assign(languages);
+const messages = Object.assign(languages)
 const i18n = createI18n({
     locale: 'de', // set locale
     fallbackLocale: 'en', // set fallback locale
@@ -46,7 +46,7 @@ const i18n = createI18n({
 })
 
 /* add font awesome icon component */
-const app = createApp(App);
+const app = createApp(App)
 
 import viewTournaments from '@/components/views/tournaments/ViewTournaments.vue'
 import createTournament from '@/components/views/tournaments/ViewCreateTournament.vue'
@@ -56,13 +56,13 @@ import viewCompetitions from '@/components/views/competitions/ViewCompetitions.v
 import createCompetition from '@/components/views/competitions/ViewCreateCompetition.vue'
 import editCompetition from '@/components/views/competitions/ViewEditCompetition.vue'
 
-import viewCompetition from "@/components/views/competition/ViewCompetition.vue";
+import viewCompetition from "@/components/views/competition/ViewCompetition.vue"
 
 import viewPlayerRegistration from '@/components/views/player/ViewPlayerRegistration.vue'
 
 import viewTemplates from '@/components/views/ViewTemplates.vue'
-import viewVerification from "@/components/views/player/ViewVerification.vue";
-import viewGroup from "@/components/views/competition/ViewGroup.vue";
+import viewVerification from "@/components/views/player/ViewVerification.vue"
+import viewGroup from "@/components/views/competition/ViewGroup.vue"
 
 const routes = [
     {
@@ -124,7 +124,6 @@ const routes = [
 
 // Bootstrap
 import './scss/style.scss'
-import * as bootstrap from 'bootstrap'
 
 const router = VueRouter.createRouter({
     history: VueRouter.createWebHashHistory(),
@@ -139,4 +138,4 @@ app
     .use(ElementPlus)
     .mount('#app')
 
-export {router, i18n}
+export {router}

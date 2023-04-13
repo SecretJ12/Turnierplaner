@@ -22,11 +22,11 @@
                 :process-status="statusActive"
                 direction="vertical"
                 finish-status="success">
-        <el-step :description="beginRegistration.toLocaleString(i18n.global.t('lang'), options)
-            +'\n - '+endRegistration.toLocaleString(i18n.global.t('lang'), options)"
+        <el-step :description="beginRegistration.toLocaleString(t('lang'), options)
+            +'\n - '+endRegistration.toLocaleString(t('lang'), options)"
                  :title="$t('TournamentSettings.registration_phase')"/>
-        <el-step :description="beginGamePhase.toLocaleString(i18n.global.t('lang'), options)
-            +' - '+endGamePhase.toLocaleString(i18n.global.t('lang'), options)"
+        <el-step :description="beginGamePhase.toLocaleString(t('lang'), options)
+            +' - '+endGamePhase.toLocaleString(t('lang'), options)"
                  :title="$t('TournamentSettings.game_phase')"
         />
       </el-steps>
@@ -35,14 +35,16 @@
 </template>
 
 <script setup>
-import Item from '../../items/ItemCompetition.vue';
-import {inject, ref, watch} from "vue";
-import {useRoute} from "vue-router";
-import AddItem from '@/components/items/ItemAdd.vue';
-import {i18n, router} from '@/main'
-import axios from "axios";
-import {auth} from "@/security/AuthService";
-import {ElMessage} from "element-plus";
+import Item from '../../items/ItemCompetition.vue'
+import {inject, ref, watch} from "vue"
+import {useRoute} from "vue-router"
+import AddItem from '@/components/items/ItemAdd.vue'
+import {router} from '@/main'
+import axios from "axios"
+import {auth} from "@/security/AuthService"
+import {ElMessage} from "element-plus"
+import {useI18n} from "vue-i18n"
+const { t } = useI18n({inheritLocale: true})
 
 const route = useRoute()
 
@@ -76,7 +78,7 @@ function update() {
             canEdit.value = false
           })
     }
-  });
+  })
   axios.get(`/tournament/${route.params.tourId}/competition/list`)
       .then((response) => {
         if (response.status === 200)
@@ -144,7 +146,7 @@ const options = {
   day: "numeric",
   hour: "numeric",
   minute: "numeric",
-};
+}
 
 </script>
 

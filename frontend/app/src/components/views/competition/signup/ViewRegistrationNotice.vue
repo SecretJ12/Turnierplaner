@@ -9,14 +9,16 @@
                     style="width: 100%"
                     @click="playerRegistration"
             >
-                {{ i18n.global.t('general.register') }}
+                {{ t('general.register') }}
             </el-button>
         </el-col>
     </el-row>
 </template>
 
 <script setup>
-import {i18n, router} from "@/main";
+import {router} from "@/main"
+import {useI18n} from "vue-i18n"
+const { t } = useI18n({inheritLocale: true})
 
 function playerRegistration() {
     router.push({path: "/player/registration"})

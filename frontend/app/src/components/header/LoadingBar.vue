@@ -4,9 +4,9 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {ref} from 'vue'
-import axios from "axios";
+import axios from "axios"
 
 let loading = ref(0)
 

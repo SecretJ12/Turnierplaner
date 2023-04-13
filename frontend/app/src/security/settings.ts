@@ -15,6 +15,6 @@ export const auth_settings = {
 
     automaticSilentRenew: true,
     filterProtocolClaims: true
-};
+}
 
-export const popup = true;
+export const popup = true

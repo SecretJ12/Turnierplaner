@@ -21,9 +21,9 @@
   </ul>
 </template>
 
-<script setup>
-import {ref} from "vue";
-import axios from "axios";
+<script setup lang="ts">
+import {ref} from "vue"
+import axios from "axios"
 
 const unauthorized = ref('');
 

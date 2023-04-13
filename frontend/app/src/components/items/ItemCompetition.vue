@@ -15,24 +15,23 @@
   </div>
 </template>
 
-<script setup>
-
+<script setup lang="ts">
 const props = defineProps({
   name: String,
   description: String,
   type: String,
   canEdit: Boolean
-});
+})
 
-const emit = defineEmits(['selected', 'settings']);
+const emit = defineEmits(['selected', 'settings'])
 
 function selected() {
-  emit('selected', props.name);
+  emit('selected', props.name)
 }
 
 function settings() {
-  console.log("settings");
-  emit('settings', props.name);
+  console.log("settings")
+  emit('settings', props.name)
 }
 </script>
 

@@ -1,30 +1,33 @@
 <template>
-  <FormTournament :data="data" :submit-text="i18n.global.t('general.create')" @submit="submit" />
+  <FormTournament :data="data" :submit-text="t('general.create')" @submit="submit" />
 </template>
 
-<script setup>
-import {reactive, ref} from 'vue'
-import axios from "axios";
-import {i18n, router} from "@/main";
-import {ElMessage} from "element-plus";
-import FormTournament from "@/components/views/tournaments/FormTournament.vue";
+<script setup lang="ts">
+import {reactive} from 'vue'
+import axios from "axios"
+import {router} from "@/main"
+import {ElMessage} from "element-plus"
+import FormTournament from "@/components/views/tournaments/FormTournament.vue"
+import {Tournament, TournamentServer} from "@/interfaces/tournament"
+import {useI18n} from "vue-i18n"
+const { t } = useI18n({inheritLocale: true})
 
-const formRef = ref()
-const data = reactive({
+const data = reactive<Tournament>({
   name: '',
   visible: true,
   description: '',
-  registration_phase: null,
-  game_phase: null
+  registration_phase: [new Date(), new Date], // TODO nice default dates
+  game_phase: [new Date(), new Date] // TODO nice default dates
 })
 
-function submit(server_data) {
+function submit(server_data: TournamentServer) {
   axios.post("/tournament/add", server_data)
       .then(_ => {
-        router.push({path: "/tournament/" + data.name})
+          ElMessage.success(t("ViewCreateTournament.tournamentCreated"))
+          router.push({path: "/tournament/" + data.name})
       })
       .catch(_ => {
-        ElMessage.error(i18n.global.t("ViewCreateTournament.creationFailed"))
+          ElMessage.error(t("ViewCreateTournament.tournamentCreationFailed"))
       })
 }
 

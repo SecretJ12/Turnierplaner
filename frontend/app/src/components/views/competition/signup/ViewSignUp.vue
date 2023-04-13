@@ -28,7 +28,7 @@
 
         <!-- Show registration is over -->
         <p v-if="!allowRegistration" style="text-align: center">
-            {{ i18n.global.t("ViewCompetition.registration_over") }}
+            {{ t("ViewCompetition.registration_over") }}
         </p>
         <template v-else>
 
@@ -46,13 +46,14 @@
 
 <script setup>
 import {inject, ref, watch} from "vue"
-import {i18n} from '@/main'
-import {auth} from "@/security/AuthService";
-import axios from "axios";
-import {useRoute} from "vue-router";
-import ViewTable from "@/components/views/competition/signup/ViewTable.vue";
-import ViewRegistrationNotice from "@/components/views/competition/signup/ViewRegistrationNotice.vue";
-import ViewSignUpForm from "@/components/views/competition/signup/ViewSignUpForm.vue";
+import {auth} from "@/security/AuthService"
+import axios from "axios"
+import {useRoute} from "vue-router"
+import ViewTable from "@/components/views/competition/signup/ViewTable.vue"
+import ViewRegistrationNotice from "@/components/views/competition/signup/ViewRegistrationNotice.vue"
+import ViewSignUpForm from "@/components/views/competition/signup/ViewSignUpForm.vue"
+import {useI18n} from "vue-i18n"
+const { t } = useI18n({inheritLocale: true})
 
 let windowWidth = ref(window.innerWidth)
 window.addEventListener('resize', () => {
@@ -111,14 +112,13 @@ function update() {
             canEdit.value = false
           })
     }
-  });
+  })
 
   updateChildren.value++
 }
 function childUpdate() {
     updateChildren.value++
 }
-
 </script>
 
 <style scoped>

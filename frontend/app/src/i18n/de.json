@@ -64,10 +64,13 @@
     "overview": "Turnierübersicht"
   },
   "ViewCreateTournament": {
-    "creationFailed": "Turnier konnte nicht erstellt werden"
+    "tournamentCreated": "Turnier erstellt",
+    "tournamentCreationFailed": "Turnier konnte nicht erstellt werden"
   },
   "ViewEditTournament": {
-    "loadingDetailsFailed": "Tournierdetails konnten nicht geladen werden"
+    "loadingDetailsFailed": "Turnierdetails konnten nicht geladen werden",
+    "tournamentUpdated": "Turnier aktualisiert",
+    "tournamentUpdateFailed": "Aktualisieren fehlgeschlagen"
   },
   "ViewCompetitions": {
     "loadingFailed": "Konkurrenzen konnten nicht geladen werden"

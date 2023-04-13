@@ -1,48 +1,43 @@
 <template>
     <div id="item">
         <div id="content" @click="selected">
-            <h2>{{ name }}</h2>
-            <p>{{ description }}</p>
+            <h2>{{ props.tournament.name }}</h2>
+            <p>{{ props.tournament.description }}</p>
             <!-- TODO entweder nur game phase oder anzeigen was gerade angezeigt wird -->
             <!-- TODO date an den unteren rand des items -->
-            <p v-if="tournamentPhase">{{props.beginRegistration.toLocaleDateString()}} - {{props.endRegistration.toLocaleDateString()}}</p>
-            <p v-else v-if="registrationPhase">{{props.beginRegistration.toLocaleDateString()}} - {{props.endRegistration.toLocaleDateString()}}</p>
-            <p v-else>{{props.beginRegistration.toLocaleDateString()}} - {{props.endRegistration.toLocaleDateString()}}</p>
+            <p v-if="registrationOver">{{props.tournament.game_phase[0].toLocaleDateString()}}
+                - {{props.tournament.game_phase[1].toLocaleDateString()}}</p>
+            <p v-else>{{props.tournament.registration_phase[0].toLocaleDateString()}}
+                - {{props.tournament.registration_phase[1].toLocaleDateString()}}</p>
         </div>
-        <font-awesome-icon v-if="canCreate"
+        <font-awesome-icon v-if="props.canCreate"
                            id="settings"
                            :icon="['fas', 'gear']" class="fa-2x" @click="settings">
         </font-awesome-icon>
-        <font-awesome-icon v-if="canCreate && !visible"
+        <font-awesome-icon v-if="props.canCreate && !props.tournament.visible"
                            id="invisible" :icon="['fas', 'eye-slash']" class="fa-2x">
         </font-awesome-icon>
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import {Tournament} from "@/interfaces/tournament"
 
-const props = defineProps({
-    name: String,
-    description: String,
-    beginRegistration: Date,
-    endRegistration: Date,
-    beginGamePhase: Date,
-    endGamePhase: Date,
-    visible: Boolean,
-    canCreate: Boolean
-})
+const props = defineProps<{
+    canCreate: boolean,
+    tournament: Tournament
+    }>()
 
-const registrationPhase =  Date.now() >= props.endRegistration
-const tournamentPhase =  Date.now() >= props.endGamePhase
+const registrationOver =  new Date() >= props.tournament.registration_phase[1]
 
-const emit = defineEmits(['selected', 'settings']);
+const emit = defineEmits(['selected', 'settings'])
 
 function selected() {
-    emit('selected', props.name);
+    emit('selected', props.tournament.name);
 }
 
 function settings() {
-    emit('settings', props.name);
+    emit('settings', props.tournament.name);
 }
 </script>
 

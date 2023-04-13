@@ -7,10 +7,10 @@
 </template>
 
 
-<script setup>
+<script setup lang="ts">
 import HeaderLeft from './HeaderLeft.vue'
 import HeaderRight from "./HeaderRight.vue"
-import LoadingBar from "./LoadingBar.vue";
+import LoadingBar from "./LoadingBar.vue"
 </script>
 
 <style scoped>

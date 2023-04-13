@@ -1,36 +1,38 @@
-<script setup>
+<script setup lang="ts">
 import HeadContent from "@/components/header/HeadContent.vue";
 import {provide, ref} from 'vue'
 import {access_token, auth} from "@/security/AuthService"
+import {useI18n} from "vue-i18n"
+const { t } = useI18n({inheritLocale: true})
 
 let aside = false;
 
 const silentLoginCompleted = ref(false)
-auth.silentLogin()
+auth.silentLogin(t)
     .then(() => {
-      silentLoginCompleted.value = true
+        silentLoginCompleted.value = true
     })
     .catch(() => {
-      silentLoginCompleted.value = true
-      console.log("Error logging in")
+        silentLoginCompleted.value = true
+        console.log("Error logging in")
     })
 
 
 const loggedIn = ref(false);
 provide('loggedIn', loggedIn)
 auth.addUserLoadedListener(() => {
-  auth.getUser().then((user) => {
-    if (user !== null) {
-      access_token.value = user.access_token
-      loggedIn.value = true
-    } else {
-      access_token.value = null
-    }
-  });
+    auth.getUser().then((user) => {
+        if (user !== null) {
+            access_token.value = user.access_token
+            loggedIn.value = true
+        } else {
+            access_token.value = null
+        }
+    });
 })
 auth.addUserUnloadedListener(() => {
-  access_token.value = null
-  loggedIn.value = false
+    access_token.value = null
+    loggedIn.value = false
 })
 </script>
 

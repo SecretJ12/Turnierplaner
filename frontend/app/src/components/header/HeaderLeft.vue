@@ -1,12 +1,14 @@
 <template>
   <div id="headerLeft" @click="home">
     <font-awesome-icon :icon="['fas', 'flag']" class="fa-2x" id="colorIcon"></font-awesome-icon>
-    <h1 id="colorHeadLine">{{ $t("title") }}</h1>
+    <h1 id="colorHeadLine">{{ t("title") }}</h1>
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {router} from '@/main'
+import {useI18n} from "vue-i18n"
+const { t } = useI18n({inheritLocale: true})
 
 function home() {
   router.replace({path: "/"})

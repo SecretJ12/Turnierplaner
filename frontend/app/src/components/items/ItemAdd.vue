@@ -4,12 +4,11 @@
   </div>
 </template>
 
-<script setup>
-
+<script setup lang="ts">
 const emit = defineEmits(['selected']);
 
 function selected() {
-  emit('selected');
+  emit('selected')
 }
 </script>
 

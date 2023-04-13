@@ -13,11 +13,11 @@
         <el-col :span="20">
           <!-- Tournament name -->
           <el-form-item
-              :label="$t('general.name')"
+              :label="t('general.name')"
               :rules="[
                   {
                     required: true,
-                    message: i18n.global.t('general.name_missing'),
+                    message: t('general.name_missing'),
                     trigger: 'blur',
                   }
               ]"
@@ -33,7 +33,7 @@
         <el-col :span="4">
           <!-- Visible -->
           <el-form-item
-              :label="$t('TournamentSettings.visible')"
+              :label="t('TournamentSettings.visible')"
               prop="visible"
           >
             <el-switch
@@ -46,7 +46,7 @@
 
       <!-- Description -->
       <el-form-item
-          :label="$t('general.description')"
+          :label="t('general.description')"
           prop="description"
       >
         <el-input
@@ -63,7 +63,7 @@
       <el-divider/>
       <!-- Begin -> End registration -->
       <el-form-item
-          :label="$t('TournamentSettings.registration_phase')"
+          :label="t('TournamentSettings.registration_phase')"
           :rules="[
             {
               required: true,
@@ -82,7 +82,7 @@
       </el-form-item>
       <!-- Begin -> End game phase -->
       <el-form-item
-          :label="$t('TournamentSettings.game_phase')"
+          :label="t('TournamentSettings.game_phase')"
           :rules="[
             {
               required: true,
@@ -111,38 +111,29 @@
   </div>
 </template>
 
-<script setup>
-import {ref} from "vue";
-import {i18n} from "@/main";
+<script setup lang="ts">
+import {ref} from "vue"
+import {Tournament, TournamentServer, tournamentClientToServer} from "@/interfaces/tournament"
+import {useI18n} from "vue-i18n"
+const { t } = useI18n({inheritLocale: true})
 
-const formRef = ref()
-const props = defineProps({
-  submitText: String,
-  disabled: false,
-  data: {
-    name: String,
-    description: String,
-    type: String
-  }
+const formRef = ref<HTMLFormElement>()
+const props = withDefaults(defineProps<{
+    submitText: string,
+    disabled: boolean,
+    data: Tournament
+    }>(), {
+    disabled: false
 })
 
 const emit = defineEmits(['submit'])
 
-function submit(formRef) {
+function submit(formRef: HTMLFormElement | undefined) {
   if (!formRef)
     return
-  formRef.validate((valid) => {
+  formRef.validate((valid: boolean) => {
     if (valid) {
-      console.log('submit!')
-      const server_data = {
-        name: props.data.name,
-        description: props.data.description,
-        beginRegistration: props.data.registration_phase[0],
-        endRegistration: props.data.registration_phase[1],
-        beginGamePhase: props.data.game_phase[0],
-        endGamePhase: props.data.game_phase[1],
-        visible: props.data.visible
-      }
+      const server_data: TournamentServer = tournamentClientToServer(props.data)
       emit('submit', server_data)
     } else {
       console.log('validation failed')
@@ -150,16 +141,19 @@ function submit(formRef) {
   })
 }
 
-const checkDates = (rule, value, callback) => {
-  if (!value)
-    callback(new Error(i18n.global.t("TournamentSettings.missing_date")))
-  if (props.data.registration_phase === null)
-    callback()
-  if (props.data.game_phase === null)
-    callback()
+const checkDates = (rule: any, value: Date, callback: (arg0?: Error) => void) => {
+  if (!value) {
+      callback(new Error(t("TournamentSettings.missing_date")))
+      return
+  }
+  if (props.data.registration_phase === null || props.data.game_phase === null) {
+      callback()
+      return
+  }
   if (new Date(props.data.registration_phase[1]) > new Date(props.data.game_phase[0]))
-    callback(new Error(i18n.global.t("TournamentSettings.wrong_dates")))
-  callback()
+    callback(new Error(t("TournamentSettings.wrong_dates")))
+  else
+    callback()
 }
 </script>
 
