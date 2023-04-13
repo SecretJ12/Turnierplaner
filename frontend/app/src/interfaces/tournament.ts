@@ -1,4 +1,4 @@
-export interface Tournament {
+export interface TournamentForm {
     id?: null | string,
     name: string,
     visible: boolean,
@@ -16,8 +16,22 @@ export interface TournamentServer {
     beginGamePhase: Date,
     endGamePhase: Date,
 }
+export interface Tournament {
+    id?: null | string,
+    name: string,
+    visible: boolean,
+    description: string,
+    registration_phase: {
+        begin: Date,
+        end: Date
+    }
+    game_phase: {
+        begin: Date,
+        end: Date
+    }
+}
 
-export function tournamentClientToServer(tournament: Tournament): TournamentServer {
+export function tournamentFormClientToServer(tournament: TournamentForm): TournamentServer {
     if (tournament.registration_phase === null)
         throw new Error();
     if (tournament.game_phase === null)
@@ -34,7 +48,7 @@ export function tournamentClientToServer(tournament: Tournament): TournamentServ
     }
 }
 
-export function tournamentServerToClient(tournament: TournamentServer): Tournament {
+export function tournamentFormServerToClient(tournament: TournamentServer): TournamentForm {
     return {
         id: tournament.id,
         visible: tournament.visible,
@@ -42,5 +56,22 @@ export function tournamentServerToClient(tournament: TournamentServer): Tourname
         description: tournament.description,
         registration_phase: [new Date(tournament.beginRegistration), new Date(tournament.endRegistration)],
         game_phase: [new Date(tournament.beginGamePhase), new Date(tournament.endGamePhase)]
+    }
+}
+
+export function tournamentServerToClient(tournament: TournamentServer): Tournament {
+    return {
+        id: tournament.id,
+        visible: tournament.visible,
+        name: tournament.name,
+        description: tournament.description,
+        registration_phase: {
+            begin: new Date(tournament.beginRegistration),
+            end: new Date(tournament.endRegistration)
+        },
+        game_phase: {
+            begin: new Date(tournament.beginGamePhase),
+            end: new Date(tournament.endGamePhase)
+        }
     }
 }

@@ -113,7 +113,7 @@
 
 <script setup lang="ts">
 import {ref} from "vue"
-import {Tournament, TournamentServer, tournamentClientToServer} from "@/interfaces/tournament"
+import {TournamentForm, TournamentServer, tournamentFormClientToServer} from "@/interfaces/tournament"
 import {useI18n} from "vue-i18n"
 const { t } = useI18n({inheritLocale: true})
 
@@ -121,7 +121,7 @@ const formRef = ref<HTMLFormElement>()
 const props = withDefaults(defineProps<{
     submitText: string,
     disabled: boolean,
-    data: Tournament
+    data: TournamentForm
     }>(), {
     disabled: false
 })
@@ -133,7 +133,7 @@ function submit(formRef: HTMLFormElement | undefined) {
     return
   formRef.validate((valid: boolean) => {
     if (valid) {
-      const server_data: TournamentServer = tournamentClientToServer(props.data)
+      const server_data: TournamentServer = tournamentFormClientToServer(props.data)
       emit('submit', server_data)
     } else {
       console.log('validation failed')

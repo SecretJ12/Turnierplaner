@@ -8,11 +8,11 @@ import axios from "axios"
 import {router} from "@/main"
 import {ElMessage} from "element-plus"
 import FormTournament from "@/components/views/tournaments/FormTournament.vue"
-import {Tournament, TournamentServer} from "@/interfaces/tournament"
+import {TournamentForm, TournamentServer} from "@/interfaces/tournament"
 import {useI18n} from "vue-i18n"
 const { t } = useI18n({inheritLocale: true})
 
-const data = reactive<Tournament>({
+const data = reactive<TournamentForm>({
   name: '',
   visible: true,
   description: '',

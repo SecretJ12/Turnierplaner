@@ -8,14 +8,18 @@ import axios from "axios"
 import {router} from "@/main"
 import {ElMessage} from "element-plus"
 import {useRoute} from "vue-router"
-import {Tournament, TournamentServer, tournamentServerToClient} from "@/interfaces/tournament"
+import {
+    TournamentForm,
+    TournamentServer,
+    tournamentFormServerToClient
+} from "@/interfaces/tournament"
 import FormTournament from "@/components/views/tournaments/FormTournament.vue"
 import {useI18n} from "vue-i18n"
 const { t } = useI18n({inheritLocale: true})
 
 const route = useRoute()
 
-const data = ref<Tournament>({
+const data = ref<TournamentForm>({
   id: null,
   name: '',
   visible: true,
@@ -28,7 +32,7 @@ const disabled = ref<boolean>(true)
 
 axios.get<TournamentServer>(`/tournament/${route.params.tourId}/details`)
     .then((response) => {
-        data.value = tournamentServerToClient(response.data)
+        data.value = tournamentFormServerToClient(response.data)
         disabled.value = false
     })
     .catch((error) => {

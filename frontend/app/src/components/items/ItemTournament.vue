@@ -5,13 +5,11 @@
             <p>{{ props.tournament.description }}</p>
             <!-- TODO entweder nur game phase oder anzeigen was gerade angezeigt wird -->
             <!-- TODO date an den unteren rand des items -->
-            <template v-if="props.tournament.registration_phase !== null">
-                <p v-if="new Date() >= props.tournament.registration_phase[1]">
-                    {{props.tournament.game_phase[0].toLocaleDateString()}}
-                    - {{props.tournament.game_phase[1].toLocaleDateString()}}</p>
-                <p v-else>{{props.tournament.registration_phase[0].toLocaleDateString()}}
-                    - {{props.tournament.registration_phase[1].toLocaleDateString()}}</p>
-            </template>
+            <p v-if="new Date() >= props.tournament.registration_phase[1]">
+                {{props.tournament.game_phase.begin.toLocaleDateString()}}
+                - {{props.tournament.game_phase.end.toLocaleDateString()}}</p>
+            <p v-else>{{props.tournament.registration_phase.begin.toLocaleDateString()}}
+                - {{props.tournament.registration_phase.end.toLocaleDateString()}}</p>
         </div>
         <font-awesome-icon v-if="props.canCreate"
                            id="settings"
