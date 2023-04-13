@@ -24,17 +24,17 @@
                 finish-status="success">
         <el-step :description="beginRegistration.toLocaleString(t('lang'), options)
             +'\n - '+endRegistration.toLocaleString(t('lang'), options)"
-                 :title="$t('TournamentSettings.registration_phase')"/>
+                 :title="t('TournamentSettings.registration_phase')"/>
         <el-step :description="beginGamePhase.toLocaleString(t('lang'), options)
             +' - '+endGamePhase.toLocaleString(t('lang'), options)"
-                 :title="$t('TournamentSettings.game_phase')"
+                 :title="t('TournamentSettings.game_phase')"
         />
       </el-steps>
     </div>
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import Item from '../../items/ItemCompetition.vue'
 import {inject, ref, watch} from "vue"
 import {useRoute} from "vue-router"
@@ -54,7 +54,7 @@ const isLoggedIn = inject('loggedIn', ref(false))
 const canEdit = ref(false)
 
 const progress = ref(0)
-const statusActive = ref("wait")
+const statusActive = ref<"wait"|"process"|"success"|"error">("wait")
 
 const beginRegistration = ref(new Date())
 const endRegistration = ref(new Date())
@@ -84,11 +84,11 @@ function update() {
         if (response.status === 200)
           competitions.value = response.data
         else {
-          ElMessage.error(i18n.global.t("ViewCompetitions.loadingFailed"))
+          ElMessage.error(t("ViewCompetitions.loadingFailed"))
         }
       })
       .catch((error) => {
-        ElMessage.error(i18n.global.t("ViewCompetitions.loadingFailed"))
+        ElMessage.error(t("ViewCompetitions.loadingFailed"))
         console.log(error)
         router.push("/")
       })
@@ -127,11 +127,11 @@ function settings() {
   router.push({path: '/tournament/' + route.params.tourId + '/edit'})
 }
 
-function selected(competition) {
+function selected(competition: string) {
   router.push({path: "/tournament/" + route.params.tourId + "/competition/" + competition})
 }
 
-function settingsItem(competition) {
+function settingsItem(competition: string) {
   router.push({path: '/tournament/' + route.params.tourId + '/competition/' + competition + '/edit'})
 }
 
@@ -139,7 +139,7 @@ function addCompetition() {
   router.push({path: '/tournament/' + route.params.tourId + '/createCompetition'})
 }
 
-const options = {
+const options: Intl.DateTimeFormatOptions = {
   weekday: "long",
   year: "numeric",
   month: "long",
@@ -147,7 +147,6 @@ const options = {
   hour: "numeric",
   minute: "numeric",
 }
-
 </script>
 
 

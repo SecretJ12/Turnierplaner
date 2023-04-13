@@ -1,43 +1,125 @@
+export enum Sex {
+    MALE = "MALE", FEMALE = "FEMALE", ANY = "ANY"
+}
+
+export enum TourType {
+    KNOCKOUT = "KNOCKOUT", GROUPS = "GROUPS"
+}
+export enum Mode {
+    SINGLE = "SINGLE", DOUBLE = "DOUBLE"
+}
+export enum SignUp {
+    INDIVIDUAL = "INDIVIDUAL", TOGETHER = "TOGETHER"
+}
 
 export interface Competition {
     id?: null | string,
     name: string,
-    visible: boolean,
     description: string,
-    registration_phase: Date[],
-    game_phase: Date[]
+    tourType: TourType,
+    mode: Mode,
+    signUp: SignUp,
+    playerA: {
+        sex: Sex,
+        hasMinAge: boolean,
+        minAge: Date | null,
+        hasMaxAge: boolean,
+        maxAge: Date | null
+    },
+    playerB: {
+        different: boolean,
+        sex: Sex,
+        hasMinAge: boolean,
+        minAge: Date | null,
+        hasMaxAge: boolean,
+        maxAge: Date | null
+    }
 }
+
 export interface CompetitionServer {
     id?: null | string,
     name: string,
-    visible: boolean
     description: string,
-    beginRegistration: Date,
-    endRegistration: Date,
-    beginGamePhase: Date,
-    endGamePhase: Date,
-}
-
-export function competitionClientToServer(tournament: Competition): CompetitionServer {
-    return {
-        id: tournament.id,
-        name: tournament.name,
-        visible: tournament.visible,
-        description: tournament.description,
-        beginRegistration: tournament.registration_phase[0],
-        endRegistration: tournament.registration_phase[1],
-        beginGamePhase: tournament.game_phase[0],
-        endGamePhase: tournament.game_phase[1]
+    type: TourType,
+    mode: Mode,
+    signUp: SignUp,
+    playerA: {
+        sex: Sex,
+        hasMinAge: boolean,
+        minAge: string,
+        hasMaxAge: boolean,
+        maxAge: string
+    },
+    playerB: {
+        different: boolean,
+        sex: Sex,
+        hasMinAge: boolean,
+        minAge: string,
+        hasMaxAge: boolean,
+        maxAge: string
     }
 }
 
-export function competitionServerToClient(tournament: CompetitionServer): Competition {
+export function competitionClientToServer(competition: Competition): CompetitionServer {
+    if (competition.playerA.minAge === null)
+        throw new Error();
+    if (competition.playerA.maxAge === null)
+        throw new Error();
+    if (competition.playerB.minAge === null)
+        throw new Error();
+    if (competition.playerB.maxAge === null)
+        throw new Error();
     return {
-        id: tournament.id,
-        visible: tournament.visible,
-        name: tournament.name,
-        description: tournament.description,
-        registration_phase: [tournament.beginRegistration, tournament.endRegistration],
-        game_phase: [tournament.beginGamePhase, tournament.endGamePhase]
+        id: competition.id,
+        name: competition.name,
+        description: competition.description,
+        type: competition.tourType,
+        mode: competition.mode,
+        signUp: competition.signUp,
+        playerA: {
+            sex: competition.playerA.sex,
+            hasMinAge: competition.playerA.hasMinAge,
+            minAge: dateToJson(competition.playerA.minAge),
+            hasMaxAge: competition.playerA.hasMaxAge,
+            maxAge: dateToJson(competition.playerA.maxAge)
+        },
+        playerB: {
+            different: competition.playerB.different,
+            sex: competition.playerB.sex,
+            hasMinAge: competition.playerB.hasMinAge,
+            minAge: dateToJson(competition.playerB.minAge),
+            hasMaxAge: competition.playerB.hasMaxAge,
+            maxAge: dateToJson(competition.playerB.maxAge)
+        }
     }
+}
+
+export function competitionServerToClient(competition: CompetitionServer): Competition {
+    return {
+        id: competition.id,
+        name: competition.name,
+        description: competition.description,
+        tourType: competition.type,
+        mode: competition.mode,
+        signUp: competition.signUp,
+        playerA: {
+            sex: competition.playerA.sex,
+            hasMinAge: competition.playerA.hasMinAge,
+            minAge: new Date(competition.playerA.minAge),
+            hasMaxAge: competition.playerA.hasMaxAge,
+            maxAge: new Date(competition.playerA.maxAge)
+        },
+        playerB: {
+            different: competition.playerB.different,
+            sex: competition.playerB.sex,
+            hasMinAge: competition.playerB.hasMinAge,
+            minAge: new Date(competition.playerB.minAge),
+            hasMaxAge: competition.playerB.hasMaxAge,
+            maxAge: new Date(competition.playerB.maxAge)
+        }
+    }
+}
+
+function dateToJson(d: Date): string {
+    return `${d.getFullYear()}-${d.getMonth() < 9 ? '0' : ''}${d.getMonth()+1}-${d.getDate() < 10 ? '0':''}${d.getDate()}`
 }

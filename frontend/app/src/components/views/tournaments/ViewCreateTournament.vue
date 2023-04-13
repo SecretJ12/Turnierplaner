@@ -16,8 +16,8 @@ const data = reactive<Tournament>({
   name: '',
   visible: true,
   description: '',
-  registration_phase: [new Date(), new Date], // TODO nice default dates
-  game_phase: [new Date(), new Date] // TODO nice default dates
+  registration_phase: null,
+  game_phase: null
 })
 
 function submit(server_data: TournamentServer) {

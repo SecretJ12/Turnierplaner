@@ -2,7 +2,7 @@
   <div v-if="!registered" id="container">
     <div>
       <h2>
-        {{ $t('ViewPlayerRegistration.headline') }}
+        {{ t('ViewPlayerRegistration.headline') }}
       </h2>
     </div>
     <div id="form">
@@ -16,7 +16,7 @@
         <el-row :gutter="20" class="row-bg" justify="space-between">
           <el-col :span="12">
             <el-form-item
-                :label="$t('ViewPlayerRegistration.first_name.field')"
+                :label="t('ViewPlayerRegistration.first_name.field')"
                 :rules="[
               {
                 required: true,
@@ -31,7 +31,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item
-                :label="$t('ViewPlayerRegistration.last_name.field')"
+                :label="t('ViewPlayerRegistration.last_name.field')"
                 :rules="[
               {
                 required: true,
@@ -49,7 +49,7 @@
         <el-row :gutter="20" class="row-bg" justify="space-between">
           <el-col :span="12">
             <el-form-item
-                :label="$t('ViewPlayerRegistration.sex.field')"
+                :label="t('ViewPlayerRegistration.sex.field')"
                 :rules="[
               {
                 required: true,
@@ -58,15 +58,15 @@
           }]"
                 prop="sex"
             >
-              <el-select v-model="data.sex" :placeholder="$t('ViewPlayerRegistration.sex.select')">
-                <el-option :label="$t('ViewPlayerRegistration.sex.Option1')" value="MALE"/>
-                <el-option :label="$t('ViewPlayerRegistration.sex.Option2')" value="FEMALE"/>
+              <el-select v-model="data.sex" :placeholder="t('ViewPlayerRegistration.sex.select')">
+                <el-option :label="t('ViewPlayerRegistration.sex.Option1')" value="MALE"/>
+                <el-option :label="t('ViewPlayerRegistration.sex.Option2')" value="FEMALE"/>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item
-                :label="$t('ViewPlayerRegistration.birthdate.field')"
+                :label="t('ViewPlayerRegistration.birthdate.field')"
                 required>
               <el-form-item
                   :rules="[
@@ -89,7 +89,7 @@
         </el-row>
 
         <el-form-item
-            :label="$t('ViewPlayerRegistration.email.field')"
+            :label="t('ViewPlayerRegistration.email.field')"
             :rules="[
           {
             required: true,
@@ -108,7 +108,7 @@
         </el-form-item>
 
         <el-form-item
-            :label="$t('ViewPlayerRegistration.phone.field')"
+            :label="t('ViewPlayerRegistration.phone.field')"
             :rules="[
           {
             required: true,
@@ -138,58 +138,67 @@
   </div>
   <div v-else id="container">
     <h2>
-      {{ $t('general.success') }}
+      {{ t('general.success') }}
     </h2>
     <p>
-      {{ $t('ViewPlayerRegistration.after') }}
+      {{ t('ViewPlayerRegistration.after') }}
     </p>
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {reactive, ref} from 'vue'
 import axios from "axios"
 import {ElMessage} from "element-plus"
 import {useI18n} from "vue-i18n"
 const { t } = useI18n({inheritLocale: true})
 
-const formRef = ref()
+const formRef = ref<HTMLFormElement>()
 const registered = ref(false)
-const data = reactive({
-  firstName: '',
-  lastName: '',
-  sex: '',
-  birthday: null,
-  email: '',
-  phone: '',
+const data = reactive<{
+    firstName: string,
+    lastName: string,
+    sex: string,
+    birthday: null | Date,
+    email: string,
+    phone: string
+  }>({
+    firstName: '',
+    lastName: '',
+    sex: '',
+    birthday: null,
+    email: '',
+    phone: ''
 })
-const submitForm = (formEl) => {
-  if (!formEl) return
-  formEl.validate((valid) => {
-    if (valid) {
-      console.log(dateToJson(data.birthday))
-      data.birthday = dateToJson(data.birthday)
-      axios.post(`/player/registration`, data)
-          .then((result) => {
-            if (result.status === 200) {
-              ElMessage.success(t("ViewPlayerRegistration.registration_successful"))
-              registered.value = true
-            } else {
-              ElMessage.error(t("ViewPlayerRegistration.registration_failed"))
-            }
-          })
-          .catch((error) => {
-            console.log(error)
-            ElMessage.error(t("ViewPlayerRegistration.registration_failed"))
-          })
-    } else {
-      console.log('error submit!')
-      return false
-    }
-  })
+function submitForm(formEl: HTMLFormElement | undefined) {
+    if (!formEl) return
+    formEl.validate((valid: boolean) => {
+        if (valid) {
+            if (data.birthday === null)
+                return
+            axios.post(`/player/registration`, {
+                firstName: data.firstName,
+                lastName: data.lastName,
+                sex: data.sex,
+                birthday: dateToJson(data.birthday),
+                email: data.email,
+                phone: data.phone,
+              }).then((_) => {
+                    ElMessage.success(t("ViewPlayerRegistration.registration_successful"))
+                    registered.value = true
+                })
+                .catch((error) => {
+                    console.log(error)
+                    ElMessage.error(t("ViewPlayerRegistration.registration_failed"))
+                })
+        } else {
+            console.log('error submit!')
+            return false
+        }
+    })
 }
 
-function dateToJson(d) {
+function dateToJson(d: Date): String {
     return `${d.getFullYear()}-${d.getMonth() < 9 ? '0' : ''}${d.getMonth()+1}-${d.getDate() < 10 ? '0':''}${d.getDate()}`
 }
 </script>

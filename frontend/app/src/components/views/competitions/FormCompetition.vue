@@ -4,7 +4,7 @@
             <el-form
                     style="width: 100%"
                     ref="formRef"
-                    :model="props.data"
+                    :model="props.competition"
                     :disabled="props.disabled"
                     :label-position="(windowWidth > 480) ? 'left' : 'top'"
                     label-width="140px"
@@ -13,7 +13,7 @@
             >
                 <!-- Competition name -->
                 <el-form-item
-                        :label="$t('general.name')"
+                        :label="t('general.name')"
                         :rules="[
                   {
                     required: true,
@@ -24,7 +24,7 @@
                         prop="name"
                 >
                     <el-input
-                            v-model="props.data.name"
+                            v-model="props.competition.name"
                             maxlength="30"
                             show-word-limit
                     />
@@ -32,11 +32,11 @@
 
                 <!-- Description -->
                 <el-form-item
-                        :label="$t('general.description')"
+                        :label="t('general.description')"
                         prop="description"
                 >
                     <el-input
-                            v-model="props.data.description"
+                            v-model="props.competition.description"
                             :autosize="{minRows: 3, maxRows: 5}"
                             autosize
                             maxlength="100"
@@ -51,18 +51,18 @@
                 <el-row :gutter="20" justify="space-between">
                     <el-col :span="12" :xs="24">
                         <el-form-item
-                                :label="$t('CompetitionSettings.type')"
+                                :label="t('CompetitionSettings.type')"
                                 prop="tourType"
                         >
-                            <el-select v-model="props.data.tourType" class="full-width">
+                            <el-select v-model="props.competition.tourType" class="full-width">
                                 <el-option
                                     :key="'KNOCKOUT'"
-                                    :label='$t("CompetitionSettings.knockout")'
-                                    value="KNOCKOUT"/>
+                                    :label='t("CompetitionSettings.knockout")'
+                                    :value="TourType.KNOCKOUT"/>
                                 <el-option
                                     :key="'GROUPS'"
-                                    :label='$t("CompetitionSettings.groups")'
-                                    value="GROUPS"/>
+                                    :label='t("CompetitionSettings.groups")'
+                                    :value="TourType.GROUPS"/>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -71,39 +71,39 @@
                     <el-col :span="12" :xs="24">
                         <!-- game mode -->
                         <el-form-item
-                                :label='$t("CompetitionSettings.mode")'
+                                :label='t("CompetitionSettings.mode")'
                                 prop="mode">
-                            <el-select v-model="props.data.mode"
+                            <el-select v-model="props.competition.mode"
                                        class="full-width"
                             >
                                 <el-option
                                     :key="'SINGLE'"
-                                    :label='$t("CompetitionSettings.single")'
-                                    value="SINGLE"/>
+                                    :label='t("CompetitionSettings.single")'
+                                    :value="Mode.SINGLE"/>
                                 <el-option
                                     :key="'DOUBLE'"
-                                    :label='$t("CompetitionSettings.double")'
-                                    value="DOUBLE"/>
+                                    :label='t("CompetitionSettings.double")'
+                                    :value="Mode.DOUBLE"/>
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12" :xs="24">
                         <!-- signup -->
                         <el-form-item
-                                :label='$t("CompetitionSettings.signup")'
+                                :label='t("CompetitionSettings.signup")'
                                 prop="mode"
-                                v-show="props.data.mode === 'DOUBLE'">
-                            <el-select v-model="props.data.signup"
+                                v-show="props.competition.mode === 'DOUBLE'">
+                            <el-select v-model="props.competition.signUp"
                                        class="full-width"
                             >
                                 <el-option
                                     :key="'INDIVIDUAL'"
-                                    :label='$t("CompetitionSettings.individual")'
-                                    value="INDIVIDUAL"/>
+                                    :label='t("CompetitionSettings.individual")'
+                                    :value="SignUp.INDIVIDUAL"/>
                                 <el-option
                                     :key="'TOGETHER'"
-                                    :label='$t("CompetitionSettings.together")'
-                                    value="TOGETHER"/>
+                                    :label='t("CompetitionSettings.together")'
+                                    :value="SignUp.TOGETHER"/>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -115,21 +115,21 @@
                 <el-row :gutter="20" justify="space-between">
                     <el-col :span="12" :xs="24">
                         <el-form-item
-                                :label='$t("CompetitionSettings.sex")'>
-                            <el-select v-model="props.data.playerA.sex"
+                                :label='t("CompetitionSettings.sex")'>
+                            <el-select v-model="props.competition.playerA.sex"
                                        class="full-width">
                                 <el-option
                                     key="MALE"
-                                    :label='$t("CompetitionSettings.male")'
-                                    value="MALE"/>
+                                    :label='t("CompetitionSettings.male")'
+                                    :value="Sex.MALE"/>
                                 <el-option
                                     :key="'FEMALE'"
-                                    :label='$t("CompetitionSettings.female")'
-                                    value="FEMALE"/>
+                                    :label='t("CompetitionSettings.female")'
+                                    :value="Sex.FEMALE"/>
                                 <el-option
                                     :key="'ANY'"
-                                    :label='$t("CompetitionSettings.any")'
-                                    value="ANY"/>
+                                    :label='t("CompetitionSettings.any")'
+                                    :value="Sex.ANY"/>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -137,7 +137,7 @@
                 <!-- age -->
                 <!-- min age -->
                 <el-form-item
-                        :label='$t("CompetitionSettings.minAge")'
+                        :label='t("CompetitionSettings.minAge")'
                         :rules="[
                           {
                             required: false,
@@ -149,19 +149,19 @@
                     <el-row :gutter="20" justify="space-between">
                         <el-col :span="5">
                             <el-switch
-                                    v-model="props.data.playerA.hasMinAge"/>
+                                    v-model="props.competition.playerA.hasMinAge"/>
                         </el-col>
                         <el-col :span="19">
                             <el-date-picker
-                                    v-if="props.data.playerA.hasMinAge"
+                                    v-if="props.competition.playerA.hasMinAge"
                                     style="float: right;"
-                                    v-model="props.data.playerA.minAge"/>
+                                    v-model="props.competition.playerA.minAge"/>
                         </el-col>
                     </el-row>
                 </el-form-item>
                 <!-- max age -->
                 <el-form-item
-                        :label='$t("CompetitionSettings.maxAge")'
+                        :label='t("CompetitionSettings.maxAge")'
                         :rules="[
                           {
                             required: false,
@@ -173,43 +173,43 @@
                     <el-row :gutter="20" justify="space-between">
                         <el-col :span="5">
                             <el-switch
-                                    v-model="props.data.playerA.hasMaxAge"/>
+                                    v-model="props.competition.playerA.hasMaxAge"/>
                         </el-col>
                         <el-col :span="19">
                             <el-date-picker
-                                    v-if="props.data.playerA.hasMaxAge"
+                                    v-if="props.competition.playerA.hasMaxAge"
                                     style="float: right;"
-                                    v-model="props.data.playerA.maxAge"/>
+                                    v-model="props.competition.playerA.maxAge"/>
                         </el-col>
                     </el-row>
                 </el-form-item>
 
                 <!-- Player 2 settings -->
-                <template v-if="props.data.mode === 'DOUBLE'">
+                <template v-if="props.competition.mode === 'DOUBLE'">
                     <el-switch
-                            :active-text="$t('CompetitionSettings.differentB')"
+                            :active-text="t('CompetitionSettings.differentB')"
                             style="margin-bottom: 22px;"
-                            v-model="props.data.playerB.different"/>
-                    <template v-if="props.data.playerB.different">
+                            v-model="props.competition.playerB.different"/>
+                    <template v-if="props.competition.playerB.different">
                         <!-- sex -->
                         <el-row :gutter="20" justify="space-between">
                             <el-col :span="12" :xs="24">
                                 <el-form-item
-                                        :label='$t("CompetitionSettings.sex")'>
-                                    <el-select v-model="props.data.playerB.sex"
+                                        :label='t("CompetitionSettings.sex")'>
+                                    <el-select v-model="props.competition.playerB.sex"
                                                class="full-width">
                                         <el-option
                                             :key="'MALE'"
-                                            :label='$t("CompetitionSettings.male")'
-                                            value="MALE"/>
+                                            :label='t("CompetitionSettings.male")'
+                                            :value="Sex.MALE"/>
                                         <el-option
                                             :key="'FEMALE'"
-                                            :label='$t("CompetitionSettings.female")'
-                                            value="FEMALE"/>
+                                            :label='t("CompetitionSettings.female")'
+                                            :value="Sex.FEMALE"/>
                                         <el-option
                                             :key="'ANY'"
-                                            :label='$t("CompetitionSettings.any")'
-                                            value="ANY"/>
+                                            :label='t("CompetitionSettings.any")'
+                                            :value="Sex.ANY"/>
                                     </el-select>
                                 </el-form-item>
                             </el-col>
@@ -217,7 +217,7 @@
                         <!-- age -->
                         <!-- min age -->
                         <el-form-item
-                                :label='$t("CompetitionSettings.minAge")'
+                                :label='t("CompetitionSettings.minAge")'
                                 :rules="[
                                   {
                                     required: false,
@@ -229,19 +229,19 @@
                             <el-row :gutter="20" justify="space-between">
                                 <el-col :span="5">
                                     <el-switch
-                                            v-model="props.data.playerB.hasMinAge"/>
+                                            v-model="props.competition.playerB.hasMinAge"/>
                                 </el-col>
                                 <el-col :span="19">
                                     <el-date-picker
-                                            v-if="props.data.playerB.hasMinAge"
+                                            v-if="props.competition.playerB.hasMinAge"
                                             style="float: right;"
-                                            v-model="props.data.playerB.minAge"/>
+                                            v-model="props.competition.playerB.minAge"/>
                                 </el-col>
                             </el-row>
                         </el-form-item>
                         <!-- max age -->
                         <el-form-item
-                                :label='$t("CompetitionSettings.maxAge")'
+                                :label='t("CompetitionSettings.maxAge")'
                                 :rules="[
                                   {
                                     required: false,
@@ -253,13 +253,13 @@
                             <el-row :gutter="20" justify="space-between">
                                 <el-col :span="5">
                                     <el-switch
-                                            v-model="props.data.playerB.hasMaxAge"/>
+                                            v-model="props.competition.playerB.hasMaxAge"/>
                                 </el-col>
                                 <el-col :span="19">
                                     <el-date-picker
-                                            v-if="props.data.playerB.hasMaxAge"
+                                            v-if="props.competition.playerB.hasMaxAge"
                                             style="float: right;"
-                                            v-model="props.data.playerB.maxAge"/>
+                                            v-model="props.competition.playerB.maxAge"/>
                                 </el-col>
                             </el-row>
                         </el-form-item>
@@ -278,9 +278,10 @@
     </el-row>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {ref} from 'vue'
 import {useI18n} from "vue-i18n"
+import {Competition, competitionClientToServer, Mode, Sex, SignUp, TourType} from "@/interfaces/competition";
 const { t } = useI18n({inheritLocale: true})
 
 let windowWidth = ref(window.innerWidth)
@@ -289,95 +290,47 @@ window.addEventListener('resize', () => {
 })
 
 const formRef = ref()
-const props = defineProps({
-    submitText: String,
-    disabled: Boolean,
-    data: {
-        type: Object,
-        name: String,
-        description: String,
-        tourType: String,
-        mode: String,
-        signup: String,
-        playerA: {
-            type: Object,
-            sex: String,
-            hasMinAge: Boolean,
-            minAge: Date,
-            hasMaxAge: Boolean,
-            maxAge: Date
-        },
-        playerB: {
-            type: Object,
-            different: Boolean,
-            sex: String,
-            hasMinAge: Boolean,
-            minAge: Date,
-            hasMaxAge: Boolean,
-            maxAge: Date
-        }
-    }
+const props = withDefaults(defineProps<{
+    submitText: string,
+    disabled: boolean,
+    competition: Competition
+}>(), {
+    disabled: false
 })
 
 const emit = defineEmits(['submit'])
 
-function submit(formRef) {
-  if (!formRef)
-    return
-  formRef.validate((valid) => {
-    if (valid) {
-      const server_data = {
-          name: props.data.name,
-          description: props.data.description,
-          type: props.data.tourType,
-          mode: props.data.mode,
-          signUp: props.data.signup,
-          playerA: {
-              sex: props.data.playerA.sex,
-              hasMinAge: props.data.playerA.hasMinAge,
-              minAge: dateToJson(props.data.playerA.minAge),
-              hasMaxAge: props.data.playerA.hasMaxAge,
-              maxAge: dateToJson(props.data.playerA.maxAge)
-          },
-          playerB: {
-              different: props.data.playerB.different,
-              sex: props.data.playerB.sex,
-              hasMinAge: props.data.playerB.hasMinAge,
-              minAge: dateToJson(props.data.playerB.minAge),
-              hasMaxAge: props.data.playerB.hasMaxAge,
-              maxAge: dateToJson(props.data.playerB.maxAge)
-          }
-      }
-      emit('submit', server_data)
-    } else {
-      console.log('validation failed')
-    }
-  })
+function submit(formRef: HTMLFormElement | undefined) {
+    if (!formRef)
+        return
+    formRef.validate((valid: boolean) => {
+        if (valid) {
+            emit('submit', competitionClientToServer(props.competition))
+        } else {
+            console.log('validation failed')
+        }
+    })
 }
 
-const checkAMin = (rule, value, callback) => {
-    if (props.data.playerA.hasMinAge && props.data.playerA.minAge === null)
+const checkAMin = (rule: any, value: Date, callback: (arg0?: Error) => void) => {
+    if (props.competition.playerA.hasMinAge && props.competition.playerA.minAge === null)
         callback(new Error(t("CompetitionSettings.missingAge")))
     callback()
 }
-const checkAMax = (rule, value, callback) => {
-    if (props.data.playerA.hasMaxAge && props.data.playerA.maxAge === null)
+const checkAMax = (rule: any, value: Date, callback: (arg0?: Error) => void) => {
+    if (props.competition.playerA.hasMaxAge && props.competition.playerA.maxAge === null)
         callback(new Error(t("CompetitionSettings.missingAge")))
     callback()
 }
-const checkBMin = (rule, value, callback) => {
-    if (props.data.playerB.hasMinAge && props.data.playerB.minAge === null)
+const checkBMin = (rule: any, value: Date, callback: (arg0?: Error) => void) => {
+    if (props.competition.playerB.hasMinAge && props.competition.playerB.minAge === null)
         callback(new Error(t("CompetitionSettings.missingAge")))
     callback()
 }
-const checkBMax = (rule, value, callback) => {
-    if (props.data.playerB.hasMaxAge && props.data.playerB.maxAge === null)
+const checkBMax = (rule: any, value: Date, callback: (arg0?: Error) => void) => {
+    if (props.competition.playerB.hasMaxAge && props.competition.playerB.maxAge === null)
         callback(new Error(t("CompetitionSettings.missingAge")))
     callback()
-}
-
-function dateToJson(d) {
-    return `${d.getFullYear()}-${d.getMonth() < 9 ? '0' : ''}${d.getMonth()+1}-${d.getDate() < 10 ? '0':''}${d.getDate()}`
 }
 </script>
 

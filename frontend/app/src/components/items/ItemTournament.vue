@@ -5,10 +5,13 @@
             <p>{{ props.tournament.description }}</p>
             <!-- TODO entweder nur game phase oder anzeigen was gerade angezeigt wird -->
             <!-- TODO date an den unteren rand des items -->
-            <p v-if="registrationOver">{{props.tournament.game_phase[0].toLocaleDateString()}}
-                - {{props.tournament.game_phase[1].toLocaleDateString()}}</p>
-            <p v-else>{{props.tournament.registration_phase[0].toLocaleDateString()}}
-                - {{props.tournament.registration_phase[1].toLocaleDateString()}}</p>
+            <template v-if="props.tournament.registration_phase !== null">
+                <p v-if="new Date() >= props.tournament.registration_phase[1]">
+                    {{props.tournament.game_phase[0].toLocaleDateString()}}
+                    - {{props.tournament.game_phase[1].toLocaleDateString()}}</p>
+                <p v-else>{{props.tournament.registration_phase[0].toLocaleDateString()}}
+                    - {{props.tournament.registration_phase[1].toLocaleDateString()}}</p>
+            </template>
         </div>
         <font-awesome-icon v-if="props.canCreate"
                            id="settings"
@@ -27,8 +30,6 @@ const props = defineProps<{
     canCreate: boolean,
     tournament: Tournament
     }>()
-
-const registrationOver =  new Date() >= props.tournament.registration_phase[1]
 
 const emit = defineEmits(['selected', 'settings'])
 

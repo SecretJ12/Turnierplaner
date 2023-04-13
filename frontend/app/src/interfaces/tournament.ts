@@ -1,11 +1,10 @@
-
 export interface Tournament {
     id?: null | string,
     name: string,
     visible: boolean,
     description: string,
-    registration_phase: Date[],
-    game_phase: Date[]
+    registration_phase: Date[] | null,
+    game_phase: Date[] | null
 }
 export interface TournamentServer {
     id?: null | string,
@@ -19,6 +18,10 @@ export interface TournamentServer {
 }
 
 export function tournamentClientToServer(tournament: Tournament): TournamentServer {
+    if (tournament.registration_phase === null)
+        throw new Error();
+    if (tournament.game_phase === null)
+        throw new Error();
     return {
         id: tournament.id,
         name: tournament.name,
