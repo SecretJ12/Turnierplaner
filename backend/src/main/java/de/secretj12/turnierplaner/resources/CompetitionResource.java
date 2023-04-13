@@ -146,7 +146,7 @@ public class CompetitionResource {
     }
 
     @GET
-    @Path("/{compName}/signedUpPlayers")
+    @Path("/{compName}/signedUpTeams")
     @Produces(MediaType.APPLICATION_JSON)
     public RestResponse<List<jUserTeam>> getSignedUpPlayers(@PathParam("tourName") String tourName,
                                        @PathParam("compName") String compName) {

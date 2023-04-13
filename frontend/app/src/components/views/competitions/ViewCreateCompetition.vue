@@ -23,7 +23,7 @@ const competition = reactive<Competition>({
     mode: Mode.SINGLE,
     signUp: SignUp.INDIVIDUAL,
     playerA: {
-      sex: Sex.MALE,
+      sex: Sex.ANY,
       hasMinAge: false,
       minAge: null,
       hasMaxAge: false,
@@ -31,7 +31,7 @@ const competition = reactive<Competition>({
     },
     playerB: {
         different: false,
-        sex: Sex.MALE,
+        sex: Sex.ANY,
         hasMinAge: false,
         minAge: null,
         hasMaxAge: false,

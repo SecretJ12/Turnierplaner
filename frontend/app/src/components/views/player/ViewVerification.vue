@@ -2,22 +2,22 @@
   <div id="container">
     <div v-if="verified">
       <h2 v-if="success">
-        {{ $t('general.success') }}
+        {{ t('general.success') }}
       </h2>
       <h2 v-else>
-        {{ $t('general.failure') }}
+        {{ t('general.failure') }}
       </h2>
     </div>
     <p v-if="success">
-      {{ $t('ViewPlayerRegistration.verification_success') }}
+      {{ t('ViewPlayerRegistration.verification_success') }}
     </p>
     <p v-else>
-      {{ $t('ViewPlayerRegistration.verification_failed') }}
+      {{ t('ViewPlayerRegistration.verification_failed') }}
     </p>
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import axios from "axios"
 import {ElLoading} from 'element-plus'
 import {ref} from 'vue'

@@ -4,21 +4,21 @@
             :direction="windowWidth < 400 ? 'vertical' : 'horizontal'">
             <el-descriptions-item :span="windowWidth < 600 ? 1 : 2">
                 <template #label>
-                    {{ $t("general.description") }}
+                    {{ t("general.description") }}
                 </template>
-                {{ props.compDetails.description }}
+                {{ props.competition.description }}
             </el-descriptions-item>
             <el-descriptions-item>
                 <template #label>
-                    {{ $t("ViewCompetition.tournament_system") }}
+                    {{ t("ViewCompetition.tournament_system") }}
                 </template>
-                {{ $t("CompetitionSettings." + props.compDetails.tourType.toLowerCase()) }}
+                {{ t("CompetitionSettings." + props.competition.tourType.toLowerCase()) }}
             </el-descriptions-item>
             <el-descriptions-item>
                 <template #label>
-                    {{ $t("ViewCompetition.game_mode") }}
+                    {{ t("ViewCompetition.game_mode") }}
                 </template>
-                {{ $t("CompetitionSettings." + compDetails.mode.toLowerCase()) }}
+                {{ t("CompetitionSettings." + props.competition.mode.toLowerCase()) }}
             </el-descriptions-item>
         </el-descriptions>
 
@@ -32,19 +32,19 @@
         </p>
         <template v-else>
 
-            <ViewSignUpForm :beginGamePhase="props.beginGamePhase" :compDetails="props.compDetails"
+            <ViewSignUpForm :beginGamePhase="props.beginGamePhase" :competition="props.competition"
                 @registered="childUpdate" />
 
-            <ViewRegistrationNotice v-if="false" :compDetails="props.compDetails" />
+            <ViewRegistrationNotice v-if="false" :compDetails="props.competition" />
         </template>
 
-        <ViewTable :compDetails="props.compDetails" :update="updateChildren" />
+        <ViewTable :competition="props.competition" :update="updateChildren" />
 
         <!-- TODO add options for admin -->
     </el-space>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {inject, ref, watch} from "vue"
 import {auth} from "@/security/AuthService"
 import axios from "axios"
@@ -52,6 +52,7 @@ import {useRoute} from "vue-router"
 import ViewTable from "@/components/views/competition/signup/ViewTable.vue"
 import ViewRegistrationNotice from "@/components/views/competition/signup/ViewRegistrationNotice.vue"
 import ViewSignUpForm from "@/components/views/competition/signup/ViewSignUpForm.vue"
+import {Competition} from "@/interfaces/competition";
 import {useI18n} from "vue-i18n"
 const { t } = useI18n({inheritLocale: true})
 
@@ -60,35 +61,11 @@ window.addEventListener('resize', () => {
     windowWidth.value = window.innerWidth
 })
 
-const props = defineProps({
-    allowRegistration: Boolean,
+const props = defineProps<{
+    allowRegistration: boolean,
     beginGamePhase: Date,
-    compDetails: {
-        type: Object,
-        name: String,
-        description: String,
-        tourType: String,
-        mode: String,
-        signup: String,
-        playerA: {
-            type: Object,
-            sex: String,
-            hasMinAge: Boolean,
-            minAge: Date,
-            hasMaxAge: Boolean,
-            maxAge: Date
-        },
-        playerB: {
-            type: Object,
-            different: Boolean,
-            sex: String,
-            hasMinAge: Boolean,
-            minAge: Date,
-            hasMaxAge: Boolean,
-            maxAge: Date
-        }
-    }
-})
+    competition: Competition
+    }>()
 
 const route = useRoute()
 const isLoggedIn = inject('loggedIn', ref(false))
@@ -104,7 +81,7 @@ function update() {
   canEdit.value = false
   auth.getUser().then((user) => {
     if (user !== null) {
-      axios.get(`/tournament/${route.params.tourId}/competition/canEdit`)
+      axios.get<boolean>(`/tournament/${route.params.tourId}/competition/canEdit`)
           .then((response) => {
             canEdit.value = response.data
           })

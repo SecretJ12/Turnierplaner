@@ -2,7 +2,7 @@
     <!-- TODO sieht das hier gut aus? -->
     <el-row :gutter="20" class="row-bg" justify="space-between">
         <el-col :span="16">
-            <span id="notice_register">{{ $t('ViewPlayerRegistration.not_found') }}</span>
+            <span id="notice_register">{{ t('ViewPlayerRegistration.not_found') }}</span>
         </el-col>
         <el-col :span="8">
             <el-button
@@ -15,7 +15,7 @@
     </el-row>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {router} from "@/main"
 import {useI18n} from "vue-i18n"
 const { t } = useI18n({inheritLocale: true})

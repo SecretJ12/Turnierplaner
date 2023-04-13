@@ -19,21 +19,8 @@ export interface Competition {
     tourType: TourType,
     mode: Mode,
     signUp: SignUp,
-    playerA: {
-        sex: Sex,
-        hasMinAge: boolean,
-        minAge: Date | null,
-        hasMaxAge: boolean,
-        maxAge: Date | null
-    },
-    playerB: {
-        different: boolean,
-        sex: Sex,
-        hasMinAge: boolean,
-        minAge: Date | null,
-        hasMaxAge: boolean,
-        maxAge: Date | null
-    }
+    playerA: settingsPlayer,
+    playerB: settingsPlayerB
 }
 
 export interface CompetitionServer {
@@ -58,6 +45,18 @@ export interface CompetitionServer {
         hasMaxAge: boolean,
         maxAge: string
     }
+}
+
+export interface settingsPlayer {
+    sex: Sex,
+    hasMinAge: boolean,
+    minAge: Date | null,
+    hasMaxAge: boolean,
+    maxAge: Date | null
+}
+
+export interface settingsPlayerB extends settingsPlayer {
+    different: boolean
 }
 
 export function competitionClientToServer(competition: Competition): CompetitionServer {

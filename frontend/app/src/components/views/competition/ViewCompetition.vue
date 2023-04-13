@@ -1,93 +1,72 @@
 <template>
-  <div id="container">
-    <div>
-      <font-awesome-icon
-          v-if=canEdit
-          id="settings"
-          :icon="['fas', 'gear']" class="fa-1x" @click="settings">
-      </font-awesome-icon>
-      <div id="tourName">
-        {{ route.params.tourId }}
-      </div>
-      <h2>
-        {{ route.params.compId }}
-      </h2>
+    <div id="container">
+        <div style="margin-bottom: 20px;">
+            <font-awesome-icon
+                    v-if=canEdit
+                    id="settings"
+                    :icon="['fas', 'gear']" class="fa-1x" @click="settings">
+            </font-awesome-icon>
+            <div id="tourName">
+                {{ route.params.tourId }}
+            </div>
+            <h2>
+                {{ route.params.compId }}
+            </h2>
+        </div>
+            <template v-if="tournament !== null">
+                <template v-if="new Date() < tournament.registration_phase.begin">
+                    {{ t("ViewCompetition.registration_not_started") }}
+                    {{ tournament.registration_phase.begin.toLocaleString(t('lang'), dateOptions) }}
+                </template>
+                <template v-else-if="new Date() < tournament.game_phase.begin">
+                    <!-- show registration page -->
+                    <ViewSignUp v-if="competition !== null"
+                                :beginGamePhase="tournament.game_phase.begin"
+                                :allowRegistration="tournament.registration_phase < new Date()"
+                                :competition="competition"/>
+                </template>
+                <template v-else>
+                    <!-- TODO show after plan has been published -->
+                    <!-- show game page -->
+                    <ViewGame v-if="competition !== null" :type="competition.tourType"/>
+            </template>
+        </template>
     </div>
-
-    <template v-if="tournamentLoaded">
-      <template v-if="!registration_started">
-          {{ t("ViewCompetition.registration_not_started") }} {{ beginRegistration.toLocaleString(t('lang'), dateOptions) }}
-      </template>
-      <template v-else-if="!game_started">
-        <!-- show registration page -->
-        <ViewSignUp :beginGamePhase="beginGamePhase" :allowRegistration="allow_registration" :compDetails="compDetails" />
-      </template>
-      <template v-else>
-        <!-- TODO show after plan has been published -->
-        <!-- show game page -->
-        <ViewGame :type="compDetails.tourType"/>
-      </template>
-    </template>
-  </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {useRoute} from 'vue-router'
-import {inject, reactive, ref, watch} from "vue"
+import {inject, ref, watch} from "vue"
 import {auth} from "@/security/AuthService"
 import axios from "axios"
 import {router} from "@/main"
 import ViewSignUp from "@/components/views/competition/signup/ViewSignUp.vue"
 import ViewGame from "@/components/views/competition/ViewGame.vue"
+import {ElMessage} from "element-plus";
+import {Competition, CompetitionServer, competitionServerToClient} from "@/interfaces/competition"
+import {Tournament, TournamentServer, tournamentServerToClient} from "@/interfaces/tournament"
 import {useI18n} from "vue-i18n"
-const { t } = useI18n({inheritLocale: true})
+
+const {t} = useI18n({inheritLocale: true})
 
 
 const route = useRoute()
 const isLoggedIn = inject('loggedIn', ref(false))
 const canEdit = ref(false)
 
-const detailsLoaded = ref(false)
-const compDetails = reactive({
-    name: '',
-    description: '',
-    tourType: 'KNOCKOUT',
-    mode: 'SINGLE',
-    signup: 'INDIVIDUAL',
-    playerA: {
-        sex: "MALE",
-        hasMinAge: false,
-        minAge: new Date(),
-        hasMaxAge: false,
-        maxAge: new Date()
-    },
-    playerB: {
-        different: Boolean,
-        sex: "MALE",
-        hasMinAge: false,
-        minAge: new Date(),
-        hasMaxAge: false,
-        maxAge: new Date()
-    }
-})
-
-const tournamentLoaded = ref(false)
-const registration_started = ref(false)
-const allow_registration = ref(false)
-const game_started = ref(false)
-let beginRegistration = ref(new Date())
-let beginGamePhase = ref(new Date())
+const competition = ref<Competition | null>(null)
+const tournament = ref<Tournament | null>(null)
 
 watch(isLoggedIn, async () => {
-  update()
+    update()
 })
 update()
 
 function update() {
-  canEdit.value = false
-  auth.getUser().then((user) => {
-    if (user !== null) {
-      axios.get(`/tournament/${route.params.tourId}/competition/canEdit`)
+    canEdit.value = false
+    auth.getUser().then((user) => {
+        if (user !== null) {
+            axios.get<boolean>(`/tournament/${route.params.tourId}/competition/canEdit`)
           .then((response) => {
             canEdit.value = response.data
           })
@@ -96,42 +75,21 @@ function update() {
           })
     }
   })
-  axios.get(`/tournament/${route.params.tourId}/competition/${route.params.compId}/details`)
+    axios.get<CompetitionServer>(`/tournament/${route.params.tourId}/competition/${route.params.compId}/details`)
       .then((response) => {
-          compDetails.id = response.data.id
-          compDetails.name = response.data.name
-          compDetails.description = response.data.description
-          compDetails.tourType = response.data.type
-          compDetails.mode = response.data.mode
-          compDetails.signup = response.data.signUp
-          compDetails.playerA.sex = response.data.playerA.sex
-          compDetails.playerA.hasMinAge = response.data.playerA.hasMinAge
-          compDetails.playerA.minAge = new Date(response.data.playerA.minAge)
-          compDetails.playerA.hasMaxAge = response.data.playerA.hasMaxAge
-          compDetails.playerA.maxAge = new Date(response.data.playerA.maxAge)
-          compDetails.playerB.different = response.data.playerB.different
-          compDetails.playerB.sex = response.data.playerB.sex
-          compDetails.playerB.hasMinAge = response.data.playerB.hasMinAge
-          compDetails.playerB.minAge = new Date(response.data.playerB.minAge)
-          compDetails.playerB.hasMaxAge = response.data.playerB.hasMaxAge
-          compDetails.playerB.maxAge = new Date(response.data.playerB.maxAge)
-          detailsLoaded.value = true
+          competition.value = competitionServerToClient(response.data)
       })
       .catch((error) => {
           console.log(error)
+          ElMessage.error(t("ViewEditTournament.loadingDetailsFailed"))
       })
-  axios.get(`/tournament/${route.params.tourId}/details`)
+    axios.get<TournamentServer>(`/tournament/${route.params.tourId}/details`)
       .then((response) => {
-          registration_started.value = new Date(response.data.beginRegistration) < new Date()
-          allow_registration.value = registration_started.value
-              && new Date(response.data.endRegistration) > new Date()
-          game_started.value = new Date(response.data.beginGamePhase) < new Date()
-          beginRegistration.value = new Date(response.data.beginRegistration)
-          beginGamePhase.value = new Date(response.data.beginGamePhase)
-          tournamentLoaded.value = true
+          tournament.value = tournamentServerToClient(response.data)
       })
       .catch((error) => {
           console.log(error)
+          ElMessage.error(t("ViewEditCompetition.loadingDetailsFailed"))
       })
 }
 
@@ -139,7 +97,7 @@ function settings() {
   router.push({path: `/tournament/${route.params.tourId}/competition/${route.params.compId}/edit`})
 }
 
-const dateOptions = {
+const dateOptions: Intl.DateTimeFormatOptions = {
     weekday: "long",
     year: "numeric",
     month: "long",

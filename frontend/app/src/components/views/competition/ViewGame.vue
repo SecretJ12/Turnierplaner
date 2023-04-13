@@ -4,7 +4,7 @@
   <p v-else>Invalid type</p>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ViewGroupSystem from "@/components/views/competition/ViewGroupSystem.vue"
 import ViewKnockoutSystem from "@/components/views/competition/ViewKnockoutSystem.vue"
 

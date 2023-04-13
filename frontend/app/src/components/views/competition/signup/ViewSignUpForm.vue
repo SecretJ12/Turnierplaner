@@ -1,17 +1,17 @@
 <template>
     <!-- SINGLE -->
-    <template v-if="props.compDetails.mode === 'SINGLE'">
+    <template v-if="props.competition.mode === Mode.SINGLE">
         <!-- Registration player A -->
         <el-space direction="vertical" fill style="width: 100%;">
-            <ViewConditions :beginGamePhase="props.beginGamePhase" :player="props.compDetails.playerA" />
+            <ViewConditions :beginGamePhase="props.beginGamePhase" :player="props.competition.playerA"/>
             <el-row :gutter="20" class="row-bg" justify="space-between">
                 <el-col :span="16">
                     <el-autocomplete
-                            v-model="playerSearchA"
-                            :fetch-suggestions="queryPlayerA"
-                            :placeholder="t('general.name')"
-                            hide-loading
-                            style="width: 100%"
+                        v-model="playerSearchA"
+                        :fetch-suggestions="queryPlayerA"
+                        :placeholder="t('general.name')"
+                        hide-loading
+                        style="width: 100%"
                     />
                 </el-col>
                 <el-col :span="8">
@@ -26,14 +26,14 @@
         </el-space>
     </template>
     <!-- DOUBLE TOGETHER -->
-    <template v-else-if="props.compDetails.signup === 'TOGETHER'">
+    <template v-else-if="props.competition.signUp === SignUp.TOGETHER">
         <el-space direction="vertical" fill style="width: 100%;">
             <el-row :gutter="20" class="row-bg" justify="space-between">
                 <el-col :span="12">
-                    <ViewConditions :beginGamePhase="props.beginGamePhase"  :player="props.compDetails.playerA" />
+                    <ViewConditions :beginGamePhase="props.beginGamePhase" :player="props.competition.playerA"/>
                 </el-col>
                 <el-col :span="12">
-                    <ViewConditions :beginGamePhase="props.beginGamePhase"  :player="props.compDetails.playerB" />
+                    <ViewConditions :beginGamePhase="props.beginGamePhase" :player="props.competition.playerB"/>
                 </el-col>
             </el-row>
             <el-row :gutter="20" class="row-bg" justify="space-between">
@@ -65,18 +65,18 @@
         </el-space>
     </template>
     <!-- DOUBLE INDIVIDUAL SAME -->
-    <template v-else-if="!props.compDetails.playerB.different">
+    <template v-else-if="!props.competition.playerB.different">
         <el-space direction="vertical" fill style="width: 100%;">
             <!-- Registration player A -->
-            <ViewConditions :beginGamePhase="props.beginGamePhase" :player="props.compDetails.playerA" />
+            <ViewConditions :beginGamePhase="props.beginGamePhase" :player="props.competition.playerA"/>
             <el-row :gutter="20" class="row-bg" justify="space-between">
                 <el-col :span="16">
                     <el-autocomplete
-                            v-model="playerSearchA"
-                            :fetch-suggestions="queryPlayerA"
-                            :placeholder="t('general.name')"
-                            hide-loading
-                            style="width: 100%"
+                        v-model="playerSearchA"
+                        :fetch-suggestions="queryPlayerA"
+                        :placeholder="t('general.name')"
+                        hide-loading
+                        style="width: 100%"
                     />
                 </el-col>
                 <el-col :span="8">
@@ -94,7 +94,7 @@
     <template v-else>
         <div id="regDoubIndDif">
             <ViewConditions id="regDoubIndDifCondA"
-                            :beginGamePhase="props.beginGamePhase"  :player="props.compDetails.playerA" />
+                            :beginGamePhase="props.beginGamePhase" :player="props.competition.playerA"/>
             <el-row id="regDoubIndDifRegA" :gutter="20" class="row-bg" justify="space-between">
                 <el-col :span="16">
                     <el-autocomplete
@@ -116,7 +116,7 @@
             </el-row>
 
             <ViewConditions id="regDoubIndDifCondB"
-                            :beginGamePhase="props.beginGamePhase" :player="props.compDetails.playerB" />
+                            :beginGamePhase="props.beginGamePhase" :player="props.competition.playerB"/>
             <el-row id="regDoubIndDifRegB" :gutter="20" class="row-bg" justify="space-between">
                 <el-col :span="16">
                     <el-autocomplete
@@ -140,65 +140,55 @@
     </template>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {defineProps, ref} from "vue"
 import axios from "axios"
 import {ElMessage} from "element-plus"
 import ViewConditions from "@/components/views/competition/signup/ViewConditions.vue"
 import {useRoute} from "vue-router"
+import {Competition, Mode, Sex, SignUp} from "@/interfaces/competition"
+import {Player, searchedPlayer} from "@/interfaces/player"
 import {useI18n} from "vue-i18n"
-const { t } = useI18n({inheritLocale: true})
+import {Team} from "@/interfaces/team"
+
+const {t} = useI18n({inheritLocale: true})
 
 const route = useRoute()
 
 const emit = defineEmits(['registered'])
-const props = defineProps({
+const props = defineProps<{
     beginGamePhase: Date,
-    compDetails: {
-        type: Object,
-        name: String,
-        description: String,
-        tourType: String,
-        mode: String,
-        signup: String,
-        playerA: {
-            type: Object,
-            sex: String,
-            hasMinAge: Boolean,
-            minAge: Date,
-            hasMaxAge: Boolean,
-            maxAge: Date
-        },
-        playerB: {
-            type: Object,
-            different: Boolean,
-            sex: String,
-            hasMinAge: Boolean,
-            minAge: Date,
-            hasMaxAge: Boolean,
-            maxAge: Date
-        }
-    }
-})
+    competition: Competition
+}>()
 
 const playerSearchA = ref("")
-let queriedPlayerA = []
+let queriedPlayerA: searchedPlayer[] = []
 const playerSearchB = ref("")
-let queriedPlayerB = []
+let queriedPlayerB: searchedPlayer[] = []
 
-function queryPlayerA(search, callback) {
+function queryPlayerA(search: string, callback: (player: searchedPlayer[]) => void) {
     queriedPlayerA = queriedPlayerA.filter((item) => {
         return item.value.toLowerCase().includes(search.toLowerCase())
     })
     callback(queriedPlayerA)
-    axios.get(`/player/find?search=${search}`
-        + (props.compDetails.playerA.sex !== 'ANY' ? `&sex=${props.compDetails.playerA.sex}` : '')
-        + (props.compDetails.playerA.hasMinAge ? `&minAge=${props.compDetails.playerA.minAge.toISOString().slice(0, 10)}` : '')
-        + (props.compDetails.playerA.hasMaxAge ? `&minAge=${props.compDetails.playerA.maxAge.toISOString().slice(0, 10)}` : ''))
+    if (props.competition.playerA.hasMinAge && props.competition.playerA.minAge === null) {
+        console.log("Data invalid")
+        return
+    }
+    axios.get<Player[]>(`/player/find?search=${search}`
+        + (props.competition.playerA.sex !== Sex.ANY ? `&sex=${props.competition.playerA.sex}` : '')
+        + (props.competition.playerA.hasMinAge && props.competition.playerA.minAge !== null ?
+            `&minAge=${props.competition.playerA.minAge.toISOString().slice(0, 10)}` : '')
+        + (props.competition.playerA.hasMaxAge && props.competition.playerA.maxAge !== null ?
+            `&minAge=${props.competition.playerA.maxAge.toISOString().slice(0, 10)}` : ''))
         .then((result) => {
             queriedPlayerA = result.data.map((item) => {
-                item.value = item.firstName + ' ' + item.lastName
-                return item
+                return {
+                    id: item.id,
+                    firstName: item.firstName,
+                    lastName: item.lastName,
+                    value: item.firstName + ' ' + item.lastName
+                }
             })
             callback(queriedPlayerA)
         })
@@ -207,19 +197,26 @@ function queryPlayerA(search, callback) {
             console.log(error)
         })
 }
-function queryPlayerB(search, callback) {
+
+function queryPlayerB(search: string, callback: (player: Player[]) => void) {
     queriedPlayerB = queriedPlayerB.filter((item) => {
         return item.value.toLowerCase().includes(search.toLowerCase())
     })
     callback(queriedPlayerB)
-    axios.get(`/player/find?search=${search}`
-        + (props.compDetails.playerB.sex !== 'ANY' ? `&sex=${props.compDetails.playerB.sex}` : '')
-        + (props.compDetails.playerB.hasMinAge ? `&minAge=${props.compDetails.playerB.minAge.toISOString().slice(0, 10)}` : '')
-        + (props.compDetails.playerB.hasMaxAge ? `&minAge=${props.compDetails.playerB.maxAge.toISOString().slice(0, 10)}` : ''))
+    axios.get<Player[]>(`/player/find?search=${search}`
+        + (props.competition.playerB.sex !== 'ANY' ? `&sex=${props.competition.playerB.sex}` : '')
+        + (props.competition.playerB.hasMinAge && props.competition.playerB.minAge !== null ?
+            `&minAge=${props.competition.playerB.minAge.toISOString().slice(0, 10)}` : '')
+        + (props.competition.playerB.hasMaxAge && props.competition.playerB.maxAge !== null ?
+            `&minAge=${props.competition.playerB.maxAge.toISOString().slice(0, 10)}` : ''))
         .then((result) => {
             queriedPlayerB = result.data.map((item) => {
-                item.value = item.firstName + ' ' + item.lastName
-                return item
+                return {
+                    id: item.id,
+                    firstName: item.firstName,
+                    lastName: item.lastName,
+                    value: item.firstName + ' ' + item.lastName
+                }
             })
             callback(queriedPlayerB)
         })
@@ -229,9 +226,9 @@ function queryPlayerB(search, callback) {
         })
 }
 
-function signUpPlayer(queriedPlayer, playerSearch, playerName) {
+function signUpPlayer(queriedPlayer: searchedPlayer[], playerSearch: string, playerA: boolean) {
     const validPlayers = queriedPlayer.filter((p) => {
-        return p.value.includes(playerSearch.value)
+        return p.value.includes(playerSearch)
     })
     if (validPlayers.length > 1) {
         ElMessage.error(t("Player.too_many_results"))
@@ -243,12 +240,17 @@ function signUpPlayer(queriedPlayer, playerSearch, playerName) {
     }
     const player = validPlayers[0]
 
-
-    const form = {}
-    form[playerName] = {
-        firstName: player.firstName,
-        lastName: player.lastName
-    }
+    const form: Team = {}
+    if (playerA)
+        form["playerA"] = {
+            firstName: player.firstName,
+            lastName: player.lastName
+        }
+    else
+        form["playerB"] = {
+            firstName: player.firstName,
+            lastName: player.lastName
+        }
 
     axios.post(`/tournament/${route.params.tourId}/competition/${route.params.compId}/signUp`, form)
         .then((_) => {
@@ -263,16 +265,16 @@ function signUpPlayer(queriedPlayer, playerSearch, playerName) {
         })
 }
 function signUpSingle() {
-    signUpPlayer(queriedPlayerA, playerSearchA, "playerA")
+    signUpPlayer(queriedPlayerA, playerSearchA.value, true)
 }
 function signUpDoubleIndSame(){
-    signUpPlayer(queriedPlayerA, playerSearchA, "playerA")
+    signUpPlayer(queriedPlayerA, playerSearchA.value, true)
 }
 function signUpDoubleIndDifA() {
-    signUpPlayer(queriedPlayerA, playerSearchA, "playerA")
+    signUpPlayer(queriedPlayerA, playerSearchA.value, true)
 }
 function signUpDoubleIndDifB() {
-    signUpPlayer(queriedPlayerB, playerSearchB, "playerB")
+    signUpPlayer(queriedPlayerB, playerSearchB.value, false)
 }
 function signUpDoubleTog() {
     const validPlayersA = queriedPlayerA.filter((p) => {

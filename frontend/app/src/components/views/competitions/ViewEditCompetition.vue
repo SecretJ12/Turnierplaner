@@ -1,6 +1,6 @@
 <template>
-  <FormCompetition :disabled="disabled" :competition="competition" :submit-text="t('general.update')"
-                   @submit="submit" />
+    <FormCompetition v-if="competition !== null" :disabled="disabled" :competition="competition"
+                     :submit-text="t('general.update')" @submit="submit"/>
 </template>
 
 <script setup lang="ts">
@@ -11,42 +11,13 @@ import {ElMessage} from "element-plus"
 import {useRoute} from "vue-router"
 import FormCompetition from "@/components/views/competitions/FormCompetition.vue"
 import {useI18n} from "vue-i18n"
-import {
-    Competition,
-    CompetitionServer,
-    competitionServerToClient,
-    Mode,
-    Sex,
-    SignUp,
-    TourType
-} from "@/interfaces/competition"
+import {Competition, CompetitionServer, competitionServerToClient} from "@/interfaces/competition"
 
 const { t } = useI18n({inheritLocale: true})
 
 const route = useRoute()
 
-const competition = ref<Competition>({
-  name: '',
-  description: '',
-  tourType: TourType.KNOCKOUT,
-  mode: Mode.SINGLE,
-  signUp: SignUp.INDIVIDUAL,
-  playerA: {
-      sex: Sex.MALE,
-      hasMinAge: false,
-      minAge: new Date(),
-      hasMaxAge: false,
-      maxAge: new Date()
-  },
-  playerB: {
-      different: false,
-      sex: Sex.MALE,
-      hasMinAge: false,
-      minAge: new Date(),
-      hasMaxAge: false,
-      maxAge: new Date()
-  }
-})
+const competition = ref<Competition | null>(null)
 
 const disabled = ref(true)
 
