@@ -28,7 +28,7 @@
                 <template v-else>
                     <!-- TODO show after plan has been published -->
                     <!-- show game page -->
-                    <ViewGame v-if="competition !== null" :type="competition.tourType"/>
+                    <ViewGame v-if="competition !== null" :tourType="competition.tourType"/>
             </template>
         </template>
     </div>

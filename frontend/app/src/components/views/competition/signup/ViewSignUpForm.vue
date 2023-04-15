@@ -141,7 +141,7 @@
 </template>
 
 <script setup lang="ts">
-import {defineProps, ref} from "vue"
+import {ref} from "vue"
 import axios from "axios"
 import {ElMessage} from "element-plus"
 import ViewConditions from "@/components/views/competition/signup/ViewConditions.vue"
@@ -149,7 +149,7 @@ import {useRoute} from "vue-router"
 import {Competition, Mode, Sex, SignUp} from "@/interfaces/competition"
 import {Player, searchedPlayer} from "@/interfaces/player"
 import {useI18n} from "vue-i18n"
-import {Team} from "@/interfaces/team"
+import {Team} from "@/interfaces/registration/team"
 
 const {t} = useI18n({inheritLocale: true})
 

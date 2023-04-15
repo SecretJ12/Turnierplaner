@@ -1,16 +1,16 @@
 <template>
-  <ViewGroupSystem v-if="props.type === 'GROUPS'"/>
-  <ViewKnockoutSystem v-else-if="props.type === 'KNOCKOUT'"/>
-  <p v-else>Invalid type</p>
+    <ViewGroupSystem v-if="props.tourType === TourType.GROUPS"/>
+    <ViewKnockoutSystem v-else-if="props.tourType === TourType.KNOCKOUT"/>
+    <p v-else>Invalid type</p>
 </template>
 
 <script setup lang="ts">
-import ViewGroupSystem from "@/components/views/competition/ViewGroupSystem.vue"
+import ViewGroupSystem from "@/components/views/competition/groupSystem/ViewGroupSystem.vue"
 import ViewKnockoutSystem from "@/components/views/competition/ViewKnockoutSystem.vue"
+import {TourType} from "@/interfaces/competition";
 
-const props = defineProps({
-  type: String
-})
+const props = defineProps<{
+    tourType: TourType}>()
 </script>
 
 <style scoped>

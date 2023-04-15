@@ -37,10 +37,10 @@ import {ElMessage} from "element-plus"
 import {ref, watch} from "vue"
 import {useRoute} from "vue-router"
 import {Competition, Mode, SignUp} from "@/interfaces/competition"
-import {Team} from "@/interfaces/team"
+import {Team} from "@/interfaces/registration/team"
 import {useI18n} from "vue-i18n"
 import {signedUpPlayer} from "@/interfaces/player"
-import {signedUpTeam} from "@/interfaces/team"
+import {signedUpTeam} from "@/interfaces/registration/team"
 
 const { t } = useI18n({inheritLocale: true})
 
