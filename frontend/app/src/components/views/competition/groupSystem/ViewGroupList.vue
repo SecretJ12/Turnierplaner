@@ -15,8 +15,8 @@
     <tr v-for="match in props.group.matches">
       <td>{{new Date(match.begin).toLocaleTimeString()}}</td>
       <td>{{match.court}}</td>
-      <td>{{match.teamA}}</td>
-      <td>{{match.teamB}}</td>
+      <td>{{match.teamA.playerA.firstName}}</td>
+      <td>{{match.teamB.playerA.firstName}}</td>
     </tr>
     </tbody>
   </table>
