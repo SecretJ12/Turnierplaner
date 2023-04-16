@@ -13,41 +13,22 @@ import VueAxios from 'vue-axios'
 import axios from 'axios'
 
 import {access_token} from '@/security/AuthService'
-
-axios.defaults.baseURL = settings.BACKEND
-
-axios.interceptors.request.use(function (config) {
-    if (access_token.value !== null)
-        config.headers.Authorization = `Bearer ${access_token.value}`
-    return config
-}, function (error) {
-    return Promise.reject(error)
-})
-
 import {library} from '@fortawesome/fontawesome-svg-core'
 /* import font awesome icon component */
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 /* import specific icons */
-import {faFlag, faRightToBracket, faRightFromBracket, faTableCellsLarge, faUserGroup, faPlus, faGear, faEyeSlash}
-    from '@fortawesome/free-solid-svg-icons'
-import { faUserSecret } from '@fortawesome/free-solid-svg-icons'
-/* add icons to the library */
-library.add(faFlag, faRightToBracket, faRightFromBracket, faTableCellsLarge, faUserGroup, faPlus, faGear, faEyeSlash, faUserSecret)
-
-
+import {
+    faEyeSlash,
+    faFlag,
+    faGear,
+    faPlus,
+    faRightFromBracket,
+    faRightToBracket,
+    faTableCellsLarge,
+    faUserGroup,
+    faUserSecret
+} from '@fortawesome/free-solid-svg-icons'
 import languages from './i18n'
-
-const messages = Object.assign(languages)
-const i18n = createI18n({
-    locale: 'de', // set locale
-    fallbackLocale: 'en', // set fallback locale
-    messages,
-    legacy: false
-})
-
-/* add font awesome icon component */
-const app = createApp(App)
-
 import viewTournaments from '@/components/views/tournaments/ViewTournaments.vue'
 import createTournament from '@/components/views/tournaments/ViewCreateTournament.vue'
 import editTournament from '@/components/views/tournaments/ViewEditTournament.vue'
@@ -62,6 +43,33 @@ import viewPlayerRegistration from '@/components/views/player/ViewPlayerRegistra
 
 import viewTemplates from '@/components/views/ViewTemplates.vue'
 import viewVerification from "@/components/views/player/ViewVerification.vue"
+// Bootstrap
+import './scss/style.scss'
+
+axios.defaults.baseURL = settings.BACKEND
+
+axios.interceptors.request.use(function (config) {
+    if (access_token.value !== null)
+        config.headers.Authorization = `Bearer ${access_token.value}`
+    return config
+}, function (error) {
+    return Promise.reject(error)
+})
+
+/* add icons to the library */
+library.add(faFlag, faRightToBracket, faRightFromBracket, faTableCellsLarge, faUserGroup, faPlus, faGear, faEyeSlash, faUserSecret)
+
+
+const messages = Object.assign(languages)
+const i18n = createI18n({
+    locale: 'de', // set locale
+    fallbackLocale: 'en', // set fallback locale
+    messages,
+    legacy: false
+})
+
+/* add font awesome icon component */
+const app = createApp(App)
 
 const routes = [
     {
@@ -115,9 +123,6 @@ const routes = [
         component: viewTemplates
     }
 ]
-
-// Bootstrap
-import './scss/style.scss'
 
 const router = VueRouter.createRouter({
     history: VueRouter.createWebHashHistory(),

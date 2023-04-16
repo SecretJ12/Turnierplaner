@@ -1,4 +1,3 @@
-
 export interface Match {
     court: string,
     begin: Date,

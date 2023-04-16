@@ -1,50 +1,50 @@
 <template>
-    <el-space direction="vertical" fill>
-        <el-descriptions border :column="windowWidth < 600 ? 1 : 2"
-            :direction="windowWidth < 400 ? 'vertical' : 'horizontal'">
-            <el-descriptions-item :span="windowWidth < 600 ? 1 : 2">
-                <template #label>
-                    {{ t("general.description") }}
-                </template>
-                {{ props.competition.description }}
-            </el-descriptions-item>
-            <el-descriptions-item>
-                <template #label>
-                    {{ t("ViewCompetition.tournament_system") }}
-                </template>
-                {{ t("CompetitionSettings." + props.competition.tourType.toLowerCase()) }}
-            </el-descriptions-item>
-            <el-descriptions-item>
-                <template #label>
-                    {{ t("ViewCompetition.game_mode") }}
-                </template>
-                {{ t("CompetitionSettings." + props.competition.mode.toLowerCase()) }}
-            </el-descriptions-item>
-        </el-descriptions>
-
-        <el-space />
-        <el-space />
-        <el-space />
-
-        <!-- Show registration is over -->
-        <p v-if="!allowRegistration" style="text-align: center">
-            {{ t("ViewCompetition.registration_over") }}
-        </p>
-        <template v-else>
-
-            <ViewSignUpForm :beginGamePhase="props.beginGamePhase" :competition="props.competition"
-                @registered="childUpdate" />
-
-            <ViewRegistrationNotice v-if="false" :compDetails="props.competition" />
+  <el-space direction="vertical" fill>
+    <el-descriptions :column="windowWidth < 600 ? 1 : 2" :direction="windowWidth < 400 ? 'vertical' : 'horizontal'"
+                     border>
+      <el-descriptions-item :span="windowWidth < 600 ? 1 : 2">
+        <template #label>
+          {{ t("general.description") }}
         </template>
+        {{ props.competition.description }}
+      </el-descriptions-item>
+      <el-descriptions-item>
+        <template #label>
+          {{ t("ViewCompetition.tournament_system") }}
+        </template>
+        {{ t("CompetitionSettings." + props.competition.tourType.toLowerCase()) }}
+      </el-descriptions-item>
+      <el-descriptions-item>
+        <template #label>
+          {{ t("ViewCompetition.game_mode") }}
+        </template>
+        {{ t("CompetitionSettings." + props.competition.mode.toLowerCase()) }}
+      </el-descriptions-item>
+    </el-descriptions>
 
-        <ViewTable :competition="props.competition" :update="updateChildren" />
+    <el-space/>
+    <el-space/>
+    <el-space/>
 
-        <!-- TODO add options for admin -->
-    </el-space>
+    <!-- Show registration is over -->
+    <p v-if="!allowRegistration" style="text-align: center">
+      {{ t("ViewCompetition.registration_over") }}
+    </p>
+    <template v-else>
+
+      <ViewSignUpForm :beginGamePhase="props.beginGamePhase" :competition="props.competition"
+                      @registered="childUpdate"/>
+
+      <ViewRegistrationNotice v-if="false" :compDetails="props.competition"/>
+    </template>
+
+    <ViewTable :competition="props.competition" :update="updateChildren"/>
+
+    <!-- TODO add options for admin -->
+  </el-space>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import {inject, ref, watch} from "vue"
 import {auth} from "@/security/AuthService"
 import axios from "axios"
@@ -54,18 +54,19 @@ import ViewRegistrationNotice from "@/components/views/competition/signup/ViewRe
 import ViewSignUpForm from "@/components/views/competition/signup/ViewSignUpForm.vue"
 import {Competition} from "@/interfaces/competition";
 import {useI18n} from "vue-i18n"
-const { t } = useI18n({inheritLocale: true})
+
+const {t} = useI18n({inheritLocale: true})
 
 let windowWidth = ref(window.innerWidth)
 window.addEventListener('resize', () => {
-    windowWidth.value = window.innerWidth
+  windowWidth.value = window.innerWidth
 })
 
 const props = defineProps<{
-    allowRegistration: boolean,
-    beginGamePhase: Date,
-    competition: Competition
-    }>()
+  allowRegistration: boolean,
+  beginGamePhase: Date,
+  competition: Competition
+}>()
 
 const route = useRoute()
 const isLoggedIn = inject('loggedIn', ref(false))
@@ -93,8 +94,9 @@ function update() {
 
   updateChildren.value++
 }
+
 function childUpdate() {
-    updateChildren.value++
+  updateChildren.value++
 }
 </script>
 

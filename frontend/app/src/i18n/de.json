@@ -77,8 +77,8 @@
   },
   "ViewGroupSystem": {
     "group": "Gruppe",
-    "progress":"Spiele am laufen...",
-    "finished":"Spiele abgeschlossen!"
+    "progress": "Spiele am laufen...",
+    "finished": "Spiele abgeschlossen!"
   },
   "CompetitionSettings": {
     "tournament_settings": "Turniereinstellungen",

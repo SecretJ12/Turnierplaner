@@ -1,40 +1,40 @@
 <template>
-    <div id="container">
-        <div style="margin-bottom: 20px;">
-            <font-awesome-icon
-                    v-if=canEdit
-                    id="settings"
-                    :icon="['fas', 'gear']" class="fa-1x" @click="settings">
-            </font-awesome-icon>
-            <div id="tourName">
-                {{ route.params.tourId }}
-            </div>
-            <h2>
-                {{ route.params.compId }}
-            </h2>
-        </div>
-            <template v-if="tournament !== null">
-                <template v-if="new Date() < tournament.registration_phase.begin">
-                    {{ t("ViewCompetition.registration_not_started") }}
-                    {{ tournament.registration_phase.begin.toLocaleString(t('lang'), dateOptions) }}
-                </template>
-                <template v-else-if="new Date() < tournament.game_phase.begin">
-                    <!-- show registration page -->
-                    <ViewSignUp v-if="competition !== null"
-                                :beginGamePhase="tournament.game_phase.begin"
-                                :allowRegistration="tournament.registration_phase < new Date()"
-                                :competition="competition"/>
-                </template>
-                <template v-else>
-                    <!-- TODO show after plan has been published -->
-                    <!-- show game page -->
-                    <ViewGame v-if="competition !== null" :tourType="competition.tourType"/>
-            </template>
-        </template>
+  <div id="container">
+    <div style="margin-bottom: 20px;">
+      <font-awesome-icon
+          v-if=canEdit
+          id="settings"
+          :icon="['fas', 'gear']" class="fa-1x" @click="settings">
+      </font-awesome-icon>
+      <div id="tourName">
+        {{ route.params.tourId }}
+      </div>
+      <h2>
+        {{ route.params.compId }}
+      </h2>
     </div>
+    <template v-if="tournament !== null">
+      <template v-if="new Date() < tournament.registration_phase.begin">
+        {{ t("ViewCompetition.registration_not_started") }}
+        {{ tournament.registration_phase.begin.toLocaleString(t('lang'), dateOptions) }}
+      </template>
+      <template v-else-if="new Date() < tournament.game_phase.begin">
+        <!-- show registration page -->
+        <ViewSignUp v-if="competition !== null"
+                    :allowRegistration="tournament.registration_phase < new Date()"
+                    :beginGamePhase="tournament.game_phase.begin"
+                    :competition="competition"/>
+      </template>
+      <template v-else>
+        <!-- TODO show after plan has been published -->
+        <!-- show game page -->
+        <ViewGame v-if="competition !== null" :tourType="competition.tourType"/>
+      </template>
+    </template>
+  </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import {useRoute} from 'vue-router'
 import {inject, ref, watch} from "vue"
 import {auth} from "@/security/AuthService"
@@ -58,15 +58,15 @@ const competition = ref<Competition | null>(null)
 const tournament = ref<Tournament | null>(null)
 
 watch(isLoggedIn, async () => {
-    update()
+  update()
 })
 update()
 
 function update() {
-    canEdit.value = false
-    auth.getUser().then((user) => {
-        if (user !== null) {
-            axios.get<boolean>(`/tournament/${route.params.tourId}/competition/canEdit`)
+  canEdit.value = false
+  auth.getUser().then((user) => {
+    if (user !== null) {
+      axios.get<boolean>(`/tournament/${route.params.tourId}/competition/canEdit`)
           .then((response) => {
             canEdit.value = response.data
           })
@@ -75,21 +75,21 @@ function update() {
           })
     }
   })
-    axios.get<CompetitionServer>(`/tournament/${route.params.tourId}/competition/${route.params.compId}/details`)
+  axios.get<CompetitionServer>(`/tournament/${route.params.tourId}/competition/${route.params.compId}/details`)
       .then((response) => {
-          competition.value = competitionServerToClient(response.data)
+        competition.value = competitionServerToClient(response.data)
       })
       .catch((error) => {
-          console.log(error)
-          ElMessage.error(t("ViewEditTournament.loadingDetailsFailed"))
+        console.log(error)
+        ElMessage.error(t("ViewEditTournament.loadingDetailsFailed"))
       })
-    axios.get<TournamentServer>(`/tournament/${route.params.tourId}/details`)
+  axios.get<TournamentServer>(`/tournament/${route.params.tourId}/details`)
       .then((response) => {
-          tournament.value = tournamentServerToClient(response.data)
+        tournament.value = tournamentServerToClient(response.data)
       })
       .catch((error) => {
-          console.log(error)
-          ElMessage.error(t("ViewEditCompetition.loadingDetailsFailed"))
+        console.log(error)
+        ElMessage.error(t("ViewEditCompetition.loadingDetailsFailed"))
       })
 }
 
@@ -98,12 +98,12 @@ function settings() {
 }
 
 const dateOptions: Intl.DateTimeFormatOptions = {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "numeric",
-    minute: "numeric",
+  weekday: "long",
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+  hour: "numeric",
+  minute: "numeric",
 }
 </script>
 

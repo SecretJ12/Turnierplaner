@@ -1,21 +1,18 @@
 <template>
-  <FormTournament :disabled="disabled" :data="data" :submit-text="t('general.update')" @submit="submit" />
+  <FormTournament :data="data" :disabled="disabled" :submit-text="t('general.update')" @submit="submit"/>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import {ref} from 'vue'
 import axios from "axios"
 import {router} from "@/main"
 import {ElMessage} from "element-plus"
 import {useRoute} from "vue-router"
-import {
-    TournamentForm,
-    TournamentServer,
-    tournamentFormServerToClient
-} from "@/interfaces/tournament"
+import {TournamentForm, tournamentFormServerToClient, TournamentServer} from "@/interfaces/tournament"
 import FormTournament from "@/components/views/tournaments/FormTournament.vue"
 import {useI18n} from "vue-i18n"
-const { t } = useI18n({inheritLocale: true})
+
+const {t} = useI18n({inheritLocale: true})
 
 const route = useRoute()
 
@@ -32,13 +29,13 @@ const disabled = ref<boolean>(true)
 
 axios.get<TournamentServer>(`/tournament/${route.params.tourId}/details`)
     .then((response) => {
-        data.value = tournamentFormServerToClient(response.data)
-        disabled.value = false
+      data.value = tournamentFormServerToClient(response.data)
+      disabled.value = false
     })
     .catch((error) => {
-        ElMessage.error(t("ViewEditTournament.loadingDetailsFailed"))
-        console.log(error)
-        router.back();
+      ElMessage.error(t("ViewEditTournament.loadingDetailsFailed"))
+      console.log(error)
+      router.back();
     })
 
 function submit(server_data: TournamentServer) {
@@ -46,10 +43,10 @@ function submit(server_data: TournamentServer) {
 
   axios.post("/tournament/update", server_data)
       .then(_ => {
-          ElMessage.success(t("ViewEditTournament.tournamentUpdated"))
+        ElMessage.success(t("ViewEditTournament.tournamentUpdated"))
       })
       .catch(_ => {
-          ElMessage.error(t("ViewEditTournament.tournamentUpdateFailed"))
+        ElMessage.error(t("ViewEditTournament.tournamentUpdateFailed"))
       })
 }
 </script>

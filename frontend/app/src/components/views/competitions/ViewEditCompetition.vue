@@ -1,9 +1,9 @@
 <template>
-    <FormCompetition v-if="competition !== null" :disabled="disabled" :competition="competition"
-                     :submit-text="t('general.update')" @submit="submit"/>
+  <FormCompetition v-if="competition !== null" :competition="competition" :disabled="disabled"
+                   :submit-text="t('general.update')" @submit="submit"/>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import {router} from "@/main"
 import {ref} from "vue"
 import axios from "axios"
@@ -13,7 +13,7 @@ import FormCompetition from "@/components/views/competitions/FormCompetition.vue
 import {useI18n} from "vue-i18n"
 import {Competition, CompetitionServer, competitionServerToClient} from "@/interfaces/competition"
 
-const { t } = useI18n({inheritLocale: true})
+const {t} = useI18n({inheritLocale: true})
 
 const route = useRoute()
 
@@ -23,8 +23,8 @@ const disabled = ref(true)
 
 axios.get<CompetitionServer>(`/tournament/${route.params.tourId}/competition/${route.params.compId}/details`)
     .then((response) => {
-        competition.value = competitionServerToClient(response.data)
-        disabled.value = false
+      competition.value = competitionServerToClient(response.data)
+      disabled.value = false
     })
     .catch((error) => {
       ElMessage.error(t("ViewEditCompetition.loadingDetailsFailed"))
@@ -35,7 +35,7 @@ axios.get<CompetitionServer>(`/tournament/${route.params.tourId}/competition/${r
 function submit(server_data: CompetitionServer) {
   axios.post(`/tournament/${route.params.tourId}/competition/update`, server_data)
       .then(_ => {
-          ElMessage.success(t("ViewEditCompetition.saved"))
+        ElMessage.success(t("ViewEditCompetition.saved"))
       })
       .catch(_ => {
         ElMessage.error(t("ViewEditCompetition.saving_failed"))

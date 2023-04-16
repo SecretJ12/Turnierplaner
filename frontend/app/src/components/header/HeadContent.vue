@@ -7,7 +7,7 @@
 </template>
 
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import HeaderLeft from './HeaderLeft.vue'
 import HeaderRight from "./HeaderRight.vue"
 import LoadingBar from "./LoadingBar.vue"

@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import {ref} from 'vue'
 import axios from "axios"
 
@@ -18,7 +18,7 @@ axios.interceptors.request.use(function (config) {
   return Promise.reject(error)
 })
 axios.interceptors.response.use(function (config) {
-  loading.value --
+  loading.value--
   return config
 }, function (error) {
   loading.value--

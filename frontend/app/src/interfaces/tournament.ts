@@ -6,6 +6,7 @@ export interface TournamentForm {
     registration_phase: Date[] | null,
     game_phase: Date[] | null
 }
+
 export interface TournamentServer {
     id?: null | string,
     name: string,
@@ -16,6 +17,7 @@ export interface TournamentServer {
     beginGamePhase: Date,
     endGamePhase: Date,
 }
+
 export interface Tournament {
     id?: null | string,
     name: string,

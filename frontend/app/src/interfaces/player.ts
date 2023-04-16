@@ -1,4 +1,3 @@
-
 export interface Player {
     id: string,
     firstName: string,
@@ -8,6 +7,7 @@ export interface Player {
 export interface searchedPlayer extends Player {
     value: string
 }
+
 export interface signedUpPlayer {
     firstName: string,
     lastName: string,

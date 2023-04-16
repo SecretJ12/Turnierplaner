@@ -146,60 +146,62 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import {reactive, ref} from 'vue'
 import axios from "axios"
 import {ElMessage} from "element-plus"
 import {useI18n} from "vue-i18n"
-const { t } = useI18n({inheritLocale: true})
+
+const {t} = useI18n({inheritLocale: true})
 
 const formRef = ref<HTMLFormElement>()
 const registered = ref(false)
 const data = reactive<{
-    firstName: string,
-    lastName: string,
-    sex: string,
-    birthday: null | Date,
-    email: string,
-    phone: string
-  }>({
-    firstName: '',
-    lastName: '',
-    sex: '',
-    birthday: null,
-    email: '',
-    phone: ''
+  firstName: string,
+  lastName: string,
+  sex: string,
+  birthday: null | Date,
+  email: string,
+  phone: string
+}>({
+  firstName: '',
+  lastName: '',
+  sex: '',
+  birthday: null,
+  email: '',
+  phone: ''
 })
+
 function submitForm(formEl: HTMLFormElement | undefined) {
-    if (!formEl) return
-    formEl.validate((valid: boolean) => {
-        if (valid) {
-            if (data.birthday === null)
-                return
-            axios.post(`/player/registration`, {
-                firstName: data.firstName,
-                lastName: data.lastName,
-                sex: data.sex,
-                birthday: dateToJson(data.birthday),
-                email: data.email,
-                phone: data.phone,
-              }).then((_) => {
-                    ElMessage.success(t("ViewPlayerRegistration.registration_successful"))
-                    registered.value = true
-                })
-                .catch((error) => {
-                    console.log(error)
-                    ElMessage.error(t("ViewPlayerRegistration.registration_failed"))
-                })
-        } else {
-            console.log('error submit!')
-            return false
-        }
-    })
+  if (!formEl) return
+  formEl.validate((valid: boolean) => {
+    if (valid) {
+      if (data.birthday === null)
+        return
+      axios.post(`/player/registration`, {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        sex: data.sex,
+        birthday: dateToJson(data.birthday),
+        email: data.email,
+        phone: data.phone,
+      }).then((_) => {
+        ElMessage.success(t("ViewPlayerRegistration.registration_successful"))
+        registered.value = true
+      })
+          .catch((error) => {
+            console.log(error)
+            ElMessage.error(t("ViewPlayerRegistration.registration_failed"))
+          })
+    } else {
+      console.log('error submit!')
+      return false
+    }
+  })
 }
 
 function dateToJson(d: Date): String {
-    return `${d.getFullYear()}-${d.getMonth() < 9 ? '0' : ''}${d.getMonth()+1}-${d.getDate() < 10 ? '0':''}${d.getDate()}`
+  return `${d.getFullYear()}-${d.getMonth() < 9 ? '0' : ''}${d.getMonth() + 1}-${d.getDate() < 10 ? '0' : ''}${d.getDate()}`
 }
 </script>
 

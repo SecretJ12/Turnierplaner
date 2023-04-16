@@ -5,9 +5,11 @@ export enum Sex {
 export enum TourType {
     KNOCKOUT = "KNOCKOUT", GROUPS = "GROUPS"
 }
+
 export enum Mode {
     SINGLE = "SINGLE", DOUBLE = "DOUBLE"
 }
+
 export enum SignUp {
     INDIVIDUAL = "INDIVIDUAL", TOGETHER = "TOGETHER"
 }
@@ -120,5 +122,5 @@ export function competitionServerToClient(competition: CompetitionServer): Compe
 }
 
 function dateToJson(d: Date): string {
-    return `${d.getFullYear()}-${d.getMonth() < 9 ? '0' : ''}${d.getMonth()+1}-${d.getDate() < 10 ? '0':''}${d.getDate()}`
+    return `${d.getFullYear()}-${d.getMonth() < 9 ? '0' : ''}${d.getMonth() + 1}-${d.getDate() < 10 ? '0' : ''}${d.getDate()}`
 }

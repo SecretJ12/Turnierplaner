@@ -17,13 +17,14 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import axios from "axios"
 import {ElLoading} from 'element-plus'
 import {ref} from 'vue'
 import {useRoute} from "vue-router"
 import {useI18n} from "vue-i18n"
-const { t } = useI18n({inheritLocale: true})
+
+const {t} = useI18n({inheritLocale: true})
 
 const route = useRoute()
 

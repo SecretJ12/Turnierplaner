@@ -2,8 +2,8 @@
   <div id="form">
     <el-form
         ref="formRef"
-        :model="props.data"
         :disabled="props.disabled"
+        :model="props.data"
         label-position="top"
         label-width="120px"
         scroll-to-error="scroll-to-error"
@@ -111,19 +111,20 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import {ref} from "vue"
-import {TournamentForm, TournamentServer, tournamentFormClientToServer} from "@/interfaces/tournament"
+import {TournamentForm, tournamentFormClientToServer, TournamentServer} from "@/interfaces/tournament"
 import {useI18n} from "vue-i18n"
-const { t } = useI18n({inheritLocale: true})
+
+const {t} = useI18n({inheritLocale: true})
 
 const formRef = ref<HTMLFormElement>()
 const props = withDefaults(defineProps<{
-    submitText: string,
-    disabled: boolean,
-    data: TournamentForm
-    }>(), {
-    disabled: false
+  submitText: string,
+  disabled: boolean,
+  data: TournamentForm
+}>(), {
+  disabled: false
 })
 
 const emit = defineEmits(['submit'])
@@ -143,12 +144,12 @@ function submit(formRef: HTMLFormElement | undefined) {
 
 const checkDates = (rule: any, value: Date, callback: (arg0?: Error) => void) => {
   if (!value) {
-      callback(new Error(t("TournamentSettings.missing_date")))
-      return
+    callback(new Error(t("TournamentSettings.missing_date")))
+    return
   }
   if (props.data.registration_phase === null || props.data.game_phase === null) {
-      callback()
-      return
+    callback()
+    return
   }
   if (new Date(props.data.registration_phase[1]) > new Date(props.data.game_phase[0]))
     callback(new Error(t("TournamentSettings.wrong_dates")))

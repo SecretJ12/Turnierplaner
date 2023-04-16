@@ -77,8 +77,8 @@
   },
   "ViewGroupSystem": {
     "group": "group",
-    "progress":"games in progress...",
-    "finished":"games finished!"
+    "progress": "games in progress...",
+    "finished": "games finished!"
   },
   "CompetitionSettings": {
     "tournament_settings": "Tournament settings",
