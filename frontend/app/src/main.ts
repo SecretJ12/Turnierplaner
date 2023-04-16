@@ -64,6 +64,9 @@ const messages = Object.assign(languages)
 const i18n = createI18n({
     locale: 'de', // set locale
     fallbackLocale: 'en', // set fallback locale
+    warnHtmlMessage: false,
+    missingWarn: false,
+    fallbackWarn: false,
     messages,
     legacy: false
 })
