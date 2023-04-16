@@ -38,14 +38,18 @@ export function matchServerToClient(match: MatchServer, teams: Map<string, Team>
     let teamA = null
     if (match.teamA !== null) {
         teamA = teams.get(match.teamA)
-        if (teamA === undefined)
+        if (teamA === undefined) {
+            console.error("Team A is undefined")
             throw new Error("Team A is undefined")
+        }
     }
     let teamB = null
     if (match.teamB !== null) {
         teamB = teams.get(match.teamB)
-        if (teamB === undefined)
+        if (teamB === undefined) {
+            console.error("Team B is undefined")
             throw new Error("Team B is undefined")
+        }
     }
 
     return {

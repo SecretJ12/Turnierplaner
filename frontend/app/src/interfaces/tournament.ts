@@ -34,10 +34,14 @@ export interface Tournament {
 }
 
 export function tournamentFormClientToServer(tournament: TournamentForm): TournamentServer {
-    if (tournament.registration_phase === null)
-        throw new Error();
-    if (tournament.game_phase === null)
-        throw new Error();
+    if (tournament.registration_phase === null) {
+        console.error("Registration phase is null")
+        throw new Error("Registration phase is null");
+    }
+    if (tournament.game_phase === null) {
+        console.error("Game phase is null")
+        throw new Error("Game phase is null");
+    }
     return {
         id: tournament.id,
         name: tournament.name,

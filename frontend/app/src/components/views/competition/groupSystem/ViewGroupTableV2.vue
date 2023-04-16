@@ -63,8 +63,10 @@ function findMatch(teamA: Team, teamB: Team): Match {
     if (match.teamA.id === teamB.id && match.teamB.id === teamA.id)
       return true
   })
-  if (match === undefined)
+  if (match === undefined) {
+    console.error("Match does not exist")
     throw new Error("Match does not exist")
+  }
   return match
 }
 

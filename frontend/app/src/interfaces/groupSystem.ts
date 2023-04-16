@@ -67,8 +67,10 @@ function groupServerToClient(group: GroupServer, teams: Map<string, Team>): Grou
         index: group.index,
         teams: group.teams.map(team => {
             const t = teams.get(team)
-            if (t === undefined)
+            if (t === undefined) {
+                console.error("Team is undefined")
                 throw new Error("Team is undefined")
+            }
             return t
         }),
         matches: group.matches.map(match => matchServerToClient(match, teams))
@@ -78,8 +80,10 @@ function groupServerToClient(group: GroupServer, teams: Map<string, Team>): Grou
 function groupMatchServerToClient(matchServer: GroupMatchServer, teams: Map<string, Team>): GroupMatch {
     const match: GroupMatch = matchServerToClient(matchServer, teams)
     if (matchServer.pos !== undefined && matchServer.groupA !== undefined && matchServer.groupB !== undefined) {
-        if (matchServer.winningPlayer !== undefined || matchServer.previousA !== undefined || matchServer.previousB !== undefined)
+        if (matchServer.winningPlayer !== undefined || matchServer.previousA !== undefined || matchServer.previousB !== undefined) {
+            console.error("Invalid state")
             throw new Error("Invalid state")
+        }
         match.prevGroups = {
             pos: matchServer.pos,
             a: matchServer.groupA,
@@ -87,8 +91,10 @@ function groupMatchServerToClient(matchServer: GroupMatchServer, teams: Map<stri
         }
     }
     if (matchServer.winningPlayer !== undefined && matchServer.previousA !== undefined && matchServer.previousB !== undefined) {
-        if (matchServer.pos !== undefined || matchServer.groupA !== undefined || matchServer.groupB !== undefined)
+        if (matchServer.pos !== undefined || matchServer.groupA !== undefined || matchServer.groupB !== undefined) {
+            console.error("Invalid state")
             throw new Error("Invalid state")
+        }
         match.prevMatch = {
             winner: matchServer.winningPlayer,
             a: groupMatchServerToClient(matchServer.previousA, teams),

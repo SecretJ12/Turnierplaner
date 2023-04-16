@@ -62,14 +62,22 @@ export interface settingsPlayerB extends settingsPlayer {
 }
 
 export function competitionClientToServer(competition: Competition): CompetitionServer {
-    if (competition.playerA.minAge === null)
-        throw new Error();
-    if (competition.playerA.maxAge === null)
-        throw new Error();
-    if (competition.playerB.minAge === null)
-        throw new Error();
-    if (competition.playerB.maxAge === null)
-        throw new Error();
+    if (competition.playerA.minAge === null) {
+        console.error("Player A minAge is null")
+        throw new Error("Player A minAge is null")
+    }
+    if (competition.playerA.maxAge === null) {
+        console.error("Player A maxAge is null")
+        throw new Error("Player A maxAge is null")
+    }
+    if (competition.playerB.minAge === null) {
+        console.error("Player B minAge is null")
+        throw new Error("Player B minAge is null")
+    }
+    if (competition.playerB.maxAge === null) {
+        console.error("Player B maxAge is null")
+        throw new Error("Player B maxAge is null")
+    }
     return {
         id: competition.id,
         name: competition.name,
