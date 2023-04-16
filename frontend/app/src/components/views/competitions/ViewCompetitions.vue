@@ -201,6 +201,7 @@ h2 {
     width: auto;
     left: 0;
     right: 0;
+    margin: 10px 0 10px 0;
   }
 }
 
