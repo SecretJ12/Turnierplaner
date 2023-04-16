@@ -37,7 +37,7 @@ function settings() {
 
 <style scoped>
 #item {
-  border-radius: 10px;
+  border-radius: 15px;
   padding: 0;
   width: 420px;
   height: 300px;
@@ -49,37 +49,23 @@ function settings() {
   padding: 20px 10px 0 10px;
   background-color: #D0D0D0;
   box-shadow: 0 0 5px #909090;
-  width: 400px;
-  height: 400px;
-}
-
-#type {
-  position: absolute;
-  left: 10px;
-  bottom: 10px;
-  color: #303030;
-}
-
-h2 {
-  text-align: center;
-}
-
-p {
-  text-align: center;
-}
-
-#item:hover {
-  box-shadow: 0 0 10px black;
-  cursor: pointer;
-}
-
-#item:active {
-  background-color: #C0C0C0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 #settings {
   position: absolute;
   right: 10px;
+  bottom: 10px;
+  color: #303030;
+}
+
+#type {
+  position: absolute;
+  left: 10px;
   bottom: 10px;
   color: #303030;
 }
@@ -90,5 +76,37 @@ p {
 
 #settings:active {
   color: #404040;
+}
+
+h2 {
+  margin-top: 0;
+  text-align: center;
+  overflow-wrap: break-word;
+}
+
+p {
+  text-align: center;
+  overflow-wrap: break-word;
+  max-width: calc(100% - 100px);
+}
+
+#content:hover {
+  cursor: pointer;
+}
+
+#item:hover {
+  box-shadow: 0 0 10px black;
+}
+
+#content:active {
+  background-color: #C0C0C0;
+}
+
+@media only screen and (max-width: 900px) {
+  #item {
+    width: 100%;
+    min-height: 100px;
+    height: auto;
+  }
 }
 </style>

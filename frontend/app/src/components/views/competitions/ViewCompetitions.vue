@@ -20,7 +20,7 @@
       </div>
       <el-steps v-if="tournament !== null" id="progress" :active="progress"
                 :process-status="statusActive"
-                direction="vertical"
+                :direction="windowWidth > 1300 ? 'vertical' : 'horizontal'"
                 finish-status="success">
         <el-step :description="tournament.registration_phase.begin.toLocaleString(t('lang'), options)
             +'\n - '+tournament.registration_phase.end.toLocaleString(t('lang'), options)"
@@ -65,6 +65,11 @@ watch(isLoggedIn, async () => {
   update()
 })
 update()
+
+let windowWidth = ref(window.innerWidth)
+window.addEventListener('resize', () => {
+  windowWidth.value = window.innerWidth
+})
 
 function update() {
   canEdit.value = false
@@ -146,7 +151,6 @@ const options: Intl.DateTimeFormatOptions = {
 }
 </script>
 
-
 <style scoped>
 #settings {
   color: #303030;
@@ -190,5 +194,23 @@ const options: Intl.DateTimeFormatOptions = {
 h2 {
   text-align: center;
   font-size: 30px;
+}
+
+@media only screen and (max-width: 900px) {
+  #competitions {
+    width: auto;
+    left: 0;
+    right: 0;
+  }
+}
+
+@media only screen and (max-width: 1300px) {
+  #content {
+    flex-direction: column-reverse;
+  }
+
+  #progress {
+    margin: 10px;
+  }
 }
 </style>
