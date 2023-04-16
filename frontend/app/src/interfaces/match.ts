@@ -6,6 +6,7 @@ export interface Match {
     winner: boolean | null,
     teamA: Team | null,
     teamB: Team | null
+    // TOOD add result
 }
 
 export interface MatchServer {
@@ -16,6 +17,7 @@ export interface MatchServer {
     winner: boolean | null,
     teamA: string | null,
     teamB: string | null
+    // TOOD add result
 }
 
 export interface Team {

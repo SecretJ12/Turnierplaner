@@ -1,5 +1,5 @@
 <template>
-  <table id="table" style="width: calc(100% - 1px);">
+  <table style="width: calc(100% - 1px);">
     <tr>
       <th id="first">
         {{ t("ViewGroupSystem.group") }} {{ props.group.index }}
@@ -30,7 +30,7 @@
                       + ((hoverTeam === teamA.id || hoverTeam === teamB.id) ? 'highlight ' : '')"
             >
             <div>
-              {{ indexA }} - {{ indexB }}
+              <ViewMatch :match="findMatch(teamA, teamB)" />
             </div>
           </td>
         </template>
@@ -44,6 +44,8 @@ import {useRoute} from 'vue-router'
 import {Group} from "@/interfaces/groupSystem"
 import {ref} from "vue"
 import {useI18n} from "vue-i18n"
+import ViewMatch from "@/components/views/competition/groupSystem/ViewMatch.vue";
+import {Match, Team} from "@/interfaces/match";
 
 const {t} = useI18n({inheritLocale: true})
 
@@ -51,6 +53,20 @@ const route = useRoute()
 const props = defineProps<{
   group: Group
 }>()
+
+function findMatch(teamA: Team, teamB: Team): Match {
+  const match: Match | undefined = props.group.matches.find(match => {
+    if (match.teamA === null || match.teamB === null)
+      return false
+    if (match.teamA.id === teamA.id && match.teamB.id === teamB.id)
+      return true
+    if (match.teamA.id === teamB.id && match.teamB.id === teamA.id)
+      return true
+  })
+  if (match === undefined)
+    throw new Error("Match does not exist")
+  return match
+}
 
 const hoverIdA = ref<null | number>(null)
 const hoverIdB = ref<null | number>(null)
@@ -76,17 +92,23 @@ function hoverLeave() {
 table {
   table-layout: fixed;
   text-align: center;
-  border-collapse: collapse;
+  border-spacing: 0;
+  border-collapse: separate;
+  border-top-left-radius: 15px;
+  border-top: solid black 1px;
+  border-left: solid black 1px;
 }
 
 #first {
   width: 150px;
+  border-top-left-radius: 15px;
 }
 
 th, td {
   width: 1fr;
   height: 80px;
-  border: solid black 1px;
+  border-bottom: solid black 1px;
+  border-right: solid black 1px;
 }
 
 th {
