@@ -1,9 +1,9 @@
 package de.secretj12.turnierplaner.resources.jsonEntities.user.knockout;
 
 import de.secretj12.turnierplaner.db.entities.Match;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserTeam;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class jUserKnockoutMatch {
 
@@ -14,8 +14,8 @@ public class jUserKnockoutMatch {
     private Boolean finished;
     private Boolean winner;
 
-    private jUserTeam teamA;
-    private jUserTeam teamB;
+    private UUID teamA;
+    private UUID teamB;
 
     private boolean winningPlayer;
     private jUserKnockoutMatch previousA;
@@ -34,9 +34,9 @@ public class jUserKnockoutMatch {
         this.winner = match.getWinner();
 
         if (match.getTeamA() != null)
-            this.teamA = new jUserTeam(match.getTeamA());
+            this.teamA = match.getTeamA().getId();
         if (match.getTeamB() != null)
-            this.teamB = new jUserTeam(match.getTeamB());
+            this.teamB = match.getTeamB().getId();
 
         if (dependant && match.getDependentOn() != null) {
             this.winningPlayer = match.getDependentOn().isWinner();
@@ -85,19 +85,19 @@ public class jUserKnockoutMatch {
         this.winner = winner;
     }
 
-    public jUserTeam getTeamA() {
+    public UUID getTeamA() {
         return teamA;
     }
 
-    public void setTeamA(jUserTeam teamA) {
+    public void setTeamA(UUID teamA) {
         this.teamA = teamA;
     }
 
-    public jUserTeam getTeamB() {
+    public UUID getTeamB() {
         return teamB;
     }
 
-    public void setTeamB(jUserTeam teamB) {
+    public void setTeamB(UUID teamB) {
         this.teamB = teamB;
     }
 
