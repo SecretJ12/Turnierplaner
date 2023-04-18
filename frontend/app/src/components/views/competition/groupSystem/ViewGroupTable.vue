@@ -1,18 +1,18 @@
 <template>
-  <div class="container text-center hover-effect">
+  <div class="container">
     <table class="table">
-      <tr class="table-light">
-        <th scope="col">
+      <tbody >
+      <tr class="table-active">
+        <th class="table-secondary">
           {{ t("ViewGroupSystem.group") }} {{ props.group.index }}
         </th>
-        <th v-for="team in props.group.teams" id="table-header" scope="col">
+        <td class="table-light text-center" v-for="team in props.group.teams" >
           {{ team.playerA.firstName }}, {{ team.playerA.lastName }}
-        </th>
+        </td>
       </tr>
-      <tbody class="table-group-divider">
-      <tr v-for="(team,index_t1) in props.group.teams">
-        <th>{{ team.playerA.firstName }}, {{ team.playerA.lastName }}</th>
-        <td v-for="(_,index_t2) in props.group.teams">
+      <tr  v-for="(team,index_t1) in props.group.teams">
+        <td class="table-active">{{ team.playerA.firstName }}, {{ team.playerA.lastName }} <br/> {{route.params.compId}}</td>
+        <td  class="text-center" v-for="(_,index_t2) in props.group.teams">
           <div v-if="index_t1===index_t2">
             /
           </div>
@@ -49,5 +49,6 @@ const progress = [false, true]
 </script>
 
 <style scoped>
+
 
 </style>
