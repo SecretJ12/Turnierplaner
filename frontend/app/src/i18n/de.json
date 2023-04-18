@@ -78,7 +78,8 @@
   "ViewGroupSystem": {
     "group": "Gruppe",
     "progress": "Spiele am laufen...",
-    "finished": "Spiele abgeschlossen!"
+    "finished": "Spiele abgeschlossen!",
+    "start": "Spielbeginn:"
   },
   "CompetitionSettings": {
     "tournament_settings": "Turniereinstellungen",
