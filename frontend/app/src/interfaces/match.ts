@@ -1,3 +1,8 @@
+export interface Set{
+    id: number
+    scoreA: number
+    scoreB: number
+}
 export interface Match {
     court: string,
     begin: Date,
@@ -7,9 +12,11 @@ export interface Match {
     teamA: Team | null,
     teamB: Team | null
     // TOOD add result
+    setList: Array<Set>
 }
 
 export interface MatchServer {
+    jUserSetList: Array<Set>;
     court: string,
     begin: string,
     end: string,
@@ -52,6 +59,11 @@ export function matchServerToClient(match: MatchServer, teams: Map<string, Team>
         }
     }
 
+    let setList: Set[] = []
+    if (match.jUserSetList !== null){
+        setList = match.jUserSetList
+    }
+
     return {
         court: match.court,
         begin: new Date(match.begin),
@@ -59,6 +71,7 @@ export function matchServerToClient(match: MatchServer, teams: Map<string, Team>
         finished: match.finished,
         winner: match.winner,
         teamA: teamA,
-        teamB: teamB
+        teamB: teamB,
+        setList: setList
     }
 }

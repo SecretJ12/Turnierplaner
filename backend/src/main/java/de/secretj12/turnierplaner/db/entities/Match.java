@@ -8,6 +8,7 @@ import de.secretj12.turnierplaner.db.entities.knockout.NextMatch;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -62,6 +63,9 @@ public class Match {
 
     @OneToOne(mappedBy = "match")
     private MatchOfGroup group;
+
+    @OneToMany(mappedBy = "key.match",cascade = {CascadeType.ALL})
+    private List<Set> sets;
 
     public UUID getId() {
         return id;
@@ -161,5 +165,13 @@ public class Match {
 
     public void setGroup(MatchOfGroup group) {
         this.group = group;
+    }
+
+    public List<Set> getSets() {
+        return sets;
+    }
+
+    public void setSets(List<Set> sets) {
+        this.sets = sets;
     }
 }
