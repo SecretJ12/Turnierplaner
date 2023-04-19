@@ -41,6 +41,7 @@ public class Testdata {
     @Inject
     FinalOfGroupRepository finalOfGroupRepository;
 
+    private Random random = new Random();
     public Testdata() {
 
     }
@@ -271,8 +272,20 @@ public class Testdata {
                     match.setTeamB(groupTeams[y]);
                     ArrayList<Set> sets = new ArrayList<>();
                     Set set = new Set();
-                    set.setScoreA(1);
-                    set.setScoreB(2);
+                    int score = random.nextInt(5);
+                    switch (score){
+                        case 1 -> set.setScoreA(0);
+                        case 2 -> set.setScoreA(15);
+                        case 3 -> set.setScoreA(30);
+                        case 4 -> set.setScoreA(40);
+                    }
+                    score = random.nextInt(5);
+                    switch (score){
+                        case 1 -> set.setScoreB(0);
+                        case 2 -> set.setScoreB(15);
+                        case 3 -> set.setScoreB(30);
+                        case 4 -> set.setScoreB(40);
+                    }
                     Set.SetKey setKey = new Set.SetKey();
                     setKey.setId(1);
                     setKey.setMatch(match);
