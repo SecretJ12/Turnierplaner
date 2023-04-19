@@ -13,6 +13,7 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -268,6 +269,17 @@ public class Testdata {
                     Match match = createMatch(c1, comp1);
                     match.setTeamA(groupTeams[x]);
                     match.setTeamB(groupTeams[y]);
+                    ArrayList<Set> sets = new ArrayList<>();
+                    Set set = new Set();
+                    set.setScoreA(1);
+                    set.setScoreB(2);
+                    Set.SetKey setKey = new Set.SetKey();
+                    setKey.setId(1);
+                    setKey.setMatch(match);
+                    setKey.setMatch(match);
+                    set.setKey(setKey);
+                    sets.add(set);
+                    match.setSets(sets);
                     matches.persist(match);
                     MatchOfGroup matchOfGroup = new MatchOfGroup();
                     matchOfGroup.setGroup(groups[i]);

@@ -47,13 +47,13 @@ public class Set {
         @JoinColumn(name = "match_id")
         private Match match;
         @Column(name = "id")
-        private UUID id;
+        private long id;
 
-        public UUID getId() {
+        public long getId() {
             return id;
         }
 
-        public void setId(UUID id) {
+        public void setId(long id) {
             this.id = id;
         }
 
@@ -62,7 +62,7 @@ public class Set {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             SetKey setKey = (SetKey) o;
-            return match.equals(setKey.match) && id.equals(setKey.id);
+            return match.equals(setKey.match) && id == (setKey.id);
         }
 
         @Override

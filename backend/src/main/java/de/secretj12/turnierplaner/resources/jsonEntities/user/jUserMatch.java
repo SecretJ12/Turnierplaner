@@ -3,6 +3,7 @@ package de.secretj12.turnierplaner.resources.jsonEntities.user;
 import de.secretj12.turnierplaner.db.entities.Match;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 public class jUserMatch {
@@ -17,6 +18,8 @@ public class jUserMatch {
     private UUID teamA;
     private UUID teamB;
 
+    private List<jUserSet> jUserSetList;
+
     public jUserMatch(Match match) {
         this.court = match.getCourt().getName();
         this.begin = match.getBegin();
@@ -29,6 +32,8 @@ public class jUserMatch {
             this.teamA = match.getTeamA().getId();
         if (match.getTeamB() != null)
             this.teamB = match.getTeamB().getId();
+
+        this.jUserSetList = match.getSets().stream().map(jUserSet::new).toList();
     }
 
     public String getCourt() {
@@ -85,5 +90,13 @@ public class jUserMatch {
 
     public void setTeamB(UUID teamB) {
         this.teamB = teamB;
+    }
+
+    public List<jUserSet> getjUserSetList() {
+        return jUserSetList;
+    }
+
+    public void setjUserSetList(List<jUserSet> jUserSetList) {
+        this.jUserSetList = jUserSetList;
     }
 }
