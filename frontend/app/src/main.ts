@@ -29,20 +29,6 @@ import {
     faUserSecret
 } from '@fortawesome/free-solid-svg-icons'
 import languages from './i18n'
-import viewTournaments from '@/components/views/tournaments/ViewTournaments.vue'
-import createTournament from '@/components/views/tournaments/ViewCreateTournament.vue'
-import editTournament from '@/components/views/tournaments/ViewEditTournament.vue'
-
-import viewCompetitions from '@/components/views/competitions/ViewCompetitions.vue'
-import createCompetition from '@/components/views/competitions/ViewCreateCompetition.vue'
-import editCompetition from '@/components/views/competitions/ViewEditCompetition.vue'
-
-import viewCompetition from "@/components/views/competition/ViewCompetition.vue"
-
-import viewPlayerRegistration from '@/components/views/player/ViewPlayerRegistration.vue'
-
-import viewTemplates from '@/components/views/ViewTemplates.vue'
-import viewVerification from "@/components/views/player/ViewVerification.vue"
 // Bootstrap
 import './scss/style.scss'
 
@@ -78,52 +64,52 @@ const routes = [
     {
         path: "/",
         name: "Tournaments",
-        component: viewTournaments
+        component: import('@/components/views/tournaments/ViewTournaments.vue')
     },
     {
         path: "/createTournament",
         name: "Create tournament",
-        component: createTournament
+        component: () => import('@/components/views/tournaments/ViewCreateTournament.vue')
     },
     {
         path: "/tournament/:tourId/edit",
         name: "Edit tournament",
-        component: editTournament
+        component: () => import('@/components/views/tournaments/ViewEditTournament.vue')
     },
     {
         path: "/tournament/:tourId",
         name: "Competitions",
-        component: viewCompetitions
+        component: import('@/components/views/competitions/ViewCompetitions.vue')
     },
     {
         path: "/tournament/:tourId/createCompetition",
         name: "Create competition",
-        component: createCompetition
+        component: () => import('@/components/views/competitions/ViewCreateCompetition.vue')
     },
     {
         path: "/tournament/:tourId/competition/:compId/edit",
         name: "Edit competition",
-        component: editCompetition
+        component: () => import('@/components/views/competitions/ViewEditCompetition.vue')
     },
     {
         path: "/tournament/:tourId/competition/:compId",
         name: "Competition",
-        component: viewCompetition
+        component: import("@/components/views/competition/ViewCompetition.vue")
     },
     {
         path: "/player/registration",
         name: "Player Registration",
-        component: viewPlayerRegistration
+        component: () => import('@/components/views/player/ViewPlayerRegistration.vue')
     },
     {
         path: "/player/verification",
         name: "Player verified",
-        component: viewVerification
+        component: () => import('@/components/views/ViewTemplates.vue')
     },
     {
         path: "/templates",
         name: "Templates",
-        component: viewTemplates
+        component: () => import('@/components/views/ViewTemplates.vue')
     }
 ]
 
