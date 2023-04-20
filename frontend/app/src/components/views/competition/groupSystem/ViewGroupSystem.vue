@@ -21,7 +21,7 @@ import {GroupSystem, GroupSystemServer, groupSystemServerToClient} from "@/inter
 import ViewGroupList from "@/components/views/competition/groupSystem/ViewGroupList.vue"
 import ViewGroupTable from "@/components/views/competition/groupSystem/ViewGroupTable.vue"
 import {useI18n} from "vue-i18n"
-import ViewGroupTableV2 from "@/components/views/competition/groupSystem/ViewGroupTableV2.vue";
+import ViewGroupTableV2 from "@/components/views/competition/groupSystem/ViewGroupTableV2.vue"
 
 const {t} = useI18n({inheritLocale: true })
 

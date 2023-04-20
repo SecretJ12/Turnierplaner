@@ -1,6 +1,4 @@
-import {Match, MatchServer, matchServerToClient, Team} from "@/interfaces/match";
-import {GroupMatch} from "@/interfaces/groupSystem";
-
+import {Match, MatchServer, matchServerToClient, Team} from "@/interfaces/match"
 
 export interface KnockoutSystem {
     teams: Team[],
@@ -41,7 +39,7 @@ export function knockoutSystemServerToClient(knockoutSystem: KnockoutSystemServe
 }
 
 function knockoutMatchServerToClient(matchServer: KnockoutMatchServer, teams: Map<string, Team>): KnockoutMatch {
-    const match: GroupMatch = matchServerToClient(matchServer, teams)
+    const match: KnockoutMatch = matchServerToClient(matchServer, teams)
     if (matchServer.previousA !== null && matchServer.previousB !== null) {
         match.prevMatch = {
             winner: matchServer.winningPlayer,

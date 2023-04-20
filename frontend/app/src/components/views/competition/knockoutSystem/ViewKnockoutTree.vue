@@ -115,7 +115,6 @@ const dateOptions: Intl.DateTimeFormatOptions = {
 
 <style scoped>
 td, th {
-  //border: solid black 1px;
 }
 
 .topCell {
