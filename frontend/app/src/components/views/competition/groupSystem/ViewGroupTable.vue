@@ -11,7 +11,7 @@
         </td>
       </tr>
       <tr  v-for="(teamA,index_t1) in props.group.teams">
-        <td class="table-active">{{ teamA.playerA.firstName }}, {{ teamA.playerA.lastName }} <br/> {{route.params.compId}}</td>
+        <td class="table-active">{{ teamA.playerA.firstName }}, {{ teamA.playerA.lastName }} <br/> <i>TSV Wolnzach / BTV - {{route.params.compId}}</i></td>
         <td  class="text-center" v-for="(teamB,index_t2) in props.group.teams">
           <div v-if="index_t1===index_t2">
             /
