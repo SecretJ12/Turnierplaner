@@ -21,7 +21,7 @@
       <template v-else-if="new Date() < tournament.game_phase.begin">
         <!-- show registration page -->
         <ViewSignUp v-if="competition !== null"
-                    :allowRegistration="tournament.registration_phase < new Date()"
+                    :allowRegistration="tournament.registration_phase.end > new Date()"
                     :beginGamePhase="tournament.game_phase.begin"
                     :competition="competition"/>
       </template>
