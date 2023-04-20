@@ -3,7 +3,7 @@
     {{ $t('ViewGroupSystem.start') }}<br/>
     {{ props.match.begin.toLocaleString(t("lang"), dateOptions) }}
   </p>
-  <div v-else-if="order">
+  <div v-else-if="props.order">
     {{scoreA}}-{{scoreB}}
   </div>
   <div v-else>
@@ -19,7 +19,7 @@ const {t} = useI18n({inheritLocale: true})
 
 const props = defineProps<{
   match: Match
-  teamA_id: string
+  order: boolean
 }>()
 
 const dateOptions: Intl.DateTimeFormatOptions = {
@@ -39,9 +39,6 @@ for (const set of props.match.setList) {
     scoreA += 1
   }
 }
-
-const order = props.teamA_id === props.match.teamA?.id
-
 </script>
 
 <style scoped>
