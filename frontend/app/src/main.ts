@@ -2,8 +2,6 @@ import {createApp} from 'vue'
 import App from './App.vue'
 import {createI18n} from "vue-i18n"
 import * as VueRouter from 'vue-router'
-import ElementPlus from 'element-plus'
-import 'element-plus/dist/index.css'
 
 /* import the fontawesome core */
 import {settings} from "@/settings"
@@ -60,11 +58,14 @@ const i18n = createI18n({
 /* add font awesome icon component */
 const app = createApp(App)
 
+import viewTournaments from '@/components/views/tournaments/ViewTournaments.vue'
+import viewCompetitions from '@/components/views/competitions/ViewCompetitions.vue'
+
 const routes = [
     {
         path: "/",
         name: "Tournaments",
-        component: import('@/components/views/tournaments/ViewTournaments.vue')
+        component: viewTournaments
     },
     {
         path: "/createTournament",
@@ -79,7 +80,7 @@ const routes = [
     {
         path: "/tournament/:tourId",
         name: "Competitions",
-        component: import('@/components/views/competitions/ViewCompetitions.vue')
+        component: viewCompetitions
     },
     {
         path: "/tournament/:tourId/createCompetition",
@@ -123,7 +124,6 @@ app
     .component('font-awesome-icon', FontAwesomeIcon)
     .use(VueAxios, axios)
     .use(router)
-    .use(ElementPlus)
     .mount('#app')
 
 export {router}
