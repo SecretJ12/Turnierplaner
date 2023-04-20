@@ -17,7 +17,7 @@
             /
           </div>
           <div v-else>
-            <ViewMatch :match="findMatch(teamA, teamB)" />
+            <ViewMatch :match="findMatch(teamA, teamB)" :team-a_id="teamA.id"/>
           </div>
         </td>
       </tr>

@@ -14,6 +14,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -260,6 +261,8 @@ public class Testdata {
         }
 
         Group[] groups = new Group[2];
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime hourLater = LocalDateTime.now().plusHours(2);
         for (int i = 0; i < 2; i++) {
             groups[i] = new Group();
             groups[i].setIndex(i + 1);
@@ -270,6 +273,14 @@ public class Testdata {
                     Match match = createMatch(c1, comp1);
                     match.setTeamA(groupTeams[x]);
                     match.setTeamB(groupTeams[y]);
+                    int matchBegin = random.nextInt(2);
+                    if(matchBegin == 0){
+                        match.setBegin(now);
+                        match.setEnd(hourLater);
+                    }else{
+                        match.setBegin(hourLater);
+                        match.setEnd(hourLater.plusHours(1));
+                    }
                     ArrayList<Set> sets = new ArrayList<>();
                     Set set = new Set();
                     int score = random.nextInt(5);
