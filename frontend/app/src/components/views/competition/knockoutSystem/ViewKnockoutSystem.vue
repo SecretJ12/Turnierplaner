@@ -1,6 +1,6 @@
 <template>
   <p>Knockout system</p>
-  <template v-if="knockoutSystem !== undefined">
+  <template v-if="knockoutSystem !== null">
     <ViewKnockoutTree style="width: 60%;" :match="knockoutSystem.finale" />
   </template>
 </template>
@@ -16,7 +16,7 @@ import ViewKnockoutTree from "@/components/views/competition/knockoutSystem/View
 const {t} = useI18n({inheritLocale: true })
 
 const route = useRoute()
-const knockoutSystem = ref<KnockoutSystem | undefined>()
+const knockoutSystem = ref<KnockoutSystem | null>(null)
 
 await axios.get<KnockoutSystemServer>(`tournament/${route.params.tourId}/competition/${route.params.compId}/knockoutMatches`)
     .then((response) => {
