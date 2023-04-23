@@ -119,6 +119,8 @@ const router = VueRouter.createRouter({
     routes
 })
 
+import 'element-plus/dist/index.css'
+
 app
     .use(i18n)
     .component('font-awesome-icon', FontAwesomeIcon)
