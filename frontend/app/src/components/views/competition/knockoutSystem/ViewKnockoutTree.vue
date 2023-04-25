@@ -1,12 +1,12 @@
 <template>
   <table style="width: calc(100% - 1px);">
     <tr>
-      <th v-for="index in rangeArr(maxDeph)">
+      <th v-for="index in rangeArr(maxDepth)">
         test {{index}}
       </th>
     </tr>
     <tr v-for="indexR in rangeArr(height)">
-      <template v-for="indexC in rangeArr(maxDeph)">
+      <template v-for="indexC in rangeArr(maxDepth)">
         <td v-if="isName(indexR, indexC)" class="topCell"
             :class="isBorder(indexR, indexC) ? 'borderCell' : ''"
         >
@@ -37,15 +37,14 @@ const props = defineProps<{
   match: KnockoutMatch
 }>()
 
-const maxDeph = calcMaxDepth(props.match)
-const height = Math.pow(2,maxDeph)
+const maxDepth = calcMaxDepth(props.match)
+const height = Math.pow(2,maxDepth)
 
 function getTop(indexR: number, indexC: number): string {
   let curMatch = props.match
   let curHeight = height
-  for (let i = 0; i < maxDeph-indexC-1; i++) {
+  for (let i = 0; i < maxDepth-indexC-1; i++) {
     curHeight /= 2
-    console.log(curHeight + " - " + indexR)
     if (curMatch.prevMatch === undefined)
       return "Error"
     if (indexR < curHeight)
@@ -64,9 +63,8 @@ function getTop(indexR: number, indexC: number): string {
 function getBottom(indexR: number, indexC: number): string {
   let curMatch = props.match
   let curHeight = height
-  for (let i = 0; i < maxDeph-indexC-1; i++) {
+  for (let i = 0; i < maxDepth-indexC-1; i++) {
     curHeight /= 2
-    console.log(curHeight + " - " + indexR)
     if (curMatch.prevMatch === undefined)
       return "Error"
     if (indexR < curHeight)
@@ -101,7 +99,7 @@ function isDescr(indexR: number, indexC: number): boolean {
 function isBorder(indexR: number, indexC: number): boolean {
   return (indexR - (Math.pow(2, indexC)) + Math.pow(2, indexC+2))
       % (Math.pow(2, indexC+2)) < Math.pow(2, indexC+1)
-    && indexC !== maxDeph-1
+    && indexC !== maxDepth-1
 }
 
 const dateOptions: Intl.DateTimeFormatOptions = {
@@ -114,6 +112,10 @@ const dateOptions: Intl.DateTimeFormatOptions = {
 </script>
 
 <style scoped>
+table {
+  table-layout: fixed;
+}
+
 td, th {
 }
 
