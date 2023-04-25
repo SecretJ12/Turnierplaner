@@ -60,6 +60,7 @@ const app = createApp(App)
 
 import viewTournaments from '@/components/views/tournaments/ViewTournaments.vue'
 import viewCompetitions from '@/components/views/competitions/ViewCompetitions.vue'
+import viewCompetition from '@/components/views/competition/ViewCompetition.vue'
 
 const routes = [
     {
@@ -95,7 +96,7 @@ const routes = [
     {
         path: "/tournament/:tourId/competition/:compId",
         name: "Competition",
-        component: import("@/components/views/competition/ViewCompetition.vue")
+        component: viewCompetition
     },
     {
         path: "/player/registration",
