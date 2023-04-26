@@ -14,9 +14,9 @@
           </template>
         </template>
       </tr>
-      <tr v-for="indexR in rangeArr(4*teamsCount+2*(teamsCount-1))">
+      <tr v-for="indexR in rangeArr(4*teamsCount+2*(teamsCount-1)+1)">
         <template v-for="indexC in rangeArr(maxDepth)">
-          <td v-if="matchColumnCellType(indexR, indexC) === cellType.match" rowspan="4" class="matchCol">
+          <td v-if="matchColumnCellType(indexR, indexC) === cellType.match" rowspan="5" class="matchCol">
             <ViewMatchV3 :match="props.match" />
           </td>
           <td v-else-if="matchColumnCellType(indexR, indexC) === cellType.emptyCell">
@@ -67,7 +67,7 @@ function matchColumnCellType(indexR: number, indexC: number): cellType {
     const mod = (indexR % 6)
     if (mod === 0)
       return cellType.match
-    else if (mod < 4)
+    else if (mod < 5)
       return cellType.empty
     else
       return cellType.emptyCell
@@ -84,7 +84,7 @@ function matchColumnCellType(indexR: number, indexC: number): cellType {
   const mod = ((indexR - heightLeftTop) % heightLeft)
   if (mod === 0)
     return cellType.match
-  else if (mod < 4)
+  else if (mod < 5)
     return cellType.empty
   else
     return cellType.emptyCell
@@ -136,14 +136,6 @@ enum cellType {
 
 enum interCellType {
   topRight, bottomRight, right, blank
-}
-
-const dateOptions: Intl.DateTimeFormatOptions = {
-  year: "2-digit",
-  month: "numeric",
-  day: "numeric",
-  hour: "numeric",
-  minute: "numeric"
 }
 </script>
 
