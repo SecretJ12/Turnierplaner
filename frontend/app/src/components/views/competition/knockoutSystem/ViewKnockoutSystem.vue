@@ -1,12 +1,15 @@
 <template>
   <p>Knockout system</p>
   <template v-if="knockoutSystem !== null">
-    <el-tabs v-model="currentTab" style="width: 800px;">
+    <el-tabs v-model="currentTab" style="width: 1500px;">
       <el-tab-pane label="Tree" name="knockout">
         <ViewKnockoutTree :match="knockoutSystem.finale" />
       </el-tab-pane>
       <el-tab-pane label="TreeV2" name="knockoutv2">
         <ViewKnockoutTreeV2 :match="knockoutSystem.finale" />
+      </el-tab-pane>
+      <el-tab-pane label="TreeV3" name="knockoutv3">
+        <ViewKnockoutTreeV3 :match="knockoutSystem.finale" />
       </el-tab-pane>
     </el-tabs>
   </template>
@@ -20,10 +23,11 @@ import {useI18n} from "vue-i18n"
 import {KnockoutSystem, KnockoutSystemServer, knockoutSystemServerToClient} from "@/interfaces/knockoutSystem"
 import ViewKnockoutTree from "@/components/views/competition/knockoutSystem/ViewKnockoutTree.vue"
 import ViewKnockoutTreeV2 from "@/components/views/competition/knockoutSystem/ViewKnockoutTreeV2.vue"
+import ViewKnockoutTreeV3 from "@/components/views/competition/knockoutSystem/ViewKnockoutTreeV3.vue"
 
 const {t} = useI18n({inheritLocale: true })
 
-const currentTab = ref("knockoutv2")
+const currentTab = ref("knockoutv3")
 
 const route = useRoute()
 const knockoutSystem = ref<KnockoutSystem | null>(null)

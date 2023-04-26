@@ -6,27 +6,38 @@
           <th>
             test {{ index }}
           </th>
-          <th v-if="index < maxDepth-1" class="interCell">
-          </th>
+          <template v-if="index < maxDepth-1">
+            <th class="interCell">
+            </th>
+            <th class="interCell">
+            </th>
+          </template>
         </template>
       </tr>
       <tr v-for="indexR in rangeArr(4*teamsCount+2*(teamsCount-1))">
         <template v-for="indexC in rangeArr(maxDepth)">
           <td v-if="matchColumnCellType(indexR, indexC) === cellType.match" rowspan="4" class="matchCol">
-            <ViewMatch :match="props.match" :leftBorder="indexC === 0" />
+            <ViewMatchV3 :match="props.match" />
           </td>
           <td v-else-if="matchColumnCellType(indexR, indexC) === cellType.emptyCell">
           </td>
 
           <template v-if="indexC < maxDepth-1">
-            <td v-if="interColumnCellType(indexR, indexC) === interCellType.topRight" class="topRightInterCell interCell">
+            <td v-if="interColumnCellType(indexR, indexC) === interCellType.topRight"
+                class="topRightInterCell interCell">
             </td>
             <td v-else-if="interColumnCellType(indexR, indexC) === interCellType.bottomRight"
                 class="bottomRightInterCell interCell">
             </td>
-            <td v-else-if="interColumnCellType(indexR, indexC) === interCellType.right" class="rightInterCell interCell">
+            <td v-else-if="interColumnCellType(indexR, indexC) === interCellType.right"
+                class="rightInterCell interCell">
             </td>
             <td v-else-if="interColumnCellType(indexR, indexC) === interCellType.blank" class="interCell">
+            </td>
+
+            <td v-if="isBottomInterCell(indexR, indexC)" class="bottomInterCell interCell">
+            </td>
+            <td v-else class="interCell">
             </td>
           </template>
         </template>
@@ -39,7 +50,7 @@
 import {KnockoutMatch} from "@/interfaces/knockoutSystem";
 import {rangeArr} from "element-plus";
 import {useI18n} from "vue-i18n"
-import ViewMatch from "@/components/views/competition/knockoutSystem/ViewMatchV2.vue";
+import ViewMatchV3 from "@/components/views/competition/knockoutSystem/ViewMatchV3.vue";
 
 const {t} = useI18n({inheritLocale: true})
 
@@ -67,8 +78,6 @@ function matchColumnCellType(indexR: number, indexC: number): cellType {
 
   const countMatchesLeft = Math.pow(2, indexC)
   const heightLeft = 4 * countMatchesLeft + 2 * (countMatchesLeft)
-
-  console.log(`indexR: ${indexR}, indexC: ${indexC}, countMatchesLeftTop: ${countMatchesLeftTop}, heightLeftTop: ${heightLeftTop}, countMatchesLeft: ${countMatchesLeft}, heightLeft: ${countMatchesLeftTop}`)
 
   if (indexR < heightLeftTop)
     return cellType.emptyCell
@@ -99,6 +108,19 @@ function interColumnCellType(indexR: number, indexC: number): interCellType {
     return interCellType.right
   else
     return interCellType.blank
+}
+
+function isBottomInterCell(indexR: number, indexC: number): boolean {
+  const countMatchesLeftTop = Math.pow(2, indexC)
+  const heightLeftTop = 4 * countMatchesLeftTop + 2 * (countMatchesLeftTop - 1) - 1
+
+  const countMatchesLeft = Math.pow(2, indexC + 1)
+  const heightLeft = 4 * countMatchesLeft + 2 * (countMatchesLeft)
+
+  if (indexR < heightLeftTop)
+    return false
+  const mod = ((indexR - heightLeftTop) % heightLeft)
+  return mod === 1;
 }
 
 function calcMaxDepth(match: KnockoutMatch): number {
@@ -157,7 +179,11 @@ td {
   border-right: solid black 2px;
 }
 
+.bottomInterCell {
+  border-bottom: solid black 2px;
+}
+
 .interCell {
-  min-width: 50px;
+  min-width: 25px;
 }
 </style>
