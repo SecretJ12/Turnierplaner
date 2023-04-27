@@ -17,16 +17,15 @@ import de.secretj12.turnierplaner.resources.jsonEntities.user.group.jUserGroupSy
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayerSignUpForm;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserTeam;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.knockout.jUserKnockoutSystem;
+import io.quarkus.security.UnauthorizedException;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.annotation.security.RolesAllowed;
-import org.jboss.resteasy.reactive.RestResponse;
-import org.jboss.resteasy.reactive.RestResponse.ResponseBuilder;
-
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -51,33 +50,28 @@ public class CompetitionResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public List<jUserCompetition> getAllCompetitions(@PathParam("tourName") String tourName) {
-        if (canSee(tourName))
-            return competitions.listByName(tourName).stream().map(jUserCompetition::new).toList();
-        return null;
+        checkTournamentAccessibility(tourName);
+        return competitions.listByName(tourName).stream().map(jUserCompetition::new).toList();
     }
 
     @GET
     @Path("/{compName}/details")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public RestResponse<jUserCompetition> getCompetition(@PathParam("tourName") String tourName,
+    public jUserCompetition getCompetition(@PathParam("tourName") String tourName,
                                            @PathParam("compName") String compName) {
+        checkTournamentAccessibility(tourName);
+
         if (securityIdentity.hasRole("director"))
-            return ResponseBuilder
-                    .ok((jUserCompetition) new jDirectorCompetitionUpdate(competitions.getByName(tourName, compName)))
-                    .build();
-        if (canSee(tourName))
-            return ResponseBuilder
-                    .ok(new jUserCompetition(competitions.getByName(tourName, compName)))
-                    .build();
-        return null;
+            return new jDirectorCompetitionUpdate(competitions.getByName(tourName, compName));
+        return new jUserCompetition(competitions.getByName(tourName, compName));
     }
 
     @GET
     @Path("/canEdit")
     @Produces(MediaType.TEXT_PLAIN)
-    public RestResponse<Boolean> canEdit(@PathParam("tourName") String tourName) {
-        return ResponseBuilder.ok(securityIdentity.hasRole("director")).build();
+    public Boolean canEdit(@PathParam("tourName") String tourName) {
+        return securityIdentity.hasRole("director");
     }
 
     @POST
@@ -86,40 +80,31 @@ public class CompetitionResource {
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public RestResponse<String> addCompetition(@PathParam("tourName") String tourName, jDirectorCompetitionAdd competition) {
+    public String addCompetition(@PathParam("tourName") String tourName, jDirectorCompetitionAdd competition) {
         if (competition.getName() == null)
-            return ResponseBuilder.create(RestResponse.Status.BAD_REQUEST, "No competition specified")
-                    .build();
+            throw new BadRequestException("No competition specified");
 
         if (competitions.getByName(tourName, competition.getName()) != null)
-            return ResponseBuilder.create(RestResponse.Status.CONFLICT, "Competition already exists").build();
+            throw new BadRequestException("Competition already exists");
 
         Tournament tournament = tournaments.getByName(tourName);
         if (tournament == null)
-            return ResponseBuilder.create(RestResponse.Status.BAD_REQUEST, "Tournament doesn't exist").build();
+            throw new BadRequestException("Tournament doesn't exist");
 
         if (competition.getPlayerA().isHasMinAge() && competition.getPlayerA().getMinAge() == null)
-            return ResponseBuilder
-                    .create(RestResponse.Status.BAD_REQUEST, "Player A: Min age null although has min age")
-                    .build();
+            throw new BadRequestException("Player A: Min age null although has min age");
         if (competition.getPlayerA().isHasMaxAge() && competition.getPlayerA().getMaxAge() == null)
-            return ResponseBuilder
-                    .create(RestResponse.Status.BAD_REQUEST, "Player A: Max age null although has max age")
-                    .build();
+            throw new BadRequestException("Player A: Max age null although has max age");
         if (competition.getPlayerB().isHasMinAge() && competition.getPlayerB().getMinAge() == null)
-            return ResponseBuilder
-                    .create(RestResponse.Status.BAD_REQUEST, "Player B: Min age null although has min age")
-                    .build();
+            throw new BadRequestException("Player B: Min age null although has min age");
         if (competition.getPlayerB().isHasMaxAge() && competition.getPlayerB().getMaxAge() == null)
-            return ResponseBuilder
-                    .create(RestResponse.Status.BAD_REQUEST, "Player B: Max age null although has max age")
-                    .build();
+            throw new BadRequestException("Player B: Max age null although has max age");
 
         Competition dbCompetition = new Competition();
         competition.toDB(dbCompetition);
         dbCompetition.setTournament(tournament);
         competitions.persist(dbCompetition);
-        return ResponseBuilder.ok("successfully added").build();
+        return "successfully added";
     }
 
     @POST
@@ -128,41 +113,38 @@ public class CompetitionResource {
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public RestResponse<String> updateCompetition(@PathParam("tourName") String tourName, jDirectorCompetitionUpdate competition) {
+    public String updateCompetition(@PathParam("tourName") String tourName, jDirectorCompetitionUpdate competition) {
         Competition dbCompetition = competitions.getById(competition.getId());
         if (dbCompetition == null)
-            return ResponseBuilder.create(RestResponse.Status.BAD_REQUEST, "Competition doesn't exist").build();
+            throw new BadRequestException("Competition doesn't exist");
         if (!dbCompetition.getTournament().getName().equals(tourName))
-            return ResponseBuilder
-                    .create(RestResponse.Status.BAD_REQUEST, "Tournament of competition is not the given")
-                    .build();
+            throw new BadRequestException("Tournament of competition is not the given");
 
         competition.toDB(dbCompetition);
         competitions.persist(dbCompetition);
 
         // TODO update players (remove all not fitting, warn in frontend if conditions are changed!)
 
-        return ResponseBuilder.ok("successfully changed").build();
+        return "successfully changed";
     }
 
     @GET
     @Path("/{compName}/signedUpTeams")
     @Produces(MediaType.APPLICATION_JSON)
-    public RestResponse<List<jUserTeam>> getSignedUpPlayers(@PathParam("tourName") String tourName,
-                                       @PathParam("compName") String compName) {
-        if (!canSee(tourName))
-            return RestResponse.status(RestResponse.Status.UNAUTHORIZED);
+    public List<jUserTeam> getSignedUpPlayers(@PathParam("tourName") String tourName,
+                                              @PathParam("compName") String compName) {
+        checkTournamentAccessibility(tourName);
 
         Competition competition = competitions.getByName(tourName, compName);
         if (competition == null)
-            return null;
+            throw new NotFoundException("Competition was not found");
 
         if (!securityIdentity.hasRole("director") &&
                 (competition.getTournament().getBeginRegistration().isAfter(LocalDateTime.now())
                         || competition.getTournament().getBeginGamePhase().isBefore(LocalDateTime.now())))
-            return RestResponse.status(RestResponse.Status.UNAUTHORIZED);
+            throw new NotAuthorizedException("Registration phase is not active");
 
-        return ResponseBuilder.ok(competition.getTeams().stream().map(jUserTeam::new).toList()).build();
+        return competition.getTeams().stream().map(jUserTeam::new).toList();
     }
 
     @POST
@@ -170,20 +152,18 @@ public class CompetitionResource {
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public RestResponse<String> signUpPlayer(@PathParam("tourName") String tourName, @PathParam("compName") String compName,
-                                 jUserPlayerSignUpForm reg) {
-
-        if (!canSee(tourName))
-            return RestResponse.status(RestResponse.Status.UNAUTHORIZED);
+    public String signUpPlayer(@PathParam("tourName") String tourName, @PathParam("compName") String compName,
+                               jUserPlayerSignUpForm reg) {
+        checkTournamentAccessibility(tourName);
 
         Competition competition = competitions.getByName(tourName, compName);
         if (competition == null)
-            return ResponseBuilder.create(RestResponse.Status.BAD_REQUEST, "Competition doesn't exist").build();
+            throw new BadRequestException("Competition doesn't exist");
 
         if (!securityIdentity.hasRole("director") && // or registration phase
                 (competition.getTournament().getBeginRegistration().isAfter(LocalDateTime.now())
                         || competition.getTournament().getEndRegistration().isBefore(LocalDateTime.now())))
-            return RestResponse.status(RestResponse.Status.UNAUTHORIZED);
+            throw new NotAuthorizedException("Registration phase is not active");
 
         if (competition.getMode() == CompetitionMode.SINGLES
                 || (competition.getSignup() == CompetitionSignUp.INDIVIDUAL && !competition.isPlayerBdifferent())) {
@@ -191,25 +171,23 @@ public class CompetitionResource {
             // -> every registration as player A and player B is null
 
             if (reg.getPlayerA() == null)
-                return ResponseBuilder.create(RestResponse.Status.BAD_REQUEST, "Player A is null").build();
+                throw new BadRequestException("Player A is null");
             if (reg.getPlayerB() != null)
-                return ResponseBuilder.create(RestResponse.Status.BAD_REQUEST, "Player B is not null").build();
+                throw new BadRequestException("Player B is not null");
 
             Player playerA = players.playerRepository
                     .getByName(reg.getPlayerA().getFirstName(), reg.getPlayerA().getLastName());
             if (playerA == null)
-                return ResponseBuilder.create(RestResponse.Status.BAD_REQUEST, "Player A doesn't exist").build();
+                throw new BadRequestException("Player A does not exist");
 
             if (conditionsFailA(competition, playerA))
-                return ResponseBuilder
-                        .create(RestResponse.Status.BAD_REQUEST, "Player A is does not meet the conditions")
-                        .build();
+                throw new BadRequestException("Player A does not meed the conditions");
 
             List<Team> regTeams = competition.getTeams();
             if (regTeams != null && regTeams.stream()
                     .anyMatch(t -> (t.getPlayerA() != null && t.getPlayerA().getId().equals(playerA.getId()))
                             || (t.getPlayerB() != null && t.getPlayerB().getId().equals(playerA.getId()))))
-                return ResponseBuilder.create(RestResponse.Status.CONFLICT, "Player already registered").build();
+                throw new WebApplicationException("Player already registered", Response.Status.CONFLICT);
 
             Team team = new Team();
             team.setPlayerA(playerA);
@@ -222,32 +200,23 @@ public class CompetitionResource {
                 // -> each registration needs to be player A xor player B null
 
                 if (reg.getPlayerA() == null && reg.getPlayerB() == null)
-                    return ResponseBuilder
-                            .create(RestResponse.Status.BAD_REQUEST, "Player A and player B are null")
-                            .build();
+                    throw new BadRequestException("Player A and player B are null");
                 if (reg.getPlayerA() != null && reg.getPlayerB() != null)
-                    return ResponseBuilder
-                            .create(RestResponse.Status.BAD_REQUEST, "Player A and player B are not null")
-                            .build();
+                    throw new BadRequestException("Player A and player B are not null");
 
                 if (reg.getPlayerA() != null) {
                     Player playerA = players.playerRepository.getByName(reg.getPlayerA().getFirstName(), reg.getPlayerA().getLastName());
                     if (playerA == null)
-                        return ResponseBuilder
-                                .create(RestResponse.Status.BAD_REQUEST, "Player A doesn't exist")
-                                .build();
+                        throw new BadRequestException("Player A doesn't exist");
 
                     if (conditionsFailA(competition, playerA))
-                        return ResponseBuilder
-                                .create(RestResponse.Status.BAD_REQUEST, "Player A is does not meet the conditions")
-                                .build();
+                        throw new BadRequestException("Player A is does not meet the conditions");
 
                     List<Team> regTeams = competition.getTeams();
                     if (regTeams != null && regTeams.stream()
                             .anyMatch(t -> (t.getPlayerA() != null && t.getPlayerA().getId().equals(playerA.getId()))
                                     || (t.getPlayerB() != null && t.getPlayerB().getId().equals(playerA.getId()))))
-                        return ResponseBuilder
-                                .create(RestResponse.Status.CONFLICT, "Player already registered").build();
+                        throw new WebApplicationException("Player already registered", Response.Status.CONFLICT);
 
                     Team team = new Team();
                     team.setPlayerA(playerA);
@@ -257,22 +226,16 @@ public class CompetitionResource {
                 if (reg.getPlayerB() != null) {
                     Player playerB = players.playerRepository.getByName(reg.getPlayerB().getFirstName(), reg.getPlayerB().getLastName());
                     if (playerB == null)
-                        return ResponseBuilder
-                                .create(RestResponse.Status.BAD_REQUEST, "Player B doesn't exist")
-                                .build();
+                        throw new BadRequestException("Player B does not exist");
 
                     if (conditionsFailB(competition, playerB))
-                        return ResponseBuilder
-                                .create(RestResponse.Status.BAD_REQUEST,
-                                        "Player B is does not meet the conditions")
-                                .build();
+                        throw new BadRequestException("Player B is does not meet the conditions");
 
                     List<Team> regTeams = competition.getTeams();
                     if (regTeams != null && regTeams.stream()
                             .anyMatch(t -> (t.getPlayerA() != null && t.getPlayerA().getId().equals(playerB.getId()))
                                     || (t.getPlayerB() != null && t.getPlayerB().getId().equals(playerB.getId()))))
-                        return ResponseBuilder
-                                .create(RestResponse.Status.CONFLICT, "Player already registered").build();
+                        throw new WebApplicationException("Player already registered", Response.Status.CONFLICT);
 
                     Team team = new Team();
                     team.setPlayerB(playerB);
@@ -284,41 +247,31 @@ public class CompetitionResource {
                 // -> needs player A and player B to be not null
 
                 if (reg.getPlayerA() == null)
-                    return ResponseBuilder.create(RestResponse.Status.BAD_REQUEST, "Player A is null").build();
+                    throw new BadRequestException("Player A is null");
                 if (reg.getPlayerB() == null)
-                    return ResponseBuilder.create(RestResponse.Status.BAD_REQUEST, "Player B is null").build();
+                    throw new BadRequestException("Player B is null");
 
                 Player playerA = players.playerRepository.getByName(reg.getPlayerA().getFirstName(), reg.getPlayerA().getLastName());
                 if (playerA == null)
-                    return ResponseBuilder
-                            .create(RestResponse.Status.BAD_REQUEST, "Player A doesn't exist").build();
+                    throw new BadRequestException("Player A does not exist");
                 Player playerB = players.playerRepository.getByName(reg.getPlayerB().getFirstName(), reg.getPlayerB().getLastName());
                 if (playerB == null)
-                    return ResponseBuilder
-                            .create(RestResponse.Status.BAD_REQUEST, "Player B doesn't exist").build();
+                    throw new BadRequestException("Player B does not exist");
 
                 if (conditionsFailA(competition, playerA))
-                    return ResponseBuilder
-                            .create(RestResponse.Status.BAD_REQUEST, "Player A is does not meet the conditions")
-                            .build();
+                    throw new BadRequestException("Player A is does not meet the conditions");
                 if (conditionsFailB(competition, playerB))
-                    return ResponseBuilder
-                            .create(RestResponse.Status.BAD_REQUEST, "Player B is does not meet the conditions")
-                            .build();
+                    throw new BadRequestException("Player B is does not meet the conditions");
 
                 List<Team> regTeams = competition.getTeams();
                 if (regTeams != null && regTeams.stream()
                         .anyMatch(t -> (t.getPlayerA() != null && t.getPlayerA().getId().equals(playerA.getId()))
                                 || (t.getPlayerB() != null && t.getPlayerB().getId().equals(playerA.getId()))))
-                    return ResponseBuilder
-                            .create(RestResponse.Status.CONFLICT, "Player A already registered")
-                            .build();
+                    throw new WebApplicationException("Player already registered", Response.Status.CONFLICT);
                 if (regTeams != null && regTeams.stream()
                         .anyMatch(t -> (t.getPlayerA() != null && t.getPlayerA().getId().equals(playerB.getId()))
                                 || (t.getPlayerB() != null && t.getPlayerB().getId().equals(playerB.getId()))))
-                    return ResponseBuilder
-                            .create(RestResponse.Status.CONFLICT, "Player B already registered")
-                            .build();
+                    throw new WebApplicationException("Player already registered", Response.Status.CONFLICT);
 
                 Team team = new Team();
                 team.setPlayerA(playerA);
@@ -329,7 +282,7 @@ public class CompetitionResource {
         }
 
         // TODO notify by mail?
-        return ResponseBuilder.ok("Player registered").build();
+        return "Player registered";
     }
 
     private boolean conditionsFailA(Competition comp, Player player) {
@@ -349,46 +302,50 @@ public class CompetitionResource {
     @GET
     @Path("/{compName}/knockoutMatches")
     @Produces(MediaType.APPLICATION_JSON)
-    public RestResponse<jUserKnockoutSystem> getKnockoutMatches(@PathParam("tourName") String tourName, @PathParam("compName") String compName) {
-        if (!canSee(tourName))
-            return RestResponse.status(Response.Status.UNAUTHORIZED);
+    public jUserKnockoutSystem getKnockoutMatches(@PathParam("tourName") String tourName, @PathParam("compName") String compName) {
+        checkTournamentAccessibility(tourName);
 
         Competition competition = competitions.getByName(tourName, compName);
         if (competition == null)
-            return RestResponse.status(Response.Status.NOT_FOUND);
+            throw new NotFoundException("Could not found competition");
         if (competition.getType() != CompetitionType.KNOCKOUT)
-            return RestResponse.status(Response.Status.METHOD_NOT_ALLOWED);
+            throw new WebApplicationException("Competition does not have type knockout",
+                    Response.Status.METHOD_NOT_ALLOWED);
 
         Match finale = matches.getFinal(competition);
         Match thirdPlace = matches.getThirdPlace(competition);
-        return ResponseBuilder.ok(new jUserKnockoutSystem(finale, thirdPlace)).build();
+        return new jUserKnockoutSystem(finale, thirdPlace);
     }
 
     @GET
     @Path("/{compName}/groupMatches")
     @Produces(MediaType.APPLICATION_JSON)
-    public RestResponse<jUserGroupSystem> getGroupMatches(@PathParam("tourName") String tourName, @PathParam("compName") String compName) {
-        if (!canSee(tourName))
-            return RestResponse.status(Response.Status.UNAUTHORIZED);
+    public jUserGroupSystem getGroupMatches(@PathParam("tourName") String tourName, @PathParam("compName") String compName) {
+        checkTournamentAccessibility(tourName);
 
         Competition competition = competitions.getByName(tourName, compName);
         if (competition == null)
-            return RestResponse.status(Response.Status.NOT_FOUND);
+            throw new NotFoundException("Competition as not found");
         if (competition.getType() != CompetitionType.GROUPS)
-            return RestResponse.status(Response.Status.METHOD_NOT_ALLOWED);
+            throw new WebApplicationException("Competition does not have type groups",
+                    Response.Status.METHOD_NOT_ALLOWED);
 
         List<Group> groups = competition.getGroups();
         if (groups == null)
-            return RestResponse.status(Response.Status.NOT_FOUND);
+            throw new NotFoundException("Found no groups");
 
         Match finale = matches.getFinal(competition);
         Match thirdPlace = matches.getThirdPlace(competition);
         if (finale == null || thirdPlace == null)
             throw new InternalServerErrorException("Finale or thirdPlace is null");
-        return ResponseBuilder.ok(new jUserGroupSystem(groups, finale, thirdPlace)).build();
+        return new jUserGroupSystem(groups, finale, thirdPlace);
     }
 
-    private boolean canSee(String tourName) {
-        return securityIdentity.hasRole("director") || tournaments.getByName(tourName).isVisible();
+    private void checkTournamentAccessibility(String tourName) {
+        Tournament tournament = tournaments.getByName(tourName);
+        if (tournament == null)
+            throw new NotFoundException("Tournament could not be found");
+        if (!securityIdentity.hasRole("director") && !tournament.isVisible())
+            throw new UnauthorizedException("Cannot access tournament");
     }
 }
