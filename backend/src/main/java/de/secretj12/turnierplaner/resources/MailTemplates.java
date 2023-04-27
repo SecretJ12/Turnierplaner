@@ -2,7 +2,7 @@ package de.secretj12.turnierplaner.resources;
 
 import io.quarkus.mailer.Mail;
 
-import javax.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.core.UriBuilder;
 import java.io.File;
 
 public class MailTemplates {

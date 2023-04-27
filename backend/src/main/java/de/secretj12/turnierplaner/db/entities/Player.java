@@ -3,7 +3,7 @@ package de.secretj12.turnierplaner.db.entities;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -13,13 +13,13 @@ import java.util.UUID;
 @NamedQueries({
         @NamedQuery(name = "filter",
                 query = "SELECT p FROM Player p " +
-                        "WHERE p.mailVerified is TRUE " +
-                        "AND (p.sex = :sex OR :ignoreSex is TRUE) " +
-                        "AND (p.birthday <= :minAge OR :ignoreMinAge is True) " +
-                        "AND (p.birthday >= :maxAge OR :ignoreMaxAge is True) " +
+                        "WHERE p.mailVerified = true " +
+                        "AND (p.sex = :sex OR :ignoreSex = true) " +
+                        "AND (p.birthday <= :minAge OR :ignoreMinAge = true) " +
+                        "AND (p.birthday >= :maxAge OR :ignoreMaxAge = true) " +
                         "AND (lower(p.firstName) like CONCAT('%', lower(:search), '%') " +
-                        "OR lower(p.lastName) = CONCAT('%', lower(:search), '%')" +
-                        "OR lower(CONCAT(p.firstName, ' ', p.lastName)) like CONCAT('%', lower(:search), '%'))" +
+                        "OR lower(p.lastName) = CONCAT('%', lower(:search), '%') " +
+                        "OR lower(CONCAT(p.firstName, ' ', p.lastName)) like CONCAT('%', lower(:search), '%')) " +
                         "ORDER BY CASE " +
                         "WHEN lower(p.firstName) like CONCAT(lower(:search), '%') THEN 0 " +
                         "WHEN lower(p.lastName) like CONCAT(lower(:search), '%') THEN 1 " +

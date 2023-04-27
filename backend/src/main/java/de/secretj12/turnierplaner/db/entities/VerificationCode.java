@@ -1,6 +1,6 @@
 package de.secretj12.turnierplaner.db.entities;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 

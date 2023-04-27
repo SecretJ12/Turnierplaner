@@ -6,7 +6,7 @@ import de.secretj12.turnierplaner.db.entities.groups.FinalOfGroup;
 import de.secretj12.turnierplaner.db.entities.groups.MatchOfGroup;
 import de.secretj12.turnierplaner.db.entities.knockout.NextMatch;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -17,11 +17,11 @@ import java.util.UUID;
         @NamedQuery(name = "findHead",
                 query = "FROM Match m WHERE m.competition.id = :compId " +
                         "AND NOT EXISTS (FROM NextMatch n WHERE n.previousA = m OR n.previousB = m) " +
-                        "AND (EXISTS (FROM NextMatch n WHERE m.id = n.nextMatch AND n.winner = :finale) " +
-                        "   OR EXISTS (FROM FinalOfGroup f WHERE m.id = f.nextMatch AND " +
+                        "AND (EXISTS (FROM NextMatch n WHERE m = n.nextMatch AND n.winner = :finale) " +
+                        "   OR EXISTS (FROM FinalOfGroup f WHERE m = f.nextMatch AND " +
                         "       (f.pos = 1 AND :finale = true " +
                         "         OR f.pos = 2 AND :finale = false))) " +
-                        "AND NOT EXISTS (FROM MatchOfGroup mog WHERE mog.match = m.id)")
+                        "AND NOT EXISTS (FROM MatchOfGroup mog WHERE mog.match = m)")
 )
 public class Match {
     @Id
@@ -55,13 +55,13 @@ public class Match {
     @JoinColumn(name = "team_b")
     private Team teamB;
 
-    @OneToOne(mappedBy = "nextMatch")
+    @OneToOne(mappedBy = "nextMatch", fetch = FetchType.LAZY)
     private NextMatch dependentOn;
 
     @OneToOne(mappedBy = "nextMatch")
     private FinalOfGroup finalOfGroup;
 
-    @OneToOne(mappedBy = "match")
+    @OneToOne(mappedBy = "match", fetch = FetchType.LAZY)
     private MatchOfGroup group;
 
     @OneToMany(mappedBy = "key.match",cascade = {CascadeType.ALL})

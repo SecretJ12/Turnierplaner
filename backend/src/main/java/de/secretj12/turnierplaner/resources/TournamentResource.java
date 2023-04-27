@@ -6,15 +6,15 @@ import de.secretj12.turnierplaner.resources.jsonEntities.director.jDirectorTourn
 import de.secretj12.turnierplaner.resources.jsonEntities.director.jDirectorTournamentUpdate;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserTournament;
 import io.quarkus.security.identity.SecurityIdentity;
+import jakarta.annotation.security.RolesAllowed;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.RestResponse.ResponseBuilder;
 
-import javax.annotation.security.RolesAllowed;
-import javax.inject.Inject;
-import javax.transaction.Transactional;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import java.util.Comparator;
 import java.util.List;
 

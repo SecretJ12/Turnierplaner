@@ -91,7 +91,7 @@
             <artifactId>quarkus-mailer</artifactId>
         </dependency>
 
-        <!-- scheduled task -->
+        <!-- scheduled tasks -->
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-quartz</artifactId>

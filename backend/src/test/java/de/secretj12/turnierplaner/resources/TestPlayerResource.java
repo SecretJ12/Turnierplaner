@@ -13,9 +13,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.inject.Inject;
-import javax.transaction.*;
-import javax.ws.rs.core.Response;
+import jakarta.inject.Inject;
+import jakarta.transaction.*;
+import jakarta.ws.rs.core.Response;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -184,8 +184,8 @@ public class TestPlayerResource {
         assertEquals(tel, players.getByName("firstName", "lastName").getPhone());
 
         assertEquals(1, mailbox.getTotalMessagesSent());
-        assertDoesNotThrow(() -> mailbox.getMessagesSentTo(recipient).get(0).getHtml());
-        String text = mailbox.getMessagesSentTo("ab@example.org").get(0).getHtml();
+        assertDoesNotThrow(() -> mailbox.getMailMessagesSentTo(recipient).get(0).getHtml());
+        String text = mailbox.getMailMessagesSentTo("ab@example.org").get(0).getHtml();
         assertTrue(text.contains("Please verify"));
         String code = text.split("code=")[1].split("#")[0];
         VerificationCode verificationCode = verificationCodes.findByUUID(UUID.fromString(code));

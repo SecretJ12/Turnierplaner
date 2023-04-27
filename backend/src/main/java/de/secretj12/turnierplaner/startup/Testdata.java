@@ -7,14 +7,13 @@ import de.secretj12.turnierplaner.db.entities.groups.Group;
 import de.secretj12.turnierplaner.db.entities.groups.MatchOfGroup;
 import de.secretj12.turnierplaner.db.entities.knockout.NextMatch;
 import de.secretj12.turnierplaner.db.repositories.*;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -42,7 +41,7 @@ public class Testdata {
     @Inject
     FinalOfGroupRepository finalOfGroupRepository;
 
-    private Random random = new Random();
+    private final Random random = new Random();
     public Testdata() {
 
     }

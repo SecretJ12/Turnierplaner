@@ -2,7 +2,7 @@ package de.secretj12.turnierplaner.db.entities.groups;
 
 import de.secretj12.turnierplaner.db.entities.Match;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.UUID;
 
 @Entity
