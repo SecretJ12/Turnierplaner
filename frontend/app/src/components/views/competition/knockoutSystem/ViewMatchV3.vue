@@ -74,7 +74,7 @@ td {
 
 .result {
   text-align: center;
-  width: 30px;
+  width: 25px;
   background-color: #FDFDFD;
 }
 </style>

@@ -1,8 +1,13 @@
-export interface Set{
-    id: number
-    scoreA: number
+export interface Game {
+    scoreA: number,
     scoreB: number
 }
+
+export interface Set {
+    scoreA: number,
+    scoreB: number
+}
+
 export interface Match {
     court: string,
     begin: Date,
@@ -10,9 +15,9 @@ export interface Match {
     finished: boolean,
     winner: boolean | null,
     teamA: Team | null,
-    teamB: Team | null
-    // TOOD add result
-    setList: Array<Set>
+    teamB: Team | null,
+    sets?: Array<Set>,
+    curGame?: Game
 }
 
 export interface MatchServer {
@@ -72,6 +77,6 @@ export function matchServerToClient(match: MatchServer, teams: Map<string, Team>
         winner: match.winner,
         teamA: teamA,
         teamB: teamB,
-        setList: setList
+        sets: setList
     }
 }
