@@ -3,8 +3,8 @@ package de.secretj12.turnierplaner.db.repositories;
 import de.secretj12.turnierplaner.db.entities.competition.Competition;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.ws.rs.QueryParam;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ws.rs.QueryParam;
 import java.util.List;
 import java.util.UUID;
 

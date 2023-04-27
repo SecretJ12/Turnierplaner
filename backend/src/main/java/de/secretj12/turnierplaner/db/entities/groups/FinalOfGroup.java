@@ -2,7 +2,7 @@ package de.secretj12.turnierplaner.db.entities.groups;
 
 import de.secretj12.turnierplaner.db.entities.Match;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.UUID;
 
 @Entity
@@ -20,10 +20,10 @@ public class FinalOfGroup {
     @JoinColumn(name = "next_match", referencedColumnName = "id", nullable = false)
     private Match nextMatch;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "group_a", referencedColumnName = "id", nullable = false)
     private Group groupA;
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "group_b", referencedColumnName = "id", nullable = false)
     private Group groupB;
 

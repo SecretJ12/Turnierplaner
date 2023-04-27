@@ -2,7 +2,7 @@ package de.secretj12.turnierplaner.db.entities.knockout;
 
 import de.secretj12.turnierplaner.db.entities.Match;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.UUID;
 
 @Entity
@@ -17,10 +17,10 @@ public class NextMatch {
     @JoinColumn(name = "next_match", referencedColumnName = "id", nullable = false)
     private Match nextMatch;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "previous_a", referencedColumnName = "id", nullable = false)
     private Match previousA;
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "previous_b", referencedColumnName = "id", nullable = false)
     private Match previousB;
 
