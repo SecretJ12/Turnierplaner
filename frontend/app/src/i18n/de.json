@@ -130,6 +130,13 @@
     "already_exists": "Der Spieler ist bereits für das Turnier registriert",
     "register_success": "Der Spieler wurde erfolgreich registriert",
     "register_failed": "Fehler beim Hinzufügen des Spielers"
+  },
+  "ViewKnockout": {
+    "finale": "Finale",
+    "thirdPlace": "Spiel um 3. Platz",
+    "semifinals": "Halbfinale",
+    "quarterfinals": "Viertelfinale",
+    "round": "Runde"
   }
 }
 

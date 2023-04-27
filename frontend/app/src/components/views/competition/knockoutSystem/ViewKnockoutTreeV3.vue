@@ -4,7 +4,7 @@
       <tr>
         <template v-for="index in rangeArr(maxDepth)">
           <th>
-            test {{ index }}
+            {{ roundTitle(index+1, maxDepth) }}
           </th>
           <template v-if="index < maxDepth-1">
             <th class="interCell">
@@ -61,6 +61,17 @@ const props = defineProps<{
 const maxDepth = calcMaxDepth(props.match)
 const teamsCount = Math.pow(2, maxDepth - 1)
 const height = Math.pow(2, maxDepth)
+
+function roundTitle(round: number, totalRounds: number): string {
+  if (round === totalRounds)
+    return t("ViewKnockout.finale")
+  else if (round === totalRounds - 1)
+    return t("ViewKnockout.semifinals")
+  else if (round === totalRounds - 2)
+    return t("ViewKnockout.quarterfinals")
+  else
+    return t("ViewKnockout.round") + " " + round
+}
 
 function matchColumnCellType(indexR: number, indexC: number): cellType {
   if (indexC === 0) {

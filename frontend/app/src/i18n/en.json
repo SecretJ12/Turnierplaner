@@ -130,6 +130,13 @@
     "already_exists": "Player is already registered",
     "register_success": "Successful registered",
     "register_failed": "Registration failed"
+  },
+  "ViewKnockout": {
+    "finale": "Finale",
+    "thirdPlace": "Third place play-off",
+    "semifinals": "Semifinales",
+    "quarterfinals": "Quarterfinales",
+    "round": "Round"
   }
 }
 
