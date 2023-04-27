@@ -55,13 +55,13 @@ public class Match {
     @JoinColumn(name = "team_b")
     private Team teamB;
 
-    @OneToOne(mappedBy = "nextMatch")
+    @OneToOne(mappedBy = "nextMatch", fetch = FetchType.LAZY)
     private NextMatch dependentOn;
 
     @OneToOne(mappedBy = "nextMatch")
     private FinalOfGroup finalOfGroup;
 
-    @OneToOne(mappedBy = "match")
+    @OneToOne(mappedBy = "match", fetch = FetchType.LAZY)
     private MatchOfGroup group;
 
     @OneToMany(mappedBy = "key.match",cascade = {CascadeType.ALL})
