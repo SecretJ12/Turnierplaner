@@ -9,7 +9,7 @@
         <ViewKnockoutTreeV2 :match="knockoutSystem.finale" />
       </el-tab-pane>
       <el-tab-pane label="TreeV3" name="knockoutv3">
-        <ViewKnockoutTreeV3 :match="knockoutSystem.finale" />
+        <ViewKnockoutTreeV3 :match="knockoutSystem.finale" :mode="props.mode" />
       </el-tab-pane>
     </el-tabs>
   </template>
@@ -24,8 +24,13 @@ import {KnockoutSystem, KnockoutSystemServer, knockoutSystemServerToClient} from
 import ViewKnockoutTree from "@/components/views/competition/knockoutSystem/ViewKnockoutTree.vue"
 import ViewKnockoutTreeV2 from "@/components/views/competition/knockoutSystem/ViewKnockoutTreeV2.vue"
 import ViewKnockoutTreeV3 from "@/components/views/competition/knockoutSystem/ViewKnockoutTreeV3.vue"
+import {Mode} from "@/interfaces/competition";
 
 const {t} = useI18n({inheritLocale: true })
+
+const props = defineProps<{
+  mode: Mode
+}>()
 
 const currentTab = ref("knockoutv3")
 

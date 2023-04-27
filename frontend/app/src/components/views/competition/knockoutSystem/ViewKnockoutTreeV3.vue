@@ -1,6 +1,6 @@
 <template>
   <el-scrollbar>
-    <table>
+    <table :class="props.mode === Mode.SINGLE ? 'tableSingles' : 'tableDoubles'">
       <tr>
         <template v-for="index in rangeArr(maxDepth)">
           <th>
@@ -17,7 +17,7 @@
       <tr v-for="indexR in rangeArr(4*teamsCount+2*(teamsCount-1)+1)">
         <template v-for="indexC in rangeArr(maxDepth)">
           <td v-if="matchColumnCellType(indexR, indexC) === cellType.match" rowspan="5" class="matchCol">
-            <ViewMatchV3 :match="props.match" />
+            <ViewMatchV3 :match="getMatch(indexR, indexC)" :mode="props.mode" />
           </td>
           <td v-else-if="matchColumnCellType(indexR, indexC) === cellType.emptyCell">
           </td>
@@ -51,16 +51,35 @@ import {KnockoutMatch} from "@/interfaces/knockoutSystem";
 import {rangeArr} from "element-plus";
 import {useI18n} from "vue-i18n"
 import ViewMatchV3 from "@/components/views/competition/knockoutSystem/ViewMatchV3.vue";
+import {Mode} from "@/interfaces/competition";
 
 const {t} = useI18n({inheritLocale: true})
 
 const props = defineProps<{
-  match: KnockoutMatch
+  match: KnockoutMatch,
+  mode: Mode
 }>()
 
 const maxDepth = calcMaxDepth(props.match)
 const teamsCount = Math.pow(2, maxDepth - 1)
 const height = Math.pow(2, maxDepth)
+
+function getMatch(indexR: number, indexC: number): KnockoutMatch {
+  let curMatch = props.match
+  let curHeight = Math.pow(2, maxDepth)
+  for (let i = 0; i < maxDepth-indexC-1; i++) {
+    curHeight /= 2
+    if (curMatch.prevMatch === undefined)
+      throw new Error("prevMatch is undefined")
+    if (indexR < curHeight)
+      curMatch = curMatch.prevMatch.a
+    else {
+      curMatch = curMatch.prevMatch.b
+      indexR -= curHeight
+    }
+  }
+  return curMatch
+}
 
 function roundTitle(round: number, totalRounds: number): string {
   if (round === totalRounds)
@@ -161,8 +180,15 @@ th {
 }
 
 td {
-  height: 20px;
   padding: 0;
+}
+
+.tableSingles>tr>td {
+  height: 20px;
+}
+
+.tableDoubles>tr>td {
+  height: 28px;
 }
 
 .matchCol {

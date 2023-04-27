@@ -1,8 +1,12 @@
 <template>
-  <table>
+  <table :class="props.mode === Mode.SINGLE ? 'tableSingles' : 'tableDoubles'">
     <tr>
       <td class="name">
-        Player A
+        {{ props.match.teamA === null ? "" : `${props.match.teamA.playerA.lastName}, ${props.match.teamA.playerA.firstName}` }}
+        <template v-if="props.mode === Mode.DOUBLE">
+          <br>
+          {{ props.match.teamA === null ? "" : `${props.match.teamA.playerB.lastName}, ${props.match.teamA.playerB.firstName}` }}
+        </template>
       </td>
       <td class="result"> <!-- TODO show correct results -->
         1
@@ -13,7 +17,11 @@
     </tr>
     <tr>
       <td class="name">
-        Player B
+        {{ props.match.teamB === null ? "" : `${props.match.teamB.playerA.lastName}, ${props.match.teamB.playerA.firstName}` }}
+        <template v-if="props.mode === Mode.DOUBLE">
+          <br>
+          {{ props.match.teamB === null ? "" : `${props.match.teamB.playerB.lastName}, ${props.match.teamB.playerB.firstName}` }}
+        </template>
       </td>
       <td class="result">
         6
@@ -23,7 +31,7 @@
       </td>
     </tr>
   </table>
-  <div id="date">
+  <div id="date" :class="props.mode === Mode.SINGLE ? 'dateSingles' : 'dateDoubles'">
     {{ props.match.begin.toLocaleString(t("lang"), dateOptions) }}
   </div>
 </template>
@@ -31,11 +39,13 @@
 <script setup lang="ts">
 import {KnockoutMatch} from "@/interfaces/knockoutSystem";
 import {useI18n} from "vue-i18n";
+import {Mode} from "@/interfaces/competition";
 
 const {t} = useI18n({inheritLocale: true })
 
 const props = defineProps<{
-  match: KnockoutMatch
+  match: KnockoutMatch,
+  mode: Mode
 }>()
 
 const dateOptions: Intl.DateTimeFormatOptions = {
@@ -49,11 +59,19 @@ const dateOptions: Intl.DateTimeFormatOptions = {
 
 <style scoped>
 table {
-  height: 80px;
+  table-layout: fixed;
   width: 300px;
   background-color: #E0E0E0;
   margin: 0;
   border: solid black 2px;
+}
+
+.tableSingles {
+  height: 80px;
+}
+
+.tableDoubles {
+  height: 108px;
 }
 
 td {
@@ -66,10 +84,17 @@ td {
 }
 
 #date {
-  height: 20px;
   text-align: right;
   padding-right: 20px;
   font-style: italic;
+}
+
+.dateSingles {
+  height: 20px;
+}
+
+.dateDoubles {
+  height: 28px;
 }
 
 .result {
