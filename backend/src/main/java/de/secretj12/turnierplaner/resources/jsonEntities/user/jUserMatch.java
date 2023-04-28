@@ -18,7 +18,7 @@ public class jUserMatch {
     private UUID teamA;
     private UUID teamB;
 
-    private List<jUserSet> jUserSetList;
+    private List<jUserSet> sets;
 
     public jUserMatch(Match match) {
         this.court = match.getCourt().getName();
@@ -33,7 +33,7 @@ public class jUserMatch {
         if (match.getTeamB() != null)
             this.teamB = match.getTeamB().getId();
 
-        this.jUserSetList = match.getSets().stream().map(jUserSet::new).toList();
+        this.sets = match.getSets().stream().map(jUserSet::new).toList();
     }
 
     public String getCourt() {
@@ -92,11 +92,11 @@ public class jUserMatch {
         this.teamB = teamB;
     }
 
-    public List<jUserSet> getjUserSetList() {
-        return jUserSetList;
+    public List<jUserSet> getSets() {
+        return sets;
     }
 
-    public void setjUserSetList(List<jUserSet> jUserSetList) {
-        this.jUserSetList = jUserSetList;
+    public void setSets(List<jUserSet> sets) {
+        this.sets = sets;
     }
 }

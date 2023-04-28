@@ -16,20 +16,20 @@ export interface Match {
     winner: boolean | null,
     teamA: Team | null,
     teamB: Team | null,
-    sets?: Array<Set>,
-    curGame?: Game
+    sets: Array<Set> | null,
+    curGame: Game | null
 }
 
 export interface MatchServer {
-    jUserSetList: Array<Set>;
     court: string,
     begin: string,
     end: string,
     finished: boolean,
     winner: boolean | null,
     teamA: string | null,
-    teamB: string | null
+    teamB: string | null,
     // TOOD add result
+    sets: Array<Set>
 }
 
 export interface Team {
@@ -64,9 +64,9 @@ export function matchServerToClient(match: MatchServer, teams: Map<string, Team>
         }
     }
 
-    let setList: Set[] = []
-    if (match.jUserSetList !== null){
-        setList = match.jUserSetList
+    let sets: Set[] = []
+    if (match.sets !== null) {
+        sets = match.sets
     }
 
     return {
@@ -77,6 +77,7 @@ export function matchServerToClient(match: MatchServer, teams: Map<string, Team>
         winner: match.winner,
         teamA: teamA,
         teamB: teamB,
-        sets: setList
+        sets: sets,
+        curGame: null
     }
 }

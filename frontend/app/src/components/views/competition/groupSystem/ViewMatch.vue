@@ -4,23 +4,25 @@
     {{ props.match.begin.toLocaleString(t("lang"), dateOptions) }}
   </p>
   <div v-else-if="props.order">
-    {{scoreA}}-{{scoreB}}
+    {{ scoreA }}-{{ scoreB }}
   </div>
   <div v-else>
-    {{scoreB}}-{{scoreA}}
+    {{ scoreB }}-{{ scoreA }}
   </div>
 </template>
 
 <script setup lang="ts">
-import {Match, Set} from "@/interfaces/match";
+import {Match} from "@/interfaces/match";
 import {useI18n} from "vue-i18n"
 
 const {t} = useI18n({inheritLocale: true})
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   match: Match
   order: boolean
-}>()
+}>(), {
+  order: true
+})
 
 const dateOptions: Intl.DateTimeFormatOptions = {
   year: "2-digit",
@@ -32,13 +34,14 @@ const dateOptions: Intl.DateTimeFormatOptions = {
 
 let scoreA = 0
 let scoreB = 0
-for (const set of props.match.setList) {
-  if (set.scoreA < set.scoreB) {
-    scoreB += 1
-  } else if (set.scoreA > set.scoreB) {
-    scoreA += 1
+if (props.match.sets !== null)
+  for (const set of props.match.sets) {
+    if (set.scoreA < set.scoreB) {
+      scoreB += 1
+    } else if (set.scoreA > set.scoreB) {
+      scoreA += 1
+    }
   }
-}
 </script>
 
 <style scoped>

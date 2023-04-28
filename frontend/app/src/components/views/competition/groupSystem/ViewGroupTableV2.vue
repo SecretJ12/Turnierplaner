@@ -30,7 +30,7 @@
                       + ((hoverTeam === teamA.id || hoverTeam === teamB.id) ? 'highlight ' : '')"
             >
             <div>
-              <ViewMatch :match="findMatch(teamA, teamB)" :order="true"/>
+              <ViewMatch :match="findMatch(teamA, teamB)" />
             </div>
           </td>
         </template>
