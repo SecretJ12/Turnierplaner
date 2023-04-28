@@ -1,6 +1,6 @@
 <template>
   <table :class="props.mode === Mode.SINGLE ? 'tableSingles' : 'tableDoubles'">
-    <tr>
+    <tr :class="{winner: props.match.finished && !props.match.winner}">
       <td class="name">
         {{ props.match.teamA === null ? "" : `${props.match.teamA.playerA.lastName}, ${props.match.teamA.playerA.firstName}` }}
         <template v-if="props.mode === Mode.DOUBLE">
@@ -15,7 +15,7 @@
         </td>
       </template>
     </tr>
-    <tr>
+    <tr :class="{winner: props.match.finished && props.match.winner}">
       <td class="name">
         {{ props.match.teamB === null ? "" : `${props.match.teamB.playerA.lastName}, ${props.match.teamB.playerA.firstName}` }}
         <template v-if="props.mode === Mode.DOUBLE">
@@ -74,6 +74,10 @@ table {
   height: 108px;
 }
 
+.winner {
+  background-color: #C0C0C0;
+}
+
 tr {
   border: solid black 2px;
 }
@@ -105,5 +109,9 @@ td {
   text-align: center;
   width: 25px;
   background-color: #FDFDFD;
+}
+
+.winner>.result {
+  background-color: #E0E0E0;
 }
 </style>
