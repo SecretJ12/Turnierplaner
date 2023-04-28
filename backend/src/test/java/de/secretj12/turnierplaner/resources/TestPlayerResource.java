@@ -197,7 +197,7 @@ public class TestPlayerResource {
                 .param("code", code)
                 .get("/player/verification")
                 .then().assertThat()
-                .statusCode(Response.Status.ACCEPTED.getStatusCode());
+                .statusCode(Response.Status.OK.getStatusCode());
         assertTrue(players.getByName("firstName", "lastName").isMailVerified());
         // TODO admin verified?
         assertEquals(tel, players.getByName("firstName", "lastName").getPhone());
