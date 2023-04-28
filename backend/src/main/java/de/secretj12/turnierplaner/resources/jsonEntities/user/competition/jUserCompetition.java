@@ -4,6 +4,7 @@ import de.secretj12.turnierplaner.db.entities.competition.Competition;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorMode;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorSignUp;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorValidSex;
+import jakarta.ws.rs.NotFoundException;
 
 public class jUserCompetition {
     private String name;
@@ -18,6 +19,9 @@ public class jUserCompetition {
     }
 
     public jUserCompetition(Competition competition) {
+        if (competition == null)
+            throw new NotFoundException("Competition was not found");
+
         this.name = competition.getName();
         this.description = competition.getDescription();
         switch (competition.getType()) {
