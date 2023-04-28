@@ -3,6 +3,7 @@ package de.secretj12.turnierplaner.resources.jsonEntities.user.knockout;
 import de.secretj12.turnierplaner.db.entities.Match;
 import de.secretj12.turnierplaner.db.entities.competition.Team;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserTeam;
+import jakarta.ws.rs.NotFoundException;
 
 import java.util.*;
 
@@ -13,6 +14,11 @@ public class jUserKnockoutSystem {
     private jUserKnockoutMatch thirdPlace;
 
     public jUserKnockoutSystem(Match finale, Match thirdPlace) {
+        if (finale == null)
+            throw new NotFoundException("Finale was not found");
+        if (thirdPlace == null)
+            throw new NotFoundException("Game for third place was not found");
+
         Set<Team> teams = new HashSet<>();
         Queue<Match> matchQueue = new ArrayDeque<>();
         matchQueue.add(finale);
