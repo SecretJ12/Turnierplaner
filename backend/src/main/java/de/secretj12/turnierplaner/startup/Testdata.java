@@ -40,6 +40,8 @@ public class Testdata {
     MatchOfGroupRepository matchOfGroupRepository;
     @Inject
     FinalOfGroupRepository finalOfGroupRepository;
+    @Inject
+    SetRepository sets;
 
     private final Random random = new Random();
     public Testdata() {
@@ -297,7 +299,7 @@ public class Testdata {
                         case 4 -> set.setScoreB(40);
                     }
                     Set.SetKey setKey = new Set.SetKey();
-                    setKey.setId(1);
+                    setKey.setIndex(1);
                     setKey.setMatch(match);
                     setKey.setMatch(match);
                     set.setKey(setKey);
@@ -373,7 +375,25 @@ public class Testdata {
             quarterFinal[i] = createMatch(c1, comp2);
             quarterFinal[i].setTeamA(knockoutTeams[2 * i]);
             quarterFinal[i].setTeamB(knockoutTeams[2 * i + 1]);
+            quarterFinal[i].setFinished(true);
+            quarterFinal[i].setWinner(false);
             matches.persist(quarterFinal[i]);
+            Set.SetKey setKey1 = new Set.SetKey();
+            setKey1.setMatch(quarterFinal[i]);
+            setKey1.setIndex(0);
+            Set set1 = new Set();
+            set1.setKey(setKey1);
+            set1.setScoreA(6);
+            set1.setScoreB(0);
+            sets.persist(set1);
+            Set.SetKey setKey2 = new Set.SetKey();
+            setKey2.setMatch(quarterFinal[i]);
+            setKey2.setIndex(1);
+            Set set2 = new Set();
+            set2.setKey(setKey2);
+            set2.setScoreA(7);
+            set2.setScoreB(6);
+            sets.persist(set2);
         }
         Match[] semiFinal = new Match[2];
         for (int i = 0; i < 2; i++) {

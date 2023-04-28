@@ -4,6 +4,7 @@ export interface Game {
 }
 
 export interface Set {
+    index: number,
     scoreA: number,
     scoreB: number
 }

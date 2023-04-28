@@ -8,12 +8,12 @@
           {{ props.match.teamA === null ? "" : `${props.match.teamA.playerB.lastName}, ${props.match.teamA.playerB.firstName}` }}
         </template>
       </td>
-      <td class="result"> <!-- TODO show correct results -->
-        1
-      </td>
-      <td class="result">
-        2
-      </td>
+
+      <template v-if="props.match.sets !== null">
+        <td class="result" v-for="set in props.match.sets">
+          {{ set.scoreA }}
+        </td>
+      </template>
     </tr>
     <tr>
       <td class="name">
@@ -23,12 +23,12 @@
           {{ props.match.teamB === null ? "" : `${props.match.teamB.playerB.lastName}, ${props.match.teamB.playerB.firstName}` }}
         </template>
       </td>
-      <td class="result">
-        6
-      </td>
-      <td class="result">
-        6
-      </td>
+
+      <template v-if="props.match.sets !== null">
+        <td class="result" v-for="set in props.match.sets">
+          {{ set.scoreB }}
+        </td>
+      </template>
     </tr>
   </table>
   <div id="date" :class="props.mode === Mode.SINGLE ? 'dateSingles' : 'dateDoubles'">

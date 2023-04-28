@@ -46,15 +46,15 @@ public class Set {
         @ManyToOne(cascade = {CascadeType.ALL})
         @JoinColumn(name = "match_id")
         private Match match;
-        @Column(name = "id")
-        private long id;
+        @Column(name = "index")
+        private long index;
 
-        public long getId() {
-            return id;
+        public long getIndex() {
+            return index;
         }
 
-        public void setId(long id) {
-            this.id = id;
+        public void setIndex(long id) {
+            this.index = id;
         }
 
         @Override
@@ -62,12 +62,12 @@ public class Set {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             SetKey setKey = (SetKey) o;
-            return match.equals(setKey.match) && id == (setKey.id);
+            return match.equals(setKey.match) && index == (setKey.index);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(match, id);
+            return Objects.hash(match, index);
         }
 
         public Match getMatch() {

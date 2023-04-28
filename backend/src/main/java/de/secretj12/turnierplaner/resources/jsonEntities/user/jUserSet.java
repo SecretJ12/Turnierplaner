@@ -3,22 +3,22 @@ package de.secretj12.turnierplaner.resources.jsonEntities.user;
 import de.secretj12.turnierplaner.db.entities.Set;
 
 public class jUserSet {
-    private long id;
+    private long index;
     private int scoreA;
     private int scoreB;
 
     public jUserSet(Set set){
         this.scoreA = set.getScoreA();
         this.scoreB = set.getScoreB();
-        this.id = set.getKey().getId();
+        this.index = set.getKey().getIndex();
     }
 
-    public long getId() {
-        return id;
+    public long getIndex() {
+        return index;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setIndex(long index) {
+        this.index = index;
     }
 
     public int getScoreA() {
