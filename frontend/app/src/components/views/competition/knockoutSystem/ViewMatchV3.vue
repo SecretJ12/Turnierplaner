@@ -74,8 +74,12 @@ table {
   height: 108px;
 }
 
-td {
+tr {
   border: solid black 2px;
+}
+
+td {
+  border: solid black 1px;
 }
 
 .name {

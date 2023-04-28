@@ -1,7 +1,7 @@
 <template>
   <p>Knockout system</p>
   <template v-if="knockoutSystem !== null">
-    <el-tabs v-model="currentTab" style="width: 1500px;">
+    <el-tabs v-model="currentTab" style="width: min(90%, 1000px);">
       <el-tab-pane label="Tree" name="knockout">
         <ViewKnockoutTree :match="knockoutSystem.finale" />
       </el-tab-pane>
