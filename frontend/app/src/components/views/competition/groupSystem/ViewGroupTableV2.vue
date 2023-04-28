@@ -25,10 +25,11 @@
           <td v-if="indexB !== props.group.teams.length-1 && (indexA + indexB < props.group.teams.length-1)"
               @mouseover="matchHover(indexA, indexB)"
               @mouseleave="hoverLeave()"
-              :class="((hoverIdA === indexA && indexB < hoverIdB) ? 'highlightLow ' : '')
-                      + ((hoverIdB === indexB && indexA < hoverIdA) ? 'highlightLow ' : '')
-                      + ((hoverTeam === teamA.id || hoverTeam === teamB.id) ? 'highlight ' : '')"
-            >
+              :class="{
+                highlightLow: (hoverIdA === indexA && indexB < hoverIdB) || (hoverIdB === indexB && indexA < hoverIdA),
+                highlight: hoverTeam === teamA.id || hoverTeam === teamB.id
+              }"
+          >
             <div>
               <ViewMatch :match="findMatch(teamA, teamB)" />
             </div>

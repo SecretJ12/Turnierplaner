@@ -1,5 +1,5 @@
 <template>
-  <table :class="props.mode === Mode.SINGLE ? 'tableSingles' : 'tableDoubles'">
+  <table :class="{tableSingles: props.mode === Mode.SINGLE, tableDoubles: props.mode === Mode.DOUBLE}">
     <tr :class="{winner: props.match.finished && !props.match.winner}">
       <td class="name">
         {{ props.match.teamA === null ? "" : `${props.match.teamA.playerA.lastName}, ${props.match.teamA.playerA.firstName}` }}
@@ -31,7 +31,7 @@
       </template>
     </tr>
   </table>
-  <div id="date" :class="props.mode === Mode.SINGLE ? 'dateSingles' : 'dateDoubles'">
+  <div id="date" :class="{dateSingles: props.mode === Mode.SINGLE, dateDoubles: props.mode === Mode.DOUBLE}">
     {{ props.match.begin.toLocaleString(t("lang"), dateOptions) }}
   </div>
 </template>
