@@ -69,7 +69,7 @@ public class TestdataGenerator {
 
         ArrayList<Tuple7<CompetitionType, CompetitionMode, Sex, Integer, Boolean, Integer, String>> compSetting = new ArrayList<>();
         compSetting.add(Tuple7.of(CompetitionType.GROUPS, CompetitionMode.SINGLES, Sex.MALE, 8, false, 2, "Single"));
-        compSetting.add(Tuple7.of(CompetitionType.KNOCKOUT, CompetitionMode.SINGLES, Sex.FEMALE, 8, false, 2, "Knockout"));
+        compSetting.add(Tuple7.of(CompetitionType.KNOCKOUT, CompetitionMode.SINGLES, Sex.FEMALE, 16, false, 2, "Knockout"));
         compSetting.add(Tuple7.of(CompetitionType.KNOCKOUT, CompetitionMode.DOUBLES, Sex.ANY, 4, false, 2, "Double"));
 
         addCompetition(tournaments[0], compSetting);
@@ -338,39 +338,25 @@ public class TestdataGenerator {
                 }
             } else {
                 competition.setMode(CompetitionMode.DOUBLES);
+                if (compSetting.getItem5()) {
+                    competition.setDescription("Doppel, individuelle Anmeldung, verschiedene Bedingung");
+                    competition.setSignup(CompetitionSignUp.INDIVIDUAL);
+                } else {
+                    competition.setDescription("Doppel, gemeinsame Anmeldung, verschiedene Bedingung");
+                    competition.setSignup(CompetitionSignUp.TOGETHER);
+                }
                 switch (compSetting.getItem3()) {
                     case ANY -> {
                         competition.setPlayerASex(Sex.MALE);
                         competition.setPlayerBSex(Sex.FEMALE);
-                        if (compSetting.getItem5()) {
-                            competition.setDescription("Doppel, individuelle Anmeldung, verschiedene Bedingung");
-                            competition.setSignup(CompetitionSignUp.INDIVIDUAL);
-                        } else {
-                            competition.setDescription("Doppel, gemeinsame Anmeldung, verschiedene Bedingung");
-                            competition.setSignup(CompetitionSignUp.TOGETHER);
-                        }
                     }
                     case MALE -> {
                         competition.setPlayerASex(Sex.MALE);
                         competition.setPlayerBSex(Sex.MALE);
-                        if (compSetting.getItem5()) {
-                            competition.setDescription("Doppel, individuelle Anmeldung, gleiche Bedingung");
-                            competition.setSignup(CompetitionSignUp.INDIVIDUAL);
-                        } else {
-                            competition.setDescription("Doppel, gemeinsame Anmeldung, gleiche Bedingung");
-                            competition.setSignup(CompetitionSignUp.TOGETHER);
-                        }
                     }
                     case FEMALE -> {
                         competition.setPlayerASex(Sex.FEMALE);
                         competition.setPlayerBSex(Sex.FEMALE);
-                        if (compSetting.getItem5()) {
-                            competition.setDescription("Doppel, individuelle Anmeldung, gleiche Bedingung");
-                            competition.setSignup(CompetitionSignUp.INDIVIDUAL);
-                        } else {
-                            competition.setDescription("Doppel, gemeinsame Anmeldung, gleiche Bedingung");
-                            competition.setSignup(CompetitionSignUp.TOGETHER);
-                        }
                     }
                 }
             }
