@@ -12,11 +12,17 @@ public class Startup {
     @Inject
     Testdata testdata;
 
+    @Inject
+    TestdataGenerator testdataGenerator;
+
+    @Inject
     @ConfigProperty(name = "turnierplaner.testdata", defaultValue = "false")
     Boolean addTestdata;
 
     void onStart(@Observes StartupEvent ev) {
-        if (addTestdata)
-            testdata.createData();
+        if (addTestdata) {
+//            testdata.createData();
+            testdataGenerator.generateData();
+        }
     }
 }

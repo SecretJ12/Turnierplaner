@@ -51,9 +51,6 @@ public class Competition {
     private boolean playerAhasMaxAge;
     @Column(name = "playerA_max_age")
     private LocalDate playerAmaxAge;
-
-    @Column(name = "playerB_different")
-    private boolean playerBdifferent;
     @Column(name = "playerB_sex")
     private Sex playerBSex;
     @Column(name = "playerB_has_min_age")
@@ -195,11 +192,7 @@ public class Competition {
     }
 
     public boolean isPlayerBdifferent() {
-        return playerBdifferent;
-    }
-
-    public void setPlayerBdifferent(boolean playerBequalsA) {
-        this.playerBdifferent = playerBequalsA;
+        return this.mode == CompetitionMode.DOUBLES;
     }
 
     public Sex getPlayerBSex() {

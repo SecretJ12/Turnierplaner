@@ -117,7 +117,6 @@ public class Testdata {
         compSingle.setPlayerASex(Sex.ANY);
         compSingle.setPlayerAhasMinAge(false);
         compSingle.setPlayerAhasMaxAge(false);
-        compSingle.setPlayerBdifferent(false);
         compSingle.setPlayerBSex(Sex.FEMALE);
         compSingle.setPlayerBhasMinAge(false);
         compSingle.setPlayerBhasMaxAge(false);
@@ -141,7 +140,6 @@ public class Testdata {
         compDoubleIndSame.setPlayerASex(Sex.ANY);
         compDoubleIndSame.setPlayerAhasMinAge(false);
         compDoubleIndSame.setPlayerAhasMaxAge(false);
-        compDoubleIndSame.setPlayerBdifferent(false);
         compDoubleIndSame.setPlayerBSex(Sex.FEMALE);
         compDoubleIndSame.setPlayerBhasMinAge(false);
         compDoubleIndSame.setPlayerBhasMaxAge(false);
@@ -165,7 +163,6 @@ public class Testdata {
         compDoubleIndDif.setPlayerASex(Sex.MALE);
         compDoubleIndDif.setPlayerAhasMinAge(false);
         compDoubleIndDif.setPlayerAhasMaxAge(false);
-        compDoubleIndDif.setPlayerBdifferent(true);
         compDoubleIndDif.setPlayerBSex(Sex.FEMALE);
         compDoubleIndDif.setPlayerBhasMinAge(false);
         compDoubleIndDif.setPlayerBhasMaxAge(false);
@@ -189,7 +186,6 @@ public class Testdata {
         compDoubleTog.setPlayerASex(Sex.MALE);
         compDoubleTog.setPlayerAhasMinAge(false);
         compDoubleTog.setPlayerAhasMaxAge(false);
-        compDoubleTog.setPlayerBdifferent(true);
         compDoubleTog.setPlayerBSex(Sex.FEMALE);
         compDoubleTog.setPlayerBhasMinAge(false);
         compDoubleTog.setPlayerBhasMaxAge(false);
@@ -235,7 +231,6 @@ public class Testdata {
         comp1.setPlayerAhasMinAge(false);
         comp1.setPlayerAhasMaxAge(false);
         comp1.setPlayerBSex(Sex.FEMALE);
-        comp1.setPlayerBdifferent(false);
         comp1.setPlayerBhasMinAge(false);
         comp1.setPlayerBhasMaxAge(false);
         competitions.persist(comp1);
@@ -346,7 +341,6 @@ public class Testdata {
         comp2.setPlayerAhasMinAge(false);
         comp2.setPlayerAhasMaxAge(false);
         comp2.setPlayerBSex(Sex.MALE);
-        comp2.setPlayerBdifferent(false);
         comp2.setPlayerBhasMinAge(false);
         comp2.setPlayerBhasMaxAge(false);
         competitions.persist(comp2);
@@ -479,7 +473,6 @@ public class Testdata {
         comp1.setPlayerAhasMinAge(false);
         comp1.setPlayerAhasMaxAge(false);
         comp1.setPlayerBSex(Sex.FEMALE);
-        comp1.setPlayerBdifferent(false);
         comp1.setPlayerBhasMinAge(false);
         comp1.setPlayerBhasMaxAge(false);
         competitions.persist(comp1);
@@ -499,7 +492,6 @@ public class Testdata {
         comp2.setPlayerAhasMinAge(false);
         comp2.setPlayerAhasMaxAge(false);
         comp2.setPlayerBSex(Sex.MALE);
-        comp2.setPlayerBdifferent(false);
         comp2.setPlayerBhasMinAge(false);
         comp2.setPlayerBhasMaxAge(false);
         competitions.persist(comp2);

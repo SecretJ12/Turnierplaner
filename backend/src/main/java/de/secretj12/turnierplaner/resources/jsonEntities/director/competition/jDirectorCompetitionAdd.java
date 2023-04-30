@@ -36,7 +36,6 @@ public class jDirectorCompetitionAdd extends jUserCompetition {
         competition.setPlayerAminAge(getPlayerA().getMinAge());
         competition.setPlayerAhasMaxAge(getPlayerA().isHasMaxAge());
         competition.setPlayerAmaxAge(getPlayerA().getMaxAge());
-        competition.setPlayerBdifferent(getPlayerB().isDifferent());
         switch (getPlayerB().getSex()) {
             case MALE -> competition.setPlayerBSex(Sex.MALE);
             case FEMALE -> competition.setPlayerBSex(Sex.FEMALE);
