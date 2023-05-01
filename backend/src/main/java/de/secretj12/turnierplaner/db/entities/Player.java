@@ -29,7 +29,7 @@ import java.util.UUID;
     )
 )
 public class Player {
-    @Id
+            @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     private UUID id;
