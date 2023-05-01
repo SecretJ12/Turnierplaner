@@ -38,8 +38,7 @@ public class PlayerResource {
     @Transactional
     @Path("/find")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<jUserPlayer> listPlayer(@QueryParam("search") String search,
-                                        @QueryParam("sex") jUserSex sex,
+    public List<jUserPlayer> listPlayer(@QueryParam("search") String search, @QueryParam("sex") jUserSex sex,
                                         @QueryParam("minAge") @JsonFormat(pattern = "yyyy-MM-dd") String minAgeS,
                                         @QueryParam("maxAge") @JsonFormat(pattern = "yyyy-MM-dd") String maxAgeS) {
         // TODO instead of filtering by params of client, better filter by given competition, prevents leak of birthday
@@ -54,9 +53,7 @@ public class PlayerResource {
         if (search.length() == 0) {
             return List.of();
         }
-        return playerRepository
-                .filter(search, dbSex, minAge, maxAge).map(jUserPlayer::new)
-                .toList();
+        return playerRepository.filter(search, dbSex, minAge, maxAge).map(jUserPlayer::new).toList();
     }
 
     @POST
@@ -75,8 +72,7 @@ public class PlayerResource {
         newPlayer.setFirstName(playerForm.getFirstName());
         newPlayer.setLastName(playerForm.getLastName());
         newPlayer.setBirthday(playerForm.getBirthday());
-        if (playerForm.getSex() == null)
-            throw new BadRequestException("Sex is null");
+        if (playerForm.getSex() == null) throw new BadRequestException("Sex is null");
         switch (playerForm.getSex()) {
             case MALE -> newPlayer.setSex(SexType.MALE);
             case FEMALE -> newPlayer.setSex(SexType.FEMALE);
@@ -110,8 +106,7 @@ public class PlayerResource {
     @Produces(MediaType.TEXT_PLAIN)
     public String verification(@QueryParam("code") String code) {
         VerificationCode verificationCode = verificationCodeRepository.findByUUID(UUID.fromString(code));
-        if (verificationCode == null)
-            throw new BadRequestException("This verification code is not correct!");
+        if (verificationCode == null) throw new BadRequestException("This verification code is not correct!");
 
         Player player = verificationCode.getPlayer();
         player.setMailVerified(true);

@@ -1,31 +1,33 @@
 package de.secretj12.turnierplaner.db.entities;
 
+import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Table(name = "players")
-@NamedQueries({
-        @NamedQuery(name = "filter",
-                query = "SELECT p FROM Player p " +
-                        "WHERE p.mailVerified = true " +
-                        "AND (p.sex = :sex OR :ignoreSex = true) " +
-                        "AND (p.birthday <= :minAge OR :ignoreMinAge = true) " +
-                        "AND (p.birthday >= :maxAge OR :ignoreMaxAge = true) " +
-                        "AND (lower(p.firstName) like CONCAT('%', lower(:search), '%') " +
-                        "OR lower(p.lastName) = CONCAT('%', lower(:search), '%') " +
-                        "OR lower(CONCAT(p.firstName, ' ', p.lastName)) like CONCAT('%', lower(:search), '%')) " +
-                        "ORDER BY CASE " +
-                        "WHEN lower(p.firstName) like CONCAT(lower(:search), '%') THEN 0 " +
-                        "WHEN lower(p.lastName) like CONCAT(lower(:search), '%') THEN 1 " +
-                        "ELSE 2 " +
-                        "END, p.firstName, p.lastName")
-})
+@NamedQueries(
+    @NamedQuery(name = "filter",
+                query = """
+                        SELECT p FROM Player p
+                        WHERE p.mailVerified = true
+                        AND (p.sex = :sex OR :ignoreSex = true)
+                        AND (p.birthday <= :minAge OR :ignoreMinAge = true)
+                        AND (p.birthday >= :maxAge OR :ignoreMaxAge = true)
+                        AND (lower(p.firstName) like CONCAT('%', lower(:search), '%')
+                        OR lower(p.lastName) = CONCAT('%', lower(:search), '%')
+                        OR lower(CONCAT(p.firstName, ' ', p.lastName)) like CONCAT('%', lower(:search), '%'))
+                        ORDER BY CASE
+                            WHEN lower(p.firstName) like CONCAT(lower(:search), '%') THEN 0
+                            WHEN lower(p.lastName) like CONCAT(lower(:search), '%') THEN 1
+                            ELSE 2
+                        END, p.firstName, p.lastName"""
+    )
+)
 public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -59,9 +61,11 @@ public class Player {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<VerificationCode> verificationCodes;
 
-    public Player() {}
+    public Player() {
+    }
 
-    public Player(String firstName, String lastName, SexType sex, LocalDate birthday, String email, String phone, boolean mailVerified, boolean adminVerified) {
+    public Player(String firstName, String lastName, SexType sex, LocalDate birthday, String email, String phone,
+                  boolean mailVerified, boolean adminVerified) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.sex = sex;

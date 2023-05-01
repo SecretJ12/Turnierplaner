@@ -4,13 +4,12 @@ import de.secretj12.turnierplaner.db.entities.Tournament;
 import de.secretj12.turnierplaner.db.repositories.TournamentRepository;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.security.TestSecurity;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
@@ -45,21 +44,13 @@ public class TestCompetitionResource {
 
     @Test
     public void testCanCreateUnauthorized() {
-        given()
-                .get("/tournament/Clubmeisterschaft 2021/competition/canEdit")
-                .then().assertThat()
-                .statusCode(Response.Status.OK.getStatusCode())
-                .body(is("false"));
+        given().get("/tournament/Clubmeisterschaft 2021/competition/canEdit").then().assertThat().statusCode(Response.Status.OK.getStatusCode()).body(is("false"));
     }
 
     @Test
     @TestSecurity(user = "testUser", roles = {"user", "reporter", "director"})
     public void testCanCreateAuthorized() {
-        given()
-                .get("/tournament/Clubmeisterschaft 2021/competition/canEdit")
-                .then().assertThat()
-                .statusCode(Response.Status.OK.getStatusCode())
-                .body(is("true"));
+        given().get("/tournament/Clubmeisterschaft 2021/competition/canEdit").then().assertThat().statusCode(Response.Status.OK.getStatusCode()).body(is("true"));
     }
 
     // TODO Tests

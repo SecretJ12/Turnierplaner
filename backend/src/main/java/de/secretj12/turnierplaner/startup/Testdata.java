@@ -44,6 +44,7 @@ public class Testdata {
     SetRepository sets;
 
     private final Random random = new Random();
+
     public Testdata() {
 
     }
@@ -275,24 +276,24 @@ public class Testdata {
                     match.setTeamA(groupTeams[x]);
                     match.setTeamB(groupTeams[y]);
                     int matchBegin = random.nextInt(2);
-                    if(matchBegin == 0){
+                    if (matchBegin == 0) {
                         match.setBegin(now);
                         match.setEnd(hourLater);
-                    }else{
+                    } else {
                         match.setBegin(hourLater);
                         match.setEnd(hourLater.plusHours(1));
                     }
                     ArrayList<Set> sets = new ArrayList<>();
                     Set set = new Set();
                     int score = random.nextInt(5);
-                    switch (score){
+                    switch (score) {
                         case 1 -> set.setScoreA(0);
                         case 2 -> set.setScoreA(15);
                         case 3 -> set.setScoreA(30);
                         case 4 -> set.setScoreA(40);
                     }
                     score = random.nextInt(5);
-                    switch (score){
+                    switch (score) {
                         case 1 -> set.setScoreB(0);
                         case 2 -> set.setScoreB(15);
                         case 3 -> set.setScoreB(30);
@@ -431,20 +432,22 @@ public class Testdata {
         tournaments.persist(tour5);
         addDefaultCompetitions(tour5, pm);
 
+        // @formatter:off
         String[] firstNames = new String[]{"Charlene", "Amado", "Goldie", "Louis", "Carrol", "Everette", "Laverne", "Robt", "Abby", "German", "Katharine", "Vanessa", "Emilio", "Adela", "Mel", "Guy", "Cassandra", "Antonia", "Angie", "Mindy", "Brice", "Deshawn", "Shawna", "Bryant", "Zachariah", "Bernie", "Selena", "Lacey", "Darnell", "Cory", "Socorro", "Belinda", "Stephan", "Korey", "Josefina", "Joe", "Clyde", "Silas", "Moses", "Christian", "Dalton", "Adrienne", "Adan", "Helena", "Luann", "Chuck", "Leona", "Emmanuel", "Debra", "Jose", "Eldridge", "Lynnette", "Tony", "Katie", "Amber", "Carmela", "Paige", "Donn", "Alfred", "Reid", "Kerry", "Lillian", "Angel", "Bryant", "Gaylord", "Deidre", "Derrick", "Allison", "Jordon", "Alfreda", "Colby", "Leticia", "Lee", "Janna", "Ivory", "Hilda", "Lindsey", "Boris", "Stanford", "Johnnie", "Maura", "Joan", "Latisha", "Robin", "Letha", "Mariano", "Hong", "Leanna", "Caleb", "Rickey", "Alta", "Kari", "Rueben", "Hugh", "Charlotte", "Willian", "Edmond", "Trent", "Claudia", "Darla"};
+        // @formatter:off
         String[] lastNames = new String[]{"Brennan", "Meyers", "Mora", "Bailey", "Burns", "Trevino", "Horton", "Monroe", "Ali", "Jarvis", "Banks", "Leblanc", "Kidd", "Mooney", "Stout", "Kramer", "Galvan", "Barrett", "Steele", "Morgan", "English", "Pitts", "Fowler", "Vaughan", "Livingston", "May", "Holden", "Sandoval", "Freeman", "Hurley", "Lambert", "Watson", "Huff", "Ruiz", "Santana", "Conway", "Mcintosh", "Bates", "Greene", "Castaneda", "Mcclure", "Kemp", "Hanna", "Merritt", "Mccarthy", "Sampson", "Barnett", "Green", "Ewing", "Floyd", "Lambert", "Farley", "Berry", "Suarez", "Spears", "Martinez", "Cameron", "Ponce", "Roth", "Tate", "Reyes", "Mann", "Bell", "Singleton", "Fischer", "Reilly", "Maxwell", "Montoya", "Serrano", "Morrison", "Patrick", "Evans", "Crawford", "Shannon", "Calhoun", "Kemp", "Vasquez", "Dorsey", "Mills", "Bright", "Rivers", "Huffman", "Wiley", "Daugherty", "Mcintyre", "Mcmahon", "Boone", "Walls", "Campos", "Morton", "Avila", "Church", "Watkins", "Keller", "Klein", "Valentine", "Bartlett", "Chaney", "Wall", "Howard"};
 
         Random rn = new Random();
         for (int i = 0; i < 500; i++) {
             boolean male = rn.nextBoolean();
 
-            String fn = firstNames[rn.nextInt(firstNames.length)] + (male?'m':'f');
+            String fn = firstNames[rn.nextInt(firstNames.length)] + (male ? 'm' : 'f');
             String ln = lastNames[rn.nextInt(lastNames.length)];
             Player pl = new Player();
             pl.setFirstName(fn);
             pl.setLastName(ln);
             pl.setBirthday(LocalDate.now());
-            pl.setSex(male?SexType.MALE :SexType.FEMALE);
+            pl.setSex(male ? SexType.MALE : SexType.FEMALE);
             pl.setEmail(fn + "." + ln + "@mail.de");
             pl.setPhone("+49 123 456789");
             pl.setMailVerified(true);

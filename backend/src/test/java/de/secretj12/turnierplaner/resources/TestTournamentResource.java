@@ -14,21 +14,13 @@ public class TestTournamentResource {
 
     @Test
     public void testCanCreateUnauthorized() {
-        given()
-                .get("/tournament/canCreate")
-                .then().assertThat()
-                .statusCode(Response.Status.OK.getStatusCode())
-                .body(is("false"));
+        given().get("/tournament/canCreate").then().assertThat().statusCode(Response.Status.OK.getStatusCode()).body(is("false"));
     }
 
     @Test
     @TestSecurity(user = "testUser", roles = {"user", "reporter", "director"})
     public void testCanCreateAuthorized() {
-        given()
-                .get("/tournament/canCreate")
-                .then().assertThat()
-                .statusCode(Response.Status.OK.getStatusCode())
-                .body(is("true"));
+        given().get("/tournament/canCreate").then().assertThat().statusCode(Response.Status.OK.getStatusCode()).body(is("true"));
     }
 
     // TODO Tests

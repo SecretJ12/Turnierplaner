@@ -16,12 +16,10 @@ public class CompetitionRepository implements PanacheRepository<Competition> {
     }
 
     public Competition getByName(String tourName, String compName) {
-        return find("#compByName", tourName, compName)
-                .firstResultOptional().orElse(null);
+        return find("#compByName", tourName, compName).firstResultOptional().orElse(null);
     }
 
     public List<Competition> listByName(@QueryParam("tourName") String tourName) {
-        return find("#listByName", tourName)
-                .list();
+        return find("#listByName", tourName).list();
     }
 }

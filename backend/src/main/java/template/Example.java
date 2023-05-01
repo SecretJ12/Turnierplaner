@@ -57,6 +57,6 @@ public class Example {
     @Produces(MediaType.TEXT_PLAIN)
     @RolesAllowed("admin")
     public RestResponse<String> helloAdmin() {
-        return ResponseBuilder.ok( "Hello admin!").build();
+        return ResponseBuilder.ok("Hello admin!").build();
     }
 }

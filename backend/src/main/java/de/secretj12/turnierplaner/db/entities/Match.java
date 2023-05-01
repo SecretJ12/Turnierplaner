@@ -5,8 +5,8 @@ import de.secretj12.turnierplaner.db.entities.competition.Team;
 import de.secretj12.turnierplaner.db.entities.groups.FinalOfGroup;
 import de.secretj12.turnierplaner.db.entities.groups.MatchOfGroup;
 import de.secretj12.turnierplaner.db.entities.knockout.NextMatch;
-
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -14,25 +14,23 @@ import java.util.UUID;
 @Entity
 @Table(name = "matches")
 @NamedQueries(
-        @NamedQuery(name = "findHead",
-                query = "FROM Match m WHERE m.competition.id = :compId " +
-                        "AND NOT EXISTS (FROM NextMatch n WHERE n.previousA = m OR n.previousB = m) " +
-                        "AND (EXISTS (FROM NextMatch n WHERE m = n.nextMatch AND n.winner = :finale) " +
-                        "   OR EXISTS (FROM FinalOfGroup f WHERE m = f.nextMatch AND " +
-                        "       (f.pos = 1 AND :finale = true " +
-                        "         OR f.pos = 2 AND :finale = false))) " +
-                        "AND NOT EXISTS (FROM MatchOfGroup mog WHERE mog.match = m)")
-)
+    @NamedQuery(name = "findHead",
+                query = """
+                        FROM Match m WHERE m.competition.id = :compId
+                        AND NOT EXISTS (FROM NextMatch n WHERE n.previousA = m OR n.previousB = m)
+                        AND (EXISTS (FROM NextMatch n WHERE m = n.nextMatch AND n.winner = :finale)
+                           OR EXISTS (FROM FinalOfGroup f WHERE m = f.nextMatch AND
+                               (f.pos = 1 AND :finale = true
+                                 OR f.pos = 2 AND :finale = false)))
+                        AND NOT EXISTS (FROM MatchOfGroup mog WHERE mog.match = m)"""))
 public class Match {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private UUID id;
 
-    @ManyToOne(cascade = {CascadeType.ALL})
-    @JoinColumns({
-            @JoinColumn(name = "competition_id")
-    })
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumns(@JoinColumn(name = "competition_id"))
     private Competition competition;
     @ManyToOne
     @JoinColumn(name = "court")
@@ -64,7 +62,7 @@ public class Match {
     @OneToOne(mappedBy = "match", fetch = FetchType.LAZY)
     private MatchOfGroup group;
 
-    @OneToMany(mappedBy = "key.match",cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "key.match", cascade = CascadeType.ALL)
     private List<Set> sets;
 
     public UUID getId() {
