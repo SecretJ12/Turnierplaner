@@ -239,14 +239,12 @@ public class TestdataGenerator {
 
 
     private void addTeamsAndMatchesToKnockout(Competition competition, int numberTeams, boolean doublePlayer, Sex sex) {
-        System.out.println("CAll");
         Team[] knockoutTeams = createTeams(competition, sex, numberTeams, doublePlayer);
 
 // CREATE KNOCKOUT MATCHES
         Match[] currentMatches = new Match[numberTeams / 2];
         Match[] previousMatches = new Match[numberTeams / 2];
         for (int i = numberTeams / 2; i > 0; i /= 2) {
-            System.out.println("number" + i);
             for (int j = 0; j < i; j++) {
                 currentMatches[j] = createMatch(courts[j % 4], competition);
 
