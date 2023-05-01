@@ -130,8 +130,8 @@ public class TestdataGenerator {
                 Set set = new Set();
                 set.setKey(setKey);
                 if (started) {
-                    set.setScoreA(random.nextInt(8));
-                    set.setScoreB(random.nextInt(8));
+                    set.setScoreA(random.nextInt(6));
+                    set.setScoreB(random.nextInt(6));
                 } else {
                     set.setScoreA(0);
                     set.setScoreB(0);
@@ -286,10 +286,10 @@ public class TestdataGenerator {
         }
     }
 
-    private Match createMatch(Court c1, Competition comp2) {
+    private Match createMatch(Court c, Competition competition) {
         Match match = new Match();
-        match.setCompetition(comp2);
-        match.setCourt(c1);
+        match.setCompetition(competition);
+        match.setCourt(c);
         match.setBegin(LocalDateTime.now());
         match.setEnd(LocalDateTime.now().plusDays(1));
         match.setFinished(false);
