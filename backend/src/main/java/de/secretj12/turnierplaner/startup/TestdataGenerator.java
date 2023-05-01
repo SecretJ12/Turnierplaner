@@ -49,7 +49,7 @@ public class TestdataGenerator {
     private final Random random = new Random();
     private final Faker faker = new Faker();
 
-    private final int NUMBEROFCOURTS = 4;
+    private final static int NUMBEROFCOURTS = 4;
     private Court[] courts = new Court[4];
 
     @Transactional
@@ -116,6 +116,7 @@ public class TestdataGenerator {
             }
         }
         tournament.setDescription(description);
+        tournaments.persist(tournament);
         return tournament;
     }
 
