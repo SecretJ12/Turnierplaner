@@ -20,7 +20,7 @@ public class Group {
     @Column(name = "index")
     private long index;
     @ManyToOne
-    @JoinColumns({@JoinColumn(name = "competition_id")})
+    @JoinColumns(@JoinColumn(name = "competition_id"))
     private Competition competition;
 
     public UUID getId() {

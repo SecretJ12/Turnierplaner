@@ -12,12 +12,9 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(
-       name = "matches"
-)
+@Table(name = "matches")
 @NamedQueries(
-    @NamedQuery(
-                name = "findHead",
+    @NamedQuery(name = "findHead",
                 query = """
                         FROM Match m WHERE m.competition.id = :compId
                         AND NOT EXISTS (FROM NextMatch n WHERE n.previousA = m OR n.previousB = m)
@@ -25,81 +22,47 @@ import java.util.UUID;
                            OR EXISTS (FROM FinalOfGroup f WHERE m = f.nextMatch AND
                                (f.pos = 1 AND :finale = true
                                  OR f.pos = 2 AND :finale = false)))
-                        AND NOT EXISTS (FROM MatchOfGroup mog WHERE mog.match = m)"""
-    )
-)
+                        AND NOT EXISTS (FROM MatchOfGroup mog WHERE mog.match = m)"""))
 public class Match {
     @Id
-    @GeneratedValue(
-                    strategy = GenerationType.AUTO
-    )
-    @Column(
-            name = "id"
-    )
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private UUID id;
 
-    @ManyToOne(
-               cascade = {CascadeType.ALL}
-    )
-    @JoinColumns(
-        {@JoinColumn(
-                     name = "competition_id"
-        )}
-    )
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumns(@JoinColumn(name = "competition_id"))
     private Competition competition;
     @ManyToOne
-    @JoinColumn(
-                name = "court"
-    )
+    @JoinColumn(name = "court")
     private Court court;
 
-    @Column(
-            name = "begin_time"
-    )
+    @Column(name = "begin_time")
     private LocalDateTime begin;
-    @Column(
-            name = "end_time"
-    )
+    @Column(name = "end_time")
     private LocalDateTime end;
 
-    @Column(
-            name = "finished"
-    )
+    @Column(name = "finished")
     private Boolean finished;
-    @Column(
-            name = "winner"
-    )
+    @Column(name = "winner")
     private Boolean winner;
 
     @ManyToOne
-    @JoinColumn(
-                name = "team_a"
-    )
+    @JoinColumn(name = "team_a")
     private Team teamA;
     @ManyToOne
-    @JoinColumn(
-                name = "team_b"
-    )
+    @JoinColumn(name = "team_b")
     private Team teamB;
 
-    @OneToOne(
-              mappedBy = "nextMatch", fetch = FetchType.LAZY
-    )
+    @OneToOne(mappedBy = "nextMatch", fetch = FetchType.LAZY)
     private NextMatch dependentOn;
 
-    @OneToOne(
-              mappedBy = "nextMatch"
-    )
+    @OneToOne(mappedBy = "nextMatch")
     private FinalOfGroup finalOfGroup;
 
-    @OneToOne(
-              mappedBy = "match", fetch = FetchType.LAZY
-    )
+    @OneToOne(mappedBy = "match", fetch = FetchType.LAZY)
     private MatchOfGroup group;
 
-    @OneToMany(
-               mappedBy = "key.match", cascade = {CascadeType.ALL}
-    )
+    @OneToMany(mappedBy = "key.match", cascade = CascadeType.ALL)
     private List<Set> sets;
 
     public UUID getId() {

@@ -1,9 +1,9 @@
 package de.secretj12.turnierplaner.db.entities;
 
+import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -64,7 +64,8 @@ public class Player {
     public Player() {
     }
 
-    public Player(String firstName, String lastName, SexType sex, LocalDate birthday, String email, String phone, boolean mailVerified, boolean adminVerified) {
+    public Player(String firstName, String lastName, SexType sex, LocalDate birthday, String email, String phone,
+                  boolean mailVerified, boolean adminVerified) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.sex = sex;

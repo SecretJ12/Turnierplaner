@@ -18,10 +18,10 @@ public class Team {
     @JoinColumn(name = "competition", referencedColumnName = "id")
     private Competition competition;
 
-    @ManyToOne(cascade = {CascadeType.ALL})
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "player_a", referencedColumnName = "id")
     private Player playerA;
-    @ManyToOne(cascade = {CascadeType.ALL})
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "player_b", referencedColumnName = "id")
     private Player playerB;
 
