@@ -280,19 +280,23 @@ public class Testdata {
                     }
                     ArrayList<Set> sets = new ArrayList<>();
                     Set set = new Set();
-                    int score = random.nextInt(5);
+                    int score = random.nextInt(6);
                     switch (score) {
-                        case 1 -> set.setScoreA(0);
-                        case 2 -> set.setScoreA(15);
-                        case 3 -> set.setScoreA(30);
-                        case 4 -> set.setScoreA(40);
+                        case 0 -> set.setScoreA(0);
+                        case 1 -> set.setScoreA(1);
+                        case 2 -> set.setScoreA(2);
+                        case 3 -> set.setScoreA(3);
+                        case 4 -> set.setScoreA(4);
+                        case 5 -> set.setScoreA(5);
                     }
-                    score = random.nextInt(5);
+                    score = random.nextInt(6);
                     switch (score) {
-                        case 1 -> set.setScoreB(0);
-                        case 2 -> set.setScoreB(15);
-                        case 3 -> set.setScoreB(30);
-                        case 4 -> set.setScoreB(40);
+                        case 0 -> set.setScoreB(0);
+                        case 1 -> set.setScoreA(1);
+                        case 2 -> set.setScoreA(2);
+                        case 3 -> set.setScoreA(3);
+                        case 4 -> set.setScoreA(4);
+                        case 5 -> set.setScoreA(5);
                     }
                     Set.SetKey setKey = new Set.SetKey();
                     setKey.setIndex(1);

@@ -4,10 +4,14 @@
     {{ props.match.begin.toLocaleString(t("lang"), dateOptions) }}
   </p>
   <div v-else-if="props.order">
-    {{ scoreA }}-{{ scoreB }}
+    <div v-for="set in props.match.sets">
+      {{set.scoreA}} - {{set.scoreB}}
+    </div>
   </div>
   <div v-else>
-    {{ scoreB }}-{{ scoreA }}
+    <div v-for="set in props.match.sets">
+      {{set.scoreB}} - {{set.scoreA}}
+    </div>
   </div>
 </template>
 
@@ -32,16 +36,6 @@ const dateOptions: Intl.DateTimeFormatOptions = {
   minute: "numeric"
 }
 
-let scoreA = 0
-let scoreB = 0
-if (props.match.sets !== null)
-  for (const set of props.match.sets) {
-    if (set.scoreA < set.scoreB) {
-      scoreB += 1
-    } else if (set.scoreA > set.scoreB) {
-      scoreA += 1
-    }
-  }
 </script>
 
 <style scoped>
