@@ -15,7 +15,7 @@ public class jDirectorCompetitionAdd extends jUserCompetition {
     public void toDB(Competition competition) {
         competition.setName(getName());
         competition.setDescription(getDescription());
-        switch(getType()) {
+        switch (getType()) {
             case KNOCKOUT -> competition.setType(CompetitionType.KNOCKOUT);
             case GROUPS -> competition.setType(CompetitionType.GROUPS);
         }

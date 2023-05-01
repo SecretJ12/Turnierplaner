@@ -45,21 +45,13 @@ public class TestCompetitionResource {
 
     @Test
     public void testCanCreateUnauthorized() {
-        given()
-                .get("/tournament/Clubmeisterschaft 2021/competition/canEdit")
-                .then().assertThat()
-                .statusCode(Response.Status.OK.getStatusCode())
-                .body(is("false"));
+        given().get("/tournament/Clubmeisterschaft 2021/competition/canEdit").then().assertThat().statusCode(Response.Status.OK.getStatusCode()).body(is("false"));
     }
 
     @Test
     @TestSecurity(user = "testUser", roles = {"user", "reporter", "director"})
     public void testCanCreateAuthorized() {
-        given()
-                .get("/tournament/Clubmeisterschaft 2021/competition/canEdit")
-                .then().assertThat()
-                .statusCode(Response.Status.OK.getStatusCode())
-                .body(is("true"));
+        given().get("/tournament/Clubmeisterschaft 2021/competition/canEdit").then().assertThat().statusCode(Response.Status.OK.getStatusCode()).body(is("true"));
     }
 
     // TODO Tests

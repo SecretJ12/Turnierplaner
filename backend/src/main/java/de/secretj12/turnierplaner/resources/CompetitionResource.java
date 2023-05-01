@@ -58,8 +58,8 @@ public class CompetitionResource {
     @Path("/{compName}/details")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public jUserCompetition getCompetition(@PathParam("tourName") String tourName,
-                                           @PathParam("compName") String compName) {
+    public jUserCompetition getCompetition(@PathParam("tourName") String tourName, @PathParam(
+        "compName") String compName) {
         checkTournamentAccessibility(tourName);
 
         if (securityIdentity.hasRole("director"))
@@ -81,15 +81,13 @@ public class CompetitionResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     public String addCompetition(@PathParam("tourName") String tourName, jDirectorCompetitionAdd competition) {
-        if (competition.getName() == null)
-            throw new BadRequestException("No competition specified");
+        if (competition.getName() == null) throw new BadRequestException("No competition specified");
 
         if (competitions.getByName(tourName, competition.getName()) != null)
             throw new BadRequestException("Competition already exists");
 
         Tournament tournament = tournaments.getByName(tourName);
-        if (tournament == null)
-            throw new BadRequestException("Tournament doesn't exist");
+        if (tournament == null) throw new BadRequestException("Tournament doesn't exist");
 
         if (competition.getPlayerA().isHasMinAge() && competition.getPlayerA().getMinAge() == null)
             throw new BadRequestException("Player A: Min age null although has min age");
@@ -115,8 +113,7 @@ public class CompetitionResource {
     @Produces(MediaType.TEXT_PLAIN)
     public String updateCompetition(@PathParam("tourName") String tourName, jDirectorCompetitionUpdate competition) {
         Competition dbCompetition = competitions.getById(competition.getId());
-        if (dbCompetition == null)
-            throw new BadRequestException("Competition doesn't exist");
+        if (dbCompetition == null) throw new BadRequestException("Competition doesn't exist");
         if (!dbCompetition.getTournament().getName().equals(tourName))
             throw new BadRequestException("Tournament of competition is not the given");
 
@@ -131,17 +128,14 @@ public class CompetitionResource {
     @GET
     @Path("/{compName}/signedUpTeams")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<jUserTeam> getSignedUpPlayers(@PathParam("tourName") String tourName,
-                                              @PathParam("compName") String compName) {
+    public List<jUserTeam> getSignedUpPlayers(@PathParam("tourName") String tourName, @PathParam(
+        "compName") String compName) {
         checkTournamentAccessibility(tourName);
 
         Competition competition = competitions.getByName(tourName, compName);
-        if (competition == null)
-            throw new NotFoundException("Competition was not found");
+        if (competition == null) throw new NotFoundException("Competition was not found");
 
-        if (!securityIdentity.hasRole("director") &&
-                (competition.getTournament().getBeginRegistration().isAfter(LocalDateTime.now())
-                        || competition.getTournament().getBeginGamePhase().isBefore(LocalDateTime.now())))
+        if (!securityIdentity.hasRole("director") && (competition.getTournament().getBeginRegistration().isAfter(LocalDateTime.now()) || competition.getTournament().getBeginGamePhase().isBefore(LocalDateTime.now())))
             throw new NotAuthorizedException("Registration phase is not active");
 
         return competition.getTeams().stream().map(jUserTeam::new).toList();
@@ -152,41 +146,32 @@ public class CompetitionResource {
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public String signUpPlayer(@PathParam("tourName") String tourName, @PathParam("compName") String compName,
-                               jUserPlayerSignUpForm reg) {
+    public String signUpPlayer(@PathParam("tourName") String tourName, @PathParam(
+        "compName") String compName, jUserPlayerSignUpForm reg) {
         checkTournamentAccessibility(tourName);
 
         Competition competition = competitions.getByName(tourName, compName);
-        if (competition == null)
-            throw new BadRequestException("Competition doesn't exist");
+        if (competition == null) throw new BadRequestException("Competition doesn't exist");
 
         if (!securityIdentity.hasRole("director") && // or registration phase
-                (competition.getTournament().getBeginRegistration().isAfter(LocalDateTime.now())
-                        || competition.getTournament().getEndRegistration().isBefore(LocalDateTime.now())))
+                (competition.getTournament().getBeginRegistration().isAfter(LocalDateTime.now()) || competition.getTournament().getEndRegistration().isBefore(LocalDateTime.now())))
             throw new NotAuthorizedException("Registration phase is not active");
 
-        if (competition.getMode() == CompetitionMode.SINGLES
-                || (competition.getSignup() == CompetitionSignUp.INDIVIDUAL && !competition.isPlayerBdifferent())) {
+        if (competition.getMode() == CompetitionMode.SINGLES || (competition.getSignup() == CompetitionSignUp.INDIVIDUAL && !competition.isPlayerBdifferent())) {
             // single mode or double with individual registration but same constraints
             // -> every registration as player A and player B is null
 
-            if (reg.getPlayerA() == null)
-                throw new BadRequestException("Player A is null");
-            if (reg.getPlayerB() != null)
-                throw new BadRequestException("Player B is not null");
+            if (reg.getPlayerA() == null) throw new BadRequestException("Player A is null");
+            if (reg.getPlayerB() != null) throw new BadRequestException("Player B is not null");
 
-            Player playerA = players.playerRepository
-                    .getByName(reg.getPlayerA().getFirstName(), reg.getPlayerA().getLastName());
-            if (playerA == null)
-                throw new BadRequestException("Player A does not exist");
+            Player playerA = players.playerRepository.getByName(reg.getPlayerA().getFirstName(), reg.getPlayerA().getLastName());
+            if (playerA == null) throw new BadRequestException("Player A does not exist");
 
             if (conditionsFailA(competition, playerA))
                 throw new BadRequestException("Player A does not meed the conditions");
 
             List<Team> regTeams = competition.getTeams();
-            if (regTeams != null && regTeams.stream()
-                    .anyMatch(t -> (t.getPlayerA() != null && t.getPlayerA().getId().equals(playerA.getId()))
-                            || (t.getPlayerB() != null && t.getPlayerB().getId().equals(playerA.getId()))))
+            if (regTeams != null && regTeams.stream().anyMatch(t -> (t.getPlayerA() != null && t.getPlayerA().getId().equals(playerA.getId())) || (t.getPlayerB() != null && t.getPlayerB().getId().equals(playerA.getId()))))
                 throw new WebApplicationException("Player already registered", Response.Status.CONFLICT);
 
             Team team = new Team();
@@ -206,16 +191,13 @@ public class CompetitionResource {
 
                 if (reg.getPlayerA() != null) {
                     Player playerA = players.playerRepository.getByName(reg.getPlayerA().getFirstName(), reg.getPlayerA().getLastName());
-                    if (playerA == null)
-                        throw new BadRequestException("Player A doesn't exist");
+                    if (playerA == null) throw new BadRequestException("Player A doesn't exist");
 
                     if (conditionsFailA(competition, playerA))
                         throw new BadRequestException("Player A is does not meet the conditions");
 
                     List<Team> regTeams = competition.getTeams();
-                    if (regTeams != null && regTeams.stream()
-                            .anyMatch(t -> (t.getPlayerA() != null && t.getPlayerA().getId().equals(playerA.getId()))
-                                    || (t.getPlayerB() != null && t.getPlayerB().getId().equals(playerA.getId()))))
+                    if (regTeams != null && regTeams.stream().anyMatch(t -> (t.getPlayerA() != null && t.getPlayerA().getId().equals(playerA.getId())) || (t.getPlayerB() != null && t.getPlayerB().getId().equals(playerA.getId()))))
                         throw new WebApplicationException("Player already registered", Response.Status.CONFLICT);
 
                     Team team = new Team();
@@ -225,16 +207,13 @@ public class CompetitionResource {
                 }
                 if (reg.getPlayerB() != null) {
                     Player playerB = players.playerRepository.getByName(reg.getPlayerB().getFirstName(), reg.getPlayerB().getLastName());
-                    if (playerB == null)
-                        throw new BadRequestException("Player B does not exist");
+                    if (playerB == null) throw new BadRequestException("Player B does not exist");
 
                     if (conditionsFailB(competition, playerB))
                         throw new BadRequestException("Player B is does not meet the conditions");
 
                     List<Team> regTeams = competition.getTeams();
-                    if (regTeams != null && regTeams.stream()
-                            .anyMatch(t -> (t.getPlayerA() != null && t.getPlayerA().getId().equals(playerB.getId()))
-                                    || (t.getPlayerB() != null && t.getPlayerB().getId().equals(playerB.getId()))))
+                    if (regTeams != null && regTeams.stream().anyMatch(t -> (t.getPlayerA() != null && t.getPlayerA().getId().equals(playerB.getId())) || (t.getPlayerB() != null && t.getPlayerB().getId().equals(playerB.getId()))))
                         throw new WebApplicationException("Player already registered", Response.Status.CONFLICT);
 
                     Team team = new Team();
@@ -246,17 +225,13 @@ public class CompetitionResource {
                 // double mode with registration together and any constraints
                 // -> needs player A and player B to be not null
 
-                if (reg.getPlayerA() == null)
-                    throw new BadRequestException("Player A is null");
-                if (reg.getPlayerB() == null)
-                    throw new BadRequestException("Player B is null");
+                if (reg.getPlayerA() == null) throw new BadRequestException("Player A is null");
+                if (reg.getPlayerB() == null) throw new BadRequestException("Player B is null");
 
                 Player playerA = players.playerRepository.getByName(reg.getPlayerA().getFirstName(), reg.getPlayerA().getLastName());
-                if (playerA == null)
-                    throw new BadRequestException("Player A does not exist");
+                if (playerA == null) throw new BadRequestException("Player A does not exist");
                 Player playerB = players.playerRepository.getByName(reg.getPlayerB().getFirstName(), reg.getPlayerB().getLastName());
-                if (playerB == null)
-                    throw new BadRequestException("Player B does not exist");
+                if (playerB == null) throw new BadRequestException("Player B does not exist");
 
                 if (conditionsFailA(competition, playerA))
                     throw new BadRequestException("Player A is does not meet the conditions");
@@ -264,13 +239,9 @@ public class CompetitionResource {
                     throw new BadRequestException("Player B is does not meet the conditions");
 
                 List<Team> regTeams = competition.getTeams();
-                if (regTeams != null && regTeams.stream()
-                        .anyMatch(t -> (t.getPlayerA() != null && t.getPlayerA().getId().equals(playerA.getId()))
-                                || (t.getPlayerB() != null && t.getPlayerB().getId().equals(playerA.getId()))))
+                if (regTeams != null && regTeams.stream().anyMatch(t -> (t.getPlayerA() != null && t.getPlayerA().getId().equals(playerA.getId())) || (t.getPlayerB() != null && t.getPlayerB().getId().equals(playerA.getId()))))
                     throw new WebApplicationException("Player already registered", Response.Status.CONFLICT);
-                if (regTeams != null && regTeams.stream()
-                        .anyMatch(t -> (t.getPlayerA() != null && t.getPlayerA().getId().equals(playerB.getId()))
-                                || (t.getPlayerB() != null && t.getPlayerB().getId().equals(playerB.getId()))))
+                if (regTeams != null && regTeams.stream().anyMatch(t -> (t.getPlayerA() != null && t.getPlayerA().getId().equals(playerB.getId())) || (t.getPlayerB() != null && t.getPlayerB().getId().equals(playerB.getId()))))
                     throw new WebApplicationException("Player already registered", Response.Status.CONFLICT);
 
                 Team team = new Team();
@@ -286,31 +257,24 @@ public class CompetitionResource {
     }
 
     private boolean conditionsFailA(Competition comp, Player player) {
-        return (comp.getPlayerASex() == Sex.FEMALE && player.getSex() == SexType.MALE)
-                || (comp.getPlayerASex() == Sex.MALE && player.getSex() == SexType.FEMALE)
-                || (comp.playerAhasMinAge() && comp.getPlayerAminAge().isBefore(player.getBirthday()))
-                || (comp.playerAhasMaxAge() && comp.getPlayerAminAge().isAfter(player.getBirthday()));
+        return (comp.getPlayerASex() == Sex.FEMALE && player.getSex() == SexType.MALE) || (comp.getPlayerASex() == Sex.MALE && player.getSex() == SexType.FEMALE) || (comp.playerAhasMinAge() && comp.getPlayerAminAge().isBefore(player.getBirthday())) || (comp.playerAhasMaxAge() && comp.getPlayerAminAge().isAfter(player.getBirthday()));
     }
 
     private boolean conditionsFailB(Competition comp, Player player) {
-        return (comp.getPlayerBSex() == Sex.FEMALE && player.getSex() == SexType.MALE)
-                || (comp.getPlayerBSex() == Sex.MALE && player.getSex() == SexType.FEMALE)
-                || (comp.playerBhasMinAge() && comp.getPlayerBminAge().isBefore(player.getBirthday()))
-                || (comp.playerBhasMaxAge() && comp.getPlayerBminAge().isAfter(player.getBirthday()));
+        return (comp.getPlayerBSex() == Sex.FEMALE && player.getSex() == SexType.MALE) || (comp.getPlayerBSex() == Sex.MALE && player.getSex() == SexType.FEMALE) || (comp.playerBhasMinAge() && comp.getPlayerBminAge().isBefore(player.getBirthday())) || (comp.playerBhasMaxAge() && comp.getPlayerBminAge().isAfter(player.getBirthday()));
     }
 
     @GET
     @Path("/{compName}/knockoutMatches")
     @Produces(MediaType.APPLICATION_JSON)
-    public jUserKnockoutSystem getKnockoutMatches(@PathParam("tourName") String tourName, @PathParam("compName") String compName) {
+    public jUserKnockoutSystem getKnockoutMatches(@PathParam("tourName") String tourName, @PathParam(
+        "compName") String compName) {
         checkTournamentAccessibility(tourName);
 
         Competition competition = competitions.getByName(tourName, compName);
-        if (competition == null)
-            throw new NotFoundException("Could not found competition");
+        if (competition == null) throw new NotFoundException("Could not found competition");
         if (competition.getType() != CompetitionType.KNOCKOUT)
-            throw new WebApplicationException("Competition does not have type knockout",
-                    Response.Status.METHOD_NOT_ALLOWED);
+            throw new WebApplicationException("Competition does not have type knockout", Response.Status.METHOD_NOT_ALLOWED);
 
         Match finale = matches.getFinal(competition);
         Match thirdPlace = matches.getThirdPlace(competition);
@@ -320,19 +284,17 @@ public class CompetitionResource {
     @GET
     @Path("/{compName}/groupMatches")
     @Produces(MediaType.APPLICATION_JSON)
-    public jUserGroupSystem getGroupMatches(@PathParam("tourName") String tourName, @PathParam("compName") String compName) {
+    public jUserGroupSystem getGroupMatches(@PathParam("tourName") String tourName, @PathParam(
+        "compName") String compName) {
         checkTournamentAccessibility(tourName);
 
         Competition competition = competitions.getByName(tourName, compName);
-        if (competition == null)
-            throw new NotFoundException("Competition as not found");
+        if (competition == null) throw new NotFoundException("Competition as not found");
         if (competition.getType() != CompetitionType.GROUPS)
-            throw new WebApplicationException("Competition does not have type groups",
-                    Response.Status.METHOD_NOT_ALLOWED);
+            throw new WebApplicationException("Competition does not have type groups", Response.Status.METHOD_NOT_ALLOWED);
 
         List<Group> groups = competition.getGroups();
-        if (groups == null)
-            throw new NotFoundException("Found no groups");
+        if (groups == null) throw new NotFoundException("Found no groups");
 
         Match finale = matches.getFinal(competition);
         Match thirdPlace = matches.getThirdPlace(competition);
@@ -343,8 +305,7 @@ public class CompetitionResource {
 
     private void checkTournamentAccessibility(String tourName) {
         Tournament tournament = tournaments.getByName(tourName);
-        if (tournament == null)
-            throw new NotFoundException("Tournament could not be found");
+        if (tournament == null) throw new NotFoundException("Tournament could not be found");
         if (!securityIdentity.hasRole("director") && !tournament.isVisible())
             throw new UnauthorizedException("Cannot access tournament");
     }

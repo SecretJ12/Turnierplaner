@@ -38,10 +38,9 @@ public class PlayerResource {
     @Transactional
     @Path("/find")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<jUserPlayer> listPlayer(@QueryParam("search") String search,
-                                        @QueryParam("sex") jUserSex sex,
-                                        @QueryParam("minAge") @JsonFormat(pattern = "yyyy-MM-dd") String minAgeS,
-                                        @QueryParam("maxAge") @JsonFormat(pattern = "yyyy-MM-dd") String maxAgeS) {
+    public List<jUserPlayer> listPlayer(@QueryParam("search") String search, @QueryParam("sex") jUserSex sex, @QueryParam("minAge") @JsonFormat(
+            pattern = "yyyy-MM-dd") String minAgeS, @QueryParam("maxAge") @JsonFormat(
+                    pattern = "yyyy-MM-dd") String maxAgeS) {
         // TODO instead of filtering by params of client, better filter by given competition, prevents leak of birthday
         // TODO only return verified accounts (except for admins)
         LocalDate minAge = minAgeS != null ? LocalDate.parse(minAgeS) : null;
@@ -54,9 +53,7 @@ public class PlayerResource {
         if (search.length() == 0) {
             return List.of();
         }
-        return playerRepository
-                .filter(search, dbSex, minAge, maxAge).map(jUserPlayer::new)
-                .toList();
+        return playerRepository.filter(search, dbSex, minAge, maxAge).map(jUserPlayer::new).toList();
     }
 
     @POST

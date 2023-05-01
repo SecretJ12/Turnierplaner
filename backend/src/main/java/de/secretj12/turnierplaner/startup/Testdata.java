@@ -44,6 +44,7 @@ public class Testdata {
     SetRepository sets;
 
     private final Random random = new Random();
+
     public Testdata() {
 
     }
@@ -275,24 +276,24 @@ public class Testdata {
                     match.setTeamA(groupTeams[x]);
                     match.setTeamB(groupTeams[y]);
                     int matchBegin = random.nextInt(2);
-                    if(matchBegin == 0){
+                    if (matchBegin == 0) {
                         match.setBegin(now);
                         match.setEnd(hourLater);
-                    }else{
+                    } else {
                         match.setBegin(hourLater);
                         match.setEnd(hourLater.plusHours(1));
                     }
                     ArrayList<Set> sets = new ArrayList<>();
                     Set set = new Set();
                     int score = random.nextInt(5);
-                    switch (score){
+                    switch (score) {
                         case 1 -> set.setScoreA(0);
                         case 2 -> set.setScoreA(15);
                         case 3 -> set.setScoreA(30);
                         case 4 -> set.setScoreA(40);
                     }
                     score = random.nextInt(5);
-                    switch (score){
+                    switch (score) {
                         case 1 -> set.setScoreB(0);
                         case 2 -> set.setScoreB(15);
                         case 3 -> set.setScoreB(30);
@@ -438,13 +439,13 @@ public class Testdata {
         for (int i = 0; i < 500; i++) {
             boolean male = rn.nextBoolean();
 
-            String fn = firstNames[rn.nextInt(firstNames.length)] + (male?'m':'f');
+            String fn = firstNames[rn.nextInt(firstNames.length)] + (male ? 'm' : 'f');
             String ln = lastNames[rn.nextInt(lastNames.length)];
             Player pl = new Player();
             pl.setFirstName(fn);
             pl.setLastName(ln);
             pl.setBirthday(LocalDate.now());
-            pl.setSex(male?SexType.MALE :SexType.FEMALE);
+            pl.setSex(male ? SexType.MALE : SexType.FEMALE);
             pl.setEmail(fn + "." + ln + "@mail.de");
             pl.setPhone("+49 123 456789");
             pl.setMailVerified(true);

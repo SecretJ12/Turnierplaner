@@ -7,7 +7,7 @@ public class jUserSet {
     private int scoreA;
     private int scoreB;
 
-    public jUserSet(Set set){
+    public jUserSet(Set set) {
         this.scoreA = set.getScoreA();
         this.scoreB = set.getScoreB();
         this.index = set.getKey().getIndex();

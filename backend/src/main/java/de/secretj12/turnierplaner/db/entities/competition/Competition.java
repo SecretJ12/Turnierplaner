@@ -3,76 +3,127 @@ package de.secretj12.turnierplaner.db.entities.competition;
 import de.secretj12.turnierplaner.db.entities.Match;
 import de.secretj12.turnierplaner.db.entities.Tournament;
 import de.secretj12.turnierplaner.db.entities.groups.Group;
-
 import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
 // TODO add attributes to set something like a plan published bit -> implement everywhere
 @Entity
-@Table(name = "competitions")
-@NamedQueries({
-        @NamedQuery(name = "compByName",
-                query = "SELECT c FROM Competition c LEFT JOIN Tournament t ON c.tournament = t " +
-                        "WHERE t.name = ?1 AND c.name = ?2"),
-        @NamedQuery(name = "listByName",
-                query = "SELECT c FROM Competition c LEFT JOIN Tournament t ON c.tournament = t WHERE t.name=  ?1")
-})
+@Table(
+        name = "competitions"
+)
+@NamedQueries(
+    {@NamedQuery(
+            name = "compByName",
+            query = "SELECT c FROM Competition c LEFT JOIN Tournament t ON c.tournament = t " + "WHERE t.name = ?1 AND c.name = ?2"
+    ), @NamedQuery(
+            name = "listByName",
+            query = "SELECT c FROM Competition c LEFT JOIN Tournament t ON c.tournament = t WHERE t.name=  ?1"
+    )
+    }
+)
 public class Competition {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(
+            strategy = GenerationType.AUTO
+    )
+    @Column(
+            name = "id", nullable = false
+    )
     private UUID id;
 
-    @Column(name = "name")
+    @Column(
+            name = "name"
+    )
     private String name;
 
-    @ManyToOne(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
-    @JoinColumn(name = "tournament_id")
+    @ManyToOne(
+            cascade = {CascadeType.ALL}, fetch = FetchType.LAZY
+    )
+    @JoinColumn(
+            name = "tournament_id"
+    )
     private Tournament tournament;
 
-    @Column(name = "description")
+    @Column(
+            name = "description"
+    )
     private String description;
-    @Column(name = "type")
+    @Column(
+            name = "type"
+    )
     private CompetitionType type;
 
-    @Column(name = "mode")
+    @Column(
+            name = "mode"
+    )
     private CompetitionMode mode;
-    @Column(name = "signup")
+    @Column(
+            name = "signup"
+    )
     private CompetitionSignUp signup;
 
-    @Column(name = "playerA_sex")
+    @Column(
+            name = "playerA_sex"
+    )
     private Sex playerASex;
-    @Column(name = "playerA_has_min_age")
+    @Column(
+            name = "playerA_has_min_age"
+    )
     private boolean playerAhasMinAge;
-    @Column(name = "playerA_min_age")
+    @Column(
+            name = "playerA_min_age"
+    )
     private LocalDate playerAminAge;
-    @Column(name = "playerA_has_max_age")
+    @Column(
+            name = "playerA_has_max_age"
+    )
     private boolean playerAhasMaxAge;
-    @Column(name = "playerA_max_age")
+    @Column(
+            name = "playerA_max_age"
+    )
     private LocalDate playerAmaxAge;
 
-    @Column(name = "playerB_different")
+    @Column(
+            name = "playerB_different"
+    )
     private boolean playerBdifferent;
-    @Column(name = "playerB_sex")
+    @Column(
+            name = "playerB_sex"
+    )
     private Sex playerBSex;
-    @Column(name = "playerB_has_min_age")
+    @Column(
+            name = "playerB_has_min_age"
+    )
     private boolean playerBhasMinAge;
-    @Column(name = "playerB_min_age")
+    @Column(
+            name = "playerB_min_age"
+    )
     private LocalDate playerBminAge;
-    @Column(name = "playerB_has_max_age")
+    @Column(
+            name = "playerB_has_max_age"
+    )
     private boolean playerBhasMaxAge;
-    @Column(name = "playerB_max_age")
+    @Column(
+            name = "playerB_max_age"
+    )
     private LocalDate playerBmaxAge;
 
-    @OneToMany(mappedBy = "competition")
+    @OneToMany(
+            mappedBy = "competition"
+    )
     private List<Team> teams;
 
-    @OneToMany(mappedBy = "competition")
+    @OneToMany(
+            mappedBy = "competition"
+    )
     private List<Match> matches;
 
-    @OneToMany(mappedBy = "competition")
+    @OneToMany(
+            mappedBy = "competition"
+    )
     private List<Group> groups;
 
     public UUID getId() {

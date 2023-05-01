@@ -32,9 +32,7 @@ public class jUserKnockoutSystem {
                 matchQueue.add(match.getDependentOn().getPreviousB());
             }
         }
-        this.teams = teams.stream()
-                .filter(Objects::nonNull)
-                .map(jUserTeam::new).toList();
+        this.teams = teams.stream().filter(Objects::nonNull).map(jUserTeam::new).toList();
         this.finale = new jUserKnockoutMatch(finale);
         this.thirdPlace = new jUserKnockoutMatch(thirdPlace, false);
     }
