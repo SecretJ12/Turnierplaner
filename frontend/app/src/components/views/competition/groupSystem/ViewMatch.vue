@@ -1,16 +1,16 @@
 <template>
-  <p v-if="props.match.begin > new Date()">
+  <p v-if="props.match.begin > new Date() && props.match.sets !== null">
     {{ $t('ViewGroupSystem.start') }}<br/>
     {{ props.match.begin.toLocaleString(t("lang"), dateOptions) }}
   </p>
   <div v-else-if="props.order">
     <div v-for="set in props.match.sets">
-      {{set.scoreA}} - {{set.scoreB}}
+      {{ set.scoreA }} - {{ set.scoreB }}
     </div>
   </div>
   <div v-else>
     <div v-for="set in props.match.sets">
-      {{set.scoreB}} - {{set.scoreA}}
+      {{ set.scoreB }} - {{ set.scoreA }}
     </div>
   </div>
 </template>
@@ -21,6 +21,7 @@ import {useI18n} from "vue-i18n"
 
 const {t} = useI18n({inheritLocale: true})
 
+// TODO fix warning
 const props = withDefaults(defineProps<{
   match: Match
   order: boolean
@@ -35,6 +36,8 @@ const dateOptions: Intl.DateTimeFormatOptions = {
   hour: "numeric",
   minute: "numeric"
 }
+
+console.log(props.match.sets)
 
 </script>
 
