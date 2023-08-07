@@ -1,8 +1,10 @@
 <template>
-  <p v-if="props.match.begin > new Date() && props.match.sets !== null">
+  <p v-if="props.match.begin > new Date()">
     {{ $t('ViewGroupSystem.start') }}<br/>
     {{ props.match.begin.toLocaleString(t("lang"), dateOptions) }}
   </p>
+  <!--  Game started already, but no results yet-->
+  <p v-else-if="props.match.begin<= new Date() && (!props.match.sets || props.match.sets.length == 0)">0-0</p>
   <div v-else-if="props.order">
     <div v-for="set in props.match.sets">
       {{ set.scoreA }} - {{ set.scoreB }}
