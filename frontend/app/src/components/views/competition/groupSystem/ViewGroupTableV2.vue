@@ -8,7 +8,7 @@
         <th v-if="index !== props.group.teams.length-1" :class="hoverIdB === index ? 'highlight' : ''"
             @mouseover="headerHover(team.id)"
             @mouseleave="hoverLeave()"
-          >
+        >
           {{ team.playerA.lastName }}, {{ team.playerA.firstName }}
         </th>
       </template>
@@ -18,7 +18,7 @@
         <th :class="(hoverIdA === indexA ? 'highlight ' : '')"
             @mouseover="headerHover(teamA.id)"
             @mouseleave="hoverLeave()"
-          >
+        >
           {{ teamA.playerA.lastName }}, {{ teamA.playerA.firstName }}
         </th>
         <template v-for="(teamB, indexB) in props.group.teams.slice().reverse()">
@@ -31,7 +31,7 @@
               }"
           >
             <div>
-              <ViewMatch :match="findMatch(teamA, teamB)" />
+              <ViewMatch :match="findMatch(teamA, teamB)"/>
             </div>
           </td>
         </template>

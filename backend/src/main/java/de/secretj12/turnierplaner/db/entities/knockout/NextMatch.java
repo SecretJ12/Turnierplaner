@@ -3,6 +3,7 @@ package de.secretj12.turnierplaner.db.entities.knockout;
 import de.secretj12.turnierplaner.db.entities.Match;
 
 import jakarta.persistence.*;
+
 import java.util.UUID;
 
 @Entity

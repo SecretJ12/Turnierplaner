@@ -13,18 +13,20 @@
       <tr v-for="indexR in rangeArr(4*teamsCount+2*(teamsCount-1))">
         <template v-for="indexC in rangeArr(maxDepth)">
           <td v-if="matchColumnCellType(indexR, indexC) === cellType.match" rowspan="4" class="matchCol">
-            <ViewMatch :match="props.match" :leftBorder="indexC === 0" />
+            <ViewMatch :match="props.match" :leftBorder="indexC === 0"/>
           </td>
           <td v-else-if="matchColumnCellType(indexR, indexC) === cellType.emptyCell">
           </td>
 
           <template v-if="indexC < maxDepth-1">
-            <td v-if="interColumnCellType(indexR, indexC) === interCellType.topRight" class="topRightInterCell interCell">
+            <td v-if="interColumnCellType(indexR, indexC) === interCellType.topRight"
+                class="topRightInterCell interCell">
             </td>
             <td v-else-if="interColumnCellType(indexR, indexC) === interCellType.bottomRight"
                 class="bottomRightInterCell interCell">
             </td>
-            <td v-else-if="interColumnCellType(indexR, indexC) === interCellType.right" class="rightInterCell interCell">
+            <td v-else-if="interColumnCellType(indexR, indexC) === interCellType.right"
+                class="rightInterCell interCell">
             </td>
             <td v-else-if="interColumnCellType(indexR, indexC) === interCellType.blank" class="interCell">
             </td>

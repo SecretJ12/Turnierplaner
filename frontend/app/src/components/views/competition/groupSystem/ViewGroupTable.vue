@@ -1,18 +1,19 @@
 <template>
   <div class="container">
     <table class="table">
-      <tbody >
+      <tbody>
       <tr class="table-active">
         <th class="table-secondary">
           {{ t("ViewGroupSystem.group") }} {{ props.group.index }}
         </th>
-        <td class="table-light text-center" v-for="team in props.group.teams" >
+        <td class="table-light text-center" v-for="team in props.group.teams">
           {{ team.playerA.firstName }}, {{ team.playerA.lastName }}
         </td>
       </tr>
-      <tr  v-for="(teamA,index_t1) in props.group.teams">
-        <td class="table-active">{{ teamA.playerA.firstName }}, {{ teamA.playerA.lastName }} <br/> <i>TSV Wolnzach / BTV - {{route.params.compId}}</i></td>
-        <td  class="text-center" v-for="(teamB,index_t2) in props.group.teams">
+      <tr v-for="(teamA,index_t1) in props.group.teams">
+        <td class="table-active">{{ teamA.playerA.firstName }}, {{ teamA.playerA.lastName }} <br/> <i>TSV Wolnzach / BTV
+          - {{ route.params.compId }}</i></td>
+        <td class="text-center" v-for="(teamB,index_t2) in props.group.teams">
           <div v-if="index_t1===index_t2">
             /
           </div>
