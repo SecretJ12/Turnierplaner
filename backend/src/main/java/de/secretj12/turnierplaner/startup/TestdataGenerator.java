@@ -322,6 +322,7 @@ public class TestdataGenerator {
             if (compSetting.getItem2() == CompetitionMode.SINGLES) {
                 competition.setMode(CompetitionMode.SINGLES);
                 competition.setSignup(CompetitionSignUp.INDIVIDUAL);
+                competition.setPlayerBdifferent(false);
                 switch (compSetting.getItem3()) {
                     case ANY -> throw new RuntimeException();
                     case MALE -> {
@@ -337,6 +338,7 @@ public class TestdataGenerator {
                 }
             } else {
                 competition.setMode(CompetitionMode.DOUBLES);
+                competition.setPlayerBdifferent(true);
                 if (compSetting.getItem5()) {
                     competition.setDescription("Doppel, individuelle Anmeldung, verschiedene Bedingung");
                     competition.setSignup(CompetitionSignUp.INDIVIDUAL);
