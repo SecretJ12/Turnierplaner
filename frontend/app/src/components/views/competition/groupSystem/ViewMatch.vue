@@ -24,7 +24,7 @@ const {t} = useI18n({inheritLocale: true})
 // TODO fix warning
 const props = withDefaults(defineProps<{
   match: Match
-  order: boolean
+  order?: boolean
 }>(), {
   order: true
 })
@@ -36,8 +36,6 @@ const dateOptions: Intl.DateTimeFormatOptions = {
   hour: "numeric",
   minute: "numeric"
 }
-
-console.log(props.match.sets)
 
 </script>
 
