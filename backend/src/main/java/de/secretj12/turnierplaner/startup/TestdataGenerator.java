@@ -120,21 +120,35 @@ public class TestdataGenerator {
         return tournament;
     }
 
-    private void createSet(Match match, boolean started, int numberOfSets) {
+    private void createSets(Match match, boolean started, int numberOfSets) {
         ArrayList<Set> setArrayList = new ArrayList<>();
-        for (int i = 0; i < numberOfSets; i++) {
-            for (int k = 0; k < 3; k++) {
+        if (!started) {
+            Set.SetKey setKey = new Set.SetKey();
+            setKey.setMatch(match);
+            setKey.setIndex(0);
+            Set set = new Set();
+            set.setKey(setKey);
+            set.setScoreA(0);
+            set.setScoreB(0);
+            setArrayList.add(set);
+            sets.persist(set);
+        } else {
+            for (int i = 0; i < numberOfSets; i++) {
                 Set.SetKey setKey = new Set.SetKey();
                 setKey.setMatch(match);
-                setKey.setIndex(k);
+                setKey.setIndex(i);
                 Set set = new Set();
                 set.setKey(setKey);
-                if (started) {
+                if (i == numberOfSets - 1) {
                     set.setScoreA(random.nextInt(6));
                     set.setScoreB(random.nextInt(6));
                 } else {
-                    set.setScoreA(0);
-                    set.setScoreB(0);
+                    int scoreA = random.nextInt(7);
+                    set.setScoreA(scoreA);
+                    if (scoreA == 6)
+                        set.setScoreB(random.nextInt(6));
+                    else
+                        set.setScoreB(6);
                 }
                 setArrayList.add(set);
                 sets.persist(set);
@@ -200,15 +214,15 @@ public class TestdataGenerator {
                     Match match = createMatch(courts[i * j % 4], competition);
                     match.setTeamA(groupTeams[i]);
                     match.setTeamB(groupTeams[j]);
-                    int matchBegin = random.nextInt(2);
-                    if (matchBegin == 0) {
+                    int matchBegin = random.nextInt(3);
+                    if (matchBegin != 0) {
                         match.setBegin(LocalDateTime.now());
                         match.setEnd(LocalDateTime.now().plusHours(1));
-                        createSet(match, true, random.nextInt(2));
+                        createSets(match, true, random.nextInt(4));
                     } else {
                         match.setBegin(LocalDateTime.now().plusMinutes(random.nextInt(60)));
                         match.setEnd(LocalDateTime.now().plusHours(2));
-                        createSet(match, false, random.nextInt(2));
+                        createSets(match, false, 1);
                     }
                     matchRepository.persist(match);
                     MatchOfGroup matchOfGroup = new MatchOfGroup();
@@ -257,13 +271,13 @@ public class TestdataGenerator {
 
                 currentMatches[j].setWinner(false);
                 matchRepository.persist(currentMatches[j]);
-                createSet(currentMatches[j], true, random.nextInt(2));
+                createSets(currentMatches[j], true, random.nextInt(2));
             }
 
             if (i == 1) {
                 currentMatches[1] = createMatch(courts[0 % 4], competition);
                 matchRepository.persist(currentMatches[1]);
-                createSet(currentMatches[1], false, random.nextInt(2));
+                createSets(currentMatches[1], false, random.nextInt(2));
                 NextMatch nextThirdPlace = new NextMatch();
                 nextThirdPlace.setPreviousA(previousMatches[0]);
                 nextThirdPlace.setPreviousB(previousMatches[1]);
