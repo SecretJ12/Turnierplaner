@@ -44,7 +44,9 @@ public class TestdataGenerator {
     @Inject
     SetRepository sets;
 
-    enum TDate {BEFORE_REGISTRATION, REGISTRATION_OPEN, BEFORE_GAMEPHASE, GAMEPHASE_OPEN, AFTER_GAMEPHASE}
+    enum TDate {
+        BEFORE_REGISTRATION, REGISTRATION_OPEN, BEFORE_GAMEPHASE, GAMEPHASE_OPEN, AFTER_GAMEPHASE
+    }
 
     private final Random random = new Random();
     private final Faker faker = new Faker();
@@ -200,7 +202,8 @@ public class TestdataGenerator {
         return teams;
     }
 
-    private void addTeamsAndMatchesToGroup(Competition competition, int numberTeams, boolean doublePlayer, Sex sex, int numberGroups) {
+    private void addTeamsAndMatchesToGroup(Competition competition, int numberTeams, boolean doublePlayer, Sex sex,
+                                           int numberGroups) {
         Team[] groupTeams = createTeams(competition, sex, numberTeams, doublePlayer);
 
         Group[] groups = new Group[numberGroups];
@@ -318,11 +321,11 @@ public class TestdataGenerator {
      * This should be a power of 2 for Knockout, a Boolean (individual or joint sign up), number of Groups
      * This should also be a power of 2, and name of Competition
      *
-     * @param Tournament   the tournament to the competitions
-     * @param List<Tuple7> A list of competition settings
-     * @return void
+     * @param t        the tournament to the competitions
+     * @param compList A list of competition settings
      */
-    private void addCompetition(Tournament t, List<Tuple7<CompetitionType, CompetitionMode, Sex, Integer, Boolean, Integer, String>> compList) {
+    private void addCompetition(Tournament t,
+                                List<Tuple7<CompetitionType, CompetitionMode, Sex, Integer, Boolean, Integer, String>> compList) {
         for (Tuple7<CompetitionType, CompetitionMode, Sex, Integer, Boolean, Integer, String> compSetting : compList) {
             Competition competition = new Competition();
             competition.setTournament(t);
