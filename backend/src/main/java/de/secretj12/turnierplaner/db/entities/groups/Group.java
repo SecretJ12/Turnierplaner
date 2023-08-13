@@ -4,6 +4,7 @@ import de.secretj12.turnierplaner.db.entities.competition.Competition;
 import de.secretj12.turnierplaner.db.entities.Match;
 
 import jakarta.persistence.*;
+
 import java.util.List;
 import java.util.UUID;
 

@@ -4,7 +4,7 @@
       <tr>
         <template v-for="index in rangeArr(maxDepth)">
           <th>
-            {{ roundTitle(index+1, maxDepth) }}
+            {{ roundTitle(index + 1, maxDepth) }}
           </th>
           <template v-if="index < maxDepth-1">
             <th class="interCell">
@@ -17,7 +17,7 @@
       <tr v-for="indexR in rangeArr(tableHeight())">
         <template v-for="indexC in rangeArr(maxDepth)">
           <td v-if="matchColumnCellType(indexR, indexC) === cellType.match" rowspan="5" class="matchCol">
-            <ViewMatchV3 :match="getMatch(indexR, indexC)" :mode="props.mode" />
+            <ViewMatchV3 :match="getMatch(indexR, indexC)" :mode="props.mode"/>
           </td>
           <td v-else-if="matchColumnCellType(indexR, indexC) === cellType.emptyCell">
           </td>
@@ -67,22 +67,22 @@ const height = Math.pow(2, maxDepth)
 function getMatch(indexR: number, indexC: number): KnockoutMatch {
   let curMatch = props.match
   let curHeight = tableHeight()
-  for (let i = 0; i < maxDepth-indexC-1; i++) {
+  for (let i = 0; i < maxDepth - indexC - 1; i++) {
     curHeight /= 2
     if (curMatch.prevMatch === undefined)
       throw new Error("prevMatch is undefined")
     if (indexR < curHeight) {
       curMatch = curMatch.prevMatch.a
     } else {
-        curMatch = curMatch.prevMatch.b
-        indexR -= curHeight
+      curMatch = curMatch.prevMatch.b
+      indexR -= curHeight
     }
   }
   return curMatch
 }
 
 function tableHeight(): number {
-  return 4*teamsCount+2*(teamsCount-1)+1
+  return 4 * teamsCount + 2 * (teamsCount - 1) + 1
 }
 
 function roundTitle(round: number, totalRounds: number): string {
@@ -187,11 +187,11 @@ td {
   padding: 0;
 }
 
-.tableSingles>tr>td {
+.tableSingles > tr > td {
   height: 20px;
 }
 
-.tableDoubles>tr>td {
+.tableDoubles > tr > td {
   height: 28px;
 }
 

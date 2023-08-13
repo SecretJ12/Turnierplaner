@@ -4,7 +4,6 @@ import de.secretj12.turnierplaner.db.entities.Match;
 import de.secretj12.turnierplaner.db.entities.Tournament;
 import de.secretj12.turnierplaner.db.entities.groups.Group;
 import jakarta.persistence.*;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;

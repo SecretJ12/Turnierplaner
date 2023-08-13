@@ -81,8 +81,8 @@
 
         <!-- oidc -->
         <dependency>
-          <groupId>io.quarkus</groupId>
-          <artifactId>quarkus-oidc</artifactId>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-oidc</artifactId>
         </dependency>
 
         <!-- mail -->
@@ -101,6 +101,13 @@
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-smallrye-openapi</artifactId>
+        </dependency>
+        <!-- Faker for name random name generation   -->
+        <dependency>
+            <groupId>net.datafaker</groupId>
+            <artifactId>datafaker</artifactId>
+            <version>1.9.0</version>
+            <scope>dev</scope>
         </dependency>
     </dependencies>
     <build>

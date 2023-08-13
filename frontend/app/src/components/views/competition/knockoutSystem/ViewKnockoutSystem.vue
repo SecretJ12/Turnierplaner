@@ -3,13 +3,13 @@
   <template v-if="knockoutSystem !== null">
     <el-tabs v-model="currentTab" style="width: min(90%, 1000px);">
       <el-tab-pane label="Tree" name="knockout">
-        <ViewKnockoutTree :match="knockoutSystem.finale" />
+        <ViewKnockoutTree :match="knockoutSystem.finale"/>
       </el-tab-pane>
       <el-tab-pane label="TreeV2" name="knockoutv2">
-        <ViewKnockoutTreeV2 :match="knockoutSystem.finale" />
+        <ViewKnockoutTreeV2 :match="knockoutSystem.finale"/>
       </el-tab-pane>
       <el-tab-pane label="TreeV3" name="knockoutv3">
-        <ViewKnockoutTreeV3 :match="knockoutSystem.finale" :mode="props.mode" />
+        <ViewKnockoutTreeV3 :match="knockoutSystem.finale" :mode="props.mode"/>
       </el-tab-pane>
     </el-tabs>
   </template>
@@ -26,7 +26,7 @@ import ViewKnockoutTreeV2 from "@/components/views/competition/knockoutSystem/Vi
 import ViewKnockoutTreeV3 from "@/components/views/competition/knockoutSystem/ViewKnockoutTreeV3.vue"
 import {Mode} from "@/interfaces/competition";
 
-const {t} = useI18n({inheritLocale: true })
+const {t} = useI18n({inheritLocale: true})
 
 const props = defineProps<{
   mode: Mode

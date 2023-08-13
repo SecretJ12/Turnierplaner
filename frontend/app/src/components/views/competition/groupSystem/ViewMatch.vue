@@ -3,11 +3,17 @@
     {{ $t('ViewGroupSystem.start') }}<br/>
     {{ props.match.begin.toLocaleString(t("lang"), dateOptions) }}
   </p>
+  <!--  Game started already, but no results yet-->
+  <p v-else-if="props.match.begin<= new Date() && (!props.match.sets || props.match.sets.length == 0)">0-0</p>
   <div v-else-if="props.order">
-    {{ scoreA }}-{{ scoreB }}
+    <div v-for="set in props.match.sets">
+      {{ set.scoreA }} - {{ set.scoreB }}
+    </div>
   </div>
   <div v-else>
-    {{ scoreB }}-{{ scoreA }}
+    <div v-for="set in props.match.sets">
+      {{ set.scoreB }} - {{ set.scoreA }}
+    </div>
   </div>
 </template>
 
@@ -17,9 +23,10 @@ import {useI18n} from "vue-i18n"
 
 const {t} = useI18n({inheritLocale: true})
 
+// TODO fix warning
 const props = withDefaults(defineProps<{
   match: Match
-  order: boolean
+  order?: boolean
 }>(), {
   order: true
 })
@@ -32,16 +39,6 @@ const dateOptions: Intl.DateTimeFormatOptions = {
   minute: "numeric"
 }
 
-let scoreA = 0
-let scoreB = 0
-if (props.match.sets !== null)
-  for (const set of props.match.sets) {
-    if (set.scoreA < set.scoreB) {
-      scoreB += 1
-    } else if (set.scoreA > set.scoreB) {
-      scoreA += 1
-    }
-  }
 </script>
 
 <style scoped>

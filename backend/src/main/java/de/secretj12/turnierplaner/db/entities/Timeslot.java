@@ -3,6 +3,7 @@ package de.secretj12.turnierplaner.db.entities;
 import de.secretj12.turnierplaner.db.entities.competition.Competition;
 
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 

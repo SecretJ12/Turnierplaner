@@ -31,7 +31,7 @@
         </el-form-item>
 
         <!-- Description -->
-<!--        TODO add english description -->
+        <!-- TODO add english description -->
         <el-form-item
             :label="t('general.description')"
             prop="description"
