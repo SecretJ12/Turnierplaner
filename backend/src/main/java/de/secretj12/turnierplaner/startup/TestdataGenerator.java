@@ -7,11 +7,13 @@ import de.secretj12.turnierplaner.db.entities.groups.Group;
 import de.secretj12.turnierplaner.db.entities.groups.MatchOfGroup;
 import de.secretj12.turnierplaner.db.entities.knockout.NextMatch;
 import de.secretj12.turnierplaner.db.repositories.*;
+import io.smallrye.mutiny.tuples.Tuple3;
 import io.smallrye.mutiny.tuples.Tuple9;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import net.datafaker.Faker;
+import org.graalvm.collections.Pair;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -47,6 +49,7 @@ public class TestdataGenerator {
     enum TDate {
         BEFORE_REGISTRATION, REGISTRATION_OPEN, BEFORE_GAMEPHASE, GAMEPHASE_OPEN, AFTER_GAMEPHASE
     }
+
     enum AGE_RESTR {
         NONE, U18, O50
     }
@@ -131,7 +134,7 @@ public class TestdataGenerator {
         return tournament;
     }
 
-    private void createSets(Match match, boolean started, int numberOfSets) {
+    private void createSets(Match match, boolean started) {
         ArrayList<Set> setArrayList = new ArrayList<>();
         if (!started) {
             Set.SetKey setKey = new Set.SetKey();
@@ -144,21 +147,68 @@ public class TestdataGenerator {
             setArrayList.add(set);
             sets.persist(set);
         } else {
+            int numberOfSets = 2;
+            int winDif = 0;
+            List<Pair<Integer, Integer>> possibleResults = List.of(Pair.create(6, 0), Pair.create(6, 1), Pair.create(6, 2), Pair.create(6, 3), Pair.create(6, 4), Pair.create(6, 5), Pair.create(7, 5), Pair.create(7, 6));
             for (int i = 0; i < numberOfSets; i++) {
                 Set.SetKey setKey = new Set.SetKey();
                 setKey.setMatch(match);
                 setKey.setIndex(i);
                 Set set = new Set();
                 set.setKey(setKey);
-                if (i == numberOfSets - 1) {
-                    set.setScoreA(random.nextInt(6));
-                    set.setScoreB(random.nextInt(6));
-                } else {
-                    int scoreA = random.nextInt(7);
-                    set.setScoreA(scoreA);
-                    if (scoreA == 6) set.setScoreB(random.nextInt(6));
-                    else set.setScoreB(6);
+
+                int r = random.nextInt(possibleResults.size());
+                switch (random.nextInt(Math.abs(winDif)+2)) {
+                    case 0 -> {
+                        set.setScoreA(possibleResults.get(r).getLeft());
+                        set.setScoreB(possibleResults.get(r).getRight());
+                        winDif++;
+                    }
+                    case 1 -> {
+                        set.setScoreA(possibleResults.get(r).getRight());
+                        set.setScoreB(possibleResults.get(r).getLeft());
+                        winDif--;
+                    }
+                    default -> {
+                        if (winDif > 0) {
+                            set.setScoreA(possibleResults.get(r).getLeft());
+                            set.setScoreB(possibleResults.get(r).getRight());
+                            winDif++;
+                        } else {
+                            set.setScoreA(possibleResults.get(r).getRight());
+                            set.setScoreB(possibleResults.get(r).getLeft());
+                            winDif--;
+                        }
+                    }
                 }
+
+                setArrayList.add(set);
+                sets.persist(set);
+            }
+            if (winDif == 0) {
+                Set.SetKey setKey = new Set.SetKey();
+                setKey.setMatch(match);
+                setKey.setIndex(numberOfSets);
+                Set set = new Set();
+                set.setKey(setKey);
+
+                int winner;
+                int looser;
+                if (random.nextInt(10) < 9) {
+                    winner = 10;
+                    looser = random.nextInt(9);
+                } else {
+                    winner = random.nextInt(11, 20);
+                    looser = winner - 2;
+                }
+                if (random.nextBoolean()) {
+                    set.setScoreA(winner);
+                    set.setScoreB(looser);
+                } else {
+                    set.setScoreA(looser);
+                    set.setScoreB(winner);
+                }
+
                 setArrayList.add(set);
                 sets.persist(set);
             }
@@ -228,11 +278,11 @@ public class TestdataGenerator {
                     if (matchBegin != 0) {
                         match.setBegin(LocalDateTime.now());
                         match.setEnd(LocalDateTime.now().plusHours(1));
-                        createSets(match, true, random.nextInt(4));
+                        createSets(match, true);
                     } else {
                         match.setBegin(LocalDateTime.now().plusMinutes(random.nextInt(60)));
                         match.setEnd(LocalDateTime.now().plusHours(2));
-                        createSets(match, false, 1);
+                        createSets(match, false);
                     }
                     matchRepository.persist(match);
                     MatchOfGroup matchOfGroup = new MatchOfGroup();
@@ -281,13 +331,13 @@ public class TestdataGenerator {
 
                 currentMatches[j].setWinner(false);
                 matchRepository.persist(currentMatches[j]);
-                createSets(currentMatches[j], true, random.nextInt(2));
+                createSets(currentMatches[j], true);
             }
 
             if (i == 1) {
                 currentMatches[1] = createMatch(courts[0 % 4], competition);
                 matchRepository.persist(currentMatches[1]);
-                createSets(currentMatches[1], false, random.nextInt(2));
+                createSets(currentMatches[1], false);
                 NextMatch nextThirdPlace = new NextMatch();
                 nextThirdPlace.setPreviousA(previousMatches[0]);
                 nextThirdPlace.setPreviousB(previousMatches[1]);
