@@ -7,7 +7,7 @@ import de.secretj12.turnierplaner.db.entities.groups.Group;
 import de.secretj12.turnierplaner.db.entities.groups.MatchOfGroup;
 import de.secretj12.turnierplaner.db.entities.knockout.NextMatch;
 import de.secretj12.turnierplaner.db.repositories.*;
-import io.smallrye.mutiny.tuples.Tuple7;
+import io.smallrye.mutiny.tuples.Tuple9;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -47,6 +47,9 @@ public class TestdataGenerator {
     enum TDate {
         BEFORE_REGISTRATION, REGISTRATION_OPEN, BEFORE_GAMEPHASE, GAMEPHASE_OPEN, AFTER_GAMEPHASE
     }
+    enum AGE_RESTR {
+        NONE, U18, O50
+    }
 
     private final Random random = new Random();
     private final Faker faker = new Faker();
@@ -62,23 +65,29 @@ public class TestdataGenerator {
             courts[i].setName("Platz " + (i + 1));
             courtRepositiory.persist(courts[i]);
         }
-        Tournament[] tournaments = new Tournament[5];
+        Tournament[] tournaments = new Tournament[6];
         tournaments[0] = createTournament(TDate.BEFORE_REGISTRATION, "Clubmeisterschaft 2026", "Anmeldung ausstehend", true);
         tournaments[1] = createTournament(TDate.REGISTRATION_OPEN, "Clubmeisterschaft 2025", "Anmeldung offen", true);
         tournaments[2] = createTournament(TDate.BEFORE_GAMEPHASE, "Clubmeisterschaft 2024", "Anmeldung vorbei", true);
         tournaments[3] = createTournament(TDate.GAMEPHASE_OPEN, "Clubmeisterschaft 2023", "Spielphase offen", true);
         tournaments[4] = createTournament(TDate.AFTER_GAMEPHASE, "Clubmeisterschaft 2022", "Spielphase vorbei", true);
+        tournaments[5] = createTournament(TDate.BEFORE_REGISTRATION, "Clubmeisterschaft 2027", "Noch in der Planung", false);
 
-        ArrayList<Tuple7<CompetitionType, CompetitionMode, Sex, Integer, Boolean, Integer, String>> compSetting = new ArrayList<>();
-        compSetting.add(Tuple7.of(CompetitionType.GROUPS, CompetitionMode.SINGLES, Sex.MALE, 8, false, 2, "Single"));
-        compSetting.add(Tuple7.of(CompetitionType.KNOCKOUT, CompetitionMode.SINGLES, Sex.FEMALE, 16, false, 2, "Knockout"));
-        compSetting.add(Tuple7.of(CompetitionType.KNOCKOUT, CompetitionMode.DOUBLES, Sex.ANY, 4, false, 2, "Double"));
+        ArrayList<Tuple9<CompetitionType, CompetitionMode, Sex, Integer, Boolean, Boolean, Integer, String, AGE_RESTR>> compSetting = new ArrayList<>();
+        compSetting.add(Tuple9.of(CompetitionType.GROUPS, CompetitionMode.SINGLES, Sex.MALE, 8, false, false, 2, "Single Groups", AGE_RESTR.NONE));
+        compSetting.add(Tuple9.of(CompetitionType.GROUPS, CompetitionMode.SINGLES, Sex.MALE, 8, false, false, 2, "Single U18", AGE_RESTR.U18));
+        compSetting.add(Tuple9.of(CompetitionType.KNOCKOUT, CompetitionMode.SINGLES, Sex.FEMALE, 16, false, false, 2, "Single Knockout", AGE_RESTR.NONE));
+        compSetting.add(Tuple9.of(CompetitionType.KNOCKOUT, CompetitionMode.DOUBLES, Sex.ANY, 4, false, false, 2, "Double", AGE_RESTR.NONE));
+        compSetting.add(Tuple9.of(CompetitionType.KNOCKOUT, CompetitionMode.DOUBLES, Sex.ANY, 4, true, false, 2, "Double random", AGE_RESTR.NONE));
+        compSetting.add(Tuple9.of(CompetitionType.KNOCKOUT, CompetitionMode.DOUBLES, Sex.ANY, 4, false, true, 2, "Double O50", AGE_RESTR.O50));
+        compSetting.add(Tuple9.of(CompetitionType.KNOCKOUT, CompetitionMode.DOUBLES, Sex.ANY, 4, true, true, 2, "Double Mixed", AGE_RESTR.NONE));
 
         addCompetition(tournaments[0], compSetting);
         addCompetition(tournaments[1], compSetting);
         addCompetition(tournaments[2], compSetting);
         addCompetition(tournaments[3], compSetting);
         addCompetition(tournaments[4], compSetting);
+        addCompetition(tournaments[5], compSetting);
     }
 
     private Tournament createTournament(TDate tDate, String name, String description, boolean visible) {
@@ -147,10 +156,8 @@ public class TestdataGenerator {
                 } else {
                     int scoreA = random.nextInt(7);
                     set.setScoreA(scoreA);
-                    if (scoreA == 6)
-                        set.setScoreB(random.nextInt(6));
-                    else
-                        set.setScoreB(6);
+                    if (scoreA == 6) set.setScoreB(random.nextInt(6));
+                    else set.setScoreB(6);
                 }
                 setArrayList.add(set);
                 sets.persist(set);
@@ -235,7 +242,7 @@ public class TestdataGenerator {
                 }
             }
         }
-//        TODO support more than 2 groups ? How is the tree supposed to look like again with Nextmatch? @Jonas
+        // TODO support more than 2 groups ? How is the tree supposed to look like again with Nextmatch? @Jonas
         Match finalOfGroupMatch1 = createMatch(courts[random.nextInt(4)], competition);
         matchRepository.persist(finalOfGroupMatch1);
         FinalOfGroup finalOfGroup1 = new FinalOfGroup();
@@ -259,7 +266,7 @@ public class TestdataGenerator {
     private void addTeamsAndMatchesToKnockout(Competition competition, int numberTeams, boolean doublePlayer, Sex sex) {
         Team[] knockoutTeams = createTeams(competition, sex, numberTeams, doublePlayer);
 
-// CREATE KNOCKOUT MATCHES
+        // CREATE KNOCKOUT MATCHES
         Match[] currentMatches = new Match[numberTeams / 2];
         Match[] previousMatches = new Match[numberTeams / 2];
         for (int i = numberTeams / 2; i > 0; i /= 2) {
@@ -325,17 +332,37 @@ public class TestdataGenerator {
      * @param compList A list of competition settings
      */
     private void addCompetition(Tournament t,
-                                List<Tuple7<CompetitionType, CompetitionMode, Sex, Integer, Boolean, Integer, String>> compList) {
-        for (Tuple7<CompetitionType, CompetitionMode, Sex, Integer, Boolean, Integer, String> compSetting : compList) {
+                                List<Tuple9<CompetitionType, CompetitionMode, Sex, Integer, Boolean, Boolean, Integer, String, AGE_RESTR>> compList) {
+        for (Tuple9<CompetitionType, CompetitionMode, Sex, Integer, Boolean, Boolean, Integer, String, AGE_RESTR> compSetting : compList) {
             Competition competition = new Competition();
             competition.setTournament(t);
-            competition.setPlayerAhasMinAge(false);
-            competition.setPlayerAhasMaxAge(false);
-            competition.setPlayerBhasMinAge(false);
-            competition.setPlayerBhasMaxAge(false);
-            competition.setName(compSetting.getItem7());
+            switch (compSetting.getItem9()) {
+                case NONE -> {
+                    competition.setPlayerAhasMinAge(false);
+                    competition.setPlayerAhasMaxAge(false);
+                    competition.setPlayerBhasMinAge(false);
+                    competition.setPlayerBhasMaxAge(false);
+                }
+                case U18 -> {
+                    competition.setPlayerAhasMinAge(false);
+                    competition.setPlayerAhasMaxAge(true);
+                    competition.setPlayerAmaxAge(LocalDate.now().minusYears(19));
+                    competition.setPlayerBhasMinAge(false);
+                    competition.setPlayerBhasMaxAge(true);
+                    competition.setPlayerBmaxAge(LocalDate.now().minusYears(19));
+                }
+                case O50 -> {
+                    competition.setPlayerAhasMinAge(true);
+                    competition.setPlayerAhasMaxAge(false);
+                    competition.setPlayerAminAge(LocalDate.now().minusYears(50));
+                    competition.setPlayerBhasMinAge(true);
+                    competition.setPlayerBhasMaxAge(false);
+                    competition.setPlayerBminAge(LocalDate.now().minusYears(50));
+                }
+            }
+            competition.setName(compSetting.getItem8());
 
-//            Set description
+            // Set description
             if (compSetting.getItem2() == CompetitionMode.SINGLES) {
                 competition.setMode(CompetitionMode.SINGLES);
                 competition.setSignup(CompetitionSignUp.INDIVIDUAL);
@@ -350,18 +377,29 @@ public class TestdataGenerator {
                     case FEMALE -> {
                         competition.setPlayerASex(Sex.FEMALE);
                         competition.setPlayerBSex(Sex.FEMALE);
-                        competition.setDescription("Frauen-Konkurrenz");
+                        competition.setDescription("Damen-Konkurrenz");
                     }
                 }
             } else {
                 competition.setMode(CompetitionMode.DOUBLES);
-                competition.setPlayerBdifferent(true);
-                if (compSetting.getItem5()) {
-                    competition.setDescription("Doppel, individuelle Anmeldung, verschiedene Bedingung");
-                    competition.setSignup(CompetitionSignUp.INDIVIDUAL);
+                if (compSetting.getItem6()) {
+                    competition.setPlayerBdifferent(true);
+                    if (compSetting.getItem5()) {
+                        competition.setDescription("Doppel, individuelle Anmeldung, verschiedene Bedingungen");
+                        competition.setSignup(CompetitionSignUp.INDIVIDUAL);
+                    } else {
+                        competition.setDescription("Doppel, gemeinsame Anmeldung, verschiedene Bedingungen");
+                        competition.setSignup(CompetitionSignUp.TOGETHER);
+                    }
                 } else {
-                    competition.setDescription("Doppel, gemeinsame Anmeldung, verschiedene Bedingung");
-                    competition.setSignup(CompetitionSignUp.TOGETHER);
+                    competition.setPlayerBdifferent(false);
+                    if (compSetting.getItem5()) {
+                        competition.setDescription("Doppel, individuelle Anmeldung, gleiche Bedingungen");
+                        competition.setSignup(CompetitionSignUp.INDIVIDUAL);
+                    } else {
+                        competition.setDescription("Doppel, gemeinsame Anmeldung, gleiche Bedingungen");
+                        competition.setSignup(CompetitionSignUp.TOGETHER);
+                    }
                 }
                 switch (compSetting.getItem3()) {
                     case ANY -> {
@@ -379,7 +417,7 @@ public class TestdataGenerator {
                 }
             }
 
-//            SET COMP TYPE == KNOCKOUT
+            // SET COMP TYPE == KNOCKOUT
             if (compSetting.getItem1() == CompetitionType.KNOCKOUT) {
                 competition.setType(CompetitionType.KNOCKOUT);
                 competitions.persist(competition);
@@ -387,7 +425,7 @@ public class TestdataGenerator {
             } else {
                 competition.setType(CompetitionType.GROUPS);
                 competitions.persist(competition);
-                addTeamsAndMatchesToGroup(competition, compSetting.getItem4(), compSetting.getItem2() == CompetitionMode.DOUBLES, compSetting.getItem3(), compSetting.getItem6());
+                addTeamsAndMatchesToGroup(competition, compSetting.getItem4(), compSetting.getItem2() == CompetitionMode.DOUBLES, compSetting.getItem3(), compSetting.getItem7());
             }
         }
     }
