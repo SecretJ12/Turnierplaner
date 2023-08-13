@@ -158,7 +158,7 @@ public class TestdataGenerator {
                 set.setKey(setKey);
 
                 int r = random.nextInt(possibleResults.size());
-                switch (random.nextInt(Math.abs(winDif)+2)) {
+                switch (random.nextInt(Math.abs(winDif) + 2)) {
                     case 0 -> {
                         set.setScoreA(possibleResults.get(r).getLeft());
                         set.setScoreB(possibleResults.get(r).getRight());
