@@ -33,7 +33,8 @@
           <ViewConditions :beginGamePhase="props.beginGamePhase" :player="props.competition.playerA"/>
         </el-col>
         <el-col :span="12">
-          <ViewConditions :beginGamePhase="props.beginGamePhase" :player="props.competition.playerB"/>
+          <ViewConditions v-if="props.competition.playerB.different" :beginGamePhase="props.beginGamePhase" :player="props.competition.playerB"/>
+          <ViewConditions v-else :beginGamePhase="props.beginGamePhase" :player="props.competition.playerA"/>
         </el-col>
       </el-row>
       <el-row :gutter="20" class="row-bg" justify="space-between">
