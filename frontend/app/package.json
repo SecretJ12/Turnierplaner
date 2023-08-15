@@ -6,7 +6,9 @@
     "dev": "vite",
     "preview": "vite preview --port 5050",
     "lint:validate": "eslint . --ext .vue,.ts,.tsx,.js,.jsx",
-    "lint:fix": "eslint . --ext .vue,.ts,.tsx,.js,.jsx --fix"
+    "lint:fix": "eslint . --ext .vue,.ts,.tsx,.js,.jsx --fix",
+    "prettier:validate": "prettier . --check",
+    "prettier:fix": "prettier . --write"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.4.0",
@@ -36,6 +38,7 @@
     "@vue/cli-service": "^5.0.8",
     "eslint": "^8.47.0",
     "eslint-plugin-vue": "^9.17.0",
+    "prettier": "3.0.2",
     "typescript": "~4.5.5",
     "unplugin-auto-import": "^0.15.3",
     "unplugin-vue-components": "^0.24.1",
