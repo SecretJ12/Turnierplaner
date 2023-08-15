@@ -52,7 +52,6 @@
         <el-input
             v-model="data.description"
             :autosize="{minRows: 3, maxRows: 5}"
-            autosize
             maxlength="100"
             show-word-limit
             type="textarea"
@@ -124,37 +123,37 @@ const props = withDefaults(defineProps<{
   disabled: boolean,
   data: TournamentForm
 }>(), {
-  disabled: false
+	disabled: false
 })
 
-const emit = defineEmits(['submit'])
+const emit = defineEmits(["submit"])
 
 function submit(formRef: HTMLFormElement | undefined) {
-  if (!formRef)
-    return
-  formRef.validate((valid: boolean) => {
-    if (valid) {
-      const server_data: TournamentServer = tournamentFormClientToServer(props.data)
-      emit('submit', server_data)
-    } else {
-      console.log('validation failed')
-    }
-  })
+	if (!formRef)
+		return
+	formRef.validate((valid: boolean) => {
+		if (valid) {
+			const server_data: TournamentServer = tournamentFormClientToServer(props.data)
+			emit("submit", server_data)
+		} else {
+			console.log("validation failed")
+		}
+	})
 }
 
 const checkDates = (rule: any, value: Date, callback: (arg0?: Error) => void) => {
-  if (!value) {
-    callback(new Error(t("TournamentSettings.missing_date")))
-    return
-  }
-  if (props.data.registration_phase === null || props.data.game_phase === null) {
-    callback()
-    return
-  }
-  if (new Date(props.data.registration_phase[1]) > new Date(props.data.game_phase[0]))
-    callback(new Error(t("TournamentSettings.wrong_dates")))
-  else
-    callback()
+	if (!value) {
+		callback(new Error(t("TournamentSettings.missing_date")))
+		return
+	}
+	if (props.data.registration_phase === null || props.data.game_phase === null) {
+		callback()
+		return
+	}
+	if (new Date(props.data.registration_phase[1]) > new Date(props.data.game_phase[0]))
+		callback(new Error(t("TournamentSettings.wrong_dates")))
+	else
+		callback()
 }
 </script>
 

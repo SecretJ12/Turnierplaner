@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import {Match} from "@/interfaces/match";
+import {Match} from "@/interfaces/match"
 import {useI18n} from "vue-i18n"
 
 const {t} = useI18n({inheritLocale: true})
@@ -28,15 +28,15 @@ const props = withDefaults(defineProps<{
   match: Match
   order?: boolean
 }>(), {
-  order: true
+	order: true
 })
 
 const dateOptions: Intl.DateTimeFormatOptions = {
-  year: "2-digit",
-  month: "numeric",
-  day: "numeric",
-  hour: "numeric",
-  minute: "numeric"
+	year: "2-digit",
+	month: "numeric",
+	day: "numeric",
+	hour: "numeric",
+	minute: "numeric"
 }
 
 </script>

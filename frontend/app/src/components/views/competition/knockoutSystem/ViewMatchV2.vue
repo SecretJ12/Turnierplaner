@@ -27,7 +27,7 @@
 
 <script setup lang="ts">
 
-import {KnockoutMatch} from "@/interfaces/knockoutSystem";
+import {KnockoutMatch} from "@/interfaces/knockoutSystem"
 
 const props = defineProps<{
   match: KnockoutMatch,

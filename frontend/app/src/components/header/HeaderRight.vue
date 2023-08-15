@@ -18,41 +18,41 @@
 </template>
 
 <script lang="ts" setup>
-import {auth} from '@/security/AuthService'
-import {inject, ref, watch} from 'vue'
+import {auth} from "@/security/AuthService"
+import {inject, ref, watch} from "vue"
 
-const currentUser = ref<string>('')
-const isLoggedIn = inject('loggedIn', ref(false))
+const currentUser = ref<string>("")
+const isLoggedIn = inject("loggedIn", ref(false))
 
 let windowWidth = ref(window.innerWidth)
-window.addEventListener('resize', () => {
-  windowWidth.value = window.innerWidth
+window.addEventListener("resize", () => {
+	windowWidth.value = window.innerWidth
 })
 
 watch(isLoggedIn, async () => {
-  auth.getUser().then((user) => {
-    if (user !== null && user.profile.preferred_username) {
-      currentUser.value = user.profile.preferred_username
-    }
-  });
+	auth.getUser().then((user) => {
+		if (user !== null && user.profile.preferred_username) {
+			currentUser.value = user.profile.preferred_username
+		}
+	})
 })
 
 function login() {
-  auth.login();
+	auth.login()
 }
 
 function logout() {
-  auth.logout();
+	auth.logout()
 }
 
 </script>
 
 <script lang="ts">
 export default {
-  name: 'locale-changer',
-  data() {
-    return {langs: ['en', 'en']}
-  }
+	name: "locale-changer",
+	data() {
+		return {langs: ["en", "en"]}
+	}
 }
 </script>
 

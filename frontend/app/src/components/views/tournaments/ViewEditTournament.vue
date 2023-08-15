@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts" setup>
-import {ref} from 'vue'
+import {ref} from "vue"
 import axios from "axios"
 import {router} from "@/main"
 import {ElMessage} from "element-plus"
@@ -17,37 +17,37 @@ const {t} = useI18n({inheritLocale: true})
 const route = useRoute()
 
 const data = ref<TournamentForm>({
-  id: null,
-  name: '',
-  visible: true,
-  description: '',
-  registration_phase: [new Date(), new Date()],
-  game_phase: [new Date(), new Date()]
+	id: null,
+	name: "",
+	visible: true,
+	description: "",
+	registration_phase: [new Date(), new Date()],
+	game_phase: [new Date(), new Date()]
 })
 
 const disabled = ref<boolean>(true)
 
 axios.get<TournamentServer>(`/tournament/${route.params.tourId}/details`)
-    .then((response) => {
-      data.value = tournamentFormServerToClient(response.data)
-      disabled.value = false
-    })
-    .catch((error) => {
-      ElMessage.error(t("ViewEditTournament.loadingDetailsFailed"))
-      console.log(error)
-      router.back();
-    })
+	.then((response) => {
+		data.value = tournamentFormServerToClient(response.data)
+		disabled.value = false
+	})
+	.catch((error) => {
+		ElMessage.error(t("ViewEditTournament.loadingDetailsFailed"))
+		console.log(error)
+		router.back()
+	})
 
 function submit(server_data: TournamentServer) {
-  server_data["id"] = data.value.id
+	server_data["id"] = data.value.id
 
-  axios.post("/tournament/update", server_data)
-      .then(_ => {
-        ElMessage.success(t("ViewEditTournament.tournamentUpdated"))
-      })
-      .catch(_ => {
-        ElMessage.error(t("ViewEditTournament.tournamentUpdateFailed"))
-      })
+	axios.post("/tournament/update", server_data)
+		.then(() => {
+			ElMessage.success(t("ViewEditTournament.tournamentUpdated"))
+		})
+		.catch(() => {
+			ElMessage.error(t("ViewEditTournament.tournamentUpdateFailed"))
+		})
 }
 </script>
 

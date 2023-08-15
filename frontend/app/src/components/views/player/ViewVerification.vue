@@ -19,8 +19,8 @@
 
 <script lang="ts" setup>
 import axios from "axios"
-import {ElLoading} from 'element-plus'
-import {ref} from 'vue'
+import {ElLoading} from "element-plus"
+import {ref} from "vue"
 import {useRoute} from "vue-router"
 import {useI18n} from "vue-i18n"
 
@@ -29,26 +29,26 @@ const {t} = useI18n({inheritLocale: true})
 const route = useRoute()
 
 const loadingAnimation = ElLoading.service({
-  lock: true,
-  text: t("general.loading"),
-  background: 'rgba(0, 0, 0, 0.7)'
+	lock: true,
+	text: t("general.loading"),
+	background: "rgba(0, 0, 0, 0.7)"
 })
 const verified = ref(false)
 const success = ref(false)
 
 
-let verificationCode = new URL(location.href).searchParams.get('code')
+let verificationCode = new URL(location.href).searchParams.get("code")
 
 axios.get(`/player/verification?code=${verificationCode}`)
-    .then((response) => {
-      success.value = response.status === 202
-    })
-    .catch((_) => {
-    })
-    .finally(() => {
-      verified.value = true
-      loadingAnimation.close()
-    })
+	.then((response) => {
+		success.value = response.status === 202
+	})
+	.catch(() => {
+	})
+	.finally(() => {
+		verified.value = true
+		loadingAnimation.close()
+	})
 </script>
 
 <style scoped>

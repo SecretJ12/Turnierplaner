@@ -7,7 +7,7 @@
 <script lang="ts" setup>
 import ViewGroupSystem from "@/components/views/competition/groupSystem/ViewGroupSystem.vue"
 import ViewKnockoutSystem from "@/components/views/competition/knockoutSystem/ViewKnockoutSystem.vue"
-import {Mode, TourType} from "@/interfaces/competition";
+import {Mode, TourType} from "@/interfaces/competition"
 
 const props = defineProps<{
   tourType: TourType,

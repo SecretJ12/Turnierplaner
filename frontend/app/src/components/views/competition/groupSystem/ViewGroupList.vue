@@ -24,13 +24,10 @@
 </template>
 
 <script lang="ts" setup>
-import {useRoute} from 'vue-router'
+import {useRoute} from "vue-router"
 import {useI18n} from "vue-i18n"
-import {Group} from "@/interfaces/groupSystem";
+import {Group} from "@/interfaces/groupSystem"
 
-const {t} = useI18n({inheritLocale: true})
-
-const route = useRoute()
 const props = defineProps<{
   group: Group
 }>()

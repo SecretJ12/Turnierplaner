@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts" setup>
-import {reactive} from 'vue'
+import {reactive} from "vue"
 import axios from "axios"
 import {router} from "@/main"
 import {ElMessage} from "element-plus"
@@ -14,22 +14,22 @@ import {useI18n} from "vue-i18n"
 const {t} = useI18n({inheritLocale: true})
 
 const data = reactive<TournamentForm>({
-  name: '',
-  visible: true,
-  description: '',
-  registration_phase: null,
-  game_phase: null
+	name: "",
+	visible: true,
+	description: "",
+	registration_phase: null,
+	game_phase: null
 })
 
 function submit(server_data: TournamentServer) {
-  axios.post("/tournament/add", server_data)
-      .then(_ => {
-        ElMessage.success(t("ViewCreateTournament.tournamentCreated"))
-        router.push({path: "/tournament/" + data.name})
-      })
-      .catch(_ => {
-        ElMessage.error(t("ViewCreateTournament.tournamentCreationFailed"))
-      })
+	axios.post("/tournament/add", server_data)
+		.then(() => {
+			ElMessage.success(t("ViewCreateTournament.tournamentCreated"))
+			router.push({path: "/tournament/" + data.name})
+		})
+		.catch(() => {
+			ElMessage.error(t("ViewCreateTournament.tournamentCreationFailed"))
+		})
 }
 
 </script>

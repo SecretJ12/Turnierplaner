@@ -41,34 +41,33 @@
 </template>
 
 <script setup lang="ts">
-import {useRoute} from 'vue-router'
+import {useRoute} from "vue-router"
 import {Group} from "@/interfaces/groupSystem"
 import {ref} from "vue"
 import {useI18n} from "vue-i18n"
-import ViewMatch from "@/components/views/competition/groupSystem/ViewMatch.vue";
-import {Match, Team} from "@/interfaces/match";
+import ViewMatch from "@/components/views/competition/groupSystem/ViewMatch.vue"
+import {Match, Team} from "@/interfaces/match"
 
 const {t} = useI18n({inheritLocale: true})
 
-const route = useRoute()
 const props = defineProps<{
   group: Group
 }>()
 
 function findMatch(teamA: Team, teamB: Team): Match {
-  const match: Match | undefined = props.group.matches.find(match => {
-    if (match.teamA === null || match.teamB === null)
-      return false
-    if (match.teamA.id === teamA.id && match.teamB.id === teamB.id)
-      return true
-    if (match.teamA.id === teamB.id && match.teamB.id === teamA.id)
-      return true
-  })
-  if (match === undefined) {
-    console.error("Match does not exist")
-    throw new Error("Match does not exist")
-  }
-  return match
+	const match: Match | undefined = props.group.matches.find(match => {
+		if (match.teamA === null || match.teamB === null)
+			return false
+		if (match.teamA.id === teamA.id && match.teamB.id === teamB.id)
+			return true
+		if (match.teamA.id === teamB.id && match.teamB.id === teamA.id)
+			return true
+	})
+	if (match === undefined) {
+		console.error("Match does not exist")
+		throw new Error("Match does not exist")
+	}
+	return match
 }
 
 const hoverIdA = ref<null | number>(null)
@@ -76,18 +75,18 @@ const hoverIdB = ref<null | number>(null)
 const hoverTeam = ref<null | string>(null)
 
 function matchHover(indexA: number, indexB: number) {
-  hoverIdA.value = indexA
-  hoverIdB.value = indexB
+	hoverIdA.value = indexA
+	hoverIdB.value = indexB
 }
 
 function headerHover(team: string) {
-  hoverTeam.value = team
+	hoverTeam.value = team
 }
 
 function hoverLeave() {
-  hoverIdA.value = null
-  hoverIdB.value = null
-  hoverTeam.value = null
+	hoverIdA.value = null
+	hoverIdB.value = null
+	hoverTeam.value = null
 }
 </script>
 

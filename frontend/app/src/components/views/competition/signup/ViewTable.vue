@@ -44,7 +44,7 @@ import {signedUpPlayer} from "@/interfaces/player"
 const {t} = useI18n({inheritLocale: true})
 
 const props = defineProps<{
-  update: Number,
+  update: number,
   competition: Competition
 }>()
 
@@ -55,78 +55,78 @@ const playersA = ref<signedUpPlayer[]>([])
 const playersB = ref<signedUpPlayer[]>([])
 
 watch(() => props.update, async () => {
-  update()
+	update()
 })
 update()
 
 function update() {
-  axios.get<Team[]>(`/tournament/${route.params.tourId}/competition/${route.params.compId}/signedUpTeams`)
-      .then((response) => {
-        if (props.competition.mode === Mode.SINGLE
+	axios.get<Team[]>(`/tournament/${route.params.tourId}/competition/${route.params.compId}/signedUpTeams`)
+		.then((response) => {
+			if (props.competition.mode === Mode.SINGLE
             || (props.competition.mode === Mode.DOUBLE && props.competition.signUp === SignUp.INDIVIDUAL
                 && !props.competition.playerB.different)) {
-          playersA.value = response.data.filter((team) => team.playerA !== null).map((team) => {
-            const player = team.playerA
-            if (player === undefined)
-              throw new Error("Player A is null")
-            return {
-              firstName: player.firstName,
-              lastName: player.lastName,
-              name: player.firstName + ' ' + player.lastName
-            }
-          })
-        } else if (props.competition.mode === Mode.DOUBLE && props.competition.signUp === SignUp.INDIVIDUAL
+				playersA.value = response.data.filter((team) => team.playerA !== null).map((team) => {
+					const player = team.playerA
+					if (player === undefined)
+						throw new Error("Player A is null")
+					return {
+						firstName: player.firstName,
+						lastName: player.lastName,
+						name: player.firstName + " " + player.lastName
+					}
+				})
+			} else if (props.competition.mode === Mode.DOUBLE && props.competition.signUp === SignUp.INDIVIDUAL
             && props.competition.playerB.different) {
-          playersA.value = response.data.filter((team) => team.playerA !== null).map((team) => {
-            let player = team.playerA
-            if (player === undefined)
-              throw new Error("Player A is null")
-            return {
-              firstName: player.firstName,
-              lastName: player.lastName,
-              name: player.firstName + ' ' + player.lastName
-            }
-          })
-          playersB.value = response.data.filter((team) => team.playerB !== null).map((team) => {
-            let player = team.playerB
-            if (player === undefined)
-              throw new Error("Player B is null")
-            return {
-              firstName: player.firstName,
-              lastName: player.lastName,
-              name: player.firstName + ' ' + player.lastName
-            }
-          })
-        } else if (props.competition.mode === Mode.DOUBLE && props.competition.signUp === SignUp.TOGETHER) {
-          teams.value = response.data.map((team) => {
-            if (team.playerA === undefined)
-              throw new Error("Player A is null")
-            if (team.playerB === undefined)
-              throw new Error("Player B is null")
-            return {
-              playerA: {
-                firstName: team.playerA.firstName,
-                lastName: team.playerA.lastName,
-                name: team.playerA.firstName + ' ' + team.playerA.lastName
-              },
-              playerB: {
-                firstName: team.playerB.firstName,
-                lastName: team.playerB.lastName,
-                name: team.playerB.firstName + ' ' + team.playerB.lastName
-              }
-            }
-          })
-        } else {
-          ElMessage.error("invalid mode")
-        }
-      })
-      .catch((error) => {
-        teams.value = []
-        playersA.value = []
-        playersB.value = []
-        ElMessage.error(t("ViewCompetition.query_player_failed"))
-        console.log(error)
-      })
+				playersA.value = response.data.filter((team) => team.playerA !== null).map((team) => {
+					let player = team.playerA
+					if (player === undefined)
+						throw new Error("Player A is null")
+					return {
+						firstName: player.firstName,
+						lastName: player.lastName,
+						name: player.firstName + " " + player.lastName
+					}
+				})
+				playersB.value = response.data.filter((team) => team.playerB !== null).map((team) => {
+					let player = team.playerB
+					if (player === undefined)
+						throw new Error("Player B is null")
+					return {
+						firstName: player.firstName,
+						lastName: player.lastName,
+						name: player.firstName + " " + player.lastName
+					}
+				})
+			} else if (props.competition.mode === Mode.DOUBLE && props.competition.signUp === SignUp.TOGETHER) {
+				teams.value = response.data.map((team) => {
+					if (team.playerA === undefined)
+						throw new Error("Player A is null")
+					if (team.playerB === undefined)
+						throw new Error("Player B is null")
+					return {
+						playerA: {
+							firstName: team.playerA.firstName,
+							lastName: team.playerA.lastName,
+							name: team.playerA.firstName + " " + team.playerA.lastName
+						},
+						playerB: {
+							firstName: team.playerB.firstName,
+							lastName: team.playerB.lastName,
+							name: team.playerB.firstName + " " + team.playerB.lastName
+						}
+					}
+				})
+			} else {
+				ElMessage.error("invalid mode")
+			}
+		})
+		.catch((error) => {
+			teams.value = []
+			playersA.value = []
+			playersB.value = []
+			ElMessage.error(t("ViewCompetition.query_player_failed"))
+			console.log(error)
+		})
 }
 </script>
 

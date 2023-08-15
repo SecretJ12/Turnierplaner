@@ -6,13 +6,13 @@
 </template>
 
 <script lang="ts" setup>
-import {router} from '@/main'
+import {router} from "@/main"
 import {useI18n} from "vue-i18n"
 
 const {t} = useI18n({inheritLocale: true})
 
 function home() {
-  router.replace({path: "/"})
+	router.replace({path: "/"})
 }
 </script>
 

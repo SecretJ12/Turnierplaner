@@ -44,8 +44,8 @@
 </template>
 
 <script lang="ts" setup>
-import {useI18n} from "vue-i18n";
-import {settingsPlayer, Sex} from "@/interfaces/competition";
+import {useI18n} from "vue-i18n"
+import {settingsPlayer, Sex} from "@/interfaces/competition"
 
 const {t} = useI18n({inheritLocale: true})
 
@@ -55,23 +55,23 @@ const props = defineProps<{
 }>()
 
 function generateAboveTag() {
-  if (props.player.minAge === null)
-    return ''
-  const dif = props.beginGamePhase.getFullYear() - props.player.minAge.getFullYear()
-  return `Ü${dif}`
+	if (props.player.minAge === null)
+		return ""
+	const dif = props.beginGamePhase.getFullYear() - props.player.minAge.getFullYear()
+	return `Ü${dif}`
 }
 
 function generateUnderTag() {
-  if (props.player.maxAge === null)
-    return ''
-  const dif = props.beginGamePhase.getFullYear() - props.player.maxAge.getFullYear()
-  return `U${dif - 1}`
+	if (props.player.maxAge === null)
+		return ""
+	const dif = props.beginGamePhase.getFullYear() - props.player.maxAge.getFullYear()
+	return `U${dif - 1}`
 }
 
 const dateOptions: Intl.DateTimeFormatOptions = {
-  year: "numeric",
-  month: "numeric",
-  day: "numeric"
+	year: "numeric",
+	month: "numeric",
+	day: "numeric"
 }
 </script>
 

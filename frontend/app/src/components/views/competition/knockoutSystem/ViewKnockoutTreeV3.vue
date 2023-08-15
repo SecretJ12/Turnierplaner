@@ -47,11 +47,11 @@
 </template>
 
 <script setup lang="ts">
-import {KnockoutMatch} from "@/interfaces/knockoutSystem";
-import {rangeArr} from "element-plus";
+import {KnockoutMatch} from "@/interfaces/knockoutSystem"
+import {rangeArr} from "element-plus"
 import {useI18n} from "vue-i18n"
-import ViewMatchV3 from "@/components/views/competition/knockoutSystem/ViewMatchV3.vue";
-import {Mode} from "@/interfaces/competition";
+import ViewMatchV3 from "@/components/views/competition/knockoutSystem/ViewMatchV3.vue"
+import {Mode} from "@/interfaces/competition"
 
 const {t} = useI18n({inheritLocale: true})
 
@@ -62,106 +62,105 @@ const props = defineProps<{
 
 const maxDepth = calcMaxDepth(props.match)
 const teamsCount = Math.pow(2, maxDepth - 1)
-const height = Math.pow(2, maxDepth)
 
 function getMatch(indexR: number, indexC: number): KnockoutMatch {
-  let curMatch = props.match
-  let curHeight = tableHeight()
-  for (let i = 0; i < maxDepth - indexC - 1; i++) {
-    curHeight /= 2
-    if (curMatch.prevMatch === undefined)
-      throw new Error("prevMatch is undefined")
-    if (indexR < curHeight) {
-      curMatch = curMatch.prevMatch.a
-    } else {
-      curMatch = curMatch.prevMatch.b
-      indexR -= curHeight
-    }
-  }
-  return curMatch
+	let curMatch = props.match
+	let curHeight = tableHeight()
+	for (let i = 0; i < maxDepth - indexC - 1; i++) {
+		curHeight /= 2
+		if (curMatch.prevMatch === undefined)
+			throw new Error("prevMatch is undefined")
+		if (indexR < curHeight) {
+			curMatch = curMatch.prevMatch.a
+		} else {
+			curMatch = curMatch.prevMatch.b
+			indexR -= curHeight
+		}
+	}
+	return curMatch
 }
 
 function tableHeight(): number {
-  return 4 * teamsCount + 2 * (teamsCount - 1) + 1
+	return 4 * teamsCount + 2 * (teamsCount - 1) + 1
 }
 
 function roundTitle(round: number, totalRounds: number): string {
-  if (round === totalRounds)
-    return t("ViewKnockout.finale")
-  else if (round === totalRounds - 1)
-    return t("ViewKnockout.semifinals")
-  else if (round === totalRounds - 2)
-    return t("ViewKnockout.quarterfinals")
-  else
-    return t("ViewKnockout.round") + " " + round
+	if (round === totalRounds)
+		return t("ViewKnockout.finale")
+	else if (round === totalRounds - 1)
+		return t("ViewKnockout.semifinals")
+	else if (round === totalRounds - 2)
+		return t("ViewKnockout.quarterfinals")
+	else
+		return t("ViewKnockout.round") + " " + round
 }
 
 function matchColumnCellType(indexR: number, indexC: number): cellType {
-  if (indexC === 0) {
-    const mod = (indexR % 6)
-    if (mod === 0)
-      return cellType.match
-    else if (mod < 5)
-      return cellType.empty
-    else
-      return cellType.emptyCell
-  }
+	if (indexC === 0) {
+		const mod = (indexR % 6)
+		if (mod === 0)
+			return cellType.match
+		else if (mod < 5)
+			return cellType.empty
+		else
+			return cellType.emptyCell
+	}
 
-  const countMatchesLeftTop = Math.pow(2, indexC - 1)
-  const heightLeftTop = 4 * countMatchesLeftTop + 2 * (countMatchesLeftTop - 1) - 1
+	const countMatchesLeftTop = Math.pow(2, indexC - 1)
+	const heightLeftTop = 4 * countMatchesLeftTop + 2 * (countMatchesLeftTop - 1) - 1
 
-  const countMatchesLeft = Math.pow(2, indexC)
-  const heightLeft = 4 * countMatchesLeft + 2 * (countMatchesLeft)
+	const countMatchesLeft = Math.pow(2, indexC)
+	const heightLeft = 4 * countMatchesLeft + 2 * (countMatchesLeft)
 
-  if (indexR < heightLeftTop)
-    return cellType.emptyCell
-  const mod = ((indexR - heightLeftTop) % heightLeft)
-  if (mod === 0)
-    return cellType.match
-  else if (mod < 5)
-    return cellType.empty
-  else
-    return cellType.emptyCell
+	if (indexR < heightLeftTop)
+		return cellType.emptyCell
+	const mod = ((indexR - heightLeftTop) % heightLeft)
+	if (mod === 0)
+		return cellType.match
+	else if (mod < 5)
+		return cellType.empty
+	else
+		return cellType.emptyCell
 }
 
 function interColumnCellType(indexR: number, indexC: number): interCellType {
-  const countMatchesLeftTop = Math.pow(2, indexC)
-  const heightLeftTop = 4 * countMatchesLeftTop + 2 * (countMatchesLeftTop - 1)
+	const countMatchesLeftTop = Math.pow(2, indexC)
+	const heightLeftTop = 4 * countMatchesLeftTop + 2 * (countMatchesLeftTop - 1)
 
-  const countMatchesLeft = Math.pow(2, indexC + 1)
-  const heightLeft = 4 * countMatchesLeft + 2 * (countMatchesLeft - 1) - heightLeftTop
+	const countMatchesLeft = Math.pow(2, indexC + 1)
+	const heightLeft = 4 * countMatchesLeft + 2 * (countMatchesLeft - 1) - heightLeftTop
 
-  const mod = ((indexR - (heightLeftTop / 2)) % (2 * heightLeft))
-  if (indexR < heightLeftTop / 2)
-    return interCellType.blank
-  if (mod === 0)
-    return interCellType.topRight
-  if (mod === heightLeft - 1)
-    return interCellType.bottomRight
-  if (mod < heightLeft)
-    return interCellType.right
-  else
-    return interCellType.blank
+	const mod = ((indexR - (heightLeftTop / 2)) % (2 * heightLeft))
+	if (indexR < heightLeftTop / 2)
+		return interCellType.blank
+	if (mod === 0)
+		return interCellType.topRight
+	if (mod === heightLeft - 1)
+		return interCellType.bottomRight
+	if (mod < heightLeft)
+		return interCellType.right
+	else
+		return interCellType.blank
 }
 
 function isBottomInterCell(indexR: number, indexC: number): boolean {
-  const countMatchesLeftTop = Math.pow(2, indexC)
-  const heightLeftTop = 4 * countMatchesLeftTop + 2 * (countMatchesLeftTop - 1) - 1
+	const countMatchesLeftTop = Math.pow(2, indexC)
+	const heightLeftTop = 4 * countMatchesLeftTop + 2 * (countMatchesLeftTop - 1) - 1
 
-  const countMatchesLeft = Math.pow(2, indexC + 1)
-  const heightLeft = 4 * countMatchesLeft + 2 * (countMatchesLeft)
+	const countMatchesLeft = Math.pow(2, indexC + 1)
+	const heightLeft = 4 * countMatchesLeft + 2 * (countMatchesLeft)
 
-  if (indexR < heightLeftTop)
-    return false
-  const mod = ((indexR - heightLeftTop) % heightLeft)
-  return mod === 1;
+	if (indexR < heightLeftTop)
+		return false
+	const mod = ((indexR - heightLeftTop) % heightLeft)
+	return mod === 1
 }
 
 function calcMaxDepth(match: KnockoutMatch): number {
-  if (match.prevMatch === undefined)
-    return 1
+	if (match.prevMatch === undefined)
+		return 1
 
-  return 1 + Math.max(calcMaxDepth(match.prevMatch.a), calcMaxDepth(match.prevMatch.b))
+	return 1 + Math.max(calcMaxDepth(match.prevMatch.a), calcMaxDepth(match.prevMatch.b))
 }
 
 enum cellType {

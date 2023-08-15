@@ -280,15 +280,15 @@
 </template>
 
 <script lang="ts" setup>
-import {ref} from 'vue'
+import {ref} from "vue"
 import {useI18n} from "vue-i18n"
-import {Competition, competitionClientToServer, Mode, Sex, SignUp, TourType} from "@/interfaces/competition";
+import {Competition, competitionClientToServer, Mode, Sex, SignUp, TourType} from "@/interfaces/competition"
 
 const {t} = useI18n({inheritLocale: true})
 
 let windowWidth = ref(window.innerWidth)
-window.addEventListener('resize', () => {
-  windowWidth.value = window.innerWidth
+window.addEventListener("resize", () => {
+	windowWidth.value = window.innerWidth
 })
 
 const formRef = ref()
@@ -297,42 +297,42 @@ const props = withDefaults(defineProps<{
   disabled: boolean,
   competition: Competition
 }>(), {
-  disabled: false
+	disabled: false
 })
 
-const emit = defineEmits(['submit'])
+const emit = defineEmits(["submit"])
 
 function submit(formRef: HTMLFormElement | undefined) {
-  if (!formRef)
-    return
-  formRef.validate((valid: boolean) => {
-    if (valid) {
-      emit('submit', competitionClientToServer(props.competition))
-    } else {
-      console.log('validation failed')
-    }
-  })
+	if (!formRef)
+		return
+	formRef.validate((valid: boolean) => {
+		if (valid) {
+			emit("submit", competitionClientToServer(props.competition))
+		} else {
+			console.log("validation failed")
+		}
+	})
 }
 
 const checkAMin = (rule: any, value: Date, callback: (arg0?: Error) => void) => {
-  if (props.competition.playerA.hasMinAge && props.competition.playerA.minAge === null)
-    callback(new Error(t("CompetitionSettings.missingAge")))
-  callback()
+	if (props.competition.playerA.hasMinAge && props.competition.playerA.minAge === null)
+		callback(new Error(t("CompetitionSettings.missingAge")))
+	callback()
 }
 const checkAMax = (rule: any, value: Date, callback: (arg0?: Error) => void) => {
-  if (props.competition.playerA.hasMaxAge && props.competition.playerA.maxAge === null)
-    callback(new Error(t("CompetitionSettings.missingAge")))
-  callback()
+	if (props.competition.playerA.hasMaxAge && props.competition.playerA.maxAge === null)
+		callback(new Error(t("CompetitionSettings.missingAge")))
+	callback()
 }
 const checkBMin = (rule: any, value: Date, callback: (arg0?: Error) => void) => {
-  if (props.competition.playerB.hasMinAge && props.competition.playerB.minAge === null)
-    callback(new Error(t("CompetitionSettings.missingAge")))
-  callback()
+	if (props.competition.playerB.hasMinAge && props.competition.playerB.minAge === null)
+		callback(new Error(t("CompetitionSettings.missingAge")))
+	callback()
 }
 const checkBMax = (rule: any, value: Date, callback: (arg0?: Error) => void) => {
-  if (props.competition.playerB.hasMaxAge && props.competition.playerB.maxAge === null)
-    callback(new Error(t("CompetitionSettings.missingAge")))
-  callback()
+	if (props.competition.playerB.hasMaxAge && props.competition.playerB.maxAge === null)
+		callback(new Error(t("CompetitionSettings.missingAge")))
+	callback()
 }
 </script>
 

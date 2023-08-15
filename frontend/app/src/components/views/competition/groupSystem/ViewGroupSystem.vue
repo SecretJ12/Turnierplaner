@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts" setup>
-import {useRoute} from 'vue-router'
+import {useRoute} from "vue-router"
 import axios from "axios"
 import {ref} from "vue"
 import {GroupSystem, GroupSystemServer, groupSystemServerToClient} from "@/interfaces/groupSystem"
@@ -24,18 +24,16 @@ import ViewGroupTable from "@/components/views/competition/groupSystem/ViewGroup
 import {useI18n} from "vue-i18n"
 import ViewGroupTableV2 from "@/components/views/competition/groupSystem/ViewGroupTableV2.vue"
 
-const {t} = useI18n({inheritLocale: true})
-
 const route = useRoute()
 const groupSystem = ref<GroupSystem | undefined>()
 const currentTab = ref("tablev2")
 
 await axios.get<GroupSystemServer>(`tournament/${route.params.tourId}/competition/${route.params.compId}/groupMatches`)
-    .then((response) => {
-      groupSystem.value = groupSystemServerToClient(response.data)
-    })
-    .catch((_) => {
-    })
+	.then((response) => {
+		groupSystem.value = groupSystemServerToClient(response.data)
+	})
+	.catch(() => {
+	})
 </script>
 
 <style>

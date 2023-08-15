@@ -52,14 +52,14 @@ import {useRoute} from "vue-router"
 import ViewTable from "@/components/views/competition/signup/ViewTable.vue"
 import ViewRegistrationNotice from "@/components/views/competition/signup/ViewRegistrationNotice.vue"
 import ViewSignUpForm from "@/components/views/competition/signup/ViewSignUpForm.vue"
-import {Competition} from "@/interfaces/competition";
+import {Competition} from "@/interfaces/competition"
 import {useI18n} from "vue-i18n"
 
 const {t} = useI18n({inheritLocale: true})
 
 let windowWidth = ref(window.innerWidth)
-window.addEventListener('resize', () => {
-  windowWidth.value = window.innerWidth
+window.addEventListener("resize", () => {
+	windowWidth.value = window.innerWidth
 })
 
 const props = defineProps<{
@@ -69,34 +69,34 @@ const props = defineProps<{
 }>()
 
 const route = useRoute()
-const isLoggedIn = inject('loggedIn', ref(false))
+const isLoggedIn = inject("loggedIn", ref(false))
 const canEdit = ref(false)
 
 const updateChildren = ref(0)
 watch(isLoggedIn, async () => {
-  update()
+	update()
 })
 update()
 
 function update() {
-  canEdit.value = false
-  auth.getUser().then((user) => {
-    if (user !== null) {
-      axios.get<boolean>(`/tournament/${route.params.tourId}/competition/canEdit`)
-          .then((response) => {
-            canEdit.value = response.data
-          })
-          .catch((_) => {
-            canEdit.value = false
-          })
-    }
-  })
+	canEdit.value = false
+	auth.getUser().then((user) => {
+		if (user !== null) {
+			axios.get<boolean>(`/tournament/${route.params.tourId}/competition/canEdit`)
+				.then((response) => {
+					canEdit.value = response.data
+				})
+				.catch(() => {
+					canEdit.value = false
+				})
+		}
+	})
 
-  updateChildren.value++
+	updateChildren.value++
 }
 
 function childUpdate() {
-  updateChildren.value++
+	updateChildren.value++
 }
 </script>
 

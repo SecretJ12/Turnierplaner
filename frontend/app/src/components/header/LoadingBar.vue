@@ -5,24 +5,24 @@
 </template>
 
 <script lang="ts" setup>
-import {ref} from 'vue'
+import {ref} from "vue"
 import axios from "axios"
 
 let loading = ref(0)
 
 axios.interceptors.request.use(function (config) {
-  loading.value++
-  return config
+	loading.value++
+	return config
 }, function (error) {
-  loading.value++
-  return Promise.reject(error)
+	loading.value++
+	return Promise.reject(error)
 })
 axios.interceptors.response.use(function (config) {
-  loading.value--
-  return config
+	loading.value--
+	return config
 }, function (error) {
-  loading.value--
-  return Promise.reject(error);
+	loading.value--
+	return Promise.reject(error)
 })
 </script>
 

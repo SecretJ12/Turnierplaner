@@ -27,8 +27,8 @@
 </template>
 
 <script setup lang="ts">
-import {KnockoutMatch} from "@/interfaces/knockoutSystem";
-import {rangeArr} from "element-plus";
+import {KnockoutMatch} from "@/interfaces/knockoutSystem"
+import {rangeArr} from "element-plus"
 import {useI18n} from "vue-i18n"
 
 const {t} = useI18n({inheritLocale: true})
@@ -41,76 +41,76 @@ const maxDepth = calcMaxDepth(props.match)
 const height = Math.pow(2, maxDepth)
 
 function getTop(indexR: number, indexC: number): string {
-  let curMatch = props.match
-  let curHeight = height
-  for (let i = 0; i < maxDepth - indexC - 1; i++) {
-    curHeight /= 2
-    if (curMatch.prevMatch === undefined)
-      return "Error"
-    if (indexR < curHeight)
-      curMatch = curMatch.prevMatch.a
-    else {
-      curMatch = curMatch.prevMatch.b
-      indexR -= curHeight
-    }
-  }
+	let curMatch = props.match
+	let curHeight = height
+	for (let i = 0; i < maxDepth - indexC - 1; i++) {
+		curHeight /= 2
+		if (curMatch.prevMatch === undefined)
+			return "Error"
+		if (indexR < curHeight)
+			curMatch = curMatch.prevMatch.a
+		else {
+			curMatch = curMatch.prevMatch.b
+			indexR -= curHeight
+		}
+	}
 
-  if (curMatch.teamA != null)
-    return curMatch.teamA.playerA.firstName
-  else
-    return curMatch.begin.toLocaleString(t("lang"), dateOptions)
+	if (curMatch.teamA != null)
+		return curMatch.teamA.playerA.firstName
+	else
+		return curMatch.begin.toLocaleString(t("lang"), dateOptions)
 }
 
 function getBottom(indexR: number, indexC: number): string {
-  let curMatch = props.match
-  let curHeight = height
-  for (let i = 0; i < maxDepth - indexC - 1; i++) {
-    curHeight /= 2
-    if (curMatch.prevMatch === undefined)
-      return "Error"
-    if (indexR < curHeight)
-      curMatch = curMatch.prevMatch.a
-    else {
-      curMatch = curMatch.prevMatch.b
-      indexR -= curHeight
-    }
-  }
+	let curMatch = props.match
+	let curHeight = height
+	for (let i = 0; i < maxDepth - indexC - 1; i++) {
+		curHeight /= 2
+		if (curMatch.prevMatch === undefined)
+			return "Error"
+		if (indexR < curHeight)
+			curMatch = curMatch.prevMatch.a
+		else {
+			curMatch = curMatch.prevMatch.b
+			indexR -= curHeight
+		}
+	}
 
-  if (curMatch.finished)
-    return "result"
-  else
-    return "" // TODO maybe player details
+	if (curMatch.finished)
+		return "result"
+	else
+		return "" // TODO maybe player details
 }
 
 
 function calcMaxDepth(match: KnockoutMatch): number {
-  if (match.prevMatch === undefined)
-    return 1
+	if (match.prevMatch === undefined)
+		return 1
 
-  return 1 + Math.max(calcMaxDepth(match.prevMatch.a), calcMaxDepth(match.prevMatch.b))
+	return 1 + Math.max(calcMaxDepth(match.prevMatch.a), calcMaxDepth(match.prevMatch.b))
 }
 
 // style functions
 function isName(indexR: number, indexC: number): boolean {
-  return (indexR - (Math.pow(2, indexC) - 1)) % (Math.pow(2, indexC + 1)) === 0
+	return (indexR - (Math.pow(2, indexC) - 1)) % (Math.pow(2, indexC + 1)) === 0
 }
 
 function isDescr(indexR: number, indexC: number): boolean {
-  return (indexR - (Math.pow(2, indexC) - 1)) % (Math.pow(2, indexC + 1)) === 1
+	return (indexR - (Math.pow(2, indexC) - 1)) % (Math.pow(2, indexC + 1)) === 1
 }
 
 function isBorder(indexR: number, indexC: number): boolean {
-  return (indexR - (Math.pow(2, indexC)) + Math.pow(2, indexC + 2))
+	return (indexR - (Math.pow(2, indexC)) + Math.pow(2, indexC + 2))
       % (Math.pow(2, indexC + 2)) < Math.pow(2, indexC + 1)
       && indexC !== maxDepth - 1
 }
 
 const dateOptions: Intl.DateTimeFormatOptions = {
-  year: "2-digit",
-  month: "numeric",
-  day: "numeric",
-  hour: "numeric",
-  minute: "numeric"
+	year: "2-digit",
+	month: "numeric",
+	day: "numeric",
+	hour: "numeric",
+	minute: "numeric"
 }
 </script>
 

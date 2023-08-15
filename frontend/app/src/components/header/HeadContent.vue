@@ -8,7 +8,7 @@
 
 
 <script lang="ts" setup>
-import HeaderLeft from './HeaderLeft.vue'
+import HeaderLeft from "./HeaderLeft.vue"
 import HeaderRight from "./HeaderRight.vue"
 import LoadingBar from "./LoadingBar.vue"
 </script>

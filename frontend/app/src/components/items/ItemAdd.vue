@@ -5,10 +5,10 @@
 </template>
 
 <script lang="ts" setup>
-const emit = defineEmits(['selected']);
+const emit = defineEmits(["selected"])
 
 function selected() {
-  emit('selected')
+	emit("selected")
 }
 </script>
 

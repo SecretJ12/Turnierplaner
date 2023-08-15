@@ -10,61 +10,61 @@
 </template>
 
 <script lang="ts" setup>
-import {inject, ref, watch} from 'vue'
-import Item from '../../items/ItemTournament.vue'
-import AddItem from '../../items/ItemAdd.vue'
-import {router} from '@/main'
+import {inject, ref, watch} from "vue"
+import Item from "../../items/ItemTournament.vue"
+import AddItem from "../../items/ItemAdd.vue"
+import {router} from "@/main"
 import axios from "axios"
 import {auth} from "@/security/AuthService"
 import {ElMessage} from "element-plus"
-import {Tournament, TournamentServer, tournamentServerToClient} from "@/interfaces/tournament";
+import {Tournament, TournamentServer, tournamentServerToClient} from "@/interfaces/tournament"
 import {useI18n} from "vue-i18n"
 
 const {t} = useI18n({inheritLocale: true})
 
 const tournaments = ref<Tournament[]>([])
 
-const isLoggedIn = inject('loggedIn', ref(false))
+const isLoggedIn = inject("loggedIn", ref(false))
 const canCreate = ref<boolean>(false)
 
 watch(isLoggedIn, async () => {
-  update()
+	update()
 })
 update()
 
 function update() {
-  canCreate.value = false
-  axios.get<TournamentServer[]>('/tournament/list')
-      .then((response) => {
-        tournaments.value = response.data.map(tournamentServerToClient)
-      })
-      .catch((error) => {
-        ElMessage.error(t("ViewTournaments.loadingFailed"))
-        console.log(error)
-      })
-  auth.getUser().then((user) => {
-    if (user !== null) {
-      axios.get<boolean>('/tournament/canCreate')
-          .then((response) => {
-            canCreate.value = response.data
-          })
-          .catch((_) => {
-            canCreate.value = false
-          })
-    }
-  })
+	canCreate.value = false
+	axios.get<TournamentServer[]>("/tournament/list")
+		.then((response) => {
+			tournaments.value = response.data.map(tournamentServerToClient)
+		})
+		.catch((error) => {
+			ElMessage.error(t("ViewTournaments.loadingFailed"))
+			console.log(error)
+		})
+	auth.getUser().then((user) => {
+		if (user !== null) {
+			axios.get<boolean>("/tournament/canCreate")
+				.then((response) => {
+					canCreate.value = response.data
+				})
+				.catch(() => {
+					canCreate.value = false
+				})
+		}
+	})
 }
 
 function selected(tournament: string) {
-  router.push({path: '/tournament/' + tournament})
+	router.push({path: "/tournament/" + tournament})
 }
 
 function settingsItem(tournament: string) {
-  router.push({path: '/tournament/' + tournament + '/edit'})
+	router.push({path: "/tournament/" + tournament + "/edit"})
 }
 
 function addTournament() {
-  router.push({path: '/createTournament'})
+	router.push({path: "/createTournament"})
 }
 </script>
 

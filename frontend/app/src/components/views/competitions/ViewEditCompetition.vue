@@ -22,24 +22,24 @@ const competition = ref<Competition | null>(null)
 const disabled = ref(true)
 
 axios.get<CompetitionServer>(`/tournament/${route.params.tourId}/competition/${route.params.compId}/details`)
-    .then((response) => {
-      competition.value = competitionServerToClient(response.data)
-      disabled.value = false
-    })
-    .catch((error) => {
-      ElMessage.error(t("ViewEditCompetition.loadingDetailsFailed"))
-      console.log(error)
-      router.back();
-    })
+	.then((response) => {
+		competition.value = competitionServerToClient(response.data)
+		disabled.value = false
+	})
+	.catch((error) => {
+		ElMessage.error(t("ViewEditCompetition.loadingDetailsFailed"))
+		console.log(error)
+		router.back()
+	})
 
 function submit(server_data: CompetitionServer) {
-  axios.post(`/tournament/${route.params.tourId}/competition/update`, server_data)
-      .then(_ => {
-        ElMessage.success(t("ViewEditCompetition.saved"))
-      })
-      .catch(_ => {
-        ElMessage.error(t("ViewEditCompetition.saving_failed"))
-      })
+	axios.post(`/tournament/${route.params.tourId}/competition/update`, server_data)
+		.then(() => {
+			ElMessage.success(t("ViewEditCompetition.saved"))
+		})
+		.catch(() => {
+			ElMessage.error(t("ViewEditCompetition.saving_failed"))
+		})
 }
 </script>
 

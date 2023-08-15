@@ -37,9 +37,9 @@
 </template>
 
 <script setup lang="ts">
-import {KnockoutMatch} from "@/interfaces/knockoutSystem";
-import {useI18n} from "vue-i18n";
-import {Mode} from "@/interfaces/competition";
+import {KnockoutMatch} from "@/interfaces/knockoutSystem"
+import {useI18n} from "vue-i18n"
+import {Mode} from "@/interfaces/competition"
 
 const {t} = useI18n({inheritLocale: true })
 
@@ -49,11 +49,11 @@ const props = defineProps<{
 }>()
 
 const dateOptions: Intl.DateTimeFormatOptions = {
-  year: "2-digit",
-  month: "numeric",
-  day: "numeric",
-  hour: "numeric",
-  minute: "numeric"
+	year: "2-digit",
+	month: "numeric",
+	day: "numeric",
+	hour: "numeric",
+	minute: "numeric"
 }
 </script>
 

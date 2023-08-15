@@ -34,11 +34,11 @@
 </template>
 
 <script lang="ts" setup>
-import {useRoute} from 'vue-router'
+import {useRoute} from "vue-router"
 import {Group} from "@/interfaces/groupSystem"
 import {useI18n} from "vue-i18n"
-import {Match, Team} from "@/interfaces/match";
-import ViewMatch from "@/components/views/competition/groupSystem/ViewMatch.vue";
+import {Match, Team} from "@/interfaces/match"
+import ViewMatch from "@/components/views/competition/groupSystem/ViewMatch.vue"
 
 const {t} = useI18n({inheritLocale: true})
 
@@ -49,19 +49,19 @@ const props = defineProps<{
 
 
 function findMatch(teamA: Team, teamB: Team): Match {
-  const match: Match | undefined = props.group.matches.find(match => {
-    if (match.teamA === null || match.teamB === null)
-      return false
-    if (match.teamA.id === teamA.id && match.teamB.id === teamB.id)
-      return true
-    if (match.teamA.id === teamB.id && match.teamB.id === teamA.id)
-      return true
-  })
-  if (match === undefined) {
-    console.error("Match does not exist")
-    throw new Error("Match does not exist")
-  }
-  return match
+	const match: Match | undefined = props.group.matches.find(match => {
+		if (match.teamA === null || match.teamB === null)
+			return false
+		if (match.teamA.id === teamA.id && match.teamB.id === teamB.id)
+			return true
+		if (match.teamA.id === teamB.id && match.teamB.id === teamA.id)
+			return true
+	})
+	if (match === undefined) {
+		console.error("Match does not exist")
+		throw new Error("Match does not exist")
+	}
+	return match
 }
 
 // TODO update progress array

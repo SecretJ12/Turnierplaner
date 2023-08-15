@@ -29,14 +29,14 @@ const props = defineProps<{
   tournament: Tournament
 }>()
 
-const emit = defineEmits(['selected', 'settings'])
+const emit = defineEmits(["selected", "settings"])
 
 function selected() {
-  emit('selected', props.tournament.name);
+	emit("selected", props.tournament.name)
 }
 
 function settings() {
-  emit('settings', props.tournament.name);
+	emit("settings", props.tournament.name)
 }
 </script>
 

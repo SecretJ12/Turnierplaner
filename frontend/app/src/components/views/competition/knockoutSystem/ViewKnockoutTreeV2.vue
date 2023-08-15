@@ -38,12 +38,10 @@
 </template>
 
 <script setup lang="ts">
-import {KnockoutMatch} from "@/interfaces/knockoutSystem";
-import {rangeArr} from "element-plus";
+import {KnockoutMatch} from "@/interfaces/knockoutSystem"
+import {rangeArr} from "element-plus"
 import {useI18n} from "vue-i18n"
-import ViewMatch from "@/components/views/competition/knockoutSystem/ViewMatchV2.vue";
-
-const {t} = useI18n({inheritLocale: true})
+import ViewMatch from "@/components/views/competition/knockoutSystem/ViewMatchV2.vue"
 
 const props = defineProps<{
   match: KnockoutMatch
@@ -51,63 +49,62 @@ const props = defineProps<{
 
 const maxDepth = calcMaxDepth(props.match)
 const teamsCount = Math.pow(2, maxDepth - 1)
-const height = Math.pow(2, maxDepth)
 
 function matchColumnCellType(indexR: number, indexC: number): cellType {
-  if (indexC === 0) {
-    const mod = (indexR % 6)
-    if (mod === 0)
-      return cellType.match
-    else if (mod < 4)
-      return cellType.empty
-    else
-      return cellType.emptyCell
-  }
+	if (indexC === 0) {
+		const mod = (indexR % 6)
+		if (mod === 0)
+			return cellType.match
+		else if (mod < 4)
+			return cellType.empty
+		else
+			return cellType.emptyCell
+	}
 
-  const countMatchesLeftTop = Math.pow(2, indexC - 1)
-  const heightLeftTop = 4 * countMatchesLeftTop + 2 * (countMatchesLeftTop - 1) - 1
+	const countMatchesLeftTop = Math.pow(2, indexC - 1)
+	const heightLeftTop = 4 * countMatchesLeftTop + 2 * (countMatchesLeftTop - 1) - 1
 
-  const countMatchesLeft = Math.pow(2, indexC)
-  const heightLeft = 4 * countMatchesLeft + 2 * (countMatchesLeft)
+	const countMatchesLeft = Math.pow(2, indexC)
+	const heightLeft = 4 * countMatchesLeft + 2 * (countMatchesLeft)
 
-  console.log(`indexR: ${indexR}, indexC: ${indexC}, countMatchesLeftTop: ${countMatchesLeftTop}, heightLeftTop: ${heightLeftTop}, countMatchesLeft: ${countMatchesLeft}, heightLeft: ${countMatchesLeftTop}`)
+	console.log(`indexR: ${indexR}, indexC: ${indexC}, countMatchesLeftTop: ${countMatchesLeftTop}, heightLeftTop: ${heightLeftTop}, countMatchesLeft: ${countMatchesLeft}, heightLeft: ${countMatchesLeftTop}`)
 
-  if (indexR < heightLeftTop)
-    return cellType.emptyCell
-  const mod = ((indexR - heightLeftTop) % heightLeft)
-  if (mod === 0)
-    return cellType.match
-  else if (mod < 4)
-    return cellType.empty
-  else
-    return cellType.emptyCell
+	if (indexR < heightLeftTop)
+		return cellType.emptyCell
+	const mod = ((indexR - heightLeftTop) % heightLeft)
+	if (mod === 0)
+		return cellType.match
+	else if (mod < 4)
+		return cellType.empty
+	else
+		return cellType.emptyCell
 }
 
 function interColumnCellType(indexR: number, indexC: number): interCellType {
-  const countMatchesLeftTop = Math.pow(2, indexC)
-  const heightLeftTop = 4 * countMatchesLeftTop + 2 * (countMatchesLeftTop - 1)
+	const countMatchesLeftTop = Math.pow(2, indexC)
+	const heightLeftTop = 4 * countMatchesLeftTop + 2 * (countMatchesLeftTop - 1)
 
-  const countMatchesLeft = Math.pow(2, indexC + 1)
-  const heightLeft = 4 * countMatchesLeft + 2 * (countMatchesLeft - 1) - heightLeftTop
+	const countMatchesLeft = Math.pow(2, indexC + 1)
+	const heightLeft = 4 * countMatchesLeft + 2 * (countMatchesLeft - 1) - heightLeftTop
 
-  const mod = ((indexR - (heightLeftTop / 2)) % (2 * heightLeft))
-  if (indexR < heightLeftTop / 2)
-    return interCellType.blank
-  if (mod === 0)
-    return interCellType.topRight
-  if (mod === heightLeft - 1)
-    return interCellType.bottomRight
-  if (mod < heightLeft)
-    return interCellType.right
-  else
-    return interCellType.blank
+	const mod = ((indexR - (heightLeftTop / 2)) % (2 * heightLeft))
+	if (indexR < heightLeftTop / 2)
+		return interCellType.blank
+	if (mod === 0)
+		return interCellType.topRight
+	if (mod === heightLeft - 1)
+		return interCellType.bottomRight
+	if (mod < heightLeft)
+		return interCellType.right
+	else
+		return interCellType.blank
 }
 
 function calcMaxDepth(match: KnockoutMatch): number {
-  if (match.prevMatch === undefined)
-    return 1
+	if (match.prevMatch === undefined)
+		return 1
 
-  return 1 + Math.max(calcMaxDepth(match.prevMatch.a), calcMaxDepth(match.prevMatch.b))
+	return 1 + Math.max(calcMaxDepth(match.prevMatch.a), calcMaxDepth(match.prevMatch.b))
 }
 
 enum cellType {
@@ -116,14 +113,6 @@ enum cellType {
 
 enum interCellType {
   topRight, bottomRight, right, blank
-}
-
-const dateOptions: Intl.DateTimeFormatOptions = {
-  year: "2-digit",
-  month: "numeric",
-  day: "numeric",
-  hour: "numeric",
-  minute: "numeric"
 }
 </script>
 
