@@ -28,7 +28,7 @@ jobs:
           java-version: '20'
           distribution: 'temurin'
           cache: maven
-      - name: Validate format backend
+      - name: Validate backend format
         run: mvn formatter:validate
       - name: Install frontend dependencies
         run: cd frontend/app && npm install
