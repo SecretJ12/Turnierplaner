@@ -1,24 +1,35 @@
 <template>
-  <FormCompetition :competition="competition" :submit-text="t('general.create')" @submit="submit"/>
+  <FormCompetition
+    :competition="competition"
+    :submit-text="t('general.create')"
+    @submit="submit"
+  />
 </template>
 
 <script lang="ts" setup>
-import {router} from "@/main"
-import {reactive} from "vue"
-import axios from "axios"
-import {ElMessage} from "element-plus"
-import {useRoute} from "vue-router"
-import FormCompetition from "@/components/views/competitions/FormCompetition.vue"
-import {useI18n} from "vue-i18n"
-import {Competition, CompetitionServer, Mode, Sex, SignUp, TourType} from "@/interfaces/competition";
+import { router } from "@/main";
+import { reactive } from "vue";
+import axios from "axios";
+import { ElMessage } from "element-plus";
+import { useRoute } from "vue-router";
+import FormCompetition from "@/components/views/competitions/ViewFormCompetition.vue";
+import { useI18n } from "vue-i18n";
+import {
+  Competition,
+  CompetitionServer,
+  Mode,
+  Sex,
+  SignUp,
+  TourType,
+} from "@/interfaces/competition";
 
-const {t} = useI18n({inheritLocale: true})
+const { t } = useI18n({ inheritLocale: true });
 
-const route = useRoute()
+const route = useRoute();
 
 const competition = reactive<Competition>({
-  name: '',
-  description: '',
+  name: "",
+  description: "",
   tourType: TourType.KNOCKOUT,
   mode: Mode.SINGLE,
   signUp: SignUp.INDIVIDUAL,
@@ -27,7 +38,7 @@ const competition = reactive<Competition>({
     hasMinAge: false,
     minAge: null,
     hasMaxAge: false,
-    maxAge: null
+    maxAge: null,
   },
   playerB: {
     different: false,
@@ -35,20 +46,20 @@ const competition = reactive<Competition>({
     hasMinAge: false,
     minAge: null,
     hasMaxAge: false,
-    maxAge: null
-  }
-})
+    maxAge: null,
+  },
+});
 
 function submit(server_data: CompetitionServer) {
-  axios.post(`/tournament/${route.params.tourId}/competition/add`, server_data)
-      .then(_ => {
-        router.push({path: "/tournament/" + route.params.tourId})
-      })
-      .catch(_ => {
-        ElMessage.error(t("ViewCreateCompetition.creationFailed"))
-      })
+  axios
+    .post(`/tournament/${route.params.tourId}/competition/add`, server_data)
+    .then((_) => {
+      router.push({ path: "/tournament/" + route.params.tourId });
+    })
+    .catch((_) => {
+      ElMessage.error(t("ViewCreateCompetition.creationFailed"));
+    });
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
