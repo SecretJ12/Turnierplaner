@@ -33,7 +33,7 @@ jobs:
       - name: Install frontend dependencies
         run: cd frontend/app && npm install
       - name: Validate frontend linter
-        run: cd frontend/app && ESLINT_USE_FLAT_CONFIG=false npm run lint:validate
+        run: cd frontend/app && npm run lint:validate
       - name: Validate frontend prettier
         run: cd frontend/app && npm run prettier:validate
       - name: Build with Maven
