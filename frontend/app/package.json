@@ -5,8 +5,8 @@
     "build": "vite build",
     "dev": "vite",
     "preview": "vite preview --port 5050",
-    "lint:validate": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:validate": "eslint . --ext .vue,.ts,.tsx,.js,.jsx",
+    "lint:fix": "eslint . --ext .vue,.ts,.tsx,.js,.jsx --fix"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.4.0",
