@@ -27,25 +27,25 @@ export interface KnockoutMatchServer extends MatchServer {
 }
 
 export function knockoutSystemServerToClient(knockoutSystem: KnockoutSystemServer): KnockoutSystem {
-    const teams = new Map<string, Team>()
-    knockoutSystem.teams.forEach(team => {
-        teams.set(team.id, team)
-    })
-    return {
-        teams: knockoutSystem.teams,
-        finale: knockoutMatchServerToClient(knockoutSystem.finale, teams),
-        thirdPlace: knockoutMatchServerToClient(knockoutSystem.thirdPlace, teams)
-    }
+	const teams = new Map<string, Team>()
+	knockoutSystem.teams.forEach(team => {
+		teams.set(team.id, team)
+	})
+	return {
+		teams: knockoutSystem.teams,
+		finale: knockoutMatchServerToClient(knockoutSystem.finale, teams),
+		thirdPlace: knockoutMatchServerToClient(knockoutSystem.thirdPlace, teams)
+	}
 }
 
 function knockoutMatchServerToClient(matchServer: KnockoutMatchServer, teams: Map<string, Team>): KnockoutMatch {
-    const match: KnockoutMatch = matchServerToClient(matchServer, teams)
-    if (matchServer.previousA !== null && matchServer.previousB !== null) {
-        match.prevMatch = {
-            winner: matchServer.winningPlayer,
-            a: knockoutMatchServerToClient(matchServer.previousA, teams),
-            b: knockoutMatchServerToClient(matchServer.previousB, teams)
-        }
-    }
-    return match
+	const match: KnockoutMatch = matchServerToClient(matchServer, teams)
+	if (matchServer.previousA !== null && matchServer.previousB !== null) {
+		match.prevMatch = {
+			winner: matchServer.winningPlayer,
+			a: knockoutMatchServerToClient(matchServer.previousA, teams),
+			b: knockoutMatchServerToClient(matchServer.previousB, teams)
+		}
+	}
+	return match
 }
