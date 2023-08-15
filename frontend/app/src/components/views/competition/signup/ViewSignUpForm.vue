@@ -19,7 +19,7 @@
               style="width: 100%"
               @click="signUpSingle"
           >
-            {{ t('general.signUp') }}
+            {{ t("general.signUp") }}
           </el-button>
         </el-col>
       </el-row>
@@ -33,7 +33,8 @@
           <ViewConditions :beginGamePhase="props.beginGamePhase" :player="props.competition.playerA"/>
         </el-col>
         <el-col :span="12">
-          <ViewConditions v-if="props.competition.playerB.different" :beginGamePhase="props.beginGamePhase" :player="props.competition.playerB"/>
+          <ViewConditions v-if="props.competition.playerB.different" :beginGamePhase="props.beginGamePhase"
+                          :player="props.competition.playerB"/>
           <ViewConditions v-else :beginGamePhase="props.beginGamePhase" :player="props.competition.playerA"/>
         </el-col>
       </el-row>
@@ -61,7 +62,7 @@
           style="width: 100%"
           @click="signUpDoubleTog"
       >
-        {{ t('general.signUp') }}
+        {{ t("general.signUp") }}
       </el-button>
     </el-space>
   </template>
@@ -85,7 +86,7 @@
               style="width: 100%"
               @click="signUpDoubleIndSame"
           >
-            {{ t('general.signUp') }}
+            {{ t("general.signUp") }}
           </el-button>
         </el-col>
       </el-row>
@@ -111,7 +112,7 @@
               style="width: 100%"
               @click="signUpDoubleIndDifA"
           >
-            {{ t('general.signUp') }}
+            {{ t("general.signUp") }}
           </el-button>
         </el-col>
       </el-row>
@@ -133,7 +134,7 @@
               style="width: 100%"
               @click="signUpDoubleIndDifB"
           >
-            {{ t('general.signUp') }}
+            {{ t("general.signUp") }}
           </el-button>
         </el-col>
       </el-row>
@@ -177,11 +178,11 @@ function queryPlayerA(search: string, callback: (player: searchedPlayer[]) => vo
 		return
 	}
 	axios.get<Player[]>(`/player/find?search=${search}`
-      + (props.competition.playerA.sex !== Sex.ANY ? `&sex=${props.competition.playerA.sex}` : "")
-      + (props.competition.playerA.hasMinAge && props.competition.playerA.minAge !== null ?
-      	`&minAge=${props.competition.playerA.minAge.toISOString().slice(0, 10)}` : "")
-      + (props.competition.playerA.hasMaxAge && props.competition.playerA.maxAge !== null ?
-      	`&minAge=${props.competition.playerA.maxAge.toISOString().slice(0, 10)}` : ""))
+		+ (props.competition.playerA.sex !== Sex.ANY ? `&sex=${props.competition.playerA.sex}` : "")
+		+ (props.competition.playerA.hasMinAge && props.competition.playerA.minAge !== null ?
+			`&minAge=${props.competition.playerA.minAge.toISOString().slice(0, 10)}` : "")
+		+ (props.competition.playerA.hasMaxAge && props.competition.playerA.maxAge !== null ?
+			`&minAge=${props.competition.playerA.maxAge.toISOString().slice(0, 10)}` : ""))
 		.then((result) => {
 			queriedPlayerA = result.data.map((item) => {
 				return {
@@ -205,11 +206,11 @@ function queryPlayerB(search: string, callback: (player: Player[]) => void) {
 	})
 	callback(queriedPlayerB)
 	axios.get<Player[]>(`/player/find?search=${search}`
-      + (props.competition.playerB.sex !== "ANY" ? `&sex=${props.competition.playerB.sex}` : "")
-      + (props.competition.playerB.hasMinAge && props.competition.playerB.minAge !== null ?
-      	`&minAge=${props.competition.playerB.minAge.toISOString().slice(0, 10)}` : "")
-      + (props.competition.playerB.hasMaxAge && props.competition.playerB.maxAge !== null ?
-      	`&minAge=${props.competition.playerB.maxAge.toISOString().slice(0, 10)}` : ""))
++ (props.competition.playerB.sex !== "ANY" ? `&sex=${props.competition.playerB.sex}` : "")
++ (props.competition.playerB.hasMinAge && props.competition.playerB.minAge !== null ?
+	`&minAge=${props.competition.playerB.minAge.toISOString().slice(0, 10)}` : "")
++ (props.competition.playerB.hasMaxAge && props.competition.playerB.maxAge !== null ?
+	`&minAge=${props.competition.playerB.maxAge.toISOString().slice(0, 10)}` : ""))
 		.then((result) => {
 			queriedPlayerB = result.data.map((item) => {
 				return {

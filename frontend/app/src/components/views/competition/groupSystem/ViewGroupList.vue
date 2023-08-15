@@ -12,7 +12,7 @@
       </tr>
       </thead>
       <tbody class="table-group-divider">
-      <tr v-for="match in props.group.matches">
+      <tr v-for="match in props.group.matches" :key="match.teamA?.id+match.teamB?.id">
         <td>{{ new Date(match.begin).toLocaleTimeString() }}</td>
         <td>{{ match.court }}</td>
         <td>{{ match.teamA.playerA.firstName }}</td>
@@ -24,8 +24,6 @@
 </template>
 
 <script lang="ts" setup>
-import {useRoute} from "vue-router"
-import {useI18n} from "vue-i18n"
 import {Group} from "@/interfaces/groupSystem"
 
 const props = defineProps<{

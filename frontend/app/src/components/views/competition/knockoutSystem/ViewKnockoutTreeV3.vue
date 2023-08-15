@@ -2,7 +2,7 @@
   <el-scrollbar>
     <table :class="props.mode === Mode.SINGLE ? 'tableSingles' : 'tableDoubles'">
       <tr>
-        <template v-for="index in rangeArr(maxDepth)">
+        <template v-for="index in rangeArr(maxDepth)" :key="index">
           <th>
             {{ roundTitle(index + 1, maxDepth) }}
           </th>
@@ -14,8 +14,8 @@
           </template>
         </template>
       </tr>
-      <tr v-for="indexR in rangeArr(tableHeight())">
-        <template v-for="indexC in rangeArr(maxDepth)">
+      <tr v-for="indexR in rangeArr(tableHeight())" :key="indexR">
+        <template v-for="indexC in rangeArr(maxDepth)" :key="indexC">
           <td v-if="matchColumnCellType(indexR, indexC) === cellType.match" rowspan="5" class="matchCol">
             <ViewMatchV3 :match="getMatch(indexR, indexC)" :mode="props.mode"/>
           </td>

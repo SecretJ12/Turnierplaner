@@ -19,7 +19,6 @@
 import {useRoute} from "vue-router"
 import axios from "axios"
 import {ref} from "vue"
-import {useI18n} from "vue-i18n"
 import {KnockoutSystem, KnockoutSystemServer, knockoutSystemServerToClient} from "@/interfaces/knockoutSystem"
 import ViewKnockoutTree from "@/components/views/competition/knockoutSystem/ViewKnockoutTree.vue"
 import ViewKnockoutTreeV2 from "@/components/views/competition/knockoutSystem/ViewKnockoutTreeV2.vue"

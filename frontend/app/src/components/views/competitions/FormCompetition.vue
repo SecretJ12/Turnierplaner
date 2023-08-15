@@ -39,7 +39,6 @@
           <el-input
               v-model="props.competition.description"
               :autosize="{minRows: 3, maxRows: 5}"
-              autosize
               maxlength="100"
               show-word-limit
               type="textarea"
@@ -314,21 +313,25 @@ function submit(formRef: HTMLFormElement | undefined) {
 	})
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const checkAMin = (rule: any, value: Date, callback: (arg0?: Error) => void) => {
 	if (props.competition.playerA.hasMinAge && props.competition.playerA.minAge === null)
 		callback(new Error(t("CompetitionSettings.missingAge")))
 	callback()
 }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const checkAMax = (rule: any, value: Date, callback: (arg0?: Error) => void) => {
 	if (props.competition.playerA.hasMaxAge && props.competition.playerA.maxAge === null)
 		callback(new Error(t("CompetitionSettings.missingAge")))
 	callback()
 }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const checkBMin = (rule: any, value: Date, callback: (arg0?: Error) => void) => {
 	if (props.competition.playerB.hasMinAge && props.competition.playerB.minAge === null)
 		callback(new Error(t("CompetitionSettings.missingAge")))
 	callback()
 }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const checkBMax = (rule: any, value: Date, callback: (arg0?: Error) => void) => {
 	if (props.competition.playerB.hasMaxAge && props.competition.playerB.maxAge === null)
 		callback(new Error(t("CompetitionSettings.missingAge")))

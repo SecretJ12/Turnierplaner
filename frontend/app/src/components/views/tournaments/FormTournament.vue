@@ -141,6 +141,7 @@ function submit(formRef: HTMLFormElement | undefined) {
 	})
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const checkDates = (rule: any, value: Date, callback: (arg0?: Error) => void) => {
 	if (!value) {
 		callback(new Error(t("TournamentSettings.missing_date")))

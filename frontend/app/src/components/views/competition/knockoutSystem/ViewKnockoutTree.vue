@@ -1,12 +1,12 @@
 <template>
   <table style="width: calc(100% - 1px);">
     <tr>
-      <th v-for="index in rangeArr(maxDepth)">
+      <th v-for="index in rangeArr(maxDepth)" :key="index">
         test {{ index }}
       </th>
     </tr>
-    <tr v-for="indexR in rangeArr(height)">
-      <template v-for="indexC in rangeArr(maxDepth)">
+    <tr v-for="indexR in rangeArr(height)" :key="indexR">
+      <template v-for="indexC in rangeArr(maxDepth)" :key="indexC">
         <td v-if="isName(indexR, indexC)" class="topCell"
             :class="isBorder(indexR, indexC) ? 'borderCell' : ''"
         >

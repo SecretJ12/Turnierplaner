@@ -6,12 +6,12 @@
   <!--  Game started already, but no results yet-->
   <p v-else-if="props.match.begin<= new Date() && (!props.match.sets || props.match.sets.length == 0)">0-0</p>
   <div v-else-if="props.order">
-    <div v-for="set in props.match.sets">
+    <div v-for="set in props.match.sets" :key="set.index">
       {{ set.scoreA }} - {{ set.scoreB }}
     </div>
   </div>
   <div v-else>
-    <div v-for="set in props.match.sets">
+    <div v-for="set in props.match.sets" :key="set.index">
       {{ set.scoreB }} - {{ set.scoreA }}
     </div>
   </div>

@@ -55,11 +55,11 @@ const playersA = ref<signedUpPlayer[]>([])
 const playersB = ref<signedUpPlayer[]>([])
 
 watch(() => props.update, async () => {
-	update()
+	updateTeams()
 })
-update()
+updateTeams()
 
-function update() {
+function updateTeams() {
 	axios.get<Team[]>(`/tournament/${route.params.tourId}/competition/${route.params.compId}/signedUpTeams`)
 		.then((response) => {
 			if (props.competition.mode === Mode.SINGLE

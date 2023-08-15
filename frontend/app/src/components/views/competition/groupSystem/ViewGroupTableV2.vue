@@ -4,7 +4,7 @@
       <th id="first">
         {{ t("ViewGroupSystem.group") }} {{ props.group.index }}
       </th>
-      <template v-for="(team, index) in props.group.teams.slice().reverse()">
+      <template v-for="(team, index) in props.group.teams.slice().reverse()" :key="index">
         <th v-if="index !== props.group.teams.length-1" :class="hoverIdB === index ? 'highlight' : ''"
             @mouseover="headerHover(team.id)"
             @mouseleave="hoverLeave()"
@@ -13,7 +13,7 @@
         </th>
       </template>
     </tr>
-    <template v-for="(teamA, indexA) in props.group.teams">
+    <template v-for="(teamA, indexA) in props.group.teams" :key="indexA">
       <tr v-if="indexA !== props.group.teams.length-1">
         <th :class="(hoverIdA === indexA ? 'highlight ' : '')"
             @mouseover="headerHover(teamA.id)"
@@ -21,7 +21,7 @@
         >
           {{ teamA.playerA.lastName }}, {{ teamA.playerA.firstName }}
         </th>
-        <template v-for="(teamB, indexB) in props.group.teams.slice().reverse()">
+        <template v-for="(teamB, indexB) in props.group.teams.slice().reverse()" :key="indexB">
           <td v-if="indexB !== props.group.teams.length-1 && (indexA + indexB < props.group.teams.length-1)"
               @mouseover="matchHover(indexA, indexB)"
               @mouseleave="hoverLeave()"
@@ -41,7 +41,6 @@
 </template>
 
 <script setup lang="ts">
-import {useRoute} from "vue-router"
 import {Group} from "@/interfaces/groupSystem"
 import {ref} from "vue"
 import {useI18n} from "vue-i18n"

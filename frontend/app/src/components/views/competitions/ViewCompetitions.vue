@@ -9,7 +9,7 @@
     </h2>
     <div id="content">
       <div id="competitions">
-        <item v-for="competition in competitions"
+        <item v-for="competition in competitions" :key="competition.id"
               :can-edit="canEdit"
               :description="competition.description"
               :name="competition.name"

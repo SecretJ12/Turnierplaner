@@ -2,7 +2,7 @@
   <el-scrollbar>
     <table>
       <tr>
-        <template v-for="index in rangeArr(maxDepth)">
+        <template v-for="index in rangeArr(maxDepth)" :key="index">
           <th>
             test {{ index }}
           </th>
@@ -10,8 +10,8 @@
           </th>
         </template>
       </tr>
-      <tr v-for="indexR in rangeArr(4*teamsCount+2*(teamsCount-1))">
-        <template v-for="indexC in rangeArr(maxDepth)">
+      <tr v-for="indexR in rangeArr(4*teamsCount+2*(teamsCount-1))" :key="indexR">
+        <template v-for="indexC in rangeArr(maxDepth)" :key="indexC">
           <td v-if="matchColumnCellType(indexR, indexC) === cellType.match" rowspan="4" class="matchCol">
             <ViewMatch :match="props.match" :leftBorder="indexC === 0"/>
           </td>
@@ -40,7 +40,6 @@
 <script setup lang="ts">
 import {KnockoutMatch} from "@/interfaces/knockoutSystem"
 import {rangeArr} from "element-plus"
-import {useI18n} from "vue-i18n"
 import ViewMatch from "@/components/views/competition/knockoutSystem/ViewMatchV2.vue"
 
 const props = defineProps<{

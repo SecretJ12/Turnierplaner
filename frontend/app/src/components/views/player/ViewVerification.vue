@@ -21,12 +21,9 @@
 import axios from "axios"
 import {ElLoading} from "element-plus"
 import {ref} from "vue"
-import {useRoute} from "vue-router"
 import {useI18n} from "vue-i18n"
 
 const {t} = useI18n({inheritLocale: true})
-
-const route = useRoute()
 
 const loadingAnimation = ElLoading.service({
 	lock: true,
