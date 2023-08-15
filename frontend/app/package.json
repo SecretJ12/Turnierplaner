@@ -4,7 +4,9 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite",
-    "preview": "vite preview --port 5050"
+    "preview": "vite preview --port 5050",
+    "lint:validate": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.4.0",
@@ -27,9 +29,13 @@
     "vue-router": "^4.1.6"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.4.0",
+    "@typescript-eslint/parser": "^6.4.0",
     "@vitejs/plugin-vue": "^4.1.0",
     "@vue/cli-plugin-typescript": "~5.0.0",
     "@vue/cli-service": "^5.0.8",
+    "eslint": "^8.47.0",
+    "eslint-plugin-vue": "^9.17.0",
     "typescript": "~4.5.5",
     "unplugin-auto-import": "^0.15.3",
     "unplugin-vue-components": "^0.24.1",
