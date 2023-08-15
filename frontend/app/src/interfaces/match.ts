@@ -1,53 +1,56 @@
 export interface Game {
-    scoreA: number,
-    scoreB: number
+	scoreA: number
+	scoreB: number
 }
 
 export interface Set {
-    index: number,
-    scoreA: number,
-    scoreB: number
+	index: number
+	scoreA: number
+	scoreB: number
 }
 
 export interface Match {
-    court: string,
-    begin: Date,
-    end: Date,
-    finished: boolean,
-    winner: boolean | null,
-    teamA: Team | null,
-    teamB: Team | null,
-    sets: Array<Set> | null,
-    curGame: Game | null
+	court: string
+	begin: Date
+	end: Date
+	finished: boolean
+	winner: boolean | null
+	teamA: Team | null
+	teamB: Team | null
+	sets: Array<Set> | null
+	curGame: Game | null
 }
 
 export interface MatchServer {
-    court: string,
-    begin: string,
-    end: string,
-    finished: boolean,
-    winner: boolean | null,
-    teamA: string | null,
-    teamB: string | null,
-    // TOOD add result
-    sets: Array<Set>
+	court: string
+	begin: string
+	end: string
+	finished: boolean
+	winner: boolean | null
+	teamA: string | null
+	teamB: string | null
+	// TOOD add result
+	sets: Array<Set>
 }
 
 export interface Team {
-    id: string
-    playerA: {
-        id: string,
-        firstName: string,
-        lastName: string
-    },
-    playerB?: {
-        id: string,
-        firstName: string,
-        lastName: string
-    }
+	id: string
+	playerA: {
+		id: string
+		firstName: string
+		lastName: string
+	}
+	playerB?: {
+		id: string
+		firstName: string
+		lastName: string
+	}
 }
 
-export function matchServerToClient(match: MatchServer, teams: Map<string, Team>): Match {
+export function matchServerToClient(
+	match: MatchServer,
+	teams: Map<string, Team>,
+): Match {
 	let teamA = null
 	if (match.teamA !== null) {
 		teamA = teams.get(match.teamA)
@@ -79,6 +82,6 @@ export function matchServerToClient(match: MatchServer, teams: Map<string, Team>
 		teamA: teamA,
 		teamB: teamB,
 		sets: sets,
-		curGame: null
+		curGame: null,
 	}
 }

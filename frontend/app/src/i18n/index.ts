@@ -3,5 +3,5 @@ import de from "./de.json"
 
 export default {
 	en: en,
-	de: de
+	de: de,
 }

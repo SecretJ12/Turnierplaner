@@ -1,53 +1,84 @@
 <template>
-  <div id="container">
-    <h2>
-      <font-awesome-icon v-if=canEdit
-                         id="settings"
-                         :icon="['fas', 'gear']" class="fa-1x" @click="settings">
-      </font-awesome-icon>
-      {{ route.params.tourId }}
-    </h2>
-    <div id="content">
-      <div id="competitions">
-        <item v-for="competition in competitions" :key="competition.id"
-              :can-edit="canEdit"
-              :description="competition.description"
-              :name="competition.name"
-              :type="competition.tourType"
-              @selected="selected"
-              @settings="settingsItem"/>
-        <AddItem v-if="canEdit" @selected="addCompetition"/>
-      </div>
-      <el-steps v-if="tournament !== null" id="progress" :active="progress"
-                :process-status="statusActive"
-                :direction="windowWidth > 1300 ? 'vertical' : 'horizontal'"
-                finish-status="success">
-        <el-step :description="tournament.registration_phase.begin.toLocaleString(t('lang'), options)
-            +'\n - '+tournament.registration_phase.end.toLocaleString(t('lang'), options)"
-                 :title="t('TournamentSettings.registration_phase')"/>
-        <el-step :description="tournament.game_phase.begin.toLocaleString(t('lang'), options)
-            +' - '+tournament.game_phase.end.toLocaleString(t('lang'), options)"
-                 :title="t('TournamentSettings.game_phase')"
-        />
-      </el-steps>
-    </div>
-  </div>
+	<div id="container">
+		<h2>
+			<font-awesome-icon
+				v-if="canEdit"
+				id="settings"
+				:icon="['fas', 'gear']"
+				class="fa-1x"
+				@click="settings"
+			>
+			</font-awesome-icon>
+			{{ route.params.tourId }}
+		</h2>
+		<div id="content">
+			<div id="competitions">
+				<item
+					v-for="competition in competitions"
+					:key="competition.id"
+					:can-edit="canEdit"
+					:description="competition.description"
+					:name="competition.name"
+					:type="competition.tourType"
+					@selected="selected"
+					@settings="settingsItem"
+				/>
+				<AddItem v-if="canEdit" @selected="addCompetition" />
+			</div>
+			<el-steps
+				v-if="tournament !== null"
+				id="progress"
+				:active="progress"
+				:process-status="statusActive"
+				:direction="windowWidth > 1300 ? 'vertical' : 'horizontal'"
+				finish-status="success"
+			>
+				<el-step
+					:description="
+						tournament.registration_phase.begin.toLocaleString(
+							t('lang'),
+							options,
+						) +
+						'\n - ' +
+						tournament.registration_phase.end.toLocaleString(t('lang'), options)
+					"
+					:title="t('TournamentSettings.registration_phase')"
+				/>
+				<el-step
+					:description="
+						tournament.game_phase.begin.toLocaleString(t('lang'), options) +
+						' - ' +
+						tournament.game_phase.end.toLocaleString(t('lang'), options)
+					"
+					:title="t('TournamentSettings.game_phase')"
+				/>
+			</el-steps>
+		</div>
+	</div>
 </template>
 
 <script lang="ts" setup>
 import Item from "../../items/ItemCompetition.vue"
-import {inject, ref, watch} from "vue"
-import {useRoute} from "vue-router"
+import { inject, ref, watch } from "vue"
+import { useRoute } from "vue-router"
 import AddItem from "@/components/items/ItemAdd.vue"
-import {router} from "@/main"
+import { router } from "@/main"
 import axios from "axios"
-import {auth} from "@/security/AuthService"
-import {ElMessage} from "element-plus"
-import {useI18n} from "vue-i18n"
-import {Competition, CompetitionServer, competitionServerToClient} from "@/interfaces/competition"
-import {Tournament, TournamentServer, tournamentServerToClient} from "@/interfaces/tournament"
+import { auth } from "@/security/AuthService"
+import { ElMessage } from "element-plus"
+import { useI18n } from "vue-i18n"
+import {
+	Competition,
+	CompetitionServer,
+	competitionServerToClient,
+} from "@/interfaces/competition"
+import {
+	Tournament,
+	TournamentServer,
+	tournamentServerToClient,
+} from "@/interfaces/tournament"
 
-const {t} = useI18n({inheritLocale: true})
+const { t } = useI18n({ inheritLocale: true })
 
 const route = useRoute()
 
@@ -75,7 +106,8 @@ function update() {
 	canEdit.value = false
 	auth.getUser().then((user) => {
 		if (user !== null) {
-			axios.get<boolean>(`/tournament/${route.params.tourId}/competition/canEdit`)
+			axios
+				.get<boolean>(`/tournament/${route.params.tourId}/competition/canEdit`)
 				.then((response) => {
 					canEdit.value = response.data
 				})
@@ -84,7 +116,10 @@ function update() {
 				})
 		}
 	})
-	axios.get<CompetitionServer[]>(`/tournament/${route.params.tourId}/competition/list`)
+	axios
+		.get<CompetitionServer[]>(
+			`/tournament/${route.params.tourId}/competition/list`,
+		)
 		.then((response) => {
 			if (response.status === 200)
 				competitions.value = response.data.map(competitionServerToClient)
@@ -97,7 +132,8 @@ function update() {
 			console.log(error)
 			router.push("/")
 		})
-	axios.get<TournamentServer>(`/tournament/${route.params.tourId}/details`)
+	axios
+		.get<TournamentServer>(`/tournament/${route.params.tourId}/details`)
 		.then((response) => {
 			const date = new Date()
 			tournament.value = tournamentServerToClient(response.data)
@@ -126,19 +162,30 @@ function update() {
 }
 
 function settings() {
-	router.push({path: "/tournament/" + route.params.tourId + "/edit"})
+	router.push({ path: "/tournament/" + route.params.tourId + "/edit" })
 }
 
 function selected(competition: string) {
-	router.push({path: "/tournament/" + route.params.tourId + "/competition/" + competition})
+	router.push({
+		path: "/tournament/" + route.params.tourId + "/competition/" + competition,
+	})
 }
 
 function settingsItem(competition: string) {
-	router.push({path: "/tournament/" + route.params.tourId + "/competition/" + competition + "/edit"})
+	router.push({
+		path:
+			"/tournament/" +
+			route.params.tourId +
+			"/competition/" +
+			competition +
+			"/edit",
+	})
 }
 
 function addCompetition() {
-	router.push({path: "/tournament/" + route.params.tourId + "/createCompetition"})
+	router.push({
+		path: "/tournament/" + route.params.tourId + "/createCompetition",
+	})
 }
 
 const options: Intl.DateTimeFormatOptions = {
@@ -153,65 +200,65 @@ const options: Intl.DateTimeFormatOptions = {
 
 <style scoped>
 #settings {
-  color: #303030;
-  margin-right: 5px;
+	color: #303030;
+	margin-right: 5px;
 }
 
 #settings:hover {
-  filter: drop-shadow(0 0 6px #808080);
+	filter: drop-shadow(0 0 6px #808080);
 }
 
 #settings:active {
-  color: #505050;
+	color: #505050;
 }
 
 #competitions {
-  margin: 10px;
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-  justify-content: center;
+	margin: 10px;
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: row;
+	justify-content: center;
 }
 
 #container {
-  width: 100%;
+	width: 100%;
 }
 
 #content {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
 }
 
 #competitions > * {
-  margin: 0 10px 10px 10px;
+	margin: 0 10px 10px 10px;
 }
 
 #progress {
-  margin-top: 20px;
+	margin-top: 20px;
 }
 
 h2 {
-  text-align: center;
-  font-size: 30px;
+	text-align: center;
+	font-size: 30px;
 }
 
 @media only screen and (max-width: 900px) {
-  #competitions {
-    width: auto;
-    left: 0;
-    right: 0;
-    margin: 10px 0 10px 0;
-  }
+	#competitions {
+		width: auto;
+		left: 0;
+		right: 0;
+		margin: 10px 0 10px 0;
+	}
 }
 
 @media only screen and (max-width: 1300px) {
-  #content {
-    flex-direction: column-reverse;
-  }
+	#content {
+		flex-direction: column-reverse;
+	}
 
-  #progress {
-    margin: 10px;
-  }
+	#progress {
+		margin: 10px;
+	}
 }
 </style>

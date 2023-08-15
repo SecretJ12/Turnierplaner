@@ -1,4 +1,4 @@
-import {settings} from "@/settings"
+import { settings } from "@/settings"
 
 export const auth_settings = {
 	authority: settings.AUTH_DOMAIN,
@@ -11,10 +11,11 @@ export const auth_settings = {
 
 	popup_redirect_uri: settings.FRONTEND + "/callbackSignIn.html",
 	popup_post_logout_redirect_uri: settings.FRONTEND + "/callbackSignOut.html",
-	registration_endpoint: settings.AUTH_DOMAIN + "/clients-registrations/openid-connect",
+	registration_endpoint:
+		settings.AUTH_DOMAIN + "/clients-registrations/openid-connect",
 
 	automaticSilentRenew: true,
-	filterProtocolClaims: true
+	filterProtocolClaims: true,
 }
 
 export const popup = true

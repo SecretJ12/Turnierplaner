@@ -1,8 +1,8 @@
-import {User, UserManager} from "oidc-client-ts"
-import {auth_settings, popup} from "./settings"
-import {ref} from "vue"
-import {ElLoading} from "element-plus"
-import {ComposerTranslation} from "vue-i18n"
+import { User, UserManager } from "oidc-client-ts"
+import { auth_settings, popup } from "./settings"
+import { ref } from "vue"
+import { ElLoading } from "element-plus"
+import { ComposerTranslation } from "vue-i18n"
 
 class AuthService {
 	userManager
@@ -18,9 +18,10 @@ class AuthService {
 					const loadingAnimation = ElLoading.service({
 						lock: true,
 						text: t("general.loading"),
-						background: "rgba(0, 0, 0, 0.7)"
+						background: "rgba(0, 0, 0, 0.7)",
 					})
-					this.userManager.signinSilent()
+					this.userManager
+						.signinSilent()
 						.then(() => {
 							console.log("update token silently")
 							access_token.value = user.access_token
@@ -44,18 +45,14 @@ class AuthService {
 	}
 
 	login() {
-		if (popup)
-			return this.userManager.signinPopup()
-		else
-			return this.userManager.signinRedirect()
+		if (popup) return this.userManager.signinPopup()
+		else return this.userManager.signinRedirect()
 	}
 
 	logout() {
 		access_token.value = null
-		if (popup)
-			return this.userManager.signoutPopup()
-		else
-			return this.userManager.signoutRedirect()
+		if (popup) return this.userManager.signoutPopup()
+		else return this.userManager.signoutRedirect()
 	}
 
 	addUserLoadedListener(cb: (user: User) => void) {

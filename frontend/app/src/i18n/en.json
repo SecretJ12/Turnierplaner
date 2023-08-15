@@ -1,142 +1,141 @@
 {
-  "title": "TOURNAMENT PLANNER",
-  "lang": "en-US",
-  "general": {
-    "create": "Create",
-    "update": "Update",
-    "name": "Name",
-    "description": "Description",
-    "name_missing": "Please input a name",
-    "signUp": "sign up",
-    "register": "register",
-    "success": "Success!",
-    "failure": "Failure!",
-    "loading": "Loading..."
-  },
-  "ViewPlayerRegistration": {
-    "headline": "Player Registration",
-    "after": "Thank you for registration! Please confirm your email with the verification link, we sent you to your email.",
-    "verification_sucess": "You have successfully verified yourself!",
-    "verification_failed": "This verification link doesn't seem to be correct.",
-    "first_name": {
-      "field": "First name",
-      "prompt": "Please input your first name"
-    },
-    "last_name": {
-      "field": "Last name",
-      "prompt": "Please input your last name"
-    },
-    "sex": {
-      "field": "Sex",
-      "prompt": "Please input your gender",
-      "select": "Select",
-      "Option1": "Men",
-      "Option2": "Woman"
-    },
-    "birthdate": {
-      "field": "birthdate",
-      "prompt": "Please input your birthdate"
-    },
-    "email": {
-      "field": "E-Mail",
-      "empty": "Please input email address",
-      "correct": "Please input a valid mail address"
-    },
-    "phone": {
-      "field": "Phone number",
-      "empty": "Please enter your phone number",
-      "correct": "Please enter a valid phone number"
-    },
-    "sign_up": "Sign up",
-    "registration_failed": "Player registration failed",
-    "registration_successful": "Player registered successfully",
-    "not_found": "Can't find yourself? Maybe you forgot to register yourself."
-  },
-  "TournamentSettings": {
-    "visible": "Visible",
-    "registration_phase": "Registration phase",
-    "game_phase": "Game phase",
-    "missing_date": "Please select a period of time",
-    "wrong_dates": "Begin of game phase needs to be after end of registration phase"
-  },
-  "ViewTournaments": {
-    "loadingFailed": "Couldn't load tournaments",
-    "overview": "Tournament overview"
-  },
-  "ViewCreateTournament": {
-    "tournamentCreated": "Turnier erstellt",
-    "tournamentCreationFailed": "Couldn't create tournament"
-  },
-  "ViewEditTournament": {
-    "loadingDetailsFailed": "Couldn't load tournament details",
-    "tournamentUpdated": "Tournament updated",
-    "tournamentUpdateFailed": "Updating tournament failed"
-  },
-  "ViewCompetitions": {
-    "loadingFailed": "Couldn't load competitions"
-  },
-  "ViewGroupSystem": {
-    "group": "group",
-    "progress": "games in progress...",
-    "finished": "games finished!",
-    "start": "The game starts at:"
-  },
-  "CompetitionSettings": {
-    "tournament_settings": "Tournament settings",
-    "type": "Tournament type",
-    "knockout": "Knockout",
-    "groups": "Group system",
-    "mode": "Game mode",
-    "single": "Single",
-    "double": "Double",
-    "signup": "Signup",
-    "individual": "individual",
-    "together": "as team",
-    "player": "Player settings",
-    "differentB": "Different settings for player 2",
-    "sex": "Sex",
-    "male": "Male",
-    "female": "Female",
-    "any": "Any",
-    "minAge": "Minimum age",
-    "maxAge": "Maximum age",
-    "missingAge": "Please choose a date"
-  },
-  "ViewCreateCompetition": {
-    "creationFailed": "Couldn't create competition"
-  },
-  "ViewEditCompetition": {
-    "saved": "Competition saved",
-    "saving_failed": "Something went wrong while saving",
-    "loadingDetailsFailed": "Couldn't load competition details"
-  },
-  "ViewCompetition": {
-    "tournament_system": "Tournament system",
-    "game_mode": "Game mode",
-    "registration_not_started": "Registration hasn't started yet. Registration phase starts on",
-    "registration_over": "Registration phase is over.",
-    "no_registration": "It seems that no one has registered yet...",
-    "query_search_failed": "Querying player failed",
-    "query_player_failed": "Querying participants failed",
-    "requirements": "Requirements",
-    "born_before": "Born before",
-    "born_after": "Born after",
-    "playerA": "Player A",
-    "playerB": "Player B"
-  },
-  "Player": {
-    "too_many_results": "Result ist not unique enough",
-    "no_result": "No player found",
-    "already_exists": "Player is already registered",
-    "register_success": "Successful registered",
-    "register_failed": "Registration failed"
-  },
-  "ViewKnockout": {
-    "finale": "Finale",
-    "thirdPlace": "Third place play-off",
-    "semifinals": "Semifinales",
-    "quarterfinals": "Quarterfinales",
-    "round": "Round"
-  }
+	"title": "TOURNAMENT PLANNER",
+	"lang": "en-US",
+	"general": {
+		"create": "Create",
+		"update": "Update",
+		"name": "Name",
+		"description": "Description",
+		"name_missing": "Please input a name",
+		"signUp": "sign up",
+		"register": "register",
+		"success": "Success!",
+		"failure": "Failure!",
+		"loading": "Loading..."
+	},
+	"ViewPlayerRegistration": {
+		"headline": "Player Registration",
+		"after": "Thank you for registration! Please confirm your email with the verification link, we sent you to your email.",
+		"verification_sucess": "You have successfully verified yourself!",
+		"verification_failed": "This verification link doesn't seem to be correct.",
+		"first_name": {
+			"field": "First name",
+			"prompt": "Please input your first name"
+		},
+		"last_name": {
+			"field": "Last name",
+			"prompt": "Please input your last name"
+		},
+		"sex": {
+			"field": "Sex",
+			"prompt": "Please input your gender",
+			"select": "Select",
+			"Option1": "Men",
+			"Option2": "Woman"
+		},
+		"birthdate": {
+			"field": "birthdate",
+			"prompt": "Please input your birthdate"
+		},
+		"email": {
+			"field": "E-Mail",
+			"empty": "Please input email address",
+			"correct": "Please input a valid mail address"
+		},
+		"phone": {
+			"field": "Phone number",
+			"empty": "Please enter your phone number",
+			"correct": "Please enter a valid phone number"
+		},
+		"sign_up": "Sign up",
+		"registration_failed": "Player registration failed",
+		"registration_successful": "Player registered successfully",
+		"not_found": "Can't find yourself? Maybe you forgot to register yourself."
+	},
+	"TournamentSettings": {
+		"visible": "Visible",
+		"registration_phase": "Registration phase",
+		"game_phase": "Game phase",
+		"missing_date": "Please select a period of time",
+		"wrong_dates": "Begin of game phase needs to be after end of registration phase"
+	},
+	"ViewTournaments": {
+		"loadingFailed": "Couldn't load tournaments",
+		"overview": "Tournament overview"
+	},
+	"ViewCreateTournament": {
+		"tournamentCreated": "Turnier erstellt",
+		"tournamentCreationFailed": "Couldn't create tournament"
+	},
+	"ViewEditTournament": {
+		"loadingDetailsFailed": "Couldn't load tournament details",
+		"tournamentUpdated": "Tournament updated",
+		"tournamentUpdateFailed": "Updating tournament failed"
+	},
+	"ViewCompetitions": {
+		"loadingFailed": "Couldn't load competitions"
+	},
+	"ViewGroupSystem": {
+		"group": "group",
+		"progress": "games in progress...",
+		"finished": "games finished!",
+		"start": "The game starts at:"
+	},
+	"CompetitionSettings": {
+		"tournament_settings": "Tournament settings",
+		"type": "Tournament type",
+		"knockout": "Knockout",
+		"groups": "Group system",
+		"mode": "Game mode",
+		"single": "Single",
+		"double": "Double",
+		"signup": "Signup",
+		"individual": "individual",
+		"together": "as team",
+		"player": "Player settings",
+		"differentB": "Different settings for player 2",
+		"sex": "Sex",
+		"male": "Male",
+		"female": "Female",
+		"any": "Any",
+		"minAge": "Minimum age",
+		"maxAge": "Maximum age",
+		"missingAge": "Please choose a date"
+	},
+	"ViewCreateCompetition": {
+		"creationFailed": "Couldn't create competition"
+	},
+	"ViewEditCompetition": {
+		"saved": "Competition saved",
+		"saving_failed": "Something went wrong while saving",
+		"loadingDetailsFailed": "Couldn't load competition details"
+	},
+	"ViewCompetition": {
+		"tournament_system": "Tournament system",
+		"game_mode": "Game mode",
+		"registration_not_started": "Registration hasn't started yet. Registration phase starts on",
+		"registration_over": "Registration phase is over.",
+		"no_registration": "It seems that no one has registered yet...",
+		"query_search_failed": "Querying player failed",
+		"query_player_failed": "Querying participants failed",
+		"requirements": "Requirements",
+		"born_before": "Born before",
+		"born_after": "Born after",
+		"playerA": "Player A",
+		"playerB": "Player B"
+	},
+	"Player": {
+		"too_many_results": "Result ist not unique enough",
+		"no_result": "No player found",
+		"already_exists": "Player is already registered",
+		"register_success": "Successful registered",
+		"register_failed": "Registration failed"
+	},
+	"ViewKnockout": {
+		"finale": "Finale",
+		"thirdPlace": "Third place play-off",
+		"semifinals": "Semifinales",
+		"quarterfinals": "Quarterfinales",
+		"round": "Round"
+	}
 }
-

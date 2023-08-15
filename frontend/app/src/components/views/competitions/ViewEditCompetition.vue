@@ -1,19 +1,28 @@
 <template>
-  <FormCompetition v-if="competition !== null" :competition="competition" :disabled="disabled"
-                   :submit-text="t('general.update')" @submit="submit"/>
+	<FormCompetition
+		v-if="competition !== null"
+		:competition="competition"
+		:disabled="disabled"
+		:submit-text="t('general.update')"
+		@submit="submit"
+	/>
 </template>
 
 <script lang="ts" setup>
-import {router} from "@/main"
-import {ref} from "vue"
+import { router } from "@/main"
+import { ref } from "vue"
 import axios from "axios"
-import {ElMessage} from "element-plus"
-import {useRoute} from "vue-router"
+import { ElMessage } from "element-plus"
+import { useRoute } from "vue-router"
 import FormCompetition from "@/components/views/competitions/FormCompetition.vue"
-import {useI18n} from "vue-i18n"
-import {Competition, CompetitionServer, competitionServerToClient} from "@/interfaces/competition"
+import { useI18n } from "vue-i18n"
+import {
+	Competition,
+	CompetitionServer,
+	competitionServerToClient,
+} from "@/interfaces/competition"
 
-const {t} = useI18n({inheritLocale: true})
+const { t } = useI18n({ inheritLocale: true })
 
 const route = useRoute()
 
@@ -21,7 +30,10 @@ const competition = ref<Competition | null>(null)
 
 const disabled = ref(true)
 
-axios.get<CompetitionServer>(`/tournament/${route.params.tourId}/competition/${route.params.compId}/details`)
+axios
+	.get<CompetitionServer>(
+		`/tournament/${route.params.tourId}/competition/${route.params.compId}/details`,
+	)
 	.then((response) => {
 		competition.value = competitionServerToClient(response.data)
 		disabled.value = false
@@ -33,7 +45,8 @@ axios.get<CompetitionServer>(`/tournament/${route.params.tourId}/competition/${r
 	})
 
 function submit(server_data: CompetitionServer) {
-	axios.post(`/tournament/${route.params.tourId}/competition/update`, server_data)
+	axios
+		.post(`/tournament/${route.params.tourId}/competition/update`, server_data)
 		.then(() => {
 			ElMessage.success(t("ViewEditCompetition.saved"))
 		})
@@ -43,5 +56,4 @@ function submit(server_data: CompetitionServer) {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
