@@ -6,7 +6,8 @@
 	"extends": [
 		"eslint:recommended",
 		"plugin:@typescript-eslint/recommended",
-		"plugin:vue/vue3-essential"
+		"plugin:vue/vue3-recommended",
+		"prettier"
 	],
 	"parserOptions": {
 		"ecmaVersion": "latest",
@@ -17,9 +18,6 @@
 	"ignorePatterns": ["dist/**", "node/**", "node_modules/**"],
 	"rules": {
 		"indent": "off",
-		"linebreak-style": ["error", "unix"],
-		"quotes": ["error", "double"],
-		"semi": ["error", "never"],
 		"vue/no-mutating-props": [
 			"error",
 			{
