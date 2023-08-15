@@ -36,14 +36,14 @@
 							indexB !== props.group.teams.length - 1 &&
 							indexA + indexB < props.group.teams.length - 1
 						"
-						@mouseover="matchHover(indexA, indexB)"
-						@mouseleave="hoverLeave()"
 						:class="{
 							highlightLow:
 								(hoverIdA === indexA && indexB < hoverIdB) ||
 								(hoverIdB === indexB && indexA < hoverIdA),
 							highlight: hoverTeam === teamA.id || hoverTeam === teamB.id,
 						}"
+						@mouseover="matchHover(indexA, indexB)"
+						@mouseleave="hoverLeave()"
 					>
 						<div>
 							<ViewMatch :match="findMatch(teamA, teamB)" />

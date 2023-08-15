@@ -17,7 +17,7 @@
 						rowspan="4"
 						class="matchCol"
 					>
-						<ViewMatch :match="props.match" :leftBorder="indexC === 0" />
+						<ViewMatch :match="props.match" :left-border="indexC === 0" />
 					</td>
 					<td
 						v-else-if="

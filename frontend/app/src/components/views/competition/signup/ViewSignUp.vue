@@ -37,12 +37,12 @@
 		</p>
 		<template v-else>
 			<ViewSignUpForm
-				:beginGamePhase="props.beginGamePhase"
+				:begin-game-phase="props.beginGamePhase"
 				:competition="props.competition"
 				@registered="childUpdate"
 			/>
 
-			<ViewRegistrationNotice v-if="false" :compDetails="props.competition" />
+			<ViewRegistrationNotice v-if="false" :comp-details="props.competition" />
 		</template>
 
 		<ViewTable :competition="props.competition" :update="updateChildren" />

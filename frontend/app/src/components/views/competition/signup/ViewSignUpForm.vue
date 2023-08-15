@@ -4,7 +4,7 @@
 		<!-- Registration player A -->
 		<el-space direction="vertical" fill style="width: 100%">
 			<ViewConditions
-				:beginGamePhase="props.beginGamePhase"
+				:begin-game-phase="props.beginGamePhase"
 				:player="props.competition.playerA"
 			/>
 			<el-row :gutter="20" class="row-bg" justify="space-between">
@@ -31,19 +31,19 @@
 			<el-row :gutter="20" class="row-bg" justify="space-between">
 				<el-col :span="12">
 					<ViewConditions
-						:beginGamePhase="props.beginGamePhase"
+						:begin-game-phase="props.beginGamePhase"
 						:player="props.competition.playerA"
 					/>
 				</el-col>
 				<el-col :span="12">
 					<ViewConditions
 						v-if="props.competition.playerB.different"
-						:beginGamePhase="props.beginGamePhase"
+						:begin-game-phase="props.beginGamePhase"
 						:player="props.competition.playerB"
 					/>
 					<ViewConditions
 						v-else
-						:beginGamePhase="props.beginGamePhase"
+						:begin-game-phase="props.beginGamePhase"
 						:player="props.competition.playerA"
 					/>
 				</el-col>
@@ -78,7 +78,7 @@
 		<el-space direction="vertical" fill style="width: 100%">
 			<!-- Registration player A -->
 			<ViewConditions
-				:beginGamePhase="props.beginGamePhase"
+				:begin-game-phase="props.beginGamePhase"
 				:player="props.competition.playerA"
 			/>
 			<el-row :gutter="20" class="row-bg" justify="space-between">
@@ -104,7 +104,7 @@
 		<div id="regDoubIndDif">
 			<ViewConditions
 				id="regDoubIndDifCondA"
-				:beginGamePhase="props.beginGamePhase"
+				:begin-game-phase="props.beginGamePhase"
 				:player="props.competition.playerA"
 			/>
 			<el-row
@@ -131,7 +131,7 @@
 
 			<ViewConditions
 				id="regDoubIndDifCondB"
-				:beginGamePhase="props.beginGamePhase"
+				:begin-game-phase="props.beginGamePhase"
 				:player="props.competition.playerB"
 			/>
 			<el-row

@@ -32,8 +32,6 @@ jobs:
         run: mvn formatter:validate
       - name: Install frontend dependencies
         run: cd frontend/app && npm install
-      - name: Export variable
-        run: export ESLINT_USE_FLAT_CONFIG=false
       - name: Validate frontend linter
         run: cd frontend/app && export ESLINT_USE_FLAT_CONFIG=false && npm run lint:validate
       - name: Validate frontend prettier

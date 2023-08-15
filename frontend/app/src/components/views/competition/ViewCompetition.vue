@@ -30,8 +30,8 @@
 				<!-- show registration page -->
 				<ViewSignUp
 					v-if="competition !== null"
-					:allowRegistration="tournament.registration_phase.end > new Date()"
-					:beginGamePhase="tournament.game_phase.begin"
+					:allow-registration="tournament.registration_phase.end > new Date()"
+					:begin-game-phase="tournament.game_phase.begin"
 					:competition="competition"
 				/>
 			</template>
@@ -40,7 +40,7 @@
 				<!-- show game page -->
 				<ViewGame
 					v-if="competition !== null"
-					:tourType="competition.tourType"
+					:tour-type="competition.tourType"
 					:mode="competition.mode"
 				/>
 			</template>

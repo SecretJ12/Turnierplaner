@@ -3,7 +3,7 @@
 		<item
 			v-for="tournament in tournaments"
 			:key="tournament.name"
-			:canCreate="canCreate"
+			:can-create="canCreate"
 			:tournament="tournament"
 			@selected="selected"
 			@settings="settingsItem"

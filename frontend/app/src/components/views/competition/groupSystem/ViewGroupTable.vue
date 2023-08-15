@@ -7,9 +7,9 @@
 						{{ t("ViewGroupSystem.group") }} {{ props.group.index }}
 					</th>
 					<td
-						class="table-light text-center"
 						v-for="team in props.group.teams"
 						:key="team.id"
+						class="table-light text-center"
 					>
 						{{ team.playerA.firstName }}, {{ team.playerA.lastName }}
 					</td>
@@ -20,9 +20,9 @@
 						<i>TSV Wolnzach / BTV - {{ route.params.compId }}</i>
 					</td>
 					<td
-						class="text-center"
 						v-for="(teamB, index_t2) in props.group.teams"
 						:key="index_t2"
+						class="text-center"
 					>
 						<div v-if="index_t1 === index_t2">/</div>
 						<div v-else>

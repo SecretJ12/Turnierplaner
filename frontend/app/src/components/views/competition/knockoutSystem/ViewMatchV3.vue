@@ -23,7 +23,7 @@
 			</td>
 
 			<template v-if="props.match.sets !== null">
-				<td class="result" v-for="set in props.match.sets" :key="set.index">
+				<td v-for="set in props.match.sets" :key="set.index" class="result">
 					{{ set.scoreA }}
 				</td>
 			</template>
@@ -46,7 +46,7 @@
 			</td>
 
 			<template v-if="props.match.sets !== null">
-				<td class="result" v-for="set in props.match.sets" :key="set.index">
+				<td v-for="set in props.match.sets" :key="set.index" class="result">
 					{{ set.scoreB }}
 				</td>
 			</template>

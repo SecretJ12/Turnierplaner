@@ -63,7 +63,7 @@ function logout() {
 
 <script lang="ts">
 export default {
-	name: "locale-changer",
+	name: "LocaleChanger",
 	data() {
 		return { langs: ["en", "en"] }
 	},

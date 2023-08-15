@@ -1,8 +1,8 @@
 <template>
 	<!-- Only to allow better comparison -->
 	<el-tabs
-		v-model="currentTab"
 		v-if="groupSystem !== undefined"
+		v-model="currentTab"
 		style="width: 1000px"
 	>
 		<el-tab-pane label="Liste" name="list">
@@ -21,9 +21,9 @@
 		</el-tab-pane>
 		<el-tab-pane label="Tabelle V2" name="tablev2">
 			<ViewGroupTableV2
-				class="table"
 				v-for="group in groupSystem.groups"
 				:key="group.index"
+				class="table"
 				:group="group"
 			/>
 		</el-tab-pane>
