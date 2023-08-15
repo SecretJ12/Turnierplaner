@@ -8,7 +8,9 @@
 		"lint:validate": "ESLINT_USE_FLAT_CONFIG=false eslint . --ext .vue,.ts,.tsx,.js,.jsx",
 		"lint:fix": "ESLINT_USE_FLAT_CONFIG=false eslint . --ext .vue,.ts,.tsx,.js,.jsx --fix",
 		"prettier:validate": "prettier . --check",
-		"prettier:fix": "prettier . --write"
+		"prettier:fix": "prettier . --write",
+		"format:validate": "ESLINT_USE_FLAT_CONFIG=false eslint . --ext .vue,.ts,.tsx,.js,.jsx && prettier . --check",
+		"format:fix": "ESLINT_USE_FLAT_CONFIG=false eslint . --ext .vue,.ts,.tsx,.js,.jsx --fix && prettier . --write"
 	},
 	"dependencies": {
 		"@fortawesome/fontawesome-svg-core": "^6.4.0",
