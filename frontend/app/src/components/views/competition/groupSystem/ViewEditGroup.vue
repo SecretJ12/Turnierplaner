@@ -48,22 +48,24 @@
     <div class="container">
       <div class="row">
         <div v-for="index in numberOfGroups" class="col-md-6">
-          <table class="table table-bordered" key="index">
-            <thead>
-              <tr>
-                <th>{{ groupNames[index - 1] }}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="team in groups[index - 1]" :key="team">
-                <td>
-                  {{ team.playerA?.firstName }} {{ team.playerA?.lastName }}
-                  <br />
-                  {{ team.playerB?.firstName }} {{ team.playerB?.lastName }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="rounded group">
+            <h6>
+              {{ groupNames[index - 1] }}
+            </h6>
+            <ul class="list-group">
+              <li
+                v-for="team in groups[index - 1]"
+                :key="team"
+                class="list-group-item"
+                draggable="true"
+                @dragstart="dragstart_handler"
+              >
+                {{ team.playerA?.firstName }} {{ team.playerA?.lastName }}
+                <br />
+                {{ team.playerB?.firstName }} {{ team.playerB?.lastName }}
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -80,9 +82,7 @@ import {
 import axios from "axios";
 
 import { useRoute } from "vue-router";
-import { signedUpTeam, Team } from "@/interfaces/registration/team";
-import { signedUpPlayer } from "@/interfaces/player";
-import { Competition, Mode, SignUp } from "@/interfaces/competition";
+import { Team } from "@/interfaces/registration/team";
 import { ElMessage } from "element-plus";
 import { useI18n } from "vue-i18n";
 
@@ -113,7 +113,7 @@ const groupNames = [
 
 await axios
   .get<Team[]>(
-    `/tournament/${route.params.tourId}/competition/${route.params.compId}/signedUpTeams`
+    `/tournament/${route.params.tourId}/competition/${route.params.compId}/signedUpTeams`,
   )
   .then((response) => {
     teams.value = response.data;
@@ -126,7 +126,7 @@ await axios
 
 await axios
   .get<GroupSystemServer>(
-    `tournament/${route.params.tourId}/competition/${route.params.compId}/groupMatches`
+    `tournament/${route.params.tourId}/competition/${route.params.compId}/groupMatches`,
   )
   .then((response) => {
     // TODO needed? maybe remove later
@@ -161,6 +161,7 @@ if (!groupSystem.value || groupSystem.value?.groups.length === 0) {
 console.log(groups.value);
 console.log(numberOfGroups.value);
 console.log(radio.selectedChoice);
+
 function assignTeamsToGroups() {
   let i: number = 0;
   const newGroups: Team[][] = [[], [], [], []];
@@ -184,6 +185,23 @@ function apply(e: HTMLFormElement | undefined) {
   console.log(numberOfGroups.value);
   console.log(radio.selectedChoice);
 }
-</script>
 
-<style scoped></style>
+function drag(ev) {
+  ev.dataTransfer.setData("text", ev.target.id);
+}
+
+function dragstart_handler(ev) {
+  // Add different types of drag data
+  ev.dataTransfer.setData("text/plain", ev.target.innerText);
+  ev.dataTransfer.setData("text/html", ev.target.outerHTML);
+  ev.dataTransfer.setData(
+    "text/uri-list",
+    ev.target.ownerDocument.location.href,
+  );
+}
+</script>
+<style scoped>
+.group {
+  padding: 10px;
+}
+</style>
