@@ -52,19 +52,35 @@
             <h6>
               {{ groupNames[index - 1] }}
             </h6>
-            <ul class="list-group">
-              <li
-                v-for="team in groups[index - 1]"
-                :key="team"
-                class="list-group-item"
-                draggable="true"
-                @dragstart="dragstart_handler"
-              >
-                {{ team.playerA?.firstName }} {{ team.playerA?.lastName }}
-                <br />
-                {{ team.playerB?.firstName }} {{ team.playerB?.lastName }}
-              </li>
-            </ul>
+            <draggable
+              class="list-group"
+              :list="groups[index - 1]"
+              group="teams"
+              itemKey="id"
+            >
+              <template #item="{ element, index }">
+                <div class="list-group-item">
+                  {{ element.playerA?.firstName }}
+                  {{ element.playerA?.lastName }}
+                  <br />
+                  {{ element.playerB?.firstName }}
+                  {{ element.playerB?.lastName }}
+                </div>
+              </template>
+            </draggable>
+            <!--            <ul class="list-group">-->
+            <!--              <li-->
+            <!--                v-for="team in groups[index - 1]"-->
+            <!--                :key="team"-->
+            <!--                class="list-group-item"-->
+            <!--                draggable="true"-->
+            <!--                @dragstart="dragstart_handler"-->
+            <!--              >-->
+            <!--                {{ team.playerA?.firstName }} {{ team.playerA?.lastName }}-->
+            <!--                <br />-->
+            <!--                {{ team.playerB?.firstName }} {{ team.playerB?.lastName }}-->
+            <!--              </li>-->
+            <!--            </ul>-->
           </div>
         </div>
       </div>
@@ -82,9 +98,10 @@ import {
 import axios from "axios";
 
 import { useRoute } from "vue-router";
-import { Team } from "@/interfaces/registration/team";
+import { Team, TeamWithId } from "@/interfaces/registration/team";
 import { ElMessage } from "element-plus";
 import { useI18n } from "vue-i18n";
+import draggable from "vuedraggable";
 
 const route = useRoute();
 
@@ -103,7 +120,7 @@ const numberOfGroups = ref<number>(1);
 
 const { t } = useI18n({ inheritLocale: true });
 
-const groups = ref<Team[][]>([[], [], [], []]);
+const groups = ref<TeamWithId[][]>([[], [], [], []]);
 const groupNames = [
   "First Group",
   "Second Group",
@@ -134,9 +151,16 @@ await axios
     numberOfGroups.value = groupSystem.value?.groups.length || 1;
     let i: number = 0;
     for (const group of groupSystem.value?.groups) {
-      groups.value[i].push.apply(groups.value[i], group.teams);
+      for (const team of group.teams) {
+        groups.value[i].push({
+          id: i,
+          playerA: team.playerA,
+          playerB: team.playerB,
+        });
+      }
       i++;
     }
+
     radio.selectedChoice = numberOfGroups.value;
     switch (numberOfGroups.value) {
       case 1:
@@ -164,7 +188,7 @@ console.log(radio.selectedChoice);
 
 function assignTeamsToGroups() {
   let i: number = 0;
-  const newGroups: Team[][] = [[], [], [], []];
+  const newGroups: TeamWithId[][] = [[], [], [], []];
   for (const team of teams.value) {
     newGroups[i % numberOfGroups.value].push(team);
     i++;
@@ -184,20 +208,6 @@ function apply(e: HTMLFormElement | undefined) {
   assignTeamsToGroups();
   console.log(numberOfGroups.value);
   console.log(radio.selectedChoice);
-}
-
-function drag(ev) {
-  ev.dataTransfer.setData("text", ev.target.id);
-}
-
-function dragstart_handler(ev) {
-  // Add different types of drag data
-  ev.dataTransfer.setData("text/plain", ev.target.innerText);
-  ev.dataTransfer.setData("text/html", ev.target.outerHTML);
-  ev.dataTransfer.setData(
-    "text/uri-list",
-    ev.target.ownerDocument.location.href,
-  );
 }
 </script>
 <style scoped>
