@@ -14,7 +14,7 @@
           </template>
         </template>
       </tr>
-      <tr v-for="indexR in rangeArr(tableHeight())">
+      <tr v-for="indexR in rangeArr(height)">
         <template v-for="indexC in rangeArr(maxDepth)">
           <td v-if="matchColumnCellType(indexR, indexC) === cellType.match" rowspan="5" class="matchCol">
             <ViewMatchV3 :match="getMatch(indexR, indexC)" :mode="props.mode" />
@@ -50,7 +50,7 @@
 import {KnockoutMatch} from "@/interfaces/knockoutSystem";
 import {rangeArr} from "element-plus";
 import {useI18n} from "vue-i18n"
-import ViewMatchV3 from "@/components/views/competition/knockoutSystem/ViewMatchV3.vue";
+import ViewMatchV3 from "@/components/views/competition/knockoutSystem/ViewMatch.vue";
 import {Mode} from "@/interfaces/competition";
 
 const {t} = useI18n({inheritLocale: true})
@@ -62,13 +62,13 @@ const props = defineProps<{
 
 const maxDepth = calcMaxDepth(props.match)
 const teamsCount = Math.pow(2, maxDepth)
-const height = Math.pow(2, maxDepth)
+const height = tableHeight()
 
 function getMatch(indexR: number, indexC: number): KnockoutMatch {
   // TODO exception for 3 or 4 teams and semifinal
 
   let curMatch = props.match
-  let curHeight = tableHeight()
+  let curHeight = height
   for (let i = 0; i < maxDepth-indexC-1; i++) {
     curHeight /= 2
     if (curMatch.prevMatch === undefined)

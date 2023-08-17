@@ -101,6 +101,10 @@ table {
 	height: 108px;
 }
 
+table > tr {
+  height: 50%;
+}
+
 .winner {
 	background-color: #c0c0c0;
 }
