@@ -1,7 +1,7 @@
 <template>
   <p>Knockout system</p>
   <template v-if="knockoutSystem !== null">
-    <ViewKnockoutTreeV3 :match="knockoutSystem.finale" :mode="props.mode"/>
+    <ViewKnockoutTreeV3 :match="knockoutSystem.finale" :thirdPlace="knockoutSystem.thirdPlace" :mode="props.mode"/>
   </template>
 </template>
 

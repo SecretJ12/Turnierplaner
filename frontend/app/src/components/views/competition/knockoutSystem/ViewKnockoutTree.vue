@@ -57,6 +57,7 @@ const {t} = useI18n({inheritLocale: true})
 
 const props = defineProps<{
   match: KnockoutMatch,
+  thirdPlace: KnockoutMatch,
   mode: Mode
 }>()
 
@@ -65,7 +66,10 @@ const teamsCount = Math.pow(2, maxDepth)
 const height = tableHeight()
 
 function getMatch(indexR: number, indexC: number): KnockoutMatch {
-  // TODO exception for 3 or 4 teams and semifinal
+  // detect semifinal
+  if (indexC === maxDepth - 1 && indexR > height / 2) {
+    return props.thirdPlace
+  }
 
   let curMatch = props.match
   let curHeight = height
