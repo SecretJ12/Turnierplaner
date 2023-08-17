@@ -337,7 +337,8 @@ public class TestdataGenerator {
                 currentMatches[1].setTeamB(getLooserOfMatchIfExists(previousMatches[1]));
 
                 matchRepository.persist(currentMatches[1]);
-                createSets(currentMatches[1]);
+                if (previousMatches[0].isFinished() && previousMatches[1].isFinished())
+                    createSets(currentMatches[1]);
                 NextMatch nextThirdPlace = new NextMatch();
                 nextThirdPlace.setPreviousA(previousMatches[0]);
                 nextThirdPlace.setPreviousB(previousMatches[1]);
