@@ -102,7 +102,7 @@ table {
 }
 
 table > tr {
-  height: 50%;
+	height: 50%;
 }
 
 .winner {
