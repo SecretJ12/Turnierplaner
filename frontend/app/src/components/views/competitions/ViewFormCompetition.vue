@@ -295,8 +295,6 @@
 </template>
 
 <script lang="ts" setup>
-console.log("unexpected error");
-
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import {
@@ -324,7 +322,7 @@ const props = withDefaults(
   }>(),
   {
     disabled: false,
-  }
+  },
 );
 
 const emit = defineEmits(["submit"]);
@@ -343,7 +341,7 @@ function submit(formRef: HTMLFormElement | undefined) {
 const checkAMin = (
   rule: any,
   value: Date,
-  callback: (arg0?: Error) => void
+  callback: (arg0?: Error) => void,
 ) => {
   if (
     props.competition.playerA.hasMinAge &&
@@ -355,7 +353,7 @@ const checkAMin = (
 const checkAMax = (
   rule: any,
   value: Date,
-  callback: (arg0?: Error) => void
+  callback: (arg0?: Error) => void,
 ) => {
   if (
     props.competition.playerA.hasMaxAge &&
@@ -367,7 +365,7 @@ const checkAMax = (
 const checkBMin = (
   rule: any,
   value: Date,
-  callback: (arg0?: Error) => void
+  callback: (arg0?: Error) => void,
 ) => {
   if (
     props.competition.playerB.hasMinAge &&
@@ -379,7 +377,7 @@ const checkBMin = (
 const checkBMax = (
   rule: any,
   value: Date,
-  callback: (arg0?: Error) => void
+  callback: (arg0?: Error) => void,
 ) => {
   if (
     props.competition.playerB.hasMaxAge &&
