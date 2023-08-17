@@ -1,4 +1,4 @@
-package de.secretj12.turnierplaner.startup;
+package de.secretj12.turnierplaner.startup.testdata;
 
 import de.secretj12.turnierplaner.db.entities.*;
 import de.secretj12.turnierplaner.db.entities.competition.*;
@@ -7,7 +7,6 @@ import de.secretj12.turnierplaner.db.entities.groups.Group;
 import de.secretj12.turnierplaner.db.entities.groups.MatchOfGroup;
 import de.secretj12.turnierplaner.db.entities.knockout.NextMatch;
 import de.secretj12.turnierplaner.db.repositories.*;
-import io.smallrye.mutiny.tuples.Tuple9;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -49,10 +48,6 @@ public class TestdataGenerator {
         BEFORE_REGISTRATION, REGISTRATION_OPEN, BEFORE_GAMEPHASE, GAMEPHASE_OPEN, AFTER_GAMEPHASE
     }
 
-    enum AGE_RESTR {
-        NONE, U18, O50
-    }
-
     private final Random random = new Random();
     private final Faker faker = new Faker();
 
@@ -68,14 +63,14 @@ public class TestdataGenerator {
             courtRepositiory.persist(courts[i]);
         }
 
-        ArrayList<Tuple9<CompetitionType, CompetitionMode, Sex, Integer, Boolean, Boolean, Integer, String, AGE_RESTR>> compSetting = new ArrayList<>();
-        compSetting.add(Tuple9.of(CompetitionType.GROUPS, CompetitionMode.SINGLES, Sex.MALE, 8, false, false, 2, "Single Groups", AGE_RESTR.NONE));
-        compSetting.add(Tuple9.of(CompetitionType.GROUPS, CompetitionMode.SINGLES, Sex.MALE, 8, false, false, 2, "Single U18", AGE_RESTR.U18));
-        compSetting.add(Tuple9.of(CompetitionType.KNOCKOUT, CompetitionMode.SINGLES, Sex.FEMALE, 16, false, false, 2, "Single Knockout", AGE_RESTR.NONE));
-        compSetting.add(Tuple9.of(CompetitionType.KNOCKOUT, CompetitionMode.DOUBLES, Sex.ANY, 16, false, false, 2, "Double", AGE_RESTR.NONE));
-        compSetting.add(Tuple9.of(CompetitionType.KNOCKOUT, CompetitionMode.DOUBLES, Sex.ANY, 32, true, false, 2, "Double random", AGE_RESTR.NONE));
-        compSetting.add(Tuple9.of(CompetitionType.KNOCKOUT, CompetitionMode.DOUBLES, Sex.ANY, 8, false, true, 2, "Double O50", AGE_RESTR.O50));
-        compSetting.add(Tuple9.of(CompetitionType.KNOCKOUT, CompetitionMode.DOUBLES, Sex.ANY, 4, true, true, 2, "Double Mixed", AGE_RESTR.NONE));
+        List<CompetitionSettings> compSetting = new ArrayList<>();
+        compSetting.add(new CompetitionSettings("Single Groups", CompetitionType.GROUPS, CompetitionMode.SINGLES, Sex.MALE, 8, false, AGE_RESTR.NONE, false, 2));
+        compSetting.add(new CompetitionSettings("Single U18", CompetitionType.GROUPS, CompetitionMode.SINGLES, Sex.MALE, 8, false, AGE_RESTR.U18, false, 2));
+        compSetting.add(new CompetitionSettings("Single Knockout", CompetitionType.KNOCKOUT, CompetitionMode.SINGLES, Sex.MALE, 16, false, AGE_RESTR.NONE, false, 2));
+        compSetting.add(new CompetitionSettings("Double", CompetitionType.KNOCKOUT, CompetitionMode.DOUBLES, Sex.MALE, 16, false, AGE_RESTR.NONE, false, 2));
+        compSetting.add(new CompetitionSettings("Double random", CompetitionType.KNOCKOUT, CompetitionMode.DOUBLES, Sex.ANY, 32, true, AGE_RESTR.NONE, false, 2));
+        compSetting.add(new CompetitionSettings("Double O50", CompetitionType.KNOCKOUT, CompetitionMode.DOUBLES, Sex.ANY, 8, false, AGE_RESTR.O50, true, 2));
+        compSetting.add(new CompetitionSettings("Double Mixed", CompetitionType.KNOCKOUT, CompetitionMode.DOUBLES, Sex.ANY, 4, true, AGE_RESTR.O50, true, 2));
 
         createTournament(TDate.BEFORE_REGISTRATION, "Clubmeisterschaft 2026", "Anmeldung ausstehend", true, compSetting);
         createTournament(TDate.REGISTRATION_OPEN, "Clubmeisterschaft 2025", "Anmeldung offen", true, compSetting);
@@ -86,7 +81,7 @@ public class TestdataGenerator {
     }
 
     private void createTournament(TDate tDate, String name, String description, boolean visible,
-                                  List<Tuple9<CompetitionType, CompetitionMode, Sex, Integer, Boolean, Boolean, Integer, String, AGE_RESTR>> compSettings) {
+                                  List<CompetitionSettings> compSettings) {
         Tournament tournament = new Tournament();
         tournament.setName(name);
         tournament.setVisible(visible);
@@ -218,11 +213,11 @@ public class TestdataGenerator {
         return player;
     }
 
-    private Team[] createTeams(Competition competition, Sex sex, int numberTeams, CompetitionMode mode) {
-        Team[] teams = new Team[numberTeams];
-        for (int i = 0; i < numberTeams; i++) {
+    private Team[] createTeams(Competition competition, CompetitionSettings competitionSettings) {
+        Team[] teams = new Team[competitionSettings.getTeamNumbers()];
+        for (int i = 0; i < competitionSettings.getTeamNumbers(); i++) {
             Player player = createPlayer();
-            if (sex == Sex.ANY) {
+            if (competitionSettings.getSex() == Sex.ANY) {
                 player.setSex(SexType.MALE);
             } else {
                 player.setSex(SexType.FEMALE);
@@ -233,9 +228,9 @@ public class TestdataGenerator {
             teams[i].setCompetition(competition);
             teams[i].setPlayerA(player);
 
-            if (mode == CompetitionMode.DOUBLES) {
+            if (competitionSettings.getCompetitionMode() == CompetitionMode.DOUBLES) {
                 Player player2 = createPlayer();
-                if (sex == Sex.ANY || sex == Sex.FEMALE) {
+                if (competitionSettings.getSex() == Sex.ANY || competitionSettings.getSex() == Sex.FEMALE) {
                     player2.setSex(SexType.FEMALE);
                 } else {
                     player2.setSex(SexType.FEMALE);
@@ -249,18 +244,17 @@ public class TestdataGenerator {
         return teams;
     }
 
-    private void addTeamsAndMatchesToGroup(Competition competition, int numberTeams, CompetitionMode mode, Sex sex,
-                                           int numberGroups) {
-        Team[] groupTeams = createTeams(competition, sex, numberTeams, mode);
+    private void addTeamsAndMatchesToGroup(Competition competition, CompetitionSettings compSettings) {
+        Team[] groupTeams = createTeams(competition, compSettings);
 
-        Group[] groups = new Group[numberGroups];
-        for (int k = 0; k < numberGroups; k++) {
+        Group[] groups = new Group[compSettings.getNumberOfGroups()];
+        for (int k = 0; k < compSettings.getNumberOfGroups(); k++) {
             groups[k] = new Group();
             groups[k].setIndex(k + 1);
             groups[k].setCompetition(competition);
             groupRepository.persist(groups[k]);
-            for (int i = k * numberTeams / numberGroups; i < numberTeams / numberGroups * (k + 1); i++) {
-                for (int j = i + 1; j < numberTeams / numberGroups * (k + 1); j++) {
+            for (int i = k * compSettings.getNumberOfGroups() / compSettings.getNumberOfGroups(); i < compSettings.getTeamNumbers() / compSettings.getNumberOfGroups() * (k + 1); i++) {
+                for (int j = i + 1; j < compSettings.getTeamNumbers() / compSettings.getNumberOfGroups() * (k + 1); j++) {
                     Match match = createMatch(courts[i * j % 4], competition);
                     match.setTeamA(groupTeams[i]);
                     match.setTeamB(groupTeams[j]);
@@ -301,18 +295,18 @@ public class TestdataGenerator {
         finalOfGroupRepository.persist(finalOfGroup2);
     }
 
-    private void addTeamsAndMatchesToKnockout(Competition competition, int numberTeams, CompetitionMode mode, Sex sex,
+    private void addTeamsAndMatchesToKnockout(Competition competition, CompetitionSettings compSettings,
                                               boolean finished) {
-        Team[] knockoutTeams = createTeams(competition, sex, numberTeams, mode);
+        Team[] knockoutTeams = createTeams(competition, compSettings);
 
         // CREATE KNOCKOUT MATCHES
-        Match[] currentMatches = new Match[numberTeams / 2];
-        Match[] previousMatches = new Match[numberTeams / 2];
-        for (int i = numberTeams / 2; i > 0; i /= 2) {
+        Match[] currentMatches = new Match[compSettings.getTeamNumbers() / 2];
+        Match[] previousMatches = new Match[compSettings.getTeamNumbers() / 2];
+        for (int i = compSettings.getTeamNumbers() / 2; i > 0; i /= 2) {
             for (int j = 0; j < i; j++) {
                 currentMatches[j] = createMatch(courts[j % 4], competition);
 
-                if (i == numberTeams / 2) {
+                if (i == compSettings.getTeamNumbers() / 2) {
                     currentMatches[j].setFinished(true);
                     currentMatches[j].setTeamA(knockoutTeams[j]);
                     currentMatches[j].setTeamB(knockoutTeams[j * 2 + 1]);
@@ -321,10 +315,9 @@ public class TestdataGenerator {
 
                 matchRepository.persist(currentMatches[j]);
 
-                if (i != numberTeams / 2) {
+                if (i != compSettings.getTeamNumbers() / 2) {
                     if (previousMatches[j * 2].isFinished() && previousMatches[j * 2 + 1].isFinished())
-                        if (finished || random.nextInt(10) > 0)
-                            createSets(currentMatches[j]);
+                        if (finished || random.nextInt(10) > 0) createSets(currentMatches[j]);
 
                     NextMatch nextMatch = new NextMatch();
                     nextMatch.setPreviousA(previousMatches[j * 2]);
@@ -335,8 +328,7 @@ public class TestdataGenerator {
                     currentMatches[j].setTeamA(getWinnerOfMatchIfExists(previousMatches[j * 2]));
                     currentMatches[j].setTeamB(getWinnerOfMatchIfExists(previousMatches[j * 2 + 1]));
                     matchRepository.persist(currentMatches[j]);
-                } else if (finished || random.nextInt(10) > 0)
-                    createSets(currentMatches[j]);
+                } else if (finished || random.nextInt(10) > 0) createSets(currentMatches[j]);
             }
 
             if (i == 1) {
@@ -355,16 +347,14 @@ public class TestdataGenerator {
             }
 
             previousMatches = currentMatches;
-            currentMatches = new Match[numberTeams / 2];
+            currentMatches = new Match[compSettings.getTeamNumbers() / 2];
         }
     }
 
     private Team getWinnerOfMatchIfExists(Match match) {
         if (match.isFinished()) {
-            if (match.getWinner())
-                return match.getTeamB();
-            else
-                return match.getTeamA();
+            if (match.getWinner()) return match.getTeamB();
+            else return match.getTeamA();
         } else {
             return null;
         }
@@ -372,10 +362,8 @@ public class TestdataGenerator {
 
     private Team getLooserOfMatchIfExists(Match match) {
         if (match.isFinished()) {
-            if (match.getWinner())
-                return match.getTeamA();
-            else
-                return match.getTeamB();
+            if (match.getWinner()) return match.getTeamA();
+            else return match.getTeamB();
         } else {
             return null;
         }
@@ -403,11 +391,11 @@ public class TestdataGenerator {
      * @param compList A list of competition settings
      */
     private void addCompetition(Tournament t, TDate tDate,
-                                List<Tuple9<CompetitionType, CompetitionMode, Sex, Integer, Boolean, Boolean, Integer, String, AGE_RESTR>> compList) {
-        for (Tuple9<CompetitionType, CompetitionMode, Sex, Integer, Boolean, Boolean, Integer, String, AGE_RESTR> compSetting : compList) {
+                                List<CompetitionSettings> compList) {
+        for (CompetitionSettings compSetting : compList) {
             Competition competition = new Competition();
             competition.setTournament(t);
-            switch (compSetting.getItem9()) {
+            switch (compSetting.getAgeRestr()) {
                 case NONE -> {
                     competition.setPlayerAhasMinAge(false);
                     competition.setPlayerAhasMaxAge(false);
@@ -431,14 +419,14 @@ public class TestdataGenerator {
                     competition.setPlayerBminAge(LocalDate.now().minusYears(50));
                 }
             }
-            competition.setName(compSetting.getItem8());
+            competition.setName(compSetting.getName());
 
             // Set description
-            if (compSetting.getItem2() == CompetitionMode.SINGLES) {
+            if (compSetting.getCompetitionMode() == CompetitionMode.SINGLES) {
                 competition.setMode(CompetitionMode.SINGLES);
                 competition.setSignup(CompetitionSignUp.INDIVIDUAL);
                 competition.setPlayerBdifferent(false);
-                switch (compSetting.getItem3()) {
+                switch (compSetting.getSex()) {
                     case ANY -> throw new RuntimeException();
                     case MALE -> {
                         competition.setPlayerASex(Sex.MALE);
@@ -453,9 +441,9 @@ public class TestdataGenerator {
                 }
             } else {
                 competition.setMode(CompetitionMode.DOUBLES);
-                if (compSetting.getItem6()) {
+                if (compSetting.isDifferentConditions()) {
                     competition.setPlayerBdifferent(true);
-                    if (compSetting.getItem5()) {
+                    if (compSetting.isRegisterIndividual()) {
                         competition.setDescription("Doppel, individuelle Anmeldung, verschiedene Bedingungen");
                         competition.setSignup(CompetitionSignUp.INDIVIDUAL);
                     } else {
@@ -464,7 +452,7 @@ public class TestdataGenerator {
                     }
                 } else {
                     competition.setPlayerBdifferent(false);
-                    if (compSetting.getItem5()) {
+                    if (compSetting.isRegisterIndividual()) {
                         competition.setDescription("Doppel, individuelle Anmeldung, gleiche Bedingungen");
                         competition.setSignup(CompetitionSignUp.INDIVIDUAL);
                     } else {
@@ -472,7 +460,7 @@ public class TestdataGenerator {
                         competition.setSignup(CompetitionSignUp.TOGETHER);
                     }
                 }
-                switch (compSetting.getItem3()) {
+                switch (compSetting.getSex()) {
                     case ANY -> {
                         competition.setPlayerASex(Sex.MALE);
                         competition.setPlayerBSex(Sex.FEMALE);
@@ -488,18 +476,18 @@ public class TestdataGenerator {
                 }
             }
 
-            competition.setType(compSetting.getItem1());
+            competition.setType(compSetting.getCompetitionType());
             competitions.persist(competition);
             switch (tDate) {
                 case BEFORE_REGISTRATION -> {
                 }
                 case REGISTRATION_OPEN, BEFORE_GAMEPHASE ->
-                        createTeams(competition, compSetting.getItem3(), compSetting.getItem4(), compSetting.getItem2());
+                    createTeams(competition, compSetting);
                 case GAMEPHASE_OPEN, AFTER_GAMEPHASE -> {
-                    if (compSetting.getItem1() == CompetitionType.KNOCKOUT) {
-                        addTeamsAndMatchesToKnockout(competition, compSetting.getItem4(), compSetting.getItem2(), compSetting.getItem3(), tDate == TDate.AFTER_GAMEPHASE);
+                    if (compSetting.getCompetitionType() == CompetitionType.KNOCKOUT) {
+                        addTeamsAndMatchesToKnockout(competition, compSetting, tDate == TDate.AFTER_GAMEPHASE);
                     } else {
-                        addTeamsAndMatchesToGroup(competition, compSetting.getItem4(), compSetting.getItem2(), compSetting.getItem3(), compSetting.getItem7());
+                        addTeamsAndMatchesToGroup(competition, compSetting);
                     }
                 }
             }

@@ -1,5 +1,6 @@
 package de.secretj12.turnierplaner.startup;
 
+import de.secretj12.turnierplaner.startup.testdata.TestdataGenerator;
 import io.quarkus.runtime.StartupEvent;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
