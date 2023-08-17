@@ -72,9 +72,9 @@ public class TestdataGenerator {
         compSetting.add(Tuple9.of(CompetitionType.GROUPS, CompetitionMode.SINGLES, Sex.MALE, 8, false, false, 2, "Single Groups", AGE_RESTR.NONE));
         compSetting.add(Tuple9.of(CompetitionType.GROUPS, CompetitionMode.SINGLES, Sex.MALE, 8, false, false, 2, "Single U18", AGE_RESTR.U18));
         compSetting.add(Tuple9.of(CompetitionType.KNOCKOUT, CompetitionMode.SINGLES, Sex.FEMALE, 16, false, false, 2, "Single Knockout", AGE_RESTR.NONE));
-        compSetting.add(Tuple9.of(CompetitionType.KNOCKOUT, CompetitionMode.DOUBLES, Sex.ANY, 4, false, false, 2, "Double", AGE_RESTR.NONE));
-        compSetting.add(Tuple9.of(CompetitionType.KNOCKOUT, CompetitionMode.DOUBLES, Sex.ANY, 4, true, false, 2, "Double random", AGE_RESTR.NONE));
-        compSetting.add(Tuple9.of(CompetitionType.KNOCKOUT, CompetitionMode.DOUBLES, Sex.ANY, 4, false, true, 2, "Double O50", AGE_RESTR.O50));
+        compSetting.add(Tuple9.of(CompetitionType.KNOCKOUT, CompetitionMode.DOUBLES, Sex.ANY, 16, false, false, 2, "Double", AGE_RESTR.NONE));
+        compSetting.add(Tuple9.of(CompetitionType.KNOCKOUT, CompetitionMode.DOUBLES, Sex.ANY, 32, true, false, 2, "Double random", AGE_RESTR.NONE));
+        compSetting.add(Tuple9.of(CompetitionType.KNOCKOUT, CompetitionMode.DOUBLES, Sex.ANY, 8, false, true, 2, "Double O50", AGE_RESTR.O50));
         compSetting.add(Tuple9.of(CompetitionType.KNOCKOUT, CompetitionMode.DOUBLES, Sex.ANY, 4, true, true, 2, "Double Mixed", AGE_RESTR.NONE));
 
         createTournament(TDate.BEFORE_REGISTRATION, "Clubmeisterschaft 2026", "Anmeldung ausstehend", true, compSetting);
