@@ -21,6 +21,9 @@
           </td>
           <td v-else-if="matchColumnCellType(indexR, indexC) === cellType.emptyCell">
           </td>
+          <td v-else-if="matchColumnCellType(indexR, indexC) === cellType.thirdPlace" class="fixHeight">
+            {{ t("ViewKnockout.thirdPlace") }}
+          </td>
 
           <template v-if="indexC < maxDepth-1">
             <td v-if="interColumnCellType(indexR, indexC) === interCellType.topRight"
@@ -120,10 +123,10 @@ function matchColumnCellType(indexR: number, indexC: number): cellType {
     } else {
       if (indexR === 6)
         return cellType.match
-      else if (indexR < 10)
+      else if (indexR < 11)
         return cellType.empty
       else if (indexR === 11)
-        return cellType.emptyCell
+        return cellType.thirdPlace
       else if (indexR === 12)
         return cellType.match
       else
@@ -158,9 +161,11 @@ function matchColumnCellType(indexR: number, indexC: number): cellType {
     if (indexC < maxDepth - 1)
       return cellType.emptyCell
     else {
-      if (mod == 5)
+      if (mod === 5)
         return cellType.emptyCell
-      else if (mod == 6)
+      else if (mod === 6)
+        return cellType.thirdPlace
+      else if (mod === 7)
         return cellType.match
       else if (mod < 11)
         return cellType.empty
@@ -228,7 +233,7 @@ function calcMaxDepth(match: KnockoutMatch): number {
 }
 
 enum cellType {
-  match, empty, emptyCell
+  match, empty, emptyCell, thirdPlace
 }
 
 enum interCellType {
@@ -252,6 +257,7 @@ td {
 
 .tableSingles>tr>td {
   height: 20px;
+  font-size: 13px;
 }
 
 .tableDoubles>tr>td {
