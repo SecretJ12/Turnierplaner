@@ -30,7 +30,7 @@
 				id="progress"
 				:active="progress"
 				:process-status="statusActive"
-				:direction="windowWidth > 1300 ? 'vertical' : 'horizontal'"
+				:direction="windowWidth > 1300 || windowWidth < 500 ? 'vertical' : 'horizontal'"
 				finish-status="success"
 			>
 				<el-step
@@ -218,6 +218,7 @@ const options: Intl.DateTimeFormatOptions = {
 	flex-wrap: wrap;
 	flex-direction: row;
 	justify-content: center;
+  flex-shrink: 2;
 }
 
 #container {
@@ -236,6 +237,8 @@ const options: Intl.DateTimeFormatOptions = {
 
 #progress {
 	margin-top: 20px;
+  margin-right: 10px;
+  flex-shrink: 0.5;
 }
 
 h2 {
