@@ -21,7 +21,7 @@
 			v-else-if="route.params.step === 'selectMode'"
 			class="step"
 			v-model="route.params.competition"
-      @tab-click="tabClick"
+			@tab-click="tabClick"
 		>
 			<el-tab-pane
 				v-for="competition in competitions"
@@ -37,7 +37,7 @@
 			v-else-if="route.params.step === 'assignTeams'"
 			class="step"
 			v-model="route.params.competition"
-      @tab-click="tabClick"
+			@tab-click="tabClick"
 		>
 			<el-tab-pane
 				v-for="competition in competitions"
@@ -53,7 +53,7 @@
 			v-else-if="route.params.step === 'assignMatches'"
 			class="step"
 			v-model="route.params.competition"
-      @tab-click="tabClick"
+			@tab-click="tabClick"
 		>
 			<el-tab-pane
 				v-for="competition in competitions"
@@ -69,7 +69,7 @@
 			v-else-if="route.params.step === 'scheduleMatches'"
 			class="step"
 			v-model="route.params.competition"
-      @tab-click="tabClick"
+			@tab-click="tabClick"
 		>
 			<el-tab-pane
 				v-for="competition in competitions"
@@ -81,19 +81,20 @@
 			</el-tab-pane>
 		</el-tabs>
 
+    <!-- TODO color depending on progress of step -->
 		<el-space direction="vertical">
-			<el-button @click="previous">previous</el-button>
+			<el-button @click="previous">{{ t('ViewPrepare.steps.previous') }}</el-button>
 			<el-steps
 				direction="vertical"
 				:active="stepToIndex(<string>route.params.step)"
 			>
-				<el-step title="Edit players" />
-				<el-step title="Choose mode" />
-				<el-step title="Assign teams" />
-				<el-step title="Assign matches" />
-				<el-step title="Schedule matches" />
+				<el-step :title="t('ViewPrepare.steps.editPlayers')" />
+				<el-step :title="t('ViewPrepare.steps.chooseMode')" />
+				<el-step :title="t('ViewPrepare.steps.assignTeams')" />
+				<el-step :title="t('ViewPrepare.steps.assignMatches')" />
+				<el-step :title="t('ViewPrepare.steps.scheduleMatches')" />
 			</el-steps>
-			<el-button @click="next">next</el-button>
+			<el-button @click="next">{{ t('ViewPrepare.steps.next') }}</el-button>
 		</el-space>
 	</div>
 </template>
@@ -183,9 +184,10 @@ function next() {
 }
 
 function tabClick(tab: { paneName: string }) {
-  router.push(`/tournament/${route.params.tourId}/prepare/${route.params.step}/${tab.paneName}`)
+	router.push(
+		`/tournament/${route.params.tourId}/prepare/${route.params.step}/${tab.paneName}`,
+	)
 }
-
 </script>
 
 <style scoped>

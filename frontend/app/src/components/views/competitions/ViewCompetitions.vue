@@ -60,7 +60,7 @@
 					/>
 				</el-steps>
 				<el-button id="prepare" type="primary" @click="prepare">
-					test >>
+					{{ t('ViewCompetition.prepare') }} >>
 				</el-button>
 			</div>
 		</div>
