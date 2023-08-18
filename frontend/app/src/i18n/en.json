@@ -122,7 +122,8 @@
 		"born_before": "Born before",
 		"born_after": "Born after",
 		"playerA": "Player A",
-		"playerB": "Player B"
+		"playerB": "Player B",
+		"prepare": "Prepare tournament"
 	},
 	"Player": {
 		"too_many_results": "Result ist not unique enough",
@@ -137,5 +138,16 @@
 		"semifinals": "Semifinales",
 		"quarterfinals": "Quarterfinales",
 		"round": "Round"
+	},
+	"ViewPrepare": {
+		"steps": {
+			"editPlayers": "Edit players",
+			"chooseMode": "Assign teams",
+			"assignTeams": "Assign teams",
+			"assignMatches": "Assign matches",
+			"scheduleMatches": "Schedule matches",
+			"previous": "Previous",
+			"next": "Next"
+		}
 	}
 }

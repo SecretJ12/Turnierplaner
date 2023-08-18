@@ -70,67 +70,7 @@ const i18n = createI18n({
 /* add font awesome icon component */
 const app = createApp(App)
 
-import viewTournaments from "@/components/views/tournaments/ViewTournaments.vue"
-import viewCompetitions from "@/components/views/competitions/ViewCompetitions.vue"
-import viewCompetition from "@/components/views/competition/ViewCompetition.vue"
-
-const routes = [
-	{
-		path: "/",
-		name: "Tournaments",
-		component: viewTournaments,
-	},
-	{
-		path: "/createTournament",
-		name: "Create tournament",
-		component: () =>
-			import("@/components/views/tournaments/ViewCreateTournament.vue"),
-	},
-	{
-		path: "/tournament/:tourId/edit",
-		name: "Edit tournament",
-		component: () =>
-			import("@/components/views/tournaments/ViewEditTournament.vue"),
-	},
-	{
-		path: "/tournament/:tourId",
-		name: "Competitions",
-		component: viewCompetitions,
-	},
-	{
-		path: "/tournament/:tourId/createCompetition",
-		name: "Create competition",
-		component: () =>
-			import("@/components/views/competitions/ViewCreateCompetition.vue"),
-	},
-	{
-		path: "/tournament/:tourId/competition/:compId/edit",
-		name: "Edit competition",
-		component: () =>
-			import("@/components/views/competitions/ViewEditCompetition.vue"),
-	},
-	{
-		path: "/tournament/:tourId/competition/:compId",
-		name: "Competition",
-		component: viewCompetition,
-	},
-	{
-		path: "/player/registration",
-		name: "Player Registration",
-		component: () =>
-			import("@/components/views/player/ViewPlayerRegistration.vue"),
-	},
-	{
-		path: "/player/verification",
-		name: "Player verified",
-		component: () => import("@/components/views/ViewTemplates.vue"),
-	},
-	{
-		path: "/templates",
-		name: "Templates",
-		component: () => import("@/components/views/ViewTemplates.vue"),
-	},
-]
+import routes from "./routes"
 
 const router = VueRouter.createRouter({
 	history: VueRouter.createWebHashHistory(),

@@ -28,12 +28,12 @@
 </template>
 
 <script lang="ts" setup>
-const props = defineProps({
-	name: String,
-	description: String,
-	type: String,
-	canEdit: Boolean,
-})
+const props = defineProps<{
+	name: string
+	description: string
+	type: string
+	canEdit: boolean
+}>()
 
 const emit = defineEmits(["selected", "settings"])
 

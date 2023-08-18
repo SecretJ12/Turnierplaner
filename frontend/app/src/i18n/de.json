@@ -122,7 +122,8 @@
 		"born_before": "Geboren vor dem",
 		"born_after": "Geboren nach dem",
 		"playerA": "Spieler A",
-		"playerB": "Spieler B"
+		"playerB": "Spieler B",
+		"prepare": "Turnier vorbereiten"
 	},
 	"Player": {
 		"too_many_results": "Die Eingabe ist nicht eindeutig",
@@ -137,5 +138,16 @@
 		"semifinals": "Halbfinale",
 		"quarterfinals": "Viertelfinale",
 		"round": "Runde"
+	},
+	"ViewPrepare": {
+		"steps": {
+			"editPlayers": "Spieler bearbeiten",
+			"chooseMode": "Spielmodus auswählen",
+			"assignTeams": "Teams auslosen",
+			"assignMatches": "Spiele auslosen",
+			"scheduleMatches": "Zeiteinteilung",
+			"previous": "Zurück",
+			"next": "Weiter"
+		}
 	}
 }
