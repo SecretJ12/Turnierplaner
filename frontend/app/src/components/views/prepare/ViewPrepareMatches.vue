@@ -1,64 +1,100 @@
 <template>
 	<div id="prepare">
-		<el-tabs tab-position="right" id="steps">
-			<el-tab-pane label="1. Edit player">
-				<el-tabs type="border-card">
-					<el-tab-pane
-						v-for="competition in competitions"
-						:key="competition.id"
-						:label="competition.name"
-					>
-						<ViewEditPlayer :competition="competition" />
-					</el-tab-pane>
-				</el-tabs>
-			</el-tab-pane>
-			<el-tab-pane label="2. Select mode">
-				<el-tabs type="border-card">
-					<el-tab-pane
-						v-for="competition in competitions"
-						:key="competition.id"
-						:label="competition.name"
-					>
-						<ViewChooseMode :competition="competition" />
-					</el-tab-pane>
-				</el-tabs>
-			</el-tab-pane>
-			<el-tab-pane label="3. Assign teams">
-				<el-tabs type="border-card">
-					<el-tab-pane
-						v-for="competition in competitions.filter(
-							(c) => c.mode === Mode.DOUBLE && c.signUp === SignUp.INDIVIDUAL,
-						)"
-						:key="competition.id"
-						:label="competition.name"
-					>
-						<ViewAssignTeams :competition="competition" />
-					</el-tab-pane>
-				</el-tabs>
-			</el-tab-pane>
-			<el-tab-pane label="4. Assign matches">
-				<el-tabs type="border-card">
-					<el-tab-pane
-						v-for="competition in competitions"
-						:key="competition.id"
-						:label="competition.name"
-					>
-						<ViewAssignMatches :competition="competition" />
-					</el-tab-pane>
-				</el-tabs>
-			</el-tab-pane>
-			<el-tab-pane label="5. Schedule matches">
-				<el-tabs type="border-card">
-					<el-tab-pane
-						v-for="competition in competitions"
-						:key="competition.id"
-						:label="competition.name"
-					>
-						<ViewScheduleMatches :competition="competition" />
-					</el-tab-pane>
-				</el-tabs>
+		<el-tabs
+			type="border-card"
+			v-if="route.params.step === 'editPlayers'"
+			class="step"
+			v-model="route.params.competition"
+			@tab-click="tabClick"
+		>
+			<el-tab-pane
+				v-for="competition in competitions"
+				:key="competition.id"
+				:label="competition.name"
+				:name="competition.name"
+			>
+				<ViewEditPlayer :competition="competition" />
 			</el-tab-pane>
 		</el-tabs>
+		<el-tabs
+			type="border-card"
+			v-else-if="route.params.step === 'selectMode'"
+			class="step"
+			v-model="route.params.competition"
+      @tab-click="tabClick"
+		>
+			<el-tab-pane
+				v-for="competition in competitions"
+				:key="competition.id"
+				:label="competition.name"
+				:name="competition.name"
+			>
+				<ViewChooseMode :competition="competition" />
+			</el-tab-pane>
+		</el-tabs>
+		<el-tabs
+			type="border-card"
+			v-else-if="route.params.step === 'assignTeams'"
+			class="step"
+			v-model="route.params.competition"
+      @tab-click="tabClick"
+		>
+			<el-tab-pane
+				v-for="competition in competitions"
+				:key="competition.id"
+				:label="competition.name"
+				:name="competition.name"
+			>
+				<ViewAssignTeams :competition="competition" />
+			</el-tab-pane>
+		</el-tabs>
+		<el-tabs
+			type="border-card"
+			v-else-if="route.params.step === 'assignMatches'"
+			class="step"
+			v-model="route.params.competition"
+      @tab-click="tabClick"
+		>
+			<el-tab-pane
+				v-for="competition in competitions"
+				:key="competition.id"
+				:label="competition.name"
+				:name="competition.name"
+			>
+				<ViewAssignMatches :competition="competition" />
+			</el-tab-pane>
+		</el-tabs>
+		<el-tabs
+			type="border-card"
+			v-else-if="route.params.step === 'scheduleMatches'"
+			class="step"
+			v-model="route.params.competition"
+      @tab-click="tabClick"
+		>
+			<el-tab-pane
+				v-for="competition in competitions"
+				:key="competition.id"
+				:label="competition.name"
+				:name="competition.name"
+			>
+				<ViewScheduleMatches :competition="competition" />
+			</el-tab-pane>
+		</el-tabs>
+
+		<el-space direction="vertical">
+			<el-button @click="previous">previous</el-button>
+			<el-steps
+				direction="vertical"
+				:active="stepToIndex(<string>route.params.step)"
+			>
+				<el-step title="Edit players" />
+				<el-step title="Choose mode" />
+				<el-step title="Assign teams" />
+				<el-step title="Assign matches" />
+				<el-step title="Schedule matches" />
+			</el-steps>
+			<el-button @click="next">next</el-button>
+		</el-space>
 	</div>
 </template>
 
@@ -73,8 +109,6 @@ import {
 	Competition,
 	CompetitionServer,
 	competitionServerToClient,
-	Mode,
-	SignUp,
 } from "@/interfaces/competition"
 import { ElMessage } from "element-plus"
 import { router } from "@/main"
@@ -91,9 +125,10 @@ axios
 		`/tournament/${route.params.tourId}/competition/list`,
 	)
 	.then((response) => {
-		if (response.status === 200)
+		if (response.status === 200) {
 			competitions.value = response.data.map(competitionServerToClient)
-		else {
+			checkComp()
+		} else {
 			ElMessage.error(t("ViewCompetitions.loadingFailed"))
 		}
 	})
@@ -102,6 +137,55 @@ axios
 		console.log(error)
 		router.push("/")
 	})
+
+const steps = [
+	"editPlayers",
+	"selectMode",
+	"assignTeams",
+	"assignMatches",
+	"scheduleMatches",
+]
+
+function stepToIndex(step: string): number {
+	return steps.findIndex((s) => s === step)
+}
+
+function checkComp() {
+	let change = false
+	let step = route.params.step
+	let comp = route.params.competition
+	if (!steps.find((s) => s === route.params.step)) {
+		change = true
+		step = "editPlayers"
+	}
+	if (!competitions.value.some((c) => c.name === route.params.competition)) {
+		change = true
+		comp = competitions.value[0].name
+	}
+	if (change)
+		router.push(`/tournament/${route.params.tourId}/prepare/${step}/${comp}`)
+}
+
+function previous() {
+	router.push(
+		`/tournament/${route.params.tourId}/prepare/${
+			steps[Math.max(0, stepToIndex(<string>route.params.step) - 1)]
+		}/${route.params.competition}`,
+	)
+}
+
+function next() {
+	router.push(
+		`/tournament/${route.params.tourId}/prepare/${
+			steps[Math.min(4, stepToIndex(<string>route.params.step) + 1)]
+		}/${route.params.competition}`,
+	)
+}
+
+function tabClick(tab: { paneName: string }) {
+  router.push(`/tournament/${route.params.tourId}/prepare/${route.params.step}/${tab.paneName}`)
+}
+
 </script>
 
 <style scoped>
@@ -114,7 +198,8 @@ axios
 	justify-content: center;
 }
 
-#steps {
-	width: 80dvw;
+.step {
+	width: 70dvw;
+	margin-right: 20px;
 }
 </style>
