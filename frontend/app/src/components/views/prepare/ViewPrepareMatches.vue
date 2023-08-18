@@ -1,10 +1,10 @@
 <template>
 	<div id="prepare">
 		<el-tabs
-			type="border-card"
 			v-if="route.params.step === 'editPlayers'"
-			class="step"
 			v-model="route.params.competition"
+			type="border-card"
+			class="step"
 			@tab-click="tabClick"
 		>
 			<el-tab-pane
@@ -17,10 +17,10 @@
 			</el-tab-pane>
 		</el-tabs>
 		<el-tabs
-			type="border-card"
 			v-else-if="route.params.step === 'selectMode'"
-			class="step"
 			v-model="route.params.competition"
+			type="border-card"
+			class="step"
 			@tab-click="tabClick"
 		>
 			<el-tab-pane
@@ -33,10 +33,10 @@
 			</el-tab-pane>
 		</el-tabs>
 		<el-tabs
-			type="border-card"
 			v-else-if="route.params.step === 'assignTeams'"
-			class="step"
 			v-model="route.params.competition"
+			type="border-card"
+			class="step"
 			@tab-click="tabClick"
 		>
 			<el-tab-pane
@@ -49,10 +49,10 @@
 			</el-tab-pane>
 		</el-tabs>
 		<el-tabs
-			type="border-card"
 			v-else-if="route.params.step === 'assignMatches'"
-			class="step"
 			v-model="route.params.competition"
+			type="border-card"
+			class="step"
 			@tab-click="tabClick"
 		>
 			<el-tab-pane
@@ -65,10 +65,10 @@
 			</el-tab-pane>
 		</el-tabs>
 		<el-tabs
-			type="border-card"
 			v-else-if="route.params.step === 'scheduleMatches'"
-			class="step"
 			v-model="route.params.competition"
+			type="border-card"
+			class="step"
 			@tab-click="tabClick"
 		>
 			<el-tab-pane
@@ -81,9 +81,11 @@
 			</el-tab-pane>
 		</el-tabs>
 
-    <!-- TODO color depending on progress of step -->
+		<!-- TODO color depending on progress of step -->
 		<el-space direction="vertical">
-			<el-button @click="previous">{{ t('ViewPrepare.steps.previous') }}</el-button>
+			<el-button @click="previous">{{
+				t("ViewPrepare.steps.previous")
+			}}</el-button>
 			<el-steps
 				direction="vertical"
 				:active="stepToIndex(<string>route.params.step)"
@@ -94,7 +96,7 @@
 				<el-step :title="t('ViewPrepare.steps.assignMatches')" />
 				<el-step :title="t('ViewPrepare.steps.scheduleMatches')" />
 			</el-steps>
-			<el-button @click="next">{{ t('ViewPrepare.steps.next') }}</el-button>
+			<el-button @click="next">{{ t("ViewPrepare.steps.next") }}</el-button>
 		</el-space>
 	</div>
 </template>
