@@ -59,7 +59,7 @@
 						:title="t('TournamentSettings.game_phase')"
 					/>
 				</el-steps>
-				<el-button id="prepare" type="primary" @click="prepare">
+				<el-button id="prepare" type="primary" @click="prepare" v-if="canEdit">
 					{{ t('ViewCompetition.prepare') }} >>
 				</el-button>
 			</div>
