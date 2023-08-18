@@ -163,7 +163,7 @@ function checkComp() {
 		comp = competitions.value[0].name
 	}
 	if (change)
-		router.push(`/tournament/${route.params.tourId}/prepare/${step}/${comp}`)
+		router.replace(`/tournament/${route.params.tourId}/prepare/${step}/${comp}`)
 }
 
 function previous() {

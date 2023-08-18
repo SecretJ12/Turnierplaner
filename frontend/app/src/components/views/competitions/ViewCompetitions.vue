@@ -25,34 +25,44 @@
 				/>
 				<AddItem v-if="canEdit" @selected="addCompetition" />
 			</div>
-			<el-steps
-				v-if="tournament !== null"
-				id="progress"
-				:active="progress"
-				:process-status="statusActive"
-				:direction="windowWidth > 1300 || windowWidth < 500 ? 'vertical' : 'horizontal'"
-				finish-status="success"
-			>
-				<el-step
-					:description="
-						tournament.registration_phase.begin.toLocaleString(
-							t('lang'),
-							options,
-						) +
-						'\n - ' +
-						tournament.registration_phase.end.toLocaleString(t('lang'), options)
+			<div id="aside">
+				<el-steps
+					v-if="tournament !== null"
+					id="progress"
+					:active="progress"
+					:process-status="statusActive"
+					:direction="
+						windowWidth > 1300 || windowWidth < 500 ? 'vertical' : 'horizontal'
 					"
-					:title="t('TournamentSettings.registration_phase')"
-				/>
-				<el-step
-					:description="
-						tournament.game_phase.begin.toLocaleString(t('lang'), options) +
-						' - ' +
-						tournament.game_phase.end.toLocaleString(t('lang'), options)
-					"
-					:title="t('TournamentSettings.game_phase')"
-				/>
-			</el-steps>
+					finish-status="success"
+				>
+					<el-step
+						:description="
+							tournament?.registration_phase.begin.toLocaleString(
+								t('lang'),
+								options,
+							) +
+							'\n - ' +
+							tournament?.registration_phase.end.toLocaleString(
+								t('lang'),
+								options,
+							)
+						"
+						:title="t('TournamentSettings.registration_phase')"
+					/>
+					<el-step
+						:description="
+							tournament?.game_phase.begin.toLocaleString(t('lang'), options) +
+							' - ' +
+							tournament?.game_phase.end.toLocaleString(t('lang'), options)
+						"
+						:title="t('TournamentSettings.game_phase')"
+					/>
+				</el-steps>
+				<el-button id="prepare" type="primary" @click="prepare">
+					test >>
+				</el-button>
+			</div>
 		</div>
 	</div>
 </template>
@@ -167,24 +177,25 @@ function settings() {
 
 function selected(competition: string) {
 	router.push({
-		path: "/tournament/" + route.params.tourId + "/competition/" + competition,
+		path: `/tournament/${route.params.tourId}/competition/${competition}`,
+	})
+}
+
+function prepare() {
+	router.push({
+		path: `/tournament/${route.params.tourId}/prepare`,
 	})
 }
 
 function settingsItem(competition: string) {
 	router.push({
-		path:
-			"/tournament/" +
-			route.params.tourId +
-			"/competition/" +
-			competition +
-			"/edit",
+		path: `/tournament/${route.params.tourId}/competition/${competition}/edit`,
 	})
 }
 
 function addCompetition() {
 	router.push({
-		path: "/tournament/" + route.params.tourId + "/createCompetition",
+		path: `/tournament/${route.params.tourId}/createCompetition`,
 	})
 }
 
@@ -218,7 +229,7 @@ const options: Intl.DateTimeFormatOptions = {
 	flex-wrap: wrap;
 	flex-direction: row;
 	justify-content: center;
-  flex-shrink: 2;
+	flex-shrink: 2;
 }
 
 #container {
@@ -235,10 +246,22 @@ const options: Intl.DateTimeFormatOptions = {
 	margin: 0 10px 10px 10px;
 }
 
-#progress {
+#aside {
+	flex-shrink: 0.5;
 	margin-top: 20px;
-  margin-right: 10px;
-  flex-shrink: 0.5;
+	margin-right: 10px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+#progress {
+	height: fit-content;
+}
+
+#prepare {
+	margin-top: 20px;
+	width: 100%;
 }
 
 h2 {

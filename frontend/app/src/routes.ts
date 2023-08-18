@@ -49,6 +49,11 @@ export default [
     component: viewPrepareMatches,
   },
   {
+    path: "/tournament/:tourId/prepare",
+    name: "Prepare all matches",
+    component: viewPrepareMatches,
+  },
+  {
     path: "/player/registration",
     name: "Player Registration",
     component: () =>
