@@ -27,8 +27,6 @@ import {
 	faUserSecret,
 } from "@fortawesome/free-solid-svg-icons"
 import languages from "./i18n"
-// Bootstrap
-import "./scss/style.scss"
 
 axios.defaults.baseURL = settings.BACKEND
 
