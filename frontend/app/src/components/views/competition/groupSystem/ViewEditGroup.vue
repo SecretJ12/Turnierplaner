@@ -50,7 +50,9 @@
         <div v-for="index in numberOfGroups" class="col-md-6">
           <div class="rounded group">
             <h6>
-              {{ groupNames[index - 1] }}
+              <b>
+                {{ groupNames[index - 1] }}
+              </b>
             </h6>
             <draggable
               class="list-group"
@@ -85,6 +87,11 @@
         </div>
       </div>
     </div>
+    <div class="container">
+      <div class="row-sm-5">
+        <button class="btn btn-primary" @click="save">save</button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -102,8 +109,13 @@ import { Team, TeamWithId } from "@/interfaces/registration/team";
 import { ElMessage } from "element-plus";
 import { useI18n } from "vue-i18n";
 import draggable from "vuedraggable";
+// import bootstrap from "bootstrap";
 
 const route = useRoute();
+
+const props = defineProps({
+  competition: String,
+});
 
 const groupSystem = ref<GroupSystem | undefined>();
 
@@ -130,7 +142,7 @@ const groupNames = [
 
 await axios
   .get<Team[]>(
-    `/tournament/${route.params.tourId}/competition/${route.params.compId}/signedUpTeams`,
+    `/tournament/${route.params.tourId}/competition/${props.competition}/signedUpTeams`,
   )
   .then((response) => {
     teams.value = response.data;
@@ -190,7 +202,11 @@ function assignTeamsToGroups() {
   let i: number = 0;
   const newGroups: TeamWithId[][] = [[], [], [], []];
   for (const team of teams.value) {
-    newGroups[i % numberOfGroups.value].push(team);
+    newGroups[i % numberOfGroups.value].push({
+      id: i,
+      playerA: team.playerA,
+      playerB: team.playerB,
+    });
     i++;
     i %= numberOfGroups.value;
   }
@@ -208,6 +224,10 @@ function apply(e: HTMLFormElement | undefined) {
   assignTeamsToGroups();
   console.log(numberOfGroups.value);
   console.log(radio.selectedChoice);
+}
+
+function save() {
+  // axios.post();
 }
 </script>
 <style scoped>
