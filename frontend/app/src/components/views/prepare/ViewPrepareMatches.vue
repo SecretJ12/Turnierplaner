@@ -168,7 +168,7 @@ function checkComp() {
 }
 
 function previous() {
-	router.push(
+	router.replace(
 		`/tournament/${route.params.tourId}/prepare/${
 			steps[Math.max(0, stepToIndex(<string>route.params.step) - 1)]
 		}/${route.params.competition}`,
@@ -176,7 +176,7 @@ function previous() {
 }
 
 function next() {
-	router.push(
+	router.replace(
 		`/tournament/${route.params.tourId}/prepare/${
 			steps[Math.min(4, stepToIndex(<string>route.params.step) + 1)]
 		}/${route.params.competition}`,
@@ -184,7 +184,7 @@ function next() {
 }
 
 function tabClick(tab: { paneName: string }) {
-	router.push(
+	router.replace(
 		`/tournament/${route.params.tourId}/prepare/${route.params.step}/${tab.paneName}`,
 	)
 }
