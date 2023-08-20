@@ -79,4 +79,13 @@ function findMatch(teamA: Team, teamB: Team): Match {
 const progress = [false, true]
 </script>
 
-<style scoped></style>
+<style scoped>
+table,
+th,
+td {
+	border: 1px solid;
+	border-collapse: collapse;
+	text-align: center;
+	padding: 10px;
+}
+</style>
