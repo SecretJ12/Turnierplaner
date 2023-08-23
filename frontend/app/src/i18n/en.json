@@ -16,7 +16,7 @@
 	"ViewPlayerRegistration": {
 		"headline": "Player Registration",
 		"after": "Thank you for registration! Please confirm your email with the verification link, we sent you to your email.",
-		"verification_sucess": "You have successfully verified yourself!",
+		"verification_success": "You have successfully verified yourself!",
 		"verification_failed": "This verification link doesn't seem to be correct.",
 		"first_name": {
 			"field": "First name",
