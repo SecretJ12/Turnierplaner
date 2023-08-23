@@ -88,11 +88,14 @@ const router = VueRouter.createRouter({
 })
 
 import "element-plus/dist/index.css"
+import PrimeVue from 'primevue/config'
+import "primevue/resources/themes/md-light-indigo/theme.css"
 
 app
 	.use(i18n)
 	.component("font-awesome-icon", FontAwesomeIcon)
 	.use(VueAxios, axios)
+	.use(PrimeVue)
 	.use(router)
 	.mount("#app")
 
