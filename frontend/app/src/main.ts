@@ -1,6 +1,6 @@
 import { createApp } from "vue"
 import App from "./App.vue"
-import { createI18n } from "vue-i18n"
+import { createI18n, I18nOptions } from "vue-i18n"
 import * as VueRouter from "vue-router"
 
 /* import the fontawesome core */
@@ -26,7 +26,6 @@ import {
 	faUserGroup,
 	faUserSecret,
 } from "@fortawesome/free-solid-svg-icons"
-import languages from "./i18n"
 // Bootstrap
 import "./scss/style.scss"
 
@@ -56,8 +55,17 @@ library.add(
 	faUserSecret,
 )
 
-const messages = Object.assign(languages)
-const i18n = createI18n({
+/* i18n */
+import languages from "./i18n"
+const messages = languages
+
+export type MessageSchema = (typeof messages)["de"]
+
+declare module "vue-i18n" {
+	export interface DefineLocaleMessage extends MessageSchema {}
+}
+
+const options: I18nOptions = {
 	locale: "de", // set locale
 	fallbackLocale: "en", // set fallback locale
 	warnHtmlMessage: false,
@@ -65,7 +73,9 @@ const i18n = createI18n({
 	fallbackWarn: false,
 	messages,
 	legacy: false,
-})
+}
+
+const i18n = createI18n<false, typeof options>(options)
 
 /* add font awesome icon component */
 const app = createApp(App)
