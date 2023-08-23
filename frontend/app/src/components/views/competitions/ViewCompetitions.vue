@@ -26,42 +26,24 @@
 				<AddItem v-if="canEdit" @selected="addCompetition" />
 			</div>
 			<div id="aside">
-				<el-steps
-					v-if="tournament !== null"
-					id="progress"
-					:active="progress"
-					:process-status="statusActive"
-					:direction="
-						windowWidth > 1300 || windowWidth < 500 ? 'vertical' : 'horizontal'
-					"
-					finish-status="success"
-				>
-					<el-step
-						:description="
-							tournament?.registration_phase.begin.toLocaleString(
-								t('lang'),
-								options,
-							) +
-							'\n - ' +
-							tournament?.registration_phase.end.toLocaleString(
-								t('lang'),
-								options,
-							)
-						"
-						:title="t('TournamentSettings.registration_phase')"
-					/>
-					<el-step
-						:description="
-							tournament?.game_phase.begin.toLocaleString(t('lang'), options) +
-							' - ' +
-							tournament?.game_phase.end.toLocaleString(t('lang'), options)
-						"
-						:title="t('TournamentSettings.game_phase')"
-					/>
-				</el-steps>
-				<el-button v-if="canEdit" id="prepare" type="primary" @click="prepare">
-					{{ t("ViewCompetition.prepare") }} >>
-				</el-button>
+        <!-- TODO fix height of timeline -->
+				<Timeline v-if="tournament !== null" id="progress" align="left" :value="status" >
+          <template #marker="slotProps">
+            text
+            <!-- TODO add fitting font awesome icon -->
+          </template>
+					<template #content="slotProps">
+            {{ slotProps.item.status }}
+            {{ slotProps.item.begin }} -
+            {{ slotProps.item.end }}
+            <!-- TODO fix dates begin reponsive -->
+					</template>
+				</Timeline>
+				<Button
+					:label="t('ViewCompetition.prepare') + ' >>'"
+					id="prepare"
+					@click="prepare"
+				></Button>
 			</div>
 		</div>
 	</div>
@@ -87,6 +69,9 @@ import {
 	TournamentServer,
 	tournamentServerToClient,
 } from "@/interfaces/tournament"
+import Button from "primevue/button"
+import Timeline from "primevue/timeline"
+import Card from "primevue/card"
 
 const { t } = useI18n({ inheritLocale: true })
 
@@ -101,6 +86,41 @@ const progress = ref(0)
 const statusActive = ref<"wait" | "process" | "success" | "error">("wait")
 
 const tournament = ref<Tournament | null>(null)
+const options: Intl.DateTimeFormatOptions = {
+	weekday: "long",
+	year: "numeric",
+	month: "long",
+	day: "numeric",
+	hour: "numeric",
+	minute: "numeric",
+}
+
+const status = ref([
+	{
+		status: t("TournamentSettings.registration_phase"),
+		begin:
+			tournament.value?.registration_phase.begin.toLocaleString(
+				t("lang"),
+				options,
+			),
+    end:
+			tournament.value?.registration_phase.end.toLocaleString(
+				t("lang"),
+				options,
+			),
+		icon: "pi pi-shopping-cart",
+		color: "#9C27B0",
+	},
+	{
+		status: t("TournamentSettings.game_phase"),
+		date:
+			tournament.value?.game_phase.begin.toLocaleString(t("lang"), options) +
+			" - " +
+			tournament.value?.game_phase.end.toLocaleString(t("lang"), options),
+		icon: "pi pi-shopping-cart",
+		color: "#9C27B0",
+	},
+])
 
 watch(isLoggedIn, async () => {
 	update()
@@ -198,15 +218,6 @@ function addCompetition() {
 		path: `/tournament/${route.params.tourId}/createCompetition`,
 	})
 }
-
-const options: Intl.DateTimeFormatOptions = {
-	weekday: "long",
-	year: "numeric",
-	month: "long",
-	day: "numeric",
-	hour: "numeric",
-	minute: "numeric",
-}
 </script>
 
 <style scoped>
@@ -252,10 +263,12 @@ const options: Intl.DateTimeFormatOptions = {
 	margin-right: 10px;
 	display: flex;
 	flex-direction: column;
-	align-items: center;
+	align-items: flex-start;
+  width: 20dvw;
 }
 
 #progress {
+  align-items: flex-start;
 	height: fit-content;
 }
 
