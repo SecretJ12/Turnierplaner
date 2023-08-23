@@ -26,8 +26,6 @@ import {
 	faUserGroup,
 	faUserSecret,
 } from "@fortawesome/free-solid-svg-icons"
-// Bootstrap
-import "./scss/style.scss"
 
 axios.defaults.baseURL = settings.BACKEND
 
@@ -88,7 +86,7 @@ const router = VueRouter.createRouter({
 })
 
 import "element-plus/dist/index.css"
-import PrimeVue from 'primevue/config'
+import PrimeVue from "primevue/config"
 import "primevue/resources/themes/md-light-indigo/theme.css"
 
 app
