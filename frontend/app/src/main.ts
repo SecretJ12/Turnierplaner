@@ -87,6 +87,7 @@ const router = VueRouter.createRouter({
 
 import "element-plus/dist/index.css"
 import PrimeVue from "primevue/config"
+import 'primeicons/primeicons.css';
 import "primevue/resources/themes/md-light-indigo/theme.css"
 
 app

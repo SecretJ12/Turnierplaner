@@ -26,22 +26,38 @@
 				<AddItem v-if="canEdit" @selected="addCompetition" />
 			</div>
 			<div id="aside">
-        <!-- TODO fix height of timeline -->
-				<Timeline v-if="tournament !== null" id="progress" align="left" :value="status" >
-          <template #marker="slotProps">
-            text
-            <!-- TODO add fitting font awesome icon -->
-          </template>
+				<Timeline v-if="tournament !== null" id="progress" op :value="status">
+					<template #marker="slotProps">
+						<span
+							class="progress-icon"
+							:style="{ borderColor: slotProps.item.color }"
+						>
+							<i
+								class="pi"
+								:class="[slotProps.item.icon]"
+								:style="{ color: slotProps.item.color }"
+							></i>
+						</span>
+					</template>
 					<template #content="slotProps">
-            {{ slotProps.item.status }}
-            {{ slotProps.item.begin }} -
-            {{ slotProps.item.end }}
-            <!-- TODO fix dates begin reponsive -->
+						<div style="height: 3px"></div>
+						<template v-if="slotProps.item.registration">
+							<strong>{{ t("TournamentSettings.registration_phase") }}</strong
+							><br />
+							{{ formatDate(tournament?.registration_phase.begin) }}
+							{{ formatDate(tournament?.registration_phase.end) }}
+						</template>
+						<template v-else>
+							<strong>{{ t("TournamentSettings.game_phase") }}</strong
+							><br />
+							{{ formatDate(tournament?.game_phase.begin) }}
+							{{ formatDate(tournament?.game_phase.end) }}
+						</template>
 					</template>
 				</Timeline>
 				<Button
-					:label="t('ViewCompetition.prepare') + ' >>'"
 					id="prepare"
+					:label="t('ViewCompetition.prepare') + ' >>'"
 					@click="prepare"
 				></Button>
 			</div>
@@ -71,7 +87,6 @@ import {
 } from "@/interfaces/tournament"
 import Button from "primevue/button"
 import Timeline from "primevue/timeline"
-import Card from "primevue/card"
 
 const { t } = useI18n({ inheritLocale: true })
 
@@ -97,28 +112,14 @@ const options: Intl.DateTimeFormatOptions = {
 
 const status = ref([
 	{
-		status: t("TournamentSettings.registration_phase"),
-		begin:
-			tournament.value?.registration_phase.begin.toLocaleString(
-				t("lang"),
-				options,
-			),
-    end:
-			tournament.value?.registration_phase.end.toLocaleString(
-				t("lang"),
-				options,
-			),
-		icon: "pi pi-shopping-cart",
-		color: "#9C27B0",
+		registration: true,
+		icon: "pi-pencil",
+		color: "#000000",
 	},
 	{
-		status: t("TournamentSettings.game_phase"),
-		date:
-			tournament.value?.game_phase.begin.toLocaleString(t("lang"), options) +
-			" - " +
-			tournament.value?.game_phase.end.toLocaleString(t("lang"), options),
-		icon: "pi pi-shopping-cart",
-		color: "#9C27B0",
+		registration: false,
+		icon: "pi-play",
+		color: "#000000",
 	},
 ])
 
@@ -168,27 +169,27 @@ function update() {
 			const date = new Date()
 			tournament.value = tournamentServerToClient(response.data)
 
-			if (date < tournament.value.registration_phase.begin) {
-				progress.value = 0
-				statusActive.value = "wait"
-			} else if (date < tournament.value.registration_phase.end) {
-				progress.value = 0
-				statusActive.value = "process"
-			} else if (date < tournament.value.game_phase.begin) {
-				progress.value = 1
-				statusActive.value = "wait"
-			} else if (date < tournament.value.game_phase.end) {
-				progress.value = 1
-				statusActive.value = "process"
-			} else {
-				progress.value = 1
-				statusActive.value = "success"
+			if (date > tournament.value.registration_phase.end) {
+        status.value[0].color = "green"
+        status.value[0].icon = "pi-check"
+      } else if (date > tournament.value.registration_phase.begin) {
+        status.value[0].color = "blue"
+      }
+      if (date > tournament.value.game_phase.end) {
+				status.value[1].color = "green"
+				status.value[1].icon = "pi-check"
+			} else if (date > tournament.value.game_phase.begin) {
+				status.value[1].color = "blue"
 			}
 		})
 		.catch((error) => {
 			statusActive.value = "error"
 			console.log(error)
 		})
+}
+
+function formatDate(d: Date) {
+	return d.toLocaleString(t("lang"), options)
 }
 
 function settings() {
@@ -263,12 +264,14 @@ function addCompetition() {
 	margin-right: 10px;
 	display: flex;
 	flex-direction: column;
+  justify-content: flex-start;
 	align-items: flex-start;
-  width: 20dvw;
+	width: 25dvw;
+  height: fit-content;
 }
 
 #progress {
-  align-items: flex-start;
+	align-items: flex-start;
 	height: fit-content;
 }
 
@@ -299,5 +302,24 @@ h2 {
 	#progress {
 		margin: 10px;
 	}
+}
+
+::v-deep(.p-timeline-event-opposite) {
+	display: none;
+}
+
+.progress-icon {
+	width: 2rem;
+	height: 2rem;
+	border: 2px solid;
+	border-radius: 100%;
+	box-sizing: border-box;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.progress-icon > i {
+	font-weight: bold;
 }
 </style>
