@@ -1,8 +1,10 @@
 <template>
-	<div id="item">
-		<div id="content" @click="selected">
-			<h2>{{ props.tournament.name }}</h2>
-			<p>{{ props.tournament.description }}</p>
+	<Card style="width: 25em" @click="selected">
+		<template #title>
+			{{ props.tournament.name }}
+		</template>
+		<template #subtitle>
+			{{ props.tournament.description }}
 			<!-- TODO entweder nur game phase oder anzeigen was gerade angezeigt wird -->
 			<!-- TODO date an den unteren rand des items -->
 			<p v-if="new Date() >= props.tournament.registration_phase[1]">
@@ -13,27 +15,38 @@
 				{{ props.tournament.registration_phase.begin.toLocaleDateString() }} -
 				{{ props.tournament.registration_phase.end.toLocaleDateString() }}
 			</p>
-		</div>
-		<font-awesome-icon
-			v-if="props.canCreate"
-			id="settings"
-			:icon="['fas', 'gear']"
-			class="fa-2x"
-			@click="settings"
-		>
-		</font-awesome-icon>
-		<font-awesome-icon
-			v-if="props.canCreate && !props.tournament.visible"
-			id="invisible"
-			:icon="['fas', 'eye-slash']"
-			class="fa-2x"
-		>
-		</font-awesome-icon>
-	</div>
+		</template>
+		<template #footer>
+			<div class="grid grid-nogutter justify-content-between">
+				<!-- TODO remove visibility icon?	-->
+				<!--				<Button-->
+				<!--					v-if="props.canCreate && !props.tournament.visible"-->
+				<!--					rounded-->
+				<!--					visible-->
+				<!--				>-->
+				<!--					<template #icon>-->
+				<!--						<span class="material-icons">visibility_off</span>-->
+				<!--					</template>-->
+				<!--				</Button>-->
+				<!--				<Button v-else-if="props.canCreate" rounded visible>-->
+				<!--					<template #icon>-->
+				<!--						<span class="material-icons">visibility</span>-->
+				<!--					</template>-->
+				<!--				</Button>-->
+				<i></i>
+				<Button v-if="props.canCreate" @click="settings" rounded outlined>
+					<template #icon>
+						<span class="material-icons">settings</span>
+					</template>
+				</Button>
+			</div>
+		</template>
+	</Card>
 </template>
 
 <script lang="ts" setup>
 import { Tournament } from "@/interfaces/tournament"
+import Button from "primevue/button"
 
 const props = defineProps<{
 	canCreate: boolean
@@ -51,78 +64,4 @@ function settings() {
 }
 </script>
 
-<style scoped>
-#item {
-	border-radius: 15px;
-	padding: 0;
-	width: 420px;
-	height: 300px;
-	position: relative;
-	overflow: hidden;
-}
-
-#content {
-	padding: 20px 10px 0 10px;
-	background-color: #d0d0d0;
-	box-shadow: 0 0 5px #909090;
-	width: 100%;
-	height: 100%;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-}
-
-#settings {
-	position: absolute;
-	right: 10px;
-	bottom: 10px;
-	color: #303030;
-}
-
-#invisible {
-	position: absolute;
-	left: 10px;
-	bottom: 10px;
-	color: #303030;
-}
-
-#settings:hover {
-	filter: drop-shadow(0 0 10px #808080);
-}
-
-#settings:active {
-	color: #404040;
-}
-
-h2 {
-	margin-top: 0;
-	text-align: center;
-	overflow-wrap: break-word;
-}
-
-p {
-	text-align: center;
-	overflow-wrap: break-word;
-	max-width: calc(100% - 100px);
-}
-
-#content:hover {
-	cursor: pointer;
-}
-
-#item:hover {
-	box-shadow: 0 0 10px black;
-}
-
-#content:active {
-	background-color: #c0c0c0;
-}
-
-@media only screen and (max-width: 900px) {
-	#item {
-		width: 100%;
-		min-height: 100px;
-		height: auto;
-	}
-}
-</style>
+<style scoped></style>
