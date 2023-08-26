@@ -87,13 +87,19 @@ const router = VueRouter.createRouter({
 
 /* Primevue components*/
 import PrimeVue from "primevue/config"
-import 'primeicons/primeicons.css';
-import "primevue/resources/themes/md-light-indigo/theme.css"
+import ToastService from "primevue/toastservice"
+import Steps from "primevue/steps"
+import TabView from "primevue/tabview"
+import TabMenu from "primevue/tabmenu"
+import Card from "primevue/card"
+import Button from "primevue/card"
+import Toolbar from "primevue/toolbar"
 
 /* Primevue styling */
 import "primeflex/primeflex.css"
 import "primevue/resources/themes/lara-light-blue/theme.css"
 import "primeicons/primeicons.css"
+import "./style.css"
 
 /* Icons */
 import "material-icons/iconfont/material-icons.css"
@@ -106,6 +112,13 @@ app
 	.use(router)
 	/* Primevue */
 	.use(PrimeVue, { ripple: true })
+	.use(ToastService)
+	.component("Steps", Steps)
+	.component("TabView", TabView)
+	.component("TabMenu", TabMenu)
+	.component("Card", Card)
+	.component("Button", Button)
+	.component("Toolbar", Toolbar)
 	.mount("#app")
 
 export { router }
