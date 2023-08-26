@@ -1,14 +1,23 @@
 <template>
-	<div id="item" @click="selected">
-		<font-awesome-icon
-			id="icon"
-			:icon="['fas', 'plus']"
-			class="fa-10x"
-		></font-awesome-icon>
-	</div>
+	<Card style="width: 25em" @click="selected">
+		<template #title> Add a new competition</template>
+		<template #subtitle> Click here to add a new competition</template>
+		<template #footer>
+			<div class="grid grid-nogutter justify-content-between">
+				<Button rounded outlined>
+					<template #icon>
+						<span class="material-symbols-outlined"> add </span>
+					</template>
+				</Button>
+				<i></i>
+			</div>
+		</template>
+	</Card>
 </template>
 
 <script lang="ts" setup>
+import Button from "primevue/button"
+
 const emit = defineEmits(["selected"])
 
 function selected() {
@@ -17,28 +26,11 @@ function selected() {
 </script>
 
 <style scoped>
-#item {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	border-radius: 10px;
-	padding: 0 10px 0 10px;
-	width: 400px;
-	height: 300px;
-	background-color: #e0e0e0;
-}
-
-#icon {
-	color: #c0c0c0;
-}
-
-#item:hover {
-	box-shadow: 0 0 10px black;
-	cursor: pointer;
-}
-
-#item:active {
-	background-color: #d0d0d0;
+.material-symbols-outlined {
+	font-variation-settings:
+		"FILL" 0,
+		"wght" 700,
+		"GRAD" 200,
+		"opsz" 48;
 }
 </style>

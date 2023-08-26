@@ -1,33 +1,36 @@
 <template>
-	<div id="item">
-		<div id="content" @click="selected">
-			<h2>{{ name }}</h2>
-			<p>{{ description }}</p>
-		</div>
-		<div id="type">
-			<font-awesome-icon
-				v-if="type === 'GROUPS'"
-				:icon="['fas', 'table-cells-large']"
-				class="fa-2x"
-			></font-awesome-icon>
-			<font-awesome-icon
-				v-else-if="type === 'KNOCKOUT'"
-				:icon="['fas', 'user-group']"
-				class="fa-2x"
-			></font-awesome-icon>
-		</div>
-		<font-awesome-icon
-			v-if="canEdit"
-			id="settings"
-			:icon="['fas', 'gear']"
-			class="fa-2x"
-			@click="settings"
-		>
-		</font-awesome-icon>
-	</div>
+	<Card style="width: 25em" @click="selected">
+		<template #title>
+			{{ name }}
+		</template>
+		<template #subtitle>
+			{{ description }}
+		</template>
+		<template #footer>
+			<div class="grid grid-nogutter justify-content-between">
+				<Button v-if="type === 'GROUPS'" text outlined disabled>
+					<template #icon>
+						<span class="material-symbols-outlined">grid_view</span>
+					</template>
+				</Button>
+				<Button v-else-if="type === 'KNOCKOUT'" disabled text outlined>
+					<template #icon>
+						<span class="material-symbols-outlined">group</span>
+					</template>
+				</Button>
+				<Button v-if="canEdit" @click="settings" rounded outlined>
+					<template #icon>
+						<span class="material-icons">settings</span>
+					</template>
+				</Button>
+			</div>
+		</template>
+	</Card>
 </template>
 
 <script lang="ts" setup>
+import Button from "primevue/button"
+
 const props = defineProps<{
 	name: string
 	description: string
@@ -47,78 +50,4 @@ function settings() {
 }
 </script>
 
-<style scoped>
-#item {
-	border-radius: 15px;
-	padding: 0;
-	width: 420px;
-	height: 300px;
-	position: relative;
-	overflow: hidden;
-}
-
-#content {
-	padding: 20px 10px 0 10px;
-	background-color: #d0d0d0;
-	box-shadow: 0 0 5px #909090;
-	width: 100%;
-	height: 100%;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-}
-
-#settings {
-	position: absolute;
-	right: 10px;
-	bottom: 10px;
-	color: #303030;
-}
-
-#type {
-	position: absolute;
-	left: 10px;
-	bottom: 10px;
-	color: #303030;
-}
-
-#settings:hover {
-	filter: drop-shadow(0 0 10px #808080);
-}
-
-#settings:active {
-	color: #404040;
-}
-
-h2 {
-	margin-top: 0;
-	text-align: center;
-	overflow-wrap: break-word;
-}
-
-p {
-	text-align: center;
-	overflow-wrap: break-word;
-	max-width: calc(100% - 100px);
-}
-
-#content:hover {
-	cursor: pointer;
-}
-
-#item:hover {
-	box-shadow: 0 0 10px black;
-}
-
-#content:active {
-	background-color: #c0c0c0;
-}
-
-@media only screen and (max-width: 900px) {
-	#item {
-		width: 100%;
-		min-height: 100px;
-		height: auto;
-	}
-}
-</style>
+<style scoped></style>
