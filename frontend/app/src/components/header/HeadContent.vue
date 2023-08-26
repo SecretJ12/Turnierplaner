@@ -20,7 +20,6 @@ header {
 	flex-wrap: nowrap;
 	align-items: center;
 	justify-content: space-between;
-	box-shadow: 0 0 10px black;
 	position: sticky;
 	left: 0;
 	right: 0;

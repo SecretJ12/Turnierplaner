@@ -85,17 +85,27 @@ const router = VueRouter.createRouter({
 	routes,
 })
 
-import "element-plus/dist/index.css"
+/* Primevue components*/
 import PrimeVue from "primevue/config"
 import 'primeicons/primeicons.css';
 import "primevue/resources/themes/md-light-indigo/theme.css"
+
+/* Primevue styling */
+import "primeflex/primeflex.css"
+import "primevue/resources/themes/lara-light-blue/theme.css"
+import "primeicons/primeicons.css"
+
+/* Icons */
+import "material-icons/iconfont/material-icons.css"
+import "material-symbols"
 
 app
 	.use(i18n)
 	.component("font-awesome-icon", FontAwesomeIcon)
 	.use(VueAxios, axios)
-	.use(PrimeVue)
 	.use(router)
+	/* Primevue */
+	.use(PrimeVue, { ripple: true })
 	.mount("#app")
 
 export { router }
