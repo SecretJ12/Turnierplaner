@@ -170,12 +170,12 @@ function update() {
 			tournament.value = tournamentServerToClient(response.data)
 
 			if (date > tournament.value.registration_phase.end) {
-        status.value[0].color = "green"
-        status.value[0].icon = "pi-check"
-      } else if (date > tournament.value.registration_phase.begin) {
-        status.value[0].color = "blue"
-      }
-      if (date > tournament.value.game_phase.end) {
+				status.value[0].color = "green"
+				status.value[0].icon = "pi-check"
+			} else if (date > tournament.value.registration_phase.begin) {
+				status.value[0].color = "blue"
+			}
+			if (date > tournament.value.game_phase.end) {
 				status.value[1].color = "green"
 				status.value[1].icon = "pi-check"
 			} else if (date > tournament.value.game_phase.begin) {
@@ -204,7 +204,7 @@ function selected(competition: string) {
 
 function prepare() {
 	router.push({
-		path: `/tournament/${route.params.tourId}/prepare`,
+		path: `/tournament/${route.params.tourId}/prepare/editPlayers/${competitions.value[0].name}`,
 	})
 }
 
@@ -264,10 +264,10 @@ function addCompetition() {
 	margin-right: 10px;
 	display: flex;
 	flex-direction: column;
-  justify-content: flex-start;
+	justify-content: flex-start;
 	align-items: flex-start;
 	width: 25dvw;
-  height: fit-content;
+	height: fit-content;
 }
 
 #progress {

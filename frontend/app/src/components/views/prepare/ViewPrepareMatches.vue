@@ -1,11 +1,14 @@
 <template>
 	<div id="prepare">
-		<!-- TODO color depending on progress of step -->
 		<div>
 			<div class="card">
-				<Steps :model="stepList" aria-label="Form Steps" />
+				<Steps :model="stepList" aria-label="Form Steps" :exact="false" />
 			</div>
-			<TabMenu :model="compList" v-model:activeIndex="activeTab" />
+			<TabMenu
+				:model="compList"
+				v-model:activeIndex="activeTab"
+				@tab-change="tabChange"
+			/>
 			<Card>
 				<template v-slot:title>
 					<span v-if="route.params.step === 'editPlayers'">Edit Player</span>
@@ -91,28 +94,21 @@ import {
 import { ElMessage } from "element-plus"
 import { router } from "@/main"
 import { useRoute } from "vue-router"
-import { ref } from "vue"
+import { reactive, ref } from "vue"
 import { useI18n } from "vue-i18n"
 import { useToast } from "primevue/usetoast"
 import Button from "primevue/button"
+import { TabMenuChangeEvent } from "primevue/tabmenu"
 
 const { t } = useI18n({ inheritLocale: true })
 const route = useRoute()
 const toast = useToast()
 
 const competitions = ref<Competition[]>([])
-const currentComp = ref<Competition | null>(null)
-
 const activeTab = ref<number>(0)
-const stepId = ref<string>("")
+const compList = ref<{ label: string }[]>([])
 
-const compList = ref<
-	{
-		label: string
-	}[]
->([])
-
-const steps2 = [
+const stepNames = [
 	"editPlayers",
 	"selectMode",
 	"assignTeams",
@@ -131,13 +127,8 @@ await axios
 		} else {
 			ElMessage.error(t("ViewCompetitions.loadingFailed"))
 		}
-
-		currentComp.value = competitions.value[0]
-
 		for (const compElement of competitions.value) {
-			compList.value.push({
-				label: compElement.name,
-			})
+			compList.value.push({ label: compElement.name })
 		}
 	})
 	.catch((error) => {
@@ -145,6 +136,8 @@ await axios
 		console.log(error)
 		router.push("/")
 	})
+
+const currentComp = ref<Competition>(competitions.value[0])
 
 const stepList = ref([
 	{
@@ -170,14 +163,14 @@ const stepList = ref([
 ])
 
 function stepToIndex(step: string): number {
-	return steps2.findIndex((s) => s === step)
+	return stepNames.findIndex((s) => s === step)
 }
 
 function checkComp() {
 	let change = false
 	let step = route.params.step
 	let comp = route.params.competition
-	if (!steps2.find((s) => s === route.params.step)) {
+	if (!stepNames.find((s) => s === route.params.step)) {
 		change = true
 		step = "editPlayers"
 	}
@@ -188,10 +181,11 @@ function checkComp() {
 	if (change)
 		router.replace(`/tournament/${route.params.tourId}/prepare/${step}/${comp}`)
 }
+
 function nextPage() {
 	router.replace(
 		`/tournament/${route.params.tourId}/prepare/${
-			steps2[stepToIndex(<string>route.params.step) + 1]
+			stepNames[stepToIndex(<string>route.params.step) + 1]
 		}/${route.params.competition}`,
 	)
 }
@@ -199,7 +193,7 @@ function nextPage() {
 function prevPage() {
 	router.replace(
 		`/tournament/${route.params.tourId}/prepare/${
-			steps2[stepToIndex(<string>route.params.step) - 1]
+			stepNames[stepToIndex(<string>route.params.step) - 1]
 		}/${route.params.competition}`,
 	)
 }
@@ -210,6 +204,22 @@ function complete() {
 		summary: "Competition updated",
 		detail: "The tournament has been updated.",
 	})
+}
+
+function tabChange(event: TabMenuChangeEvent) {
+	activeTab.value = event.index
+	currentComp.value = competitions.value[event.index]
+	router.replace(
+		`/tournament/${route.params.tourId}/prepare/${route.params.step}/${
+			competitions.value[event.index].name
+		}`,
+	)
+
+	for (let i = 0; i < stepList.value.length; i++) {
+		stepList.value[i].to = `/tournament/${route.params.tourId}/prepare/${
+			stepNames[i]
+		}/${competitions.value[event.index].name}`
+	}
 }
 </script>
 
