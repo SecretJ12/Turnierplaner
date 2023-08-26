@@ -2,6 +2,7 @@
 	<FormTournament
 		:data="data"
 		:submit-text="t('general.create')"
+		:disabled="false"
 		@submit="submit"
 	/>
 </template>

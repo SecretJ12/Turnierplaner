@@ -45,7 +45,6 @@ function selected() {
 }
 
 function settings() {
-	console.log("settings")
 	emit("settings", props.name)
 }
 </script>
