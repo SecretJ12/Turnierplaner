@@ -1,110 +1,78 @@
 <template>
-	<div id="form">
-		<el-form
-			ref="formRef"
-			:disabled="props.disabled"
-			:model="props.data"
-			label-position="top"
-			label-width="120px"
-			scroll-to-error="scroll-to-error"
-			size="large"
-		>
-			<el-row :gutter="20" class="row-bg" justify="space-between">
-				<el-col :span="20">
-					<!-- Tournament name -->
-					<el-form-item
-						:label="t('general.name')"
-						:rules="[
-							{
-								required: true,
-								message: t('general.name_missing'),
-								trigger: 'blur',
-							},
-						]"
-						prop="name"
-					>
-						<el-input v-model="data.name" maxlength="30" show-word-limit />
-					</el-form-item>
-				</el-col>
-				<el-col :span="4">
-					<!-- Visible -->
-					<el-form-item :label="t('TournamentSettings.visible')" prop="visible">
-						<el-switch
-							v-model="data.visible"
-							style="
-								--el-switch-on-color: #13ce66;
-								--el-switch-off-color: #ff4949;
-							"
-						/>
-					</el-form-item>
-				</el-col>
-			</el-row>
-
-			<!-- Description -->
-			<el-form-item :label="t('general.description')" prop="description">
-				<el-input
-					v-model="data.description"
-					:autosize="{ minRows: 3, maxRows: 5 }"
-					maxlength="100"
-					show-word-limit
-					type="textarea"
-				/>
-			</el-form-item>
-
-			<!-- Times -->
-			<el-divider />
-			<!-- Begin -> End registration -->
-			<el-form-item
-				:label="t('TournamentSettings.registration_phase')"
-				:rules="[
-					{
-						required: true,
-						validator: checkDates,
-						trigger: 'blur',
-					},
-				]"
-				prop="registration_phase"
-			>
-				<el-date-picker
-					v-model="data.registration_phase"
-					end-placeholder="End date"
-					start-placeholder="Start date"
-					type="datetimerange"
-				/>
-			</el-form-item>
-			<!-- Begin -> End game phase -->
-			<el-form-item
-				:label="t('TournamentSettings.game_phase')"
-				:rules="[
-					{
-						required: true,
-						validator: checkDates,
-						trigger: 'blur',
-					},
-				]"
-				prop="game_phase"
-			>
-				<el-date-picker
-					v-model="data.game_phase"
-					end-placeholder="End date"
-					start-placeholder="Start date"
-					type="datetimerange"
-				/>
-			</el-form-item>
-
-			<el-row class="row-bg" justify="end">
-				<el-form-item>
-					<el-button type="primary" @click="submit(formRef)">
-						{{ props.submitText }}
-					</el-button>
-				</el-form-item>
-			</el-row>
-		</el-form>
+	<!--TODO add internalization-->
+	<div class="justify-content-center" style="width: 100%">
+		<div class="card">
+			<h3>Tournament registration</h3>
+			<div class="formgrid grid">
+				<div class="field col-11">
+					<label for="name">{{ t("general.name") }}</label>
+					<input
+						id="name"
+						type="text"
+						v-bind="name"
+						maxlength="30"
+						class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+					/>
+					<small id="name-error" class="p-error">{{ errors.name }}</small>
+				</div>
+				<div class="field col flex flex-column">
+					<label for="visible" class="text-900">{{
+						t("TournamentSettings.visible")
+					}}</label>
+					<InputSwitch id="visible" v-bind="visible" />
+				</div>
+				<div class="field col-12">
+					<label for="description">{{ t("general.description") }}</label>
+					<textarea
+						id="description"
+						type="text"
+						rows="4"
+						class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+						v-bind="description"
+					></textarea>
+				</div>
+				<div class="field col-6">
+					<label for="registration">{{
+						t("TournamentSettings.registration_phase")
+					}}</label>
+					<Calendar
+						id="registration"
+						v-bind="registration_phase"
+						selectionMode="range"
+						:manualInput="false"
+						class="w-full"
+						show-icon
+					/>
+					<small id="registration_phase-error" class="p-error">{{
+						errors.registration_phase
+					}}</small>
+				</div>
+				<div class="field col-6">
+					<label for="game_phase">{{
+						t("TournamentSettings.game_phase")
+					}}</label>
+					<Calendar
+						id="game_phase"
+						v-bind="game_phase"
+						selectionMode="range"
+						:manualInput="false"
+						class="w-full"
+						show-icon
+					/>
+					<small id="game_phase-error" class="p-error">{{
+						errors.game_phase
+					}}</small>
+				</div>
+				<div class="field">
+					<Button :label="props.submitText"></Button>
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue"
+import { reactive, ref } from "vue"
 import {
 	TournamentForm,
 	tournamentFormClientToServer,
@@ -112,7 +80,29 @@ import {
 } from "@/interfaces/tournament"
 import { useI18n } from "vue-i18n"
 
+import { useForm, useFieldArray, useField } from "vee-validate"
+import Button from "primevue/button"
+
 const { t } = useI18n({ inheritLocale: true })
+
+const { values, defineInputBinds, errors, defineComponentBinds } = useForm({
+	validationSchema: {
+		name: (val: string) => (val ? true : t("TournamentSettings.missing_name")),
+		registration_phase: (val: [Date, Date]) =>
+			val ? true : t("TournamentSettings.missing_date"),
+	},
+	// initialErrors: {
+	// 	name: t("TournamentSettings.missing_name"),
+	// 	registration_phase: t("TournamentSettings.missing_name"),
+	// },
+})
+
+const name = defineInputBinds("name")
+const visible = defineComponentBinds("visible")
+const description = defineInputBinds("description")
+
+const registration_phase = defineComponentBinds("registration_phase")
+const game_phase = defineComponentBinds("game_phase")
 
 const formRef = ref<HTMLFormElement>()
 const props = withDefaults(
@@ -165,15 +155,15 @@ const checkDates = (
 		callback(new Error(t("TournamentSettings.wrong_dates")))
 	else callback()
 }
+
+function validateField(value: string) {
+	console.log(value)
+	if (!value) {
+		return "Name - Surname is required."
+	}
+
+	return true
+}
 </script>
 
-<style scoped>
-#form {
-	width: 100%;
-	margin: 10px;
-	display: flex;
-	flex-wrap: wrap;
-	flex-direction: row;
-	justify-content: center;
-}
-</style>
+<style scoped></style>

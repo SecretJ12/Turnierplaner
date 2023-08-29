@@ -108,6 +108,7 @@ const competitions = ref<Competition[]>([])
 const activeTab = ref<number>(0)
 const compList = ref<{ label: string }[]>([])
 
+// TODO add internalization
 const stepNames = [
 	"editPlayers",
 	"selectMode",

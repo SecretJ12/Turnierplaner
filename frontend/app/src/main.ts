@@ -94,6 +94,9 @@ import TabMenu from "primevue/tabmenu"
 import Card from "primevue/card"
 import Button from "primevue/card"
 import Toolbar from "primevue/toolbar"
+import InputText from "primevue/inputtext"
+import Calendar from "primevue/calendar"
+import InputSwitch from "primevue/inputswitch"
 
 /* Primevue styling */
 import "primeflex/primeflex.css"
@@ -119,6 +122,9 @@ app
 	.component("Card", Card)
 	.component("Button", Button)
 	.component("Toolbar", Toolbar)
+	.component("InputText", InputText)
+	.component("Calendar", Calendar)
+	.component("InputSwitch", InputSwitch)
 	.mount("#app")
 
 export { router }
