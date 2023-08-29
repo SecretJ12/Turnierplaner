@@ -12,6 +12,7 @@
 						v-bind="name"
 						maxlength="30"
 						class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+						rules="required|min:3"
 					/>
 					<small id="name-error" class="p-error">{{ errors.name }}</small>
 				</div>
@@ -63,8 +64,8 @@
 						errors.game_phase
 					}}</small>
 				</div>
-				<div class="field">
-					<Button :label="props.submitText"></Button>
+				<div class="field col">
+					<Button :label="props.submitText" @click="onSubmit"></Button>
 				</div>
 			</div>
 		</div>
@@ -80,22 +81,36 @@ import {
 } from "@/interfaces/tournament"
 import { useI18n } from "vue-i18n"
 
-import { useForm, useFieldArray, useField } from "vee-validate"
+import { useForm, useFieldArray, useField, defineRule } from "vee-validate"
 import Button from "primevue/button"
+
+import { object, string, number, date, InferType, boolean, array } from "yup"
+import { toTypedSchema } from "@vee-validate/yup"
 
 const { t } = useI18n({ inheritLocale: true })
 
-const { values, defineInputBinds, errors, defineComponentBinds } = useForm({
-	validationSchema: {
-		name: (val: string) => (val ? true : t("TournamentSettings.missing_name")),
-		registration_phase: (val: [Date, Date]) =>
-			val ? true : t("TournamentSettings.missing_date"),
-	},
-	// initialErrors: {
-	// 	name: t("TournamentSettings.missing_name"),
-	// 	registration_phase: t("TournamentSettings.missing_name"),
-	// },
-})
+import { setLocale } from "yup"
+
+const { values, defineInputBinds, errors, defineComponentBinds, handleSubmit } =
+	useForm({
+		validationSchema: toTypedSchema(
+			object({
+				name: string()
+					.min(4, t("validation.field_too_short"))
+					.required(t("validation.field_required")),
+				visible: boolean(),
+				description: string().max(500),
+				registration_phase: array()
+					.of(date())
+					.length(2, "please choose two dates")
+					.required(),
+				game_phase: array()
+					.of(date())
+					.length(2, "please choose two dates")
+					.required(),
+			}),
+		),
+	})
 
 const name = defineInputBinds("name")
 const visible = defineComponentBinds("visible")
@@ -132,6 +147,10 @@ function submit(formRef: HTMLFormElement | undefined) {
 	})
 }
 
+const onSubmit = handleSubmit((values) => {
+	console.log(values)
+	emit("submit", values)
+})
 const checkDates = (
 	rule: any, // eslint-disable-line @typescript-eslint/no-explicit-any
 	value: Date,
