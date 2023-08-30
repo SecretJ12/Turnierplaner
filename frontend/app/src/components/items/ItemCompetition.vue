@@ -18,7 +18,7 @@
 						<span class="material-symbols-outlined">group</span>
 					</template>
 				</Button>
-				<Button v-if="canEdit" @click="settings" rounded outlined>
+				<Button v-if="canEdit" @click="settings" @click.stop rounded outlined>
 					<template #icon>
 						<span class="material-icons">settings</span>
 					</template>
@@ -41,7 +41,7 @@ const props = defineProps<{
 const emit = defineEmits(["selected", "settings"])
 
 function selected() {
-	emit("selected", props.name)
+  emit("selected", props.name)
 }
 
 function settings() {

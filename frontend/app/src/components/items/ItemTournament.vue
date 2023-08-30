@@ -17,24 +17,8 @@
 			</p>
 		</template>
 		<template #footer>
-			<div class="grid grid-nogutter justify-content-between">
-				<!-- TODO remove visibility icon?	-->
-				<!--				<Button-->
-				<!--					v-if="props.canCreate && !props.tournament.visible"-->
-				<!--					rounded-->
-				<!--					visible-->
-				<!--				>-->
-				<!--					<template #icon>-->
-				<!--						<span class="material-icons">visibility_off</span>-->
-				<!--					</template>-->
-				<!--				</Button>-->
-				<!--				<Button v-else-if="props.canCreate" rounded visible>-->
-				<!--					<template #icon>-->
-				<!--						<span class="material-icons">visibility</span>-->
-				<!--					</template>-->
-				<!--				</Button>-->
-				<i></i>
-				<Button v-if="props.canCreate" @click="settings" rounded outlined>
+			<div class="grid grid-nogutter justify-content-end">
+				<Button v-if="props.canCreate" @click="settings" @click.stop rounded outlined>
 					<template #icon>
 						<span class="material-icons">settings</span>
 					</template>
