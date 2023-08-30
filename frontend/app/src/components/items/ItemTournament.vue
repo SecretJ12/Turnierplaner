@@ -1,12 +1,9 @@
 <template>
 	<Card id="card" @click="selected">
 		<template #title>
-			{{ props.tournament.name }}
+      {{ props.tournament.name }}
 		</template>
 		<template #subtitle>
-			{{ props.tournament.description }}
-			<!-- TODO entweder nur game phase oder anzeigen was gerade angezeigt wird -->
-			<!-- TODO date an den unteren rand des items -->
 			<p v-if="new Date() >= props.tournament.registration_phase[1]">
 				{{ props.tournament.game_phase.begin.toLocaleDateString() }}
 				- {{ props.tournament.game_phase.end.toLocaleDateString() }}
@@ -16,17 +13,19 @@
 				{{ props.tournament.registration_phase.end.toLocaleDateString() }}
 			</p>
 		</template>
+		<template #content>
+			<div class="content">
+				{{ props.tournament.description }}
+			</div>
+		</template>
 		<template #footer>
 			<div class="grid grid-nogutter justify-content-end">
-				<Button
-					v-if="props.canCreate"
-					@click="settings"
-					@click.stop
-					rounded
-					outlined
-				>
+				<Button v-if="props.canCreate" style="visibility: hidden"></Button>
+				<Button v-if="props.canCreate" outlined rounded class="icon">
 					<template #icon>
-						<span class="material-icons">settings</span>
+						<span class="material-icons" @click="settings" @click.stop
+							>settings</span
+						>
 					</template>
 				</Button>
 			</div>
@@ -57,5 +56,16 @@ function settings() {
 #card {
 	width: 25em;
 	cursor: pointer;
+	position: relative;
+}
+
+.content {
+  word-break: break-word;
+}
+
+.icon {
+	position: absolute;
+	right: 1.25rem;
+	bottom: 1.25rem;
 }
 </style>
