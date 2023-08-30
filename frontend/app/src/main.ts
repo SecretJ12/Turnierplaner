@@ -92,11 +92,12 @@ import Steps from "primevue/steps"
 import TabView from "primevue/tabview"
 import TabMenu from "primevue/tabmenu"
 import Card from "primevue/card"
-import Button from "primevue/card"
+import Button from "primevue/button"
 import Toolbar from "primevue/toolbar"
 import InputText from "primevue/inputtext"
 import Calendar from "primevue/calendar"
 import InputSwitch from "primevue/inputswitch"
+import Dropdown from "primevue/dropdown"
 
 /* Primevue styling */
 import "primeflex/primeflex.css"
@@ -140,6 +141,7 @@ app
 	.component("InputText", InputText)
 	.component("Calendar", Calendar)
 	.component("InputSwitch", InputSwitch)
+	.component("Dropdown", Dropdown)
 	.mount("#app")
 
 export { router }

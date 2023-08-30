@@ -97,7 +97,6 @@ import { useRoute } from "vue-router"
 import { ref } from "vue"
 import { useI18n } from "vue-i18n"
 import { useToast } from "primevue/usetoast"
-import Button from "primevue/button"
 import { TabMenuChangeEvent } from "primevue/tabmenu"
 
 const { t } = useI18n({ inheritLocale: true })

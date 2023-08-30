@@ -16,8 +16,6 @@
 </template>
 
 <script lang="ts" setup>
-import Button from "primevue/button"
-
 const emit = defineEmits(["selected"])
 
 function selected() {

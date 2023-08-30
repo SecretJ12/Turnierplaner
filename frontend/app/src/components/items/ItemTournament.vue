@@ -18,7 +18,13 @@
 		</template>
 		<template #footer>
 			<div class="grid grid-nogutter justify-content-end">
-				<Button v-if="props.canCreate" @click="settings" @click.stop rounded outlined>
+				<Button
+					v-if="props.canCreate"
+					@click="settings"
+					@click.stop
+					rounded
+					outlined
+				>
 					<template #icon>
 						<span class="material-icons">settings</span>
 					</template>
@@ -30,7 +36,6 @@
 
 <script lang="ts" setup>
 import { Tournament } from "@/interfaces/tournament"
-import Button from "primevue/button"
 
 const props = defineProps<{
 	canCreate: boolean
@@ -49,10 +54,8 @@ function settings() {
 </script>
 
 <style scoped>
-
 #card {
-  width: 25em;
-  cursor: pointer;
+	width: 25em;
+	cursor: pointer;
 }
-
 </style>

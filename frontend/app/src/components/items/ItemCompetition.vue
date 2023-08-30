@@ -15,7 +15,7 @@
 				</Button>
 				<Button v-else-if="type === 'KNOCKOUT'" disabled text outlined>
 					<template #icon>
-						<span class="material-symbols-outlined">group</span>
+						<span class="material-symbols-outlined">groups</span>
 					</template>
 				</Button>
 				<Button v-if="canEdit" @click="settings" @click.stop rounded outlined>
@@ -29,8 +29,6 @@
 </template>
 
 <script lang="ts" setup>
-import Button from "primevue/button"
-
 const props = defineProps<{
 	name: string
 	description: string
@@ -41,7 +39,7 @@ const props = defineProps<{
 const emit = defineEmits(["selected", "settings"])
 
 function selected() {
-  emit("selected", props.name)
+	emit("selected", props.name)
 }
 
 function settings() {
@@ -50,10 +48,8 @@ function settings() {
 </script>
 
 <style scoped>
-
 #card {
-  width: 25em;
-  cursor: pointer;
+	width: 25em;
+	cursor: pointer;
 }
-
 </style>
