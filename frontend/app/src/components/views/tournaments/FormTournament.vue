@@ -12,7 +12,6 @@
 						v-bind="name"
 						maxlength="30"
 						class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
-						rules="required|min:3"
 					/>
 					<small id="name-error" class="p-error">{{ errors.name }}</small>
 				</div>
@@ -73,7 +72,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from "vue"
+import { ref } from "vue"
 import {
 	TournamentForm,
 	tournamentFormClientToServer,
@@ -81,16 +80,26 @@ import {
 } from "@/interfaces/tournament"
 import { useI18n } from "vue-i18n"
 
-import { useForm, useFieldArray, useField, defineRule } from "vee-validate"
+import { useForm } from "vee-validate"
 import Button from "primevue/button"
 
-import { object, string, number, date, InferType, boolean, array } from "yup"
+import { object, string, date, boolean, array, ref as yupRef } from "yup"
 import { toTypedSchema } from "@vee-validate/yup"
 
 const { t } = useI18n({ inheritLocale: true })
 
-import { setLocale } from "yup"
+const props = withDefaults(
+	defineProps<{
+		submitText: string
+		disabled: boolean
+		data: TournamentForm
+	}>(),
+	{
+		disabled: false,
+	},
+)
 
+// TODO: internalization
 const { values, defineInputBinds, errors, defineComponentBinds, handleSubmit } =
 	useForm({
 		validationSchema: toTypedSchema(
@@ -107,9 +116,20 @@ const { values, defineInputBinds, errors, defineComponentBinds, handleSubmit } =
 				game_phase: array()
 					.of(date())
 					.length(2, "please choose two dates")
+					.min(
+						yupRef("registration_phase.1"),
+						"game phase must be after registration phase",
+					)
 					.required(),
 			}),
 		),
+		initialValues: {
+			name: props.data.name,
+			visible: props.data.visible,
+			description: props.data.description,
+			registration_phase: props.data.registration_phase,
+			game_phase: props.data.game_phase,
+		},
 	})
 
 const name = defineInputBinds("name")
@@ -120,16 +140,6 @@ const registration_phase = defineComponentBinds("registration_phase")
 const game_phase = defineComponentBinds("game_phase")
 
 const formRef = ref<HTMLFormElement>()
-const props = withDefaults(
-	defineProps<{
-		submitText: string
-		disabled: boolean
-		data: TournamentForm
-	}>(),
-	{
-		disabled: false,
-	},
-)
 
 const emit = defineEmits(["submit"])
 
@@ -149,40 +159,8 @@ function submit(formRef: HTMLFormElement | undefined) {
 
 const onSubmit = handleSubmit((values) => {
 	console.log(values)
-	emit("submit", values)
+	emit("submit", tournamentFormClientToServer(values))
 })
-const checkDates = (
-	rule: any, // eslint-disable-line @typescript-eslint/no-explicit-any
-	value: Date,
-	callback: (arg0?: Error) => void,
-) => {
-	if (!value) {
-		callback(new Error(t("TournamentSettings.missing_date")))
-		return
-	}
-	if (
-		props.data.registration_phase === null ||
-		props.data.game_phase === null
-	) {
-		callback()
-		return
-	}
-	if (
-		new Date(props.data.registration_phase[1]) >
-		new Date(props.data.game_phase[0])
-	)
-		callback(new Error(t("TournamentSettings.wrong_dates")))
-	else callback()
-}
-
-function validateField(value: string) {
-	console.log(value)
-	if (!value) {
-		return "Name - Surname is required."
-	}
-
-	return true
-}
 </script>
 
 <style scoped></style>

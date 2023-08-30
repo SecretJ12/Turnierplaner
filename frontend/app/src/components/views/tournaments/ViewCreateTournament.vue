@@ -22,8 +22,8 @@ const data = reactive<TournamentForm>({
 	name: "",
 	visible: true,
 	description: "",
-	registration_phase: null,
-	game_phase: null,
+	registration_phase: undefined,
+	game_phase: undefined,
 })
 
 function submit(server_data: TournamentServer) {
