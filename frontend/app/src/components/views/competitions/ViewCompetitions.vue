@@ -57,6 +57,7 @@
 				</Timeline>
 				<Button
 					id="prepare"
+          v-if="isLoggedIn"
 					:label="t('ViewCompetition.prepare') + ' >>'"
 					@click="prepare"
 				></Button>
