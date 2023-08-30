@@ -1,17 +1,8 @@
 <template>
 	<Card style="width: 25em" @click="selected">
+    <!-- TODO internalization -->
 		<template #title> Add a new competition</template>
 		<template #subtitle> Click here to add a new competition</template>
-		<template #footer>
-			<div class="grid grid-nogutter justify-content-between">
-				<i></i>
-				<Button rounded outlined>
-					<template #icon>
-						<span class="material-symbols-outlined"> add </span>
-					</template>
-				</Button>
-			</div>
-		</template>
 	</Card>
 </template>
 

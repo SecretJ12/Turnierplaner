@@ -1,5 +1,5 @@
 <template>
-	<Card id="card" @click="selected">
+	<Card id="card" @click="selected" class="relative cursor-pointer w-25rem">
 		<template #title>
       {{ props.tournament.name }}
 		</template>
@@ -20,7 +20,7 @@
 		</template>
 		<template #footer>
 			<div class="grid grid-nogutter justify-content-end">
-				<Button v-if="props.canCreate" style="visibility: hidden"></Button>
+				<Button v-if="props.canCreate" outlined rounded disabled style="visibility: hidden"></Button>
 				<Button v-if="props.canCreate" outlined rounded class="icon">
 					<template #icon>
 						<span class="material-icons" @click="settings" @click.stop
@@ -53,11 +53,6 @@ function settings() {
 </script>
 
 <style scoped>
-#card {
-	width: 25em;
-	cursor: pointer;
-	position: relative;
-}
 
 .content {
   word-break: break-word;

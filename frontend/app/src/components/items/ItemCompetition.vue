@@ -1,29 +1,46 @@
 <template>
-	<Card id="card" @click="selected">
+	<Card id="card" @click="selected" class="relative cursor-pointer w-25rem">
 		<template #title>
 			{{ name }}
 		</template>
-		<template #subtitle>
+		<template #content>
 			{{ description }}
 		</template>
 		<template #footer>
-			<div class="grid grid-nogutter justify-content-between">
-				<Button v-if="type === 'GROUPS'" text outlined disabled>
-					<template #icon>
-						<span class="material-symbols-outlined">grid_view</span>
-					</template>
-				</Button>
-				<Button v-else-if="type === 'KNOCKOUT'" disabled text outlined>
-					<template #icon>
-						<span class="material-symbols-outlined">groups</span>
-					</template>
-				</Button>
-				<Button v-if="canEdit" @click="settings" @click.stop rounded outlined>
-					<template #icon>
-						<span class="material-icons">settings</span>
-					</template>
-				</Button>
-			</div>
+			<Button
+				outlined
+				disabled
+				style="visibility: hidden"
+			>
+			</Button>
+			<Button v-if="type === 'GROUPS'" text outlined disabled class="icon">
+				<template #icon>
+					<span class="material-symbols-outlined">grid_view</span>
+				</template>
+			</Button>
+			<Button
+				v-else-if="type === 'KNOCKOUT'"
+				disabled
+				text
+				outlined
+				class="icon"
+			>
+				<template #icon>
+					<span class="material-symbols-outlined">groups</span>
+				</template>
+			</Button>
+			<Button
+				v-if="canEdit"
+				@click="settings"
+				@click.stop
+				rounded
+				outlined
+				class="settings"
+			>
+				<template #icon>
+					<span class="material-icons">settings</span>
+				</template>
+			</Button>
 		</template>
 	</Card>
 </template>
@@ -48,8 +65,15 @@ function settings() {
 </script>
 
 <style scoped>
-#card {
-	width: 25em;
-	cursor: pointer;
+.icon {
+	position: absolute;
+	left: 1.25rem;
+	bottom: 1.25rem;
+}
+
+.settings {
+	position: absolute;
+	right: 1.25rem;
+	bottom: 1.25rem;
 }
 </style>
