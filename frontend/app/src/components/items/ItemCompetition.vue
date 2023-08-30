@@ -1,5 +1,5 @@
 <template>
-	<Card style="width: 25em" @click="selected">
+	<Card id="card" @click="selected">
 		<template #title>
 			{{ name }}
 		</template>
@@ -49,4 +49,11 @@ function settings() {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+
+#card {
+  width: 25em;
+  cursor: pointer;
+}
+
+</style>
