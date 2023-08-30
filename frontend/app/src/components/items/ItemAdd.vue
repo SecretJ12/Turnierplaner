@@ -1,6 +1,6 @@
 <template>
 	<Card style="width: 25em" @click="selected">
-    <!-- TODO internalization -->
+		<!-- TODO internalization -->
 		<template #title> Add a new competition</template>
 		<template #subtitle> Click here to add a new competition</template>
 	</Card>

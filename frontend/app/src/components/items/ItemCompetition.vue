@@ -1,5 +1,5 @@
 <template>
-	<Card id="card" @click="selected" class="relative cursor-pointer w-25rem">
+	<Card id="card" class="relative cursor-pointer w-25rem" @click="selected">
 		<template #title>
 			{{ name }}
 		</template>
@@ -7,12 +7,7 @@
 			{{ description }}
 		</template>
 		<template #footer>
-			<Button
-				outlined
-				disabled
-				style="visibility: hidden"
-			>
-			</Button>
+			<Button outlined disabled style="visibility: hidden"> </Button>
 			<Button v-if="type === 'GROUPS'" text outlined disabled class="icon">
 				<template #icon>
 					<span class="material-symbols-outlined">grid_view</span>
@@ -31,11 +26,11 @@
 			</Button>
 			<Button
 				v-if="canEdit"
-				@click="settings"
-				@click.stop
 				rounded
 				outlined
 				class="settings"
+				@click="settings"
+				@click.stop
 			>
 				<template #icon>
 					<span class="material-icons">settings</span>

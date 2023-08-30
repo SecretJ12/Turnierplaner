@@ -1,7 +1,7 @@
 <template>
-	<Card id="card" @click="selected" class="relative cursor-pointer w-25rem">
+	<Card id="card" class="relative cursor-pointer w-25rem" @click="selected">
 		<template #title>
-      {{ props.tournament.name }}
+			{{ props.tournament.name }}
 		</template>
 		<template #subtitle>
 			<p v-if="new Date() >= props.tournament.registration_phase[1]">
@@ -20,10 +20,16 @@
 		</template>
 		<template #footer>
 			<div class="grid grid-nogutter justify-content-end">
-				<Button v-if="props.canCreate" outlined rounded disabled style="visibility: hidden"></Button>
-				<Button v-if="props.canCreate" outlined rounded class="icon">
+				<Button
+					v-if="props.canCreate"
+					outlined
+					rounded
+					disabled
+					style="visibility: hidden"
+				></Button>
+				<Button v-if="props.canCreate" @click="settings" @click.stop outlined rounded class="icon">
 					<template #icon>
-						<span class="material-icons" @click="settings" @click.stop
+						<span class="material-icons"
 							>settings</span
 						>
 					</template>
@@ -53,9 +59,8 @@ function settings() {
 </script>
 
 <style scoped>
-
 .content {
-  word-break: break-word;
+	word-break: break-word;
 }
 
 .icon {
