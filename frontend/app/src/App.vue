@@ -52,7 +52,11 @@ auth.addUserUnloadedListener(() => {
 </template>
 
 <style>
-@import "assets/base.css";
+body {
+  margin: 0;
+  padding: 0 !important;
+}
+
 </style>
 
 <style scoped>
