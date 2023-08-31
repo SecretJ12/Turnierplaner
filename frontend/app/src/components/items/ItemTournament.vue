@@ -27,11 +27,16 @@
 					disabled
 					style="visibility: hidden"
 				></Button>
-				<Button v-if="props.canCreate" @click="settings" @click.stop outlined rounded class="icon">
+				<Button
+					v-if="props.canCreate"
+					@click="settings"
+					@click.stop
+					outlined
+					rounded
+					class="icon"
+				>
 					<template #icon>
-						<span class="material-icons"
-							>settings</span
-						>
+						<span class="material-icons">settings</span>
 					</template>
 				</Button>
 			</div>

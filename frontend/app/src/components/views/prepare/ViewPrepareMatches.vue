@@ -5,12 +5,12 @@
 				<Steps :model="stepList" aria-label="Form Steps" :exact="false" />
 			</div>
 			<TabMenu
-				:model="compList"
 				v-model:activeIndex="activeTab"
+				:model="compList"
 				@tab-change="tabChange"
 			/>
 			<Card>
-				<template v-slot:title>
+				<template #title>
 					<span v-if="route.params.step === 'editPlayers'">Edit Player</span>
 					<span v-else-if="route.params.step === 'selectMode'"
 						>Select Mode</span
@@ -26,7 +26,7 @@
 					>
 					- {{ currentComp?.name }}:
 				</template>
-				<template v-slot:content>
+				<template #content>
 					<ViewEditPlayer
 						v-if="route.params.step === 'editPlayers'"
 						:competition="competitions[activeTab]"
@@ -48,29 +48,29 @@
 						:competition="competitions[activeTab]"
 					/>
 				</template>
-				<template v-slot:footer>
+				<template #footer>
 					<div class="grid grid-nogutter justify-content-between">
 						<i v-if="route.params.step === 'editPlayers'" />
 						<Button
 							v-else
 							label="Back"
-							@click="prevPage"
 							icon="pi pi-angle-left"
+							@click="prevPage"
 						/>
 						<Button
 							v-if="route.params.step !== 'scheduleMatches'"
 							label="Next"
-							@click="nextPage"
 							icon="pi pi-angle-right"
-							iconPos="right"
+							icon-pos="right"
+							@click="nextPage"
 						/>
 						<Button
 							v-else
 							label="Complete"
-							@click="complete"
 							icon="pi pi-check"
-							iconPos="right"
+							icon-pos="right"
 							class="p-button-success"
+							@click="complete"
 						/>
 					</div>
 				</template>

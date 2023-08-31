@@ -56,8 +56,8 @@
 					</template>
 				</Timeline>
 				<Button
+					v-if="isLoggedIn"
 					id="prepare"
-          v-if="isLoggedIn"
 					:label="t('ViewCompetition.prepare') + ' >>'"
 					@click="prepare"
 				></Button>
