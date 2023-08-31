@@ -1,10 +1,6 @@
 <template>
 	<div id="headerLeft" @click="home">
-		<font-awesome-icon
-			id="colorIcon"
-			:icon="['fas', 'flag']"
-			class="fa-2x"
-		></font-awesome-icon>
+		<span class="material-icons" style="font-size: 3rem">sports_tennis</span>
 		<h1 id="colorHeadLine">{{ t("title") }}</h1>
 	</div>
 </template>
@@ -27,10 +23,6 @@ function home() {
 	flex-direction: row;
 	align-items: center;
 	cursor: pointer;
-}
-
-#colorIcon {
-	color: #3bb0ff;
 }
 
 #colorHeadLine {
