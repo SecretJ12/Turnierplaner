@@ -1,6 +1,7 @@
 {
 	"title": "TOURNAMENT PLANNER",
 	"lang": "en-US",
+	"date_format": "mm/dd/yy",
 	"general": {
 		"create": "Create",
 		"update": "Update",
@@ -150,15 +151,16 @@
 			"next": "Next"
 		}
 	},
-  "validation": {
-    "field_invalid": "Field is invalid",
-    "field_required": "Field is required",
-    "field_too_short": "Field is too short",
-    "field_too_long": "Field is too long",
-    "field_invalid_email": "Field is not a valid email address",
-    "field_invalid_phone": "Field is not a valid phone number",
-    "field_invalid_date": "Field is not a valid date",
-    "field_invalid_number": "Field is not a valid number",
-    "field_invalid_url": "Field is not a valid URL"
-  }
+	"validation": {
+		"field_invalid": "Field is invalid",
+		"field_required": "Field is required",
+		"field_too_short": "Field is too short",
+		"field_too_long": "Field is too long",
+		"field_invalid_email": "Field is not a valid email address",
+		"field_invalid_phone": "Field is not a valid phone number",
+		"field_invalid_date": "Field is not a valid date",
+		"field_invalid_number": "Field is not a valid number",
+		"field_invalid_url": "Field is not a valid URL",
+		"only_one_date": "Please choose start and end date"
+	}
 }

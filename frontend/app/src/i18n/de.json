@@ -1,6 +1,7 @@
 {
 	"title": "TURNIERPLANER",
 	"lang": "de-DE",
+	"date_format": "dd.mm.yy",
 	"general": {
 		"create": "Erstellen",
 		"update": "Aktualisieren",
@@ -159,6 +160,7 @@
 		"field_invalid_phone": "Bitte geben Sie eine gültige Telefonnummer an",
 		"field_invalid_date": "Bitte geben Sie ein gültiges Datum an",
 		"field_invalid_number": "Bitte geben Sie eine gültige Zahl an",
-		"field_invalid_url": "Bitte geben Sie eine gültige URL an"
+		"field_invalid_url": "Bitte geben Sie eine gültige URL an",
+		"only_one_date": "Bitte wähle ein Anfangs- und Enddatum"
 	}
 }

@@ -2,10 +2,10 @@
 	<!--TODO add internalization-->
 	<div class="flex justify-content-center w-full">
 		<Card id="card">
-			<template #title> Tournament registration </template>
+			<template #title> Tournament registration</template>
 			<template #content>
 				<div class="formgrid grid">
-					<div class="field col-11">
+					<div class="field col-10">
 						<label for="name">{{ t("general.name") }}</label>
 						<input
 							id="name"
@@ -14,13 +14,17 @@
 							maxlength="30"
 							class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
 						/>
-						<small id="name-error" class="p-error">{{ errors.name }}</small>
+						<small id="name-error" class="p-error">{{
+							t(errors.name || "")
+						}}</small>
 					</div>
-					<div class="field col flex flex-column">
+					<div class="field col flex flex-column col-2">
 						<label for="visible" class="text-900">{{
 							t("TournamentSettings.visible")
 						}}</label>
-						<InputSwitch id="visible" v-bind="visible" />
+						<div class="h-full flex align-items-center">
+							<InputSwitch id="visible" v-bind="visible" />
+						</div>
 					</div>
 					<div class="field col-12">
 						<label for="description">{{ t("general.description") }}</label>
@@ -28,6 +32,7 @@
 							id="description"
 							type="text"
 							rows="4"
+							maxlength="255"
 							class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
 							v-bind="description"
 						></textarea>
@@ -42,11 +47,12 @@
 							selectionMode="range"
 							:manualInput="false"
 							class="w-full"
-							dateFormat="dd/mm/yy"
+							:dateFormat="t('date_format')"
+							showTime
 							show-icon
 						/>
 						<small id="registration_phase-error" class="p-error">{{
-							errors.registration_phase
+							t(errors.registration_phase || "")
 						}}</small>
 					</div>
 					<div class="field col-6">
@@ -59,11 +65,12 @@
 							selectionMode="range"
 							:manualInput="false"
 							class="w-full"
-							dateFormat="dd/mm/yy"
+							:dateFormat="t('date_format')"
+							showTime
 							show-icon
 						/>
 						<small id="game_phase-error" class="p-error">{{
-							errors.game_phase
+							t(errors.game_phase || "")
 						}}</small>
 					</div>
 				</div>
@@ -88,7 +95,7 @@ import { useI18n } from "vue-i18n"
 import { useForm } from "vee-validate"
 import Card from "primevue/card"
 
-import { array, boolean, date, object, ref as yupRef, string } from "yup"
+import { array, boolean, date, object, string } from "yup"
 import { toTypedSchema } from "@vee-validate/yup"
 
 const { t } = useI18n({ inheritLocale: true })
@@ -110,18 +117,18 @@ const { values, defineInputBinds, errors, defineComponentBinds, handleSubmit } =
 		validationSchema: toTypedSchema(
 			object({
 				name: string()
-					.min(4, t("validation.field_too_short"))
-					.required(t("validation.field_required")),
+					.required("validation.field_required")
+					.min(4, "validation.field_too_short"),
 				visible: boolean(),
-				description: string().max(500),
+				description: string().max(255),
 				registration_phase: array()
 					.of(date())
-					.length(2, "please choose two dates")
+					.length(2, "validation.only_one_date")
 					.required(),
 				// TODO: check if game_phase is after registration_phase
 				game_phase: array()
 					.of(date())
-					.length(2, "please choose two dates")
+					.length(2, "validation.only_one_date")
 					.required(),
 			}),
 		),
@@ -144,7 +151,7 @@ const game_phase = defineComponentBinds("game_phase")
 const emit = defineEmits(["submit"])
 
 const onSubmit = handleSubmit((values) => {
-	emit("submit", tournamentFormClientToServer(values))
+	emit("submit", tournamentFormClientToServer(<TournamentForm>values))
 })
 </script>
 
