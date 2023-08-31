@@ -36,7 +36,7 @@ const data = ref<TournamentForm>({
 
 const disabled = ref<boolean>(true)
 
-axios
+await axios
 	.get<TournamentServer>(`/tournament/${route.params.tourId}/details`)
 	.then((response) => {
 		data.value = tournamentFormServerToClient(response.data)
