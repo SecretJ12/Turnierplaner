@@ -65,7 +65,6 @@
 				</div>
 
 				<div class="field col-12 flex flex-column">
-					<!--						<label for="tournamentType">Placeholder </label>-->
 					<Dropdown
 						v-bind="selectedTourMode"
 						:options="tourMode"
@@ -142,6 +141,7 @@
 					<b>{{ t("CompetitionSettings.player") }}</b>
 				</Divider>
 				<Divider v-if="playerB_different.modelValue" align="left">
+					<!--	TODO internalization	-->
 					Spieler 1
 				</Divider>
 				<div class="field col-12 flex flex-column">
@@ -357,310 +357,11 @@
 				<div class="col-12">
 					{{ errors }}
 				</div>
-
 				<div class="field col-12">
 					<Button :label="props.submitText" @click="onSubmit"> </Button>
 				</div>
 			</div>
 		</div>
-	</div>
-
-	<div class="flex justify-content-center w-full">
-		<el-row align="middle" class="full-width" justify="center">
-			<el-col :lg="10" :md="14" :sm="16" :xl="10" :xs="22">
-				<el-form
-					ref="formRef"
-					:disabled="props.disabled"
-					:label-position="windowWidth > 480 ? 'left' : 'top'"
-					:model="props.competition"
-					label-width="140px"
-					scroll-to-error="scroll-to-error"
-					size="large"
-					style="width: 100%"
-				>
-					<!-- Competition name -->
-					<el-form-item
-						:label="t('general.name')"
-						:rules="[
-							{
-								required: true,
-								message: t('general.name_missing'),
-								trigger: 'blur',
-							},
-						]"
-						prop="name"
-					>
-						<el-input
-							v-model="props.competition.name"
-							maxlength="30"
-							show-word-limit
-						/>
-					</el-form-item>
-
-					<!-- Description -->
-					<!-- TODO add english description -->
-					<el-form-item :label="t('general.description')" prop="description">
-						<el-input
-							v-model="props.competition.description"
-							:autosize="{ minRows: 3, maxRows: 5 }"
-							maxlength="100"
-							show-word-limit
-							type="textarea"
-						/>
-					</el-form-item>
-
-					<!-- tournament type -->
-					<el-divider
-						>{{ t("CompetitionSettings.tournament_settings") }}
-					</el-divider>
-					<el-row :gutter="20" justify="space-between">
-						<el-col :span="12" :xs="24">
-							<el-form-item
-								:label="t('CompetitionSettings.type')"
-								prop="tourType"
-							>
-								<el-select
-									v-model="props.competition.tourType"
-									class="full-width"
-								>
-									<el-option
-										:key="'KNOCKOUT'"
-										:label="t('CompetitionSettings.knockout')"
-										:value="TourType.KNOCKOUT"
-									/>
-									<el-option
-										:key="'GROUPS'"
-										:label="t('CompetitionSettings.groups')"
-										:value="TourType.GROUPS"
-									/>
-								</el-select>
-							</el-form-item>
-						</el-col>
-					</el-row>
-					<el-row :gutter="20" justify="space-between">
-						<el-col :span="12" :xs="24">
-							<!-- game mode -->
-							<el-form-item :label="t('CompetitionSettings.mode')" prop="mode">
-								<el-select v-model="props.competition.mode" class="full-width">
-									<el-option
-										:key="'SINGLE'"
-										:label="t('CompetitionSettings.single')"
-										:value="Mode.SINGLE"
-									/>
-									<el-option
-										:key="'DOUBLE'"
-										:label="t('CompetitionSettings.double')"
-										:value="Mode.DOUBLE"
-									/>
-								</el-select>
-							</el-form-item>
-						</el-col>
-						<el-col :span="12" :xs="24">
-							<!-- signup -->
-							<el-form-item
-								v-show="props.competition.mode === 'DOUBLE'"
-								:label="t('CompetitionSettings.signup')"
-								prop="mode"
-							>
-								<el-select
-									v-model="props.competition.signUp"
-									class="full-width"
-								>
-									<el-option
-										:key="'INDIVIDUAL'"
-										:label="t('CompetitionSettings.individual')"
-										:value="SignUp.INDIVIDUAL"
-									/>
-									<el-option
-										:key="'TOGETHER'"
-										:label="t('CompetitionSettings.together')"
-										:value="SignUp.TOGETHER"
-									/>
-								</el-select>
-							</el-form-item>
-						</el-col>
-					</el-row>
-
-					<!-- Player 1 settings -->
-					<el-divider>{{ t("CompetitionSettings.player") }}</el-divider>
-					<!-- sex -->
-					<el-row :gutter="20" justify="space-between">
-						<el-col :span="12" :xs="24">
-							<el-form-item :label="t('CompetitionSettings.sex')">
-								<el-select
-									v-model="props.competition.playerA.sex"
-									class="full-width"
-								>
-									<el-option
-										key="MALE"
-										:label="t('CompetitionSettings.male')"
-										:value="Sex.MALE"
-									/>
-									<el-option
-										:key="'FEMALE'"
-										:label="t('CompetitionSettings.female')"
-										:value="Sex.FEMALE"
-									/>
-									<el-option
-										:key="'ANY'"
-										:label="t('CompetitionSettings.any')"
-										:value="Sex.ANY"
-									/>
-								</el-select>
-							</el-form-item>
-						</el-col>
-					</el-row>
-					<!-- age -->
-					<!-- min age -->
-					<el-form-item
-						:label="t('CompetitionSettings.minAge')"
-						:rules="[
-							{
-								required: false,
-								validator: checkAMin,
-								trigger: 'blur',
-							},
-						]"
-						prop="playerA.hasMinAge"
-					>
-						<el-row :gutter="20" justify="space-between">
-							<el-col :span="5">
-								<el-switch v-model="props.competition.playerA.hasMinAge" />
-							</el-col>
-							<el-col :span="19">
-								<el-date-picker
-									v-if="props.competition.playerA.hasMinAge"
-									v-model="props.competition.playerA.minAge"
-									style="float: right"
-								/>
-							</el-col>
-						</el-row>
-					</el-form-item>
-					<!-- max age -->
-					<el-form-item
-						:label="t('CompetitionSettings.maxAge')"
-						:rules="[
-							{
-								required: false,
-								validator: checkAMax,
-								trigger: 'blur',
-							},
-						]"
-						prop="playerA.hasMaxAge"
-					>
-						<el-row :gutter="20" justify="space-between">
-							<el-col :span="5">
-								<el-switch v-model="props.competition.playerA.hasMaxAge" />
-							</el-col>
-							<el-col :span="19">
-								<el-date-picker
-									v-if="props.competition.playerA.hasMaxAge"
-									v-model="props.competition.playerA.maxAge"
-									style="float: right"
-								/>
-							</el-col>
-						</el-row>
-					</el-form-item>
-
-					<!-- Player 2 settings -->
-					<template v-if="props.competition.mode === 'DOUBLE'">
-						<el-switch
-							v-model="props.competition.playerB.different"
-							:active-text="t('CompetitionSettings.differentB')"
-							style="margin-bottom: 22px"
-						/>
-						<template v-if="props.competition.playerB.different">
-							<!-- sex -->
-							<el-row :gutter="20" justify="space-between">
-								<el-col :span="12" :xs="24">
-									<el-form-item :label="t('CompetitionSettings.sex')">
-										<el-select
-											v-model="props.competition.playerB.sex"
-											class="full-width"
-										>
-											<el-option
-												:key="'MALE'"
-												:label="t('CompetitionSettings.male')"
-												:value="Sex.MALE"
-											/>
-											<el-option
-												:key="'FEMALE'"
-												:label="t('CompetitionSettings.female')"
-												:value="Sex.FEMALE"
-											/>
-											<el-option
-												:key="'ANY'"
-												:label="t('CompetitionSettings.any')"
-												:value="Sex.ANY"
-											/>
-										</el-select>
-									</el-form-item>
-								</el-col>
-							</el-row>
-							<!-- age -->
-							<!-- min age -->
-							<el-form-item
-								:label="t('CompetitionSettings.minAge')"
-								:rules="[
-									{
-										required: false,
-										validator: checkBMin,
-										trigger: 'blur',
-									},
-								]"
-								prop="playerB.hasMinAge"
-							>
-								<el-row :gutter="20" justify="space-between">
-									<el-col :span="5">
-										<el-switch v-model="props.competition.playerB.hasMinAge" />
-									</el-col>
-									<el-col :span="19">
-										<el-date-picker
-											v-if="props.competition.playerB.hasMinAge"
-											v-model="props.competition.playerB.minAge"
-											style="float: right"
-										/>
-									</el-col>
-								</el-row>
-							</el-form-item>
-							<!-- max age -->
-							<el-form-item
-								:label="t('CompetitionSettings.maxAge')"
-								:rules="[
-									{
-										required: false,
-										validator: checkBMax,
-										trigger: 'blur',
-									},
-								]"
-								prop="playerB.hasMaxAge"
-							>
-								<el-row :gutter="20" justify="space-between">
-									<el-col :span="5">
-										<el-switch v-model="props.competition.playerB.hasMaxAge" />
-									</el-col>
-									<el-col :span="19">
-										<el-date-picker
-											v-if="props.competition.playerB.hasMaxAge"
-											v-model="props.competition.playerB.maxAge"
-											style="float: right"
-										/>
-									</el-col>
-								</el-row>
-							</el-form-item>
-						</template>
-					</template>
-
-					<el-row justify="end">
-						<el-form-item>
-							<el-button type="primary" @click="submit(formRef)">
-								{{ props.submitText }}
-							</el-button>
-						</el-form-item>
-					</el-row>
-				</el-form>
-			</el-col>
-		</el-row>
 	</div>
 </template>
 
@@ -721,7 +422,9 @@ const {
 			mode: object({ name: mixed().oneOf(Object.values(Mode)).required() }),
 			signUp: object({ name: string() }).required(),
 
-			playerA_Sex: string().oneOf(Object.values(Sex)).required(),
+			playerA_Sex: object({
+				name: mixed().oneOf(Object.values(Sex)).required(),
+			}),
 
 			playerA_hasMinAge: boolean(),
 			playerA_minAge: date(),
@@ -729,7 +432,9 @@ const {
 			playerA_maxAge: date(),
 
 			playerB_different: boolean(),
-			playerB_Sex: string().oneOf(Object.values(Sex)).required(),
+			playerB_Sex: object({
+				name: string().oneOf(Object.values(Sex)).required(),
+			}),
 			playerB_hasMinAge: boolean(),
 			playerB_minAge: date(),
 			playerB_hasMaxAge: boolean(),
@@ -737,11 +442,35 @@ const {
 		}),
 	),
 	initialValues: {
-		playerB_different: false,
+		name: props.competition.name,
+		description: props.competition.description,
+		tourType: { name: props.competition.tourType },
+		mode: { name: props.competition.mode },
+		signUp: { name: props.competition.signUp },
+		playerA_Sex: { name: props.competition.playerA.sex },
+		playerA_hasMinAge: props.competition.playerA.hasMinAge,
+		playerA_minAge: props.competition.playerA.minAge
+			? props.competition.playerA.minAge
+			: undefined,
+		playerA_hasMaxAge: props.competition.playerA.hasMaxAge,
+		playerA_maxAge: props.competition.playerA.maxAge
+			? props.competition.playerA.maxAge
+			: undefined,
+		playerB_different: props.competition.playerB.different,
+		playerB_Sex: { name: props.competition.playerB.sex },
+		playerB_hasMinAge: props.competition.playerB.hasMinAge,
+		playerB_minAge: props.competition.playerB.minAge
+			? props.competition.playerB.minAge
+			: undefined,
+		playerB_hasMaxAge: props.competition.playerB.hasMaxAge,
+		playerB_maxAge: props.competition.playerB.maxAge
+			? props.competition.playerB.maxAge
+			: undefined,
 	},
 })
 
 const name = defineInputBinds("name")
+const description = defineComponentBinds("description")
 
 const tourTypes = ref([{ name: TourType.KNOCKOUT }, { name: TourType.GROUPS }])
 const selectedTourType = defineComponentBinds("tourType")
