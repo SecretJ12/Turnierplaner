@@ -1,33 +1,15 @@
 <template>
-	<!-- Only to allow better comparison -->
-	<el-tabs
+	<!-- TODO show on card -->
+	<!-- TODO add toggle to show as list? -->
+	<ViewGroupTable
 		v-if="groupSystem !== undefined"
-		v-model="currentTab"
+		v-for="group in groupSystem.groups"
+		:key="group.index"
+		:group="group"
 		style="width: 1000px"
-	>
-		<el-tab-pane label="Liste" name="list">
-			<ViewGroupList
-				v-for="group in groupSystem.groups"
-				:key="group.index"
-				:group="group"
-			/>
-		</el-tab-pane>
-		<el-tab-pane label="Tabelle" name="table">
-			<ViewGroupTable
-				v-for="group in groupSystem.groups"
-				:key="group.index"
-				:group="group"
-			/>
-		</el-tab-pane>
-		<el-tab-pane label="Tabelle V2" name="tablev2">
-			<ViewGroupTableV2
-				v-for="group in groupSystem.groups"
-				:key="group.index"
-				class="table"
-				:group="group"
-			/>
-		</el-tab-pane>
-	</el-tabs>
+	/>
+
+	<!-- show finals -->
 </template>
 
 <script lang="ts" setup>
@@ -39,13 +21,10 @@ import {
 	GroupSystemServer,
 	groupSystemServerToClient,
 } from "@/interfaces/groupSystem"
-import ViewGroupList from "@/components/views/competition/groupSystem/ViewGroupList.vue"
 import ViewGroupTable from "@/components/views/competition/groupSystem/ViewGroupTable.vue"
-import ViewGroupTableV2 from "@/components/views/competition/groupSystem/ViewGroupTableV2.vue"
 
 const route = useRoute()
 const groupSystem = ref<GroupSystem | undefined>()
-const currentTab = ref("tablev2")
 
 await axios
 	.get<GroupSystemServer>(
