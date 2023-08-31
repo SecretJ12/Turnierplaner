@@ -1,34 +1,19 @@
 <template>
 	<div id="headerRight">
-		<el-select
-			id="language-select"
-			v-model="$i18n.locale"
-			fit-input-width
-			placeholder="ab"
-		>
-			<el-option
-				v-for="locale in $i18n.availableLocales"
-				:key="locale"
-				:label="locale.toLocaleString()"
-				:value="locale"
-			/>
-		</el-select>
-		<font-awesome-icon
-			v-if="!isLoggedIn"
-			id="colorIcon"
-			:icon="['fas', 'right-to-bracket']"
-			class="fa-2x clickable"
-			@click="login"
-		/>
+		<Dropdown v-model="$i18n.locale" :options="$i18n.availableLocales" />
 
-		<span v-if="isLoggedIn && windowWidth > 600">{{ currentUser }}</span>
-		<font-awesome-icon
-			v-if="isLoggedIn"
-			id="colorIcon"
-			:icon="['fas', 'right-from-bracket']"
-			class="fa-2x clickable"
-			@click="logout"
-		/>
+		<span
+			v-if="!isLoggedIn"
+			class="material-icons clickable bigger"
+			@click="login"
+			>login</span
+		>
+		<template v-else>
+			<span v-if="windowWidth > 600">{{ currentUser }}</span>
+			<span class="material-icons clickable bigger" @click="logout"
+				>logout</span
+			>
+		</template>
 	</div>
 </template>
 
@@ -71,11 +56,6 @@ export default {
 </script>
 
 <style>
-#language-select {
-	width: 20px;
-	margin-right: 0;
-}
-
 #headerRight {
 	width: fit-content;
 	padding-right: 10px;
@@ -109,11 +89,12 @@ export default {
 	flex-shrink: 1;
 }
 
-#colorIcon {
-	color: #044154;
-}
-
 .clickable {
 	cursor: pointer;
+}
+
+.bigger {
+	font-size: 2.5rem !important;
+	font-weight: bold !important;
 }
 </style>
