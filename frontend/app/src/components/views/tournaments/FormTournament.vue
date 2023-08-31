@@ -1,5 +1,4 @@
 <template>
-	<!--TODO add internalization-->
 	<div class="flex justify-content-center w-full">
 		<Card id="card">
 			<template #title> Tournament registration</template>
@@ -95,7 +94,7 @@ import { useI18n } from "vue-i18n"
 import { useForm } from "vee-validate"
 import Card from "primevue/card"
 
-import { array, boolean, date, object, string } from "yup"
+import { array, boolean, date, object, string, mixed, setLocale } from "yup"
 import { toTypedSchema } from "@vee-validate/yup"
 
 const { t } = useI18n({ inheritLocale: true })
@@ -111,6 +110,12 @@ const props = withDefaults(
 	},
 )
 
+setLocale({
+	mixed: {
+		notNull: "validation.only_one_date",
+	},
+})
+
 // TODO: internalization
 const { values, defineInputBinds, errors, defineComponentBinds, handleSubmit } =
 	useForm({
@@ -122,13 +127,20 @@ const { values, defineInputBinds, errors, defineComponentBinds, handleSubmit } =
 				visible: boolean(),
 				description: string().max(255),
 				registration_phase: array()
-					.of(date())
 					.length(2, "validation.only_one_date")
+					.of(mixed().nonNullable())
+					.of(date())
+					.test("correctDates", "TournamentSettings.wrong_dates", (arr, context) => {
+						return context.parent.registration_phase[1] < context.parent.game_phase[0]
+					})
 					.required(),
-				// TODO: check if game_phase is after registration_phase
 				game_phase: array()
-					.of(date())
 					.length(2, "validation.only_one_date")
+					.of(mixed().nonNullable())
+					.of(date())
+					.test("correctDates", "TournamentSettings.wrong_dates", (arr, context) => {
+						return context.parent.registration_phase[1] < context.parent.game_phase[0]
+					})
 					.required(),
 			}),
 		),
