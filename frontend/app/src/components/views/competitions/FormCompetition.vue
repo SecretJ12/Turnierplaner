@@ -103,26 +103,61 @@
 							</template>
 						</Dropdown>
 					</div>
-					<div
-						v-if="selectedTourMode.modelValue?.name === Mode.DOUBLE"
-						class="field col-12 flex flex-column"
-					>
-						<!--						<label for="tournamentType">Placeholder </label>-->
+
+					<div v-if="selectedTourMode.modelValue?.name === Mode.DOUBLE">
+						<div class="field col-12 flex flex-column">
+							<Dropdown
+								v-bind="signUp"
+								:options="signUpOptions"
+								optionLabel="name"
+								:placeholder="t(`CompetitionSettings.signup`)"
+								class="w-full md:w-14rem"
+							>
+								<template #value="slotProps">
+									<div v-if="slotProps.value" class="flex align-items-center">
+										<span
+											v-if="slotProps.value.name == 'DOUBLE'"
+											class="material-symbols-outlined"
+											>group</span
+										>
+										<span v-else class="material-symbols-outlined">person</span>
+										<div>{{ slotProps.value.name }}</div>
+									</div>
+									<span v-else>
+										{{ slotProps.placeholder }}
+									</span>
+								</template>
+								<template #option="slotProps">
+									<div class="flex align-items-center">
+										<span
+											v-if="slotProps.option.name === 'DOUBLE'"
+											class="material-symbols-outlined"
+											>group</span
+										>
+										<span v-else class="material-symbols-outlined">person</span>
+										<div>{{ slotProps.option.name }}</div>
+									</div>
+								</template>
+							</Dropdown>
+						</div>
+					</div>
+
+					<div class="field col-12 flex flex-column">
 						<Dropdown
-							v-bind="selectedSex"
-							:options="sex"
+							v-bind="playerASex"
+							:options="sexOptions"
 							optionLabel="name"
-							:placeholder="t(`CompetitionSettings.signup`)"
+							:placeholder="t(`CompetitionSettings.sex`)"
 							class="w-full md:w-14rem"
 						>
 							<template #value="slotProps">
 								<div v-if="slotProps.value" class="flex align-items-center">
 									<span
-										v-if="slotProps.value.name == 'DOUBLE'"
+										v-if="slotProps.value.name == 'FEMALE'"
 										class="material-symbols-outlined"
-										>group</span
+										>female</span
 									>
-									<span v-else class="material-symbols-outlined">person</span>
+									<span v-else class="material-symbols-outlined">male</span>
 									<div>{{ slotProps.value.name }}</div>
 								</div>
 								<span v-else>
@@ -132,16 +167,78 @@
 							<template #option="slotProps">
 								<div class="flex align-items-center">
 									<span
-										v-if="slotProps.option.name === 'DOUBLE'"
+										v-if="slotProps.option.name === 'FEMALE'"
 										class="material-symbols-outlined"
-										>group</span
+										>female</span
 									>
-									<span v-else class="material-symbols-outlined">person</span>
+									<span v-else class="material-symbols-outlined">male</span>
 									<div>{{ slotProps.option.name }}</div>
 								</div>
 							</template>
 						</Dropdown>
 					</div>
+					<div class="field col-12 flex flex-column">
+						<label for="minAge" class="text-900">{{
+							t("CompetitionSettings.minAge")
+						}}</label>
+						<InputSwitch id="minAge" v-bind="playerAHasMinAge"> </InputSwitch>
+					</div>
+					<div class="field col-12 flex flex-column">
+						<label for="maxAge" class="text-900">{{
+							t("CompetitionSettings.maxAge")
+						}}</label>
+						<InputSwitch id="maxAge" v-bind="playerAHasMaxAge"> </InputSwitch>
+					</div>
+
+					<div class="field col-12 flex flex-column">
+						<Dropdown
+							v-bind="playerBSex"
+							:options="sexOptions"
+							optionLabel="name"
+							:placeholder="t(`CompetitionSettings.sex`)"
+							class="w-full md:w-14rem"
+						>
+							<template #value="slotProps">
+								<div v-if="slotProps.value" class="flex align-items-center">
+									<span
+										v-if="slotProps.value.name == 'FEMALE'"
+										class="material-symbols-outlined"
+										>female</span
+									>
+									<span v-else class="material-symbols-outlined">male</span>
+									<div>{{ slotProps.value.name }}</div>
+								</div>
+								<span v-else>
+									{{ slotProps.placeholder }}
+								</span>
+							</template>
+							<template #option="slotProps">
+								<div class="flex align-items-center">
+									<span
+										v-if="slotProps.option.name === 'FEMALE'"
+										class="material-symbols-outlined"
+										>female</span
+									>
+									<span v-else class="material-symbols-outlined">male</span>
+									<div>{{ slotProps.option.name }}</div>
+								</div>
+							</template>
+						</Dropdown>
+					</div>
+
+					<div class="field col-12 flex flex-column">
+						<label for="minAge" class="text-900">{{
+							t("CompetitionSettings.minAge")
+						}}</label>
+						<InputSwitch id="minAge" v-bind="playerBHasMinAge"> </InputSwitch>
+					</div>
+					<div class="field col-12 flex flex-column">
+						<label for="maxAge" class="text-900">{{
+							t("CompetitionSettings.maxAge")
+						}}</label>
+						<InputSwitch id="maxAge" v-bind="playerBHasMaxAge"> </InputSwitch>
+					</div>
+
 					<div>
 						{{ errors }}
 					</div>
@@ -511,7 +608,7 @@ const { values, defineInputBinds, errors, defineComponentBinds, handleSubmit } =
 					name: mixed().oneOf(Object.values(TourType)).required(),
 				}),
 				mode: object({ name: mixed().oneOf(Object.values(Mode)).required() }),
-				signUp: string().oneOf(Object.values(SignUp)).required(),
+				signUp: object({ name: string() }).required(),
 
 				playerA_Sex: string().oneOf(Object.values(Sex)).required(),
 				playerA_hasMinAge: boolean(),
@@ -536,8 +633,17 @@ const selectedTourType = defineComponentBinds("tourType")
 const tourMode = ref([{ name: Mode.SINGLE }, { name: Mode.DOUBLE }])
 const selectedTourMode = defineComponentBinds("mode")
 
-const sex = ref([{ name: "zusammen" }, { name: "einzeln" }])
-const selectedSex = defineComponentBinds("playerA_Sex")
+const signUpOptions = ref([{ name: "zusammen" }, { name: "einzeln" }])
+const signUp = defineComponentBinds("signUp")
+
+const sexOptions = ref([{ name: Sex.MALE }, { name: Sex.FEMALE }])
+const playerASex = defineComponentBinds("playerA_Sex")
+const playerBSex = defineComponentBinds("playerB_Sex")
+
+const playerAHasMinAge = defineComponentBinds("playerA_hasMinAge")
+const playerAHasMaxAge = defineComponentBinds("playerA_hasMaxAge")
+const playerBHasMinAge = defineComponentBinds("playerB_hasMinAge")
+const playerBHasMaxAge = defineComponentBinds("playerB_hasMaxAge")
 
 const emit = defineEmits(["submit"])
 
