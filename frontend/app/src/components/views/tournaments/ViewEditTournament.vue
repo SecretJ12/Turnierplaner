@@ -3,6 +3,7 @@
 		:data="data"
 		:disabled="disabled"
 		:submit-text="t('general.update')"
+		header="ViewEditTournament.tournamentUpdate"
 		@submit="submit"
 	/>
 </template>

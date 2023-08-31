@@ -1,7 +1,7 @@
 <template>
 	<div class="flex justify-content-center w-full">
 		<Card id="card">
-			<template #title> Tournament registration</template>
+			<template #title>{{ t(props.header) }}</template>
 			<template #content>
 				<div class="formgrid grid">
 					<div class="field col-10">
@@ -104,6 +104,7 @@ const props = withDefaults(
 		submitText: string
 		disabled: boolean
 		data: TournamentForm
+		header: string
 	}>(),
 	{
 		disabled: false,

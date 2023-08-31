@@ -3,6 +3,7 @@
 		:data="data"
 		:submit-text="t('general.create')"
 		:disabled="false"
+		header="ViewCreateTournament.tournamentCreation"
 		@submit="submit"
 	/>
 </template>
