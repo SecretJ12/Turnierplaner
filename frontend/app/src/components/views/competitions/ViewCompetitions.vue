@@ -1,14 +1,7 @@
 <template>
 	<div id="container">
 		<h2>
-			<font-awesome-icon
-				v-if="canEdit"
-				id="settings"
-				:icon="['fas', 'gear']"
-				class="fa-1x"
-				@click="settings"
-			>
-			</font-awesome-icon>
+			<span v-if="canEdit" id="settings" @click="settings" class="material-icons cursor-pointer" style="font-size: 2rem">settings</span>
 			{{ route.params.tourId }}
 		</h2>
 		<div id="content">

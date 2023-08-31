@@ -12,8 +12,6 @@ import axios from "axios"
 
 import { access_token } from "@/security/AuthService"
 import { library } from "@fortawesome/fontawesome-svg-core"
-/* import font awesome icon component */
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
 /* import specific icons */
 import {
 	faEyeSlash,
@@ -131,7 +129,6 @@ setLocale({
 
 app
 	.use(i18n)
-	.component("font-awesome-icon", FontAwesomeIcon)
 	.use(VueAxios, axios)
 	.use(router)
 	/* Primevue */
