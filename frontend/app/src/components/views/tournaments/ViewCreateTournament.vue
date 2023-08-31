@@ -22,7 +22,7 @@ const toast = useToast()
 
 const data = reactive<TournamentForm>({
 	name: "",
-	visible: true,
+	visible: false,
 	description: "",
 	registration_phase: undefined,
 	game_phase: undefined,

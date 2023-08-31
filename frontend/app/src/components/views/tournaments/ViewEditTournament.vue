@@ -31,7 +31,7 @@ const route = useRoute()
 const data = ref<TournamentForm>({
 	id: null,
 	name: "",
-	visible: true,
+	visible: false,
 	description: "",
 	registration_phase: [new Date(), new Date()],
 	game_phase: [new Date(), new Date()],

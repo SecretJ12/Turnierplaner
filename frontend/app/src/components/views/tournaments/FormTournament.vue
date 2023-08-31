@@ -4,25 +4,39 @@
 			<template #title>{{ t(props.header) }}</template>
 			<template #content>
 				<div class="formgrid grid">
-					<div class="field col-10">
-						<label for="name">{{ t("general.name") }}</label>
-						<InputText
-							id="name"
-							type="text"
-							v-bind="name"
-							maxlength="30"
-							class="w-full"
-							:class="{ 'p-invalid': errors.name }"
-						/>
-						<InlineMessage v-if="errors.name" class="mt-2"
-							>{{ t(errors.name || "") }}
-						</InlineMessage>
-					</div>
-					<div class="field col flex flex-column col-2">
-						<label for="visible" class="text-900">{{
-							t("TournamentSettings.visible")
-						}}</label>
-						<InputSwitch id="visible" v-bind="visible" />
+					<div class="field col-12 flex w-full justify-content-end">
+						<div style="flex-grow: 3">
+							<label for="name">{{ t("general.name") }}</label>
+							<InputText
+								id="name"
+								type="text"
+								v-bind="name"
+								maxlength="30"
+								class="w-full"
+								:class="{ 'p-invalid': errors.name }"
+							/>
+							<InlineMessage v-if="errors.name" class="mt-2"
+								>{{ t(errors.name || "") }}
+							</InlineMessage>
+						</div>
+						<div
+							class="flex flex-column min-w-max flex-grow-0"
+							style="padding-left: 1rem"
+						>
+							<label for="visible" class="text-900">{{
+								t("TournamentSettings.visible")
+							}}</label>
+							<SelectButton
+								v-bind="visible"
+								unselectable="false"
+								:options="[
+									{ name: 'Nein', value: false },
+									{ name: 'Ja', value: true },
+								]"
+								optionLabel="name"
+								optionValue="value"
+							/>
+						</div>
 					</div>
 					<div class="field col-12">
 						<label for="description">{{ t("general.description") }}</label>

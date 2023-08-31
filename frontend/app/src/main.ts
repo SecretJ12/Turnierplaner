@@ -102,6 +102,7 @@ import Dropdown from "primevue/dropdown"
 import Divider from "primevue/divider"
 import InlineMessage from "primevue/inlinemessage"
 import Toast from "primevue/toast"
+import SelectButton from "primevue/selectbutton"
 
 /* Primevue styling */
 import "primeflex/primeflex.css"
@@ -150,6 +151,7 @@ app
 	.component("Divider", Divider)
 	.component("InlineMessage", InlineMessage)
 	.component("Toast", Toast)
+	.component("SelectButton", SelectButton)
 	.mount("#app")
 
 export { router }
