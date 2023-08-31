@@ -6,35 +6,34 @@
 				<div class="formgrid grid">
 					<div class="field col-10">
 						<label for="name">{{ t("general.name") }}</label>
-						<input
+						<InputText
 							id="name"
 							type="text"
 							v-bind="name"
 							maxlength="30"
-							class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+							class="w-full"
+							:class="{ 'p-invalid': errors.name }"
 						/>
-						<small id="name-error" class="p-error">{{
-							t(errors.name || "")
-						}}</small>
+						<InlineMessage v-if="errors.name" class="mt-2"
+							>{{ t(errors.name || "") }}
+						</InlineMessage>
 					</div>
 					<div class="field col flex flex-column col-2">
 						<label for="visible" class="text-900">{{
 							t("TournamentSettings.visible")
 						}}</label>
-						<div class="h-full flex align-items-center">
-							<InputSwitch id="visible" v-bind="visible" />
-						</div>
+						<InputSwitch id="visible" v-bind="visible" />
 					</div>
 					<div class="field col-12">
 						<label for="description">{{ t("general.description") }}</label>
-						<textarea
+						<Textarea
 							id="description"
 							type="text"
 							rows="4"
 							maxlength="255"
-							class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+							class="w-full"
 							v-bind="description"
-						></textarea>
+						></Textarea>
 					</div>
 					<div class="field col-6">
 						<label for="registration">{{
@@ -43,16 +42,17 @@
 						<Calendar
 							id="registration"
 							v-bind="registration_phase"
-							selectionMode="range"
-							:manualInput="false"
+							selection-mode="range"
+							:manual-input="false"
 							class="w-full"
-							:dateFormat="t('date_format')"
-							showTime
+							:date-format="t('date_format')"
+							show-time
 							show-icon
+							:class="{ 'p-invalid': errors.registration_phase }"
 						/>
-						<small id="registration_phase-error" class="p-error">{{
-							t(errors.registration_phase || "")
-						}}</small>
+						<InlineMessage v-if="errors.registration_phase" class="mt-2"
+							>{{ t(errors.registration_phase || "") }}
+						</InlineMessage>
 					</div>
 					<div class="field col-6">
 						<label for="game_phase">{{
@@ -61,16 +61,17 @@
 						<Calendar
 							id="game_phase"
 							v-bind="game_phase"
-							selectionMode="range"
-							:manualInput="false"
+							selection-mode="range"
+							:manual-input="false"
 							class="w-full"
-							:dateFormat="t('date_format')"
-							showTime
+							:date-format="t('date_format')"
+							show-time
 							show-icon
+							:class="{ 'p-invalid': errors.game_phase }"
 						/>
-						<small id="game_phase-error" class="p-error">{{
-							t(errors.game_phase || "")
-						}}</small>
+						<InlineMessage v-if="errors.game_phase" class="mt-2"
+							>{{ t(errors.game_phase || "") }}
+						</InlineMessage>
 					</div>
 				</div>
 				<div></div>
@@ -94,7 +95,7 @@ import { useI18n } from "vue-i18n"
 import { useForm } from "vee-validate"
 import Card from "primevue/card"
 
-import { array, boolean, date, object, string, mixed, setLocale } from "yup"
+import { array, boolean, date, mixed, object, setLocale, string } from "yup"
 import { toTypedSchema } from "@vee-validate/yup"
 
 const { t } = useI18n({ inheritLocale: true })
@@ -113,12 +114,12 @@ const props = withDefaults(
 
 setLocale({
 	mixed: {
-		notNull: "validation.only_one_date",
+		notNull: "validation.date_missing",
 	},
 })
 
 // TODO: internalization
-const { values, defineInputBinds, errors, defineComponentBinds, handleSubmit } =
+const { defineInputBinds, errors, defineComponentBinds, handleSubmit } =
 	useForm({
 		validationSchema: toTypedSchema(
 			object({
@@ -128,21 +129,37 @@ const { values, defineInputBinds, errors, defineComponentBinds, handleSubmit } =
 				visible: boolean(),
 				description: string().max(255),
 				registration_phase: array()
-					.length(2, "validation.only_one_date")
+					.length(2, "validation.date_missing")
 					.of(mixed().nonNullable())
 					.of(date())
-					.test("correctDates", "TournamentSettings.wrong_dates", (arr, context) => {
-						return context.parent.registration_phase[1] < context.parent.game_phase[0]
-					})
-					.required(),
+					.test(
+						"correctDates",
+						"TournamentSettings.wrong_dates",
+						(arr, context) => {
+							if (!context.parent.game_phase?.[0]) return true
+							return (
+								context.parent.registration_phase[1] <
+								context.parent.game_phase[0]
+							)
+						},
+					)
+					.required("validation.date_missing"),
 				game_phase: array()
-					.length(2, "validation.only_one_date")
+					.length(2, "validation.date_missing")
 					.of(mixed().nonNullable())
 					.of(date())
-					.test("correctDates", "TournamentSettings.wrong_dates", (arr, context) => {
-						return context.parent.registration_phase[1] < context.parent.game_phase[0]
-					})
-					.required(),
+					.test(
+						"correctDates",
+						"TournamentSettings.wrong_dates",
+						(arr, context) => {
+							if (!context.parent.registration_phase?.[1]) return true
+							return (
+								context.parent.registration_phase[1] <
+								context.parent.game_phase[0]
+							)
+						},
+					)
+					.required("validation.date_missing"),
 			}),
 		),
 		initialValues: {

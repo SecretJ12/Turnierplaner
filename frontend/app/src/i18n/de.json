@@ -70,6 +70,7 @@
 		"tournamentCreation": "Turniererstellung"
 	},
 	"ViewEditTournament": {
+		"tournamentUpdating": "Turnieraktualisierung",
 		"loadingDetailsFailed": "Turnierdetails konnten nicht geladen werden",
 		"tournamentUpdated": "Turnier aktualisiert",
 		"tournamentUpdateFailed": "Aktualisieren fehlgeschlagen",
@@ -163,6 +164,6 @@
 		"field_invalid_date": "Bitte geben Sie ein gültiges Datum an",
 		"field_invalid_number": "Bitte geben Sie eine gültige Zahl an",
 		"field_invalid_url": "Bitte geben Sie eine gültige URL an",
-		"only_one_date": "Bitte wähle ein Anfangs- und Enddatum"
+		"date_missing": "Bitte wähle ein Anfangs- und Enddatum"
 	}
 }

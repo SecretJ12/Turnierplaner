@@ -65,11 +65,13 @@
 		"overview": "Tournament overview"
 	},
 	"ViewCreateTournament": {
-		"tournamentCreated": "Turnier erstellt",
+		"tournamentCreating": "Creation of tournament",
+		"tournamentCreated": "Turnier created",
 		"tournamentCreationFailed": "Couldn't create tournament",
 		"tournamentCreation": "Create tournament"
 	},
 	"ViewEditTournament": {
+		"tournamentUpdating": "Updating of tournament",
 		"loadingDetailsFailed": "Couldn't load tournament details",
 		"tournamentUpdated": "Tournament updated",
 		"tournamentUpdateFailed": "Updating tournament failed",
@@ -163,6 +165,6 @@
 		"field_invalid_date": "Field is not a valid date",
 		"field_invalid_number": "Field is not a valid number",
 		"field_invalid_url": "Field is not a valid URL",
-		"only_one_date": "Please choose start and end date"
+		"date_missing": "Please choose start and end date"
 	}
 }

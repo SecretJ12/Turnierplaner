@@ -21,8 +21,10 @@ import {
 } from "@/interfaces/tournament"
 import FormTournament from "@/components/views/tournaments/FormTournament.vue"
 import { useI18n } from "vue-i18n"
+import { useToast } from "primevue/usetoast"
 
 const { t } = useI18n({ inheritLocale: true })
+const toast = useToast()
 
 const route = useRoute()
 
@@ -55,10 +57,22 @@ function submit(server_data: TournamentServer) {
 	axios
 		.post("/tournament/update", server_data)
 		.then(() => {
-			ElMessage.success(t("ViewEditTournament.tournamentUpdated"))
+			toast.add({
+				severity: "success",
+				summary: t("ViewEditTournament.tournamentUpdating"),
+				detail: t("ViewEditTournament.tournamentUpdated"),
+				life: 3000,
+				closable: false,
+			})
 		})
 		.catch(() => {
-			ElMessage.error(t("ViewEditTournament.tournamentUpdateFailed"))
+			toast.add({
+				severity: "error",
+				summary: t("ViewEditTournament.tournamentUpdating"),
+				detail: t("ViewEditTournament.tournamentUpdateFailed"),
+				life: 3000,
+				closable: false,
+			})
 		})
 }
 </script>

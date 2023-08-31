@@ -29,11 +29,11 @@
 				></Button>
 				<Button
 					v-if="props.canCreate"
-					@click="settings"
-					@click.stop
 					outlined
 					rounded
 					class="icon"
+					@click="settings"
+					@click.stop
 				>
 					<template #icon>
 						<span class="material-icons">settings</span>

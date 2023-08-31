@@ -49,6 +49,7 @@ auth.addUserUnloadedListener(() => {
 			<h2>Aside content</h2>
 		</aside>
 	</div>
+	<Toast />
 </template>
 
 <style>

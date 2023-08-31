@@ -95,10 +95,13 @@ import Card from "primevue/card"
 import Button from "primevue/button"
 import Toolbar from "primevue/toolbar"
 import InputText from "primevue/inputtext"
+import Textarea from "primevue/textarea"
 import Calendar from "primevue/calendar"
 import InputSwitch from "primevue/inputswitch"
 import Dropdown from "primevue/dropdown"
 import Divider from "primevue/divider"
+import InlineMessage from "primevue/inlinemessage"
+import Toast from "primevue/toast"
 
 /* Primevue styling */
 import "primeflex/primeflex.css"
@@ -140,10 +143,13 @@ app
 	.component("Button", Button)
 	.component("Toolbar", Toolbar)
 	.component("InputText", InputText)
+	.component("Textarea", Textarea)
 	.component("Calendar", Calendar)
 	.component("InputSwitch", InputSwitch)
 	.component("Dropdown", Dropdown)
 	.component("Divider", Divider)
+	.component("InlineMessage", InlineMessage)
+	.component("Toast", Toast)
 	.mount("#app")
 
 export { router }
