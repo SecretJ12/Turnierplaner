@@ -118,7 +118,6 @@ setLocale({
 	},
 })
 
-// TODO: internalization
 const { defineInputBinds, errors, defineComponentBinds, handleSubmit } =
 	useForm({
 		validationSchema: toTypedSchema(
