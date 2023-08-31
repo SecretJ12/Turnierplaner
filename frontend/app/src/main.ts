@@ -98,6 +98,7 @@ import InputText from "primevue/inputtext"
 import Calendar from "primevue/calendar"
 import InputSwitch from "primevue/inputswitch"
 import Dropdown from "primevue/dropdown"
+import Divider from "primevue/divider"
 
 /* Primevue styling */
 import "primeflex/primeflex.css"
@@ -142,6 +143,7 @@ app
 	.component("Calendar", Calendar)
 	.component("InputSwitch", InputSwitch)
 	.component("Dropdown", Dropdown)
+	.component("Divider", Divider)
 	.mount("#app")
 
 export { router }
