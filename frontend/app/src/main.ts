@@ -76,6 +76,8 @@ import InlineMessage from "primevue/inlinemessage"
 import Toast from "primevue/toast"
 import SelectButton from "primevue/selectbutton"
 import Skeleton from "primevue/skeleton"
+import Panel from "primevue/panel";
+import ScrollPanel from "primevue/scrollpanel";
 
 /* Primevue styling */
 import "primeflex/primeflex.css"
@@ -125,6 +127,8 @@ app
 	.component("Toast", Toast)
 	.component("SelectButton", SelectButton)
 	.component("Skeleton", Skeleton)
+	.component("Panel", Panel)
+	.component("ScrollPanel", ScrollPanel)
 	.mount("#app")
 
 export { router }
