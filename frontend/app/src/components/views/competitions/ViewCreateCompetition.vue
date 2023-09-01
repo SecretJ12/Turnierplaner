@@ -9,8 +9,6 @@
 <script lang="ts" setup>
 import { router } from "@/main"
 import { reactive } from "vue"
-import axios from "axios"
-import { ElMessage } from "element-plus"
 import { useRoute } from "vue-router"
 import FormCompetition from "@/components/views/competitions/FormCompetition.vue"
 import { useI18n } from "vue-i18n"
@@ -22,8 +20,11 @@ import {
 	SignUp,
 	TourType,
 } from "@/interfaces/competition"
+import { useToast } from "primevue/usetoast"
+import { addCompetition } from "@/backend/competition"
 
 const { t } = useI18n({ inheritLocale: true })
+const toast = useToast()
 
 const route = useRoute()
 
@@ -51,14 +52,11 @@ const competition = reactive<Competition>({
 })
 
 function submit(server_data: CompetitionServer) {
-	axios
-		.post(`/tournament/${route.params.tourId}/competition/add`, server_data)
-		.then(() => {
+	addCompetition(server_data, <string>route.params.tourId, t, toast, {
+		suc: () => {
 			router.push({ path: "/tournament/" + route.params.tourId })
-		})
-		.catch(() => {
-			ElMessage.error(t("ViewCreateCompetition.creationFailed"))
-		})
+		},
+	})
 }
 </script>
 

@@ -77,40 +77,37 @@
 
 <script lang="ts" setup>
 import Item from "../../items/ItemCompetition.vue"
-import { inject, ref, watch } from "vue"
+import { inject, ref } from "vue"
 import { useRoute } from "vue-router"
 import AddItem from "@/components/items/ItemAdd.vue"
 import { router } from "@/main"
-import axios from "axios"
-import { auth } from "@/security/AuthService"
-import { ElMessage } from "element-plus"
 import { useI18n } from "vue-i18n"
-import {
-	Competition,
-	CompetitionServer,
-	competitionServerToClient,
-} from "@/interfaces/competition"
-import {
-	Tournament,
-	TournamentServer,
-	tournamentServerToClient,
-} from "@/interfaces/tournament"
 import Button from "primevue/button"
 import Timeline from "primevue/timeline"
+import { getCanEdit } from "@/backend/security"
+import { getTournamentDetails } from "@/backend/tournament"
+import { useToast } from "primevue/usetoast"
+import { getListCompetitions } from "@/backend/competition"
 
 const { t } = useI18n({ inheritLocale: true })
+const toast = useToast()
 
 const route = useRoute()
 
-const competitions = ref<Competition[]>([])
-
 const isLoggedIn = inject("loggedIn", ref(false))
-const canEdit = ref(false)
+const canEdit = getCanEdit(<string>route.params.tourId, isLoggedIn)
+const competitions = getListCompetitions(
+	<string>route.params.tourId,
+	isLoggedIn,
+	t,
+	toast,
+	{
+		err: () => {
+			router.push("/")
+		},
+	},
+)
 
-const progress = ref(0)
-const statusActive = ref<"wait" | "process" | "success" | "error">("wait")
-
-const tournament = ref<Tournament | null>(null)
 const options: Intl.DateTimeFormatOptions = {
 	weekday: "long",
 	year: "numeric",
@@ -132,66 +129,25 @@ const status = ref([
 		color: "#000000",
 	},
 ])
+const tournament = getTournamentDetails(<string>route.params.tourId, t, toast, {
+	suc: () => {
+		if (tournament.value === null) return
 
-watch(isLoggedIn, async () => {
-	update()
-})
-update()
-
-function update() {
-	canEdit.value = false
-	auth.getUser().then((user) => {
-		if (user !== null) {
-			axios
-				.get<boolean>(`/tournament/${route.params.tourId}/competition/canEdit`)
-				.then((response) => {
-					canEdit.value = response.data
-				})
-				.catch(() => {
-					canEdit.value = false
-				})
+		const date = new Date()
+		if (date > tournament.value.registration_phase.end) {
+			status.value[0].color = "green"
+			status.value[0].icon = "pi-check"
+		} else if (date > tournament.value.registration_phase.begin) {
+			status.value[0].color = "blue"
 		}
-	})
-	axios
-		.get<CompetitionServer[]>(
-			`/tournament/${route.params.tourId}/competition/list`,
-		)
-		.then((response) => {
-			if (response.status === 200)
-				competitions.value = response.data.map(competitionServerToClient)
-			else {
-				ElMessage.error(t("ViewCompetitions.loadingFailed"))
-			}
-		})
-		.catch((error) => {
-			ElMessage.error(t("ViewCompetitions.loadingFailed"))
-			console.log(error)
-			router.push("/")
-		})
-	axios
-		.get<TournamentServer>(`/tournament/${route.params.tourId}/details`)
-		.then((response) => {
-			const date = new Date()
-			tournament.value = tournamentServerToClient(response.data)
-
-			if (date > tournament.value.registration_phase.end) {
-				status.value[0].color = "green"
-				status.value[0].icon = "pi-check"
-			} else if (date > tournament.value.registration_phase.begin) {
-				status.value[0].color = "blue"
-			}
-			if (date > tournament.value.game_phase.end) {
-				status.value[1].color = "green"
-				status.value[1].icon = "pi-check"
-			} else if (date > tournament.value.game_phase.begin) {
-				status.value[1].color = "blue"
-			}
-		})
-		.catch((error) => {
-			statusActive.value = "error"
-			console.log(error)
-		})
-}
+		if (date > tournament.value.game_phase.end) {
+			status.value[1].color = "green"
+			status.value[1].icon = "pi-check"
+		} else if (date > tournament.value.game_phase.begin) {
+			status.value[1].color = "blue"
+		}
+	},
+})
 
 function formatDate(d: Date) {
 	return d.toLocaleString(t("lang"), options)

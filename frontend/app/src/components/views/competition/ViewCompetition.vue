@@ -50,74 +50,36 @@
 
 <script lang="ts" setup>
 import { useRoute } from "vue-router"
-import { inject, ref, watch } from "vue"
-import { auth } from "@/security/AuthService"
-import axios from "axios"
+import { inject, ref } from "vue"
 import { router } from "@/main"
 import ViewSignUp from "@/components/views/competition/signup/ViewSignUp.vue"
 import ViewGame from "@/components/views/competition/ViewGame.vue"
-import { ElMessage } from "element-plus"
-import {
-	Competition,
-	CompetitionServer,
-	competitionServerToClient,
-} from "@/interfaces/competition"
-import {
-	Tournament,
-	TournamentServer,
-	tournamentServerToClient,
-} from "@/interfaces/tournament"
 import { useI18n } from "vue-i18n"
+import { getCanEdit } from "@/backend/security"
+import { getTournamentDetails } from "@/backend/tournament"
+import { useToast } from "primevue/usetoast"
+import { getCompetitionDetails } from "@/backend/competition"
 
 const { t } = useI18n({ inheritLocale: true })
+const toast = useToast()
 
 const route = useRoute()
 const isLoggedIn = inject("loggedIn", ref(false))
-const canEdit = ref(false)
+const canEdit = getCanEdit(<string>route.params.tourId, isLoggedIn)
 
-const competition = ref<Competition | null>(null)
-const tournament = ref<Tournament | null>(null)
-
-watch(isLoggedIn, async () => {
-	update()
-})
-update()
-
-function update() {
-	canEdit.value = false
-	auth.getUser().then((user) => {
-		if (user !== null) {
-			axios
-				.get<boolean>(`/tournament/${route.params.tourId}/competition/canEdit`)
-				.then((response) => {
-					canEdit.value = response.data
-				})
-				.catch(() => {
-					canEdit.value = false
-				})
-		}
-	})
-	axios
-		.get<CompetitionServer>(
-			`/tournament/${route.params.tourId}/competition/${route.params.compId}/details`,
-		)
-		.then((response) => {
-			competition.value = competitionServerToClient(response.data)
-		})
-		.catch((error) => {
-			console.log(error)
-			ElMessage.error(t("ViewEditTournament.loadingDetailsFailed"))
-		})
-	axios
-		.get<TournamentServer>(`/tournament/${route.params.tourId}/details`)
-		.then((response) => {
-			tournament.value = tournamentServerToClient(response.data)
-		})
-		.catch((error) => {
-			console.log(error)
-			ElMessage.error(t("ViewEditCompetition.loadingDetailsFailed"))
-		})
-}
+const tournament = getTournamentDetails(
+	<string>route.params.tourId,
+	t,
+	toast,
+	{},
+)
+const competition = getCompetitionDetails(
+	<string>route.params.tourId,
+	<string>route.params.compId,
+	t,
+	toast,
+	{},
+)
 
 function settings() {
 	router.push({

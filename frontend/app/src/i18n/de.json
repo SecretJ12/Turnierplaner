@@ -115,12 +115,17 @@
 		"missingAge": "Bitte wähle ein Datum"
 	},
 	"ViewCreateCompetition": {
-		"creationFailed": "Konkurrenz konnte nicht erstellt werden"
+		"creationFailed": "Konkurrenz konnte nicht erstellt werden",
+		"competitionCreated": "Konkurrenz erstellt",
+		"competitionCreation": "Konkurrenzerstellung"
 	},
 	"ViewEditCompetition": {
 		"saved": "Konkurrenz wurde gespeichert",
 		"saving_failed": "Beim Speichern hat etwas nicht funktioniert",
-		"loadingDetailsFailed": "Details der Konkurrenz konnten nicht geladen werden"
+		"loadingDetailsFailed": "Details der Konkurrenz konnten nicht geladen werden",
+		"competitionUpdated": "Konkurrenz aktualisiert",
+		"competitionUpdateFailed": "Aktualisierung fehlgeschlagen",
+		"competitionUpdate": "Konkurrenzaktualisierung"
 	},
 	"ViewCompetition": {
 		"tournament_system": "Turniersystem",

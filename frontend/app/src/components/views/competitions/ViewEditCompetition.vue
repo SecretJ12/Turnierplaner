@@ -1,8 +1,15 @@
 <template>
 	<FormCompetition
-		v-if="competition !== null"
+		v-if="competition === null"
+		:competition="CompetitionDefault"
+		:disabled="true"
+		:submit-text="t('general.update')"
+		@submit="submit"
+	/>
+	<FormCompetition
+		v-else
 		:competition="competition"
-		:disabled="disabled"
+		:disabled="false"
 		:submit-text="t('general.update')"
 		@submit="submit"
 	/>
@@ -10,49 +17,32 @@
 
 <script lang="ts" setup>
 import { router } from "@/main"
-import { ref } from "vue"
-import axios from "axios"
-import { ElMessage } from "element-plus"
 import { useRoute } from "vue-router"
 import FormCompetition from "@/components/views/competitions/FormCompetition.vue"
 import { useI18n } from "vue-i18n"
-import {
-	Competition,
-	CompetitionServer,
-	competitionServerToClient,
-} from "@/interfaces/competition"
+import { CompetitionDefault, CompetitionServer } from "@/interfaces/competition"
+import { getCompetitionDetails, updateCompetition } from "@/backend/competition"
+import { useToast } from "primevue/usetoast"
 
 const { t } = useI18n({ inheritLocale: true })
+const toast = useToast()
 
 const route = useRoute()
 
-const competition = ref<Competition | null>(null)
-
-const disabled = ref(true)
-
-axios
-	.get<CompetitionServer>(
-		`/tournament/${route.params.tourId}/competition/${route.params.compId}/details`,
-	)
-	.then((response) => {
-		competition.value = competitionServerToClient(response.data)
-		disabled.value = false
-	})
-	.catch((error) => {
-		ElMessage.error(t("ViewEditCompetition.loadingDetailsFailed"))
-		console.log(error)
-		router.back()
-	})
+const competition = getCompetitionDetails(
+	<string>route.params.tourId,
+	<string>route.params.compId,
+	t,
+	toast,
+	{
+		err: () => {
+			router.back()
+		},
+	},
+)
 
 function submit(server_data: CompetitionServer) {
-	axios
-		.post(`/tournament/${route.params.tourId}/competition/update`, server_data)
-		.then(() => {
-			ElMessage.success(t("ViewEditCompetition.saved"))
-		})
-		.catch(() => {
-			ElMessage.error(t("ViewEditCompetition.saving_failed"))
-		})
+	updateCompetition(server_data, <string>route.params.tourId, t, toast, {})
 }
 </script>
 

@@ -9,6 +9,7 @@ export function getCanCreate(isLoggedIn: Ref<boolean>) {
 	update()
 
 	function update() {
+		canCreate.value = false
 		auth.getUser().then((user) => {
 			if (user !== null) {
 				axios
@@ -24,4 +25,29 @@ export function getCanCreate(isLoggedIn: Ref<boolean>) {
 	}
 
 	return canCreate
+}
+
+export function getCanEdit(tourId: string, isLoggedIn: Ref<boolean>) {
+	const canEdit = ref<boolean>(false)
+
+	watch(isLoggedIn, update)
+	update()
+
+	function update() {
+		canEdit.value = false
+		auth.getUser().then((user) => {
+			if (user !== null) {
+				axios
+					.get<boolean>(`/tournament/${tourId}/competition/canEdit`)
+					.then((response) => {
+						canEdit.value = response.data
+					})
+					.catch(() => {
+						canEdit.value = false
+					})
+			}
+		})
+	}
+
+	return canEdit
 }

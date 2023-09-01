@@ -19,7 +19,10 @@
 
 <script lang="ts" setup>
 import { useRoute } from "vue-router"
-import { TournamentFormDefault, TournamentServer } from "@/interfaces/tournament";
+import {
+	TournamentFormDefault,
+	TournamentServer,
+} from "@/interfaces/tournament"
 import FormTournament from "@/components/views/tournaments/FormTournament.vue"
 import { useI18n } from "vue-i18n"
 import { useToast } from "primevue/usetoast"
@@ -51,7 +54,7 @@ function submit(server_data: TournamentServer) {
 	}
 	server_data["id"] = data.value.id
 
-	updateTournament(server_data, t, toast)
+	updateTournament(server_data, t, toast, {})
 }
 </script>
 

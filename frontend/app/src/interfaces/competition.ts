@@ -30,6 +30,30 @@ export interface Competition {
 	playerB: settingsPlayerB
 }
 
+export const CompetitionDefault: Competition = {
+	id: null,
+	name: "",
+	description: "",
+	tourType: TourType.KNOCKOUT,
+	mode: Mode.SINGLE,
+	signUp: SignUp.INDIVIDUAL,
+	playerA: {
+		sex: Sex.ANY,
+		hasMinAge: false,
+		minAge: null,
+		hasMaxAge: false,
+		maxAge: null,
+	},
+	playerB: {
+		different: false,
+		sex: Sex.ANY,
+		hasMinAge: false,
+		minAge: null,
+		hasMaxAge: false,
+		maxAge: null,
+	},
+}
+
 export interface CompetitionServer {
 	id?: null | string
 	name: string

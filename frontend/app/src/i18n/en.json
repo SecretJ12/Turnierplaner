@@ -116,12 +116,17 @@
 		"missingAge": "Please choose a date"
 	},
 	"ViewCreateCompetition": {
-		"creationFailed": "Couldn't create competition"
+		"creationFailed": "Couldn't create competition",
+		"competitionCreated": "Competition created",
+		"competitionCreation": "Creating competition"
 	},
 	"ViewEditCompetition": {
 		"saved": "Competition saved",
 		"saving_failed": "Something went wrong while saving",
-		"loadingDetailsFailed": "Couldn't load competition details"
+		"loadingDetailsFailed": "Couldn't load competition details",
+		"competitionUpdated": "Competition updated",
+		"competitionUpdateFailed": "Updating competition failed",
+		"competitionUpdate": "Update competition"
 	},
 	"ViewCompetition": {
 		"tournament_system": "Tournament system",

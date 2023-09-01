@@ -111,6 +111,10 @@ export function updateTournament(
 	tournament: TournamentServer,
 	t: (s: string) => string,
 	toast: ToastServiceMethods,
+	handler: {
+		suc?: () => void
+		err?: () => void
+	},
 ) {
 	axios
 		.post("/tournament/update", tournament)
@@ -121,6 +125,7 @@ export function updateTournament(
 				detail: t("ViewEditTournament.tournamentUpdated"),
 				life: 3000,
 			})
+			if (handler.suc) handler.suc()
 		})
 		.catch((error) => {
 			toast.add({
@@ -129,6 +134,7 @@ export function updateTournament(
 				detail: error,
 				life: 3000,
 			})
+			if (handler.err) handler.err()
 		})
 }
 
@@ -136,7 +142,10 @@ export function addTournament(
 	tournament: TournamentServer,
 	t: (s: string) => string,
 	toast: ToastServiceMethods,
-	sucHandler: () => void,
+	handler: {
+		suc?: () => void
+		err?: () => void
+	},
 ) {
 	axios
 		.post("/tournament/add", tournament)
@@ -148,7 +157,7 @@ export function addTournament(
 				life: 3000,
 				closable: false,
 			})
-			sucHandler()
+			if (handler.suc) handler.suc()
 		})
 		.catch(() => {
 			toast.add({
@@ -158,5 +167,6 @@ export function addTournament(
 				life: 3000,
 				closable: false,
 			})
+			if (handler.err) handler.err()
 		})
 }
