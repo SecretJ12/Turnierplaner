@@ -1,5 +1,5 @@
 <template>
-	<Card id="card" class="relative cursor-pointer w-25rem" @click="selected">
+	<Card class="relative cursor-pointer w-25rem" @click="selected">
 		<template #title>
 			{{ props.tournament.name }}
 		</template>

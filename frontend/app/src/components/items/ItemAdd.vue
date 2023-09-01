@@ -1,5 +1,5 @@
 <template>
-	<Card style="width: 25em" @click="selected">
+	<Card class="cursor-pointer" style="width: 25em" @click="selected">
 		<!-- TODO internalization -->
 		<template #title> Add a new competition</template>
 		<template #subtitle> Click here to add a new competition</template>
@@ -15,11 +15,4 @@ function selected() {
 </script>
 
 <style scoped>
-.material-symbols-outlined {
-	font-variation-settings:
-		"FILL" 0,
-		"wght" 700,
-		"GRAD" 200,
-		"opsz" 48;
-}
 </style>
