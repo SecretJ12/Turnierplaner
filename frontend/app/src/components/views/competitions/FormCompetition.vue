@@ -12,7 +12,9 @@
 						maxlength="30"
 						class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
 					/>
-					<small id="name-error" class="p-error">{{ errors.name }}</small>
+					<InlineMessage v-if="errors.name" class="mt-2"
+						>{{ t(errors.name || "") }}
+					</InlineMessage>
 				</div>
 				<div class="field col-12">
 					<label for="description">{{ t("general.description") }}</label>
@@ -356,6 +358,7 @@
 				</div>
 				<div class="col-12">
 					{{ errors }}
+					{{ values }}
 				</div>
 				<div class="field col-12">
 					<Button :label="props.submitText" @click="onSubmit"> </Button>
@@ -414,8 +417,9 @@ const {
 		object({
 			name: string()
 				.min(4, t("validation.field_too_short"))
+				.max(40, "validation.field_too_long")
 				.required(t("validation.field_required")),
-			description: string().max(500),
+			description: string().max(50),
 			tourType: object({
 				name: mixed().oneOf(Object.values(TourType)).required(),
 			}),
@@ -470,7 +474,7 @@ const {
 })
 
 const name = defineInputBinds("name")
-const description = defineComponentBinds("description")
+const description = defineInputBinds("description")
 
 const tourTypes = ref([{ name: TourType.KNOCKOUT }, { name: TourType.GROUPS }])
 const selectedTourType = defineComponentBinds("tourType")
