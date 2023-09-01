@@ -30,7 +30,7 @@ const data = reactive<TournamentForm>({
 
 function submit(server_data: TournamentServer) {
 	addTournament(server_data, t, toast, {
-		err: () => {
+		suc: () => {
 			router.push({ path: `/tournament/${server_data.name}` })
 		},
 	})

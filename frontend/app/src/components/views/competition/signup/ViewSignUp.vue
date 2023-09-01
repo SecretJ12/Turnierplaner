@@ -1,4 +1,11 @@
 <template>
+	<div class="w-full flex flex-column align-items-center">
+		<Card class="w-full md:w-30rem">
+			<strong>{{ t("general.description") }}:</strong>{{ props.competition.description }}
+			<strong>{{ t("ViewCompetition.tournament_system") }}:</strong>{{t("CompetitionSettings." + props.competition.tourType.toLowerCase())}}
+			<strong>{{ t("ViewCompetition.game_mode") }}:</strong>{{ t("CompetitionSettings." + props.competition.mode.toLowerCase()) }}
+		</Card>
+	</div>
 	<el-space direction="vertical" fill>
 		<el-descriptions
 			:column="windowWidth < 600 ? 1 : 2"
