@@ -7,6 +7,15 @@ export interface TournamentForm {
 	game_phase: Date[] | undefined
 }
 
+export const TournamentFormDefault = {
+	id: null,
+	name: "",
+	visible: false,
+	description: "",
+	registration_phase: [new Date(), new Date()],
+	game_phase: [new Date(), new Date()],
+}
+
 export interface TournamentServer {
 	id?: null | string
 	name: string

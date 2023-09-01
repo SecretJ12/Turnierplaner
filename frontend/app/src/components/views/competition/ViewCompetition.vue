@@ -1,7 +1,14 @@
 <template>
 	<div id="container">
 		<div style="margin-bottom: 20px">
-			<span v-if="canEdit" id="settings" @click="settings" class="material-icons cursor-pointer" style="font-size: 1.7rem">settings</span>
+			<span
+				v-if="canEdit"
+				id="settings"
+				@click="settings"
+				class="material-icons cursor-pointer"
+				style="font-size: 1.7rem"
+				>settings</span
+			>
 			<div id="tourName">
 				{{ route.params.tourId }}
 			</div>

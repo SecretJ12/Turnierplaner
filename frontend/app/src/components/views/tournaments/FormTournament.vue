@@ -14,26 +14,26 @@
 								maxlength="30"
 								class="w-full"
 								:class="{ 'p-invalid': errors.name }"
+								:disabled="disabled"
 							/>
 							<InlineMessage v-if="errors.name" class="mt-2"
 								>{{ t(errors.name || "") }}
 							</InlineMessage>
 						</div>
-						<div
-							class="col flex flex-column min-w-max flex-grow-0"
-						>
+						<div class="col flex flex-column min-w-max flex-grow-0">
 							<label for="visible" class="text-900">{{
 								t("TournamentSettings.visible")
 							}}</label>
 							<SelectButton
 								v-bind="visible"
-								unselectable="false"
+								:unselectable="false"
 								:options="[
-									{ name: 'Nein', value: false },
-									{ name: 'Ja', value: true },
+									{ name: t('no'), value: false },
+									{ name: t('yes'), value: true },
 								]"
 								optionLabel="name"
 								optionValue="value"
+								:disabled="disabled"
 							/>
 						</div>
 					</div>
@@ -46,6 +46,7 @@
 							maxlength="255"
 							class="w-full"
 							v-bind="description"
+							:disabled="disabled"
 						></Textarea>
 					</div>
 					<div class="field col-6">
@@ -62,6 +63,7 @@
 							show-time
 							show-icon
 							:class="{ 'p-invalid': errors.registration_phase }"
+							:disabled="disabled"
 						/>
 						<InlineMessage v-if="errors.registration_phase" class="mt-2"
 							>{{ t(errors.registration_phase || "") }}
@@ -81,6 +83,7 @@
 							show-time
 							show-icon
 							:class="{ 'p-invalid': errors.game_phase }"
+							:disabled="disabled"
 						/>
 						<InlineMessage v-if="errors.game_phase" class="mt-2"
 							>{{ t(errors.game_phase || "") }}
@@ -91,7 +94,11 @@
 			</template>
 			<template #footer>
 				<div class="justify-content-end flex">
-					<Button :label="props.submitText" @click="onSubmit"></Button>
+					<Button
+						:label="props.submitText"
+						@click="onSubmit"
+						:disabled="disabled"
+					></Button>
 				</div>
 			</template>
 		</Card>

@@ -2,6 +2,8 @@
 	"title": "TURNIERPLANER",
 	"lang": "de-DE",
 	"date_format": "dd.mm.yy",
+	"no": "Nein",
+	"yes": "Ja",
 	"general": {
 		"create": "Erstellen",
 		"update": "Aktualisieren",

@@ -1,7 +1,14 @@
 <template>
 	<div id="container">
 		<h2>
-			<span v-if="canEdit" id="settings" @click="settings" class="material-icons cursor-pointer" style="font-size: 2rem">settings</span>
+			<span
+				v-if="canEdit"
+				id="settings"
+				@click="settings"
+				class="material-icons cursor-pointer"
+				style="font-size: 2rem"
+				>settings</span
+			>
 			{{ route.params.tourId }}
 		</h2>
 		<div id="content">
@@ -16,7 +23,12 @@
 					@selected="selected"
 					@settings="settingsItem"
 				/>
-				<AddItem v-if="canEdit" :title="t('ViewCompetitions.add_title')" :content="t('ViewCompetitions.add_content')" @selected="addCompetition" />
+				<AddItem
+					v-if="canEdit"
+					:title="t('ViewCompetitions.add_title')"
+					:content="t('ViewCompetitions.add_content')"
+					@selected="addCompetition"
+				/>
 			</div>
 			<div id="aside">
 				<Timeline v-if="tournament !== null" id="progress" op :value="status">
@@ -37,14 +49,18 @@
 						<template v-if="slotProps.item.registration">
 							<strong>{{ t("TournamentSettings.registration_phase") }}</strong
 							><br />
-							<strong>{{ t("ViewCompetitions.from")}}</strong> {{ formatDate(tournament?.registration_phase.begin) }}<br>
-							<strong>{{ t("ViewCompetitions.till")}}</strong> {{ formatDate(tournament?.registration_phase.end) }}
+							<strong>{{ t("ViewCompetitions.from") }}</strong>
+							{{ formatDate(tournament?.registration_phase.begin) }}<br />
+							<strong>{{ t("ViewCompetitions.till") }}</strong>
+							{{ formatDate(tournament?.registration_phase.end) }}
 						</template>
 						<template v-else>
 							<strong>{{ t("TournamentSettings.game_phase") }}</strong
 							><br />
-							<strong>{{ t("ViewCompetitions.from")}}</strong> {{ formatDate(tournament?.game_phase.begin) }}<br>
-							<strong>{{ t("ViewCompetitions.till")}}</strong> {{ formatDate(tournament?.game_phase.end) }}
+							<strong>{{ t("ViewCompetitions.from") }}</strong>
+							{{ formatDate(tournament?.game_phase.begin) }}<br />
+							<strong>{{ t("ViewCompetitions.till") }}</strong>
+							{{ formatDate(tournament?.game_phase.end) }}
 						</template>
 					</template>
 				</Timeline>

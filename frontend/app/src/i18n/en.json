@@ -2,6 +2,8 @@
 	"title": "TOURNAMENT PLANNER",
 	"lang": "en-US",
 	"date_format": "mm/dd/yy",
+	"no": "No",
+	"yes": "Yes",
 	"general": {
 		"create": "Create",
 		"update": "Update",
