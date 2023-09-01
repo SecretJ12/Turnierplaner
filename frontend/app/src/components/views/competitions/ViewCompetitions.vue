@@ -16,7 +16,7 @@
 					@selected="selected"
 					@settings="settingsItem"
 				/>
-				<AddItem v-if="canEdit" @selected="addCompetition" />
+				<AddItem v-if="canEdit" :title="t('ViewCompetitions.add_title')" :content="t('ViewCompetitions.add_content')" @selected="addCompetition" />
 			</div>
 			<div id="aside">
 				<Timeline v-if="tournament !== null" id="progress" op :value="status">
@@ -37,14 +37,14 @@
 						<template v-if="slotProps.item.registration">
 							<strong>{{ t("TournamentSettings.registration_phase") }}</strong
 							><br />
-							{{ formatDate(tournament?.registration_phase.begin) }}
-							{{ formatDate(tournament?.registration_phase.end) }}
+							<strong>{{ t("ViewCompetitions.from")}}</strong> {{ formatDate(tournament?.registration_phase.begin) }}<br>
+							<strong>{{ t("ViewCompetitions.till")}}</strong> {{ formatDate(tournament?.registration_phase.end) }}
 						</template>
 						<template v-else>
 							<strong>{{ t("TournamentSettings.game_phase") }}</strong
 							><br />
-							{{ formatDate(tournament?.game_phase.begin) }}
-							{{ formatDate(tournament?.game_phase.end) }}
+							<strong>{{ t("ViewCompetitions.from")}}</strong> {{ formatDate(tournament?.game_phase.begin) }}<br>
+							<strong>{{ t("ViewCompetitions.till")}}</strong> {{ formatDate(tournament?.game_phase.end) }}
 						</template>
 					</template>
 				</Timeline>
@@ -121,11 +121,6 @@ watch(isLoggedIn, async () => {
 	update()
 })
 update()
-
-let windowWidth = ref(window.innerWidth)
-window.addEventListener("resize", () => {
-	windowWidth.value = window.innerWidth
-})
 
 function update() {
 	canEdit.value = false
@@ -265,13 +260,12 @@ function addCompetition() {
 }
 
 #progress {
-	align-items: flex-start;
 	height: fit-content;
 }
 
 #prepare {
 	margin-top: 20px;
-	width: 100%;
+	width: min(100%, 30rem);
 }
 
 h2 {
@@ -293,8 +287,9 @@ h2 {
 		flex-direction: column-reverse;
 	}
 
-	#progress {
-		margin: 10px;
+	#aside {
+		padding: 10px;
+		width: 100%;
 	}
 }
 

@@ -8,7 +8,7 @@
 			@selected="selected"
 			@settings="settingsItem"
 		/>
-		<AddItem v-if="canCreate" @selected="addTournament" />
+		<AddItem v-if="canCreate" :title="t('ViewTournaments.add_title')" :content="t('ViewTournaments.add_content')" @selected="addTournament" />
 	</div>
 </template>
 

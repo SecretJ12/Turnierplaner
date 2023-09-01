@@ -62,7 +62,9 @@
 	},
 	"ViewTournaments": {
 		"loadingFailed": "Couldn't load tournaments",
-		"overview": "Tournament overview"
+		"overview": "Tournament overview",
+		"add_title": "New tournament",
+		"add_content": "Click to add new tournament"
 	},
 	"ViewCreateTournament": {
 		"tournamentCreating": "Creation of tournament",
@@ -78,7 +80,11 @@
 		"tournamentUpdate": "Update tournament"
 	},
 	"ViewCompetitions": {
-		"loadingFailed": "Couldn't load competitions"
+		"loadingFailed": "Couldn't load competitions",
+		"add_title": "New competition",
+		"add_content": "Click to add new competition",
+		"from": "Von",
+		"till": "Bis"
 	},
 	"ViewGroupSystem": {
 		"group": "group",

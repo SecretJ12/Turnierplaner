@@ -1,4 +1,5 @@
 <template>
+	<!-- TODO optimize mobile -->
 	<header>
 		<HeaderLeft />
 		<HeaderRight />

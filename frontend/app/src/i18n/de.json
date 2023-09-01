@@ -62,7 +62,9 @@
 	},
 	"ViewTournaments": {
 		"loadingFailed": "Turniere konnten nicht geladen werden",
-		"overview": "Turnierübersicht"
+		"overview": "Turnierübersicht",
+		"add_title": "Neues Turnier",
+		"add_content": "Klicke um neues Turnier hinzuzufügen"
 	},
 	"ViewCreateTournament": {
 		"tournamentCreated": "Turnier erstellt",
@@ -77,7 +79,11 @@
 		"tournamentUpdate": "Turnier aktualisieren"
 	},
 	"ViewCompetitions": {
-		"loadingFailed": "Konkurrenzen konnten nicht geladen werden"
+		"loadingFailed": "Konkurrenzen konnten nicht geladen werden",
+		"add_title": "Neue Konkurrenz",
+		"add_content": "Klicke um neue Konkurrenz hinzuzufügen",
+		"from": "Von",
+		"till": "Bis"
 	},
 	"ViewGroupSystem": {
 		"group": "Gruppe",

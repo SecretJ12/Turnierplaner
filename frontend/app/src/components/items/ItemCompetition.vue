@@ -1,5 +1,5 @@
 <template>
-	<Card id="card" class="relative cursor-pointer w-25rem" @click="selected">
+	<Card id="card" class="relative cursor-pointer md:w-23rem w-full" @click="selected">
 		<template #title>
 			{{ name }}
 		</template>

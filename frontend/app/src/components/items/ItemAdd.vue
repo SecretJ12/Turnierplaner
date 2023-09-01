@@ -1,18 +1,21 @@
 <template>
-	<Card class="cursor-pointer" style="width: 25em" @click="selected">
-		<!-- TODO internalization -->
-		<template #title> Add a new competition</template>
-		<template #subtitle> Click here to add a new competition</template>
+	<Card class="cursor-pointer md:w-23rem w-full" @click="selected">
+		<template #title>{{ props.title }}</template>
+		<template #subtitle>{{ props.content }}</template>
 	</Card>
 </template>
 
 <script lang="ts" setup>
 const emit = defineEmits(["selected"])
 
+const props = defineProps<{
+	title: string
+	content: string
+}>()
+
 function selected() {
 	emit("selected")
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
