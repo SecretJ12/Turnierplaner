@@ -11,19 +11,6 @@ import VueAxios from "vue-axios"
 import axios from "axios"
 
 import { access_token } from "@/security/AuthService"
-import { library } from "@fortawesome/fontawesome-svg-core"
-/* import specific icons */
-import {
-	faEyeSlash,
-	faFlag,
-	faGear,
-	faPlus,
-	faRightFromBracket,
-	faRightToBracket,
-	faTableCellsLarge,
-	faUserGroup,
-	faUserSecret,
-} from "@fortawesome/free-solid-svg-icons"
 
 axios.defaults.baseURL = settings.BACKEND
 
@@ -38,22 +25,9 @@ axios.interceptors.request.use(
 	},
 )
 
-/* add icons to the library */
-library.add(
-	faFlag,
-	faRightToBracket,
-	faRightFromBracket,
-	faTableCellsLarge,
-	faUserGroup,
-	faPlus,
-	faGear,
-	faEyeSlash,
-	faUserSecret,
-)
-
 /* i18n */
 import languages from "./i18n"
-const messages = languages
+const messages = languages;
 
 export type MessageSchema = (typeof messages)["de"]
 
