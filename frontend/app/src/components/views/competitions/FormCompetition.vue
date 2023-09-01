@@ -356,10 +356,6 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-12">
-					{{ errors }}
-					{{ values }}
-				</div>
 				<div class="field col-12">
 					<Button :label="props.submitText" @click="onSubmit"> </Button>
 				</div>
