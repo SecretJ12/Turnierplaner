@@ -157,11 +157,16 @@
 						<template #value="slotProps">
 							<div v-if="slotProps.value" class="flex align-items-center">
 								<span
-									v-if="slotProps.value.name == 'FEMALE'"
+									v-if="slotProps.value.value == 'FEMALE'"
 									class="material-symbols-outlined"
 									>female</span
 								>
-								<span v-else class="material-symbols-outlined">male</span>
+								<span
+									v-else-if="slotProps.value.value === 'MALE'"
+									class="material-symbols-outlined"
+									>male</span
+								>
+								<span v-else class="material-symbols-outlined">agender</span>
 								<div>{{ slotProps.value.name }}</div>
 							</div>
 							<span v-else>
@@ -171,11 +176,16 @@
 						<template #option="slotProps">
 							<div class="flex align-items-center">
 								<span
-									v-if="slotProps.option.name === 'FEMALE'"
+									v-if="slotProps.option.value === 'FEMALE'"
 									class="material-symbols-outlined"
 									>female</span
 								>
-								<span v-else class="material-symbols-outlined">male</span>
+								<span
+									v-else-if="slotProps.option.value === 'MALE'"
+									class="material-symbols-outlined"
+									>male</span
+								>
+								<span v-else class="material-symbols-outlined">agender</span>
 								<div>{{ slotProps.option.name }}</div>
 							</div>
 						</template>
@@ -268,11 +278,16 @@
 							<template #value="slotProps">
 								<div v-if="slotProps.value" class="flex align-items-center">
 									<span
-										v-if="slotProps.value.name == 'FEMALE'"
+										v-if="slotProps.value.value == 'FEMALE'"
 										class="material-symbols-outlined"
 										>female</span
 									>
-									<span v-else class="material-symbols-outlined">male</span>
+									<span
+										v-else-if="slotProps.value.value === 'MALE'"
+										class="material-symbols-outlined"
+										>male</span
+									>
+									<span v-else class="material-symbols-outlined">agender</span>
 									<div>{{ slotProps.value.name }}</div>
 								</div>
 								<span v-else>
@@ -282,11 +297,16 @@
 							<template #option="slotProps">
 								<div class="flex align-items-center">
 									<span
-										v-if="slotProps.option.name === 'FEMALE'"
+										v-if="slotProps.option.value === 'FEMALE'"
 										class="material-symbols-outlined"
 										>female</span
 									>
-									<span v-else class="material-symbols-outlined">male</span>
+									<span
+										v-else-if="slotProps.option.value === 'MALE'"
+										class="material-symbols-outlined"
+										>male</span
+									>
+									<span v-else class="material-symbols-outlined">agender</span>
 									<div>{{ slotProps.option.name }}</div>
 								</div>
 							</template>
@@ -356,6 +376,10 @@
 						</div>
 					</div>
 				</div>
+				<div>
+					{{ errors }} <br />
+					{{ values }}
+				</div>
 				<div class="field col-12">
 					<Button :label="props.submitText" @click="onSubmit"> </Button>
 				</div>
@@ -373,6 +397,7 @@ import {
 	competitionFormToServer,
 	Mode,
 	Sex,
+	SignUp,
 	TourType,
 } from "@/interfaces/competition"
 
@@ -420,10 +445,14 @@ const {
 				name: mixed().oneOf(Object.values(TourType)).required(),
 			}),
 			mode: object({ name: mixed().oneOf(Object.values(Mode)).required() }),
-			signUp: object({ name: string() }).required(),
+			signUp: object({
+				name: string(),
+				value: mixed().oneOf(Object.values(SignUp)),
+			}).required(),
 
 			playerA_Sex: object({
-				name: mixed().oneOf(Object.values(Sex)).required(),
+				name: string().required(),
+				value: mixed().oneOf(Object.values(Sex)).required(),
 			}),
 
 			playerA_hasMinAge: boolean(),
@@ -433,7 +462,8 @@ const {
 
 			playerB_different: boolean(),
 			playerB_Sex: object({
-				name: string().oneOf(Object.values(Sex)).required(),
+				name: string().required(),
+				value: mixed().oneOf(Object.values(Sex)).required(),
 			}),
 			playerB_hasMinAge: boolean(),
 			playerB_minAge: date(),
@@ -446,8 +476,16 @@ const {
 		description: props.competition.description,
 		tourType: { name: props.competition.tourType },
 		mode: { name: props.competition.mode },
-		signUp: { name: props.competition.signUp },
-		playerA_Sex: { name: props.competition.playerA.sex },
+		signUp: { name: props.competition.signUp, value: props.competition.signUp },
+		playerA_Sex: {
+			name:
+				props.competition.playerA.sex === Sex.MALE
+					? t("CompetitionSettings.male")
+					: props.competition.playerA.sex === Sex.FEMALE
+					? t("CompetitionSettings.female")
+					: t("CompetitionSettings.any"),
+			value: props.competition.playerA.sex,
+		},
 		playerA_hasMinAge: props.competition.playerA.hasMinAge,
 		playerA_minAge: props.competition.playerA.minAge
 			? props.competition.playerA.minAge
@@ -457,7 +495,15 @@ const {
 			? props.competition.playerA.maxAge
 			: undefined,
 		playerB_different: props.competition.playerB.different,
-		playerB_Sex: { name: props.competition.playerB.sex },
+		playerB_Sex: {
+			name:
+				props.competition.playerB.sex === Sex.MALE
+					? t("CompetitionSettings.male")
+					: props.competition.playerB.sex === Sex.FEMALE
+					? t("CompetitionSettings.female")
+					: t("CompetitionSettings.any"),
+			value: props.competition.playerB.sex,
+		},
 		playerB_hasMinAge: props.competition.playerB.hasMinAge,
 		playerB_minAge: props.competition.playerB.minAge
 			? props.competition.playerB.minAge
@@ -478,10 +524,17 @@ const selectedTourType = defineComponentBinds("tourType")
 const tourMode = ref([{ name: Mode.SINGLE }, { name: Mode.DOUBLE }])
 const selectedTourMode = defineComponentBinds("mode")
 
-const signUpOptions = ref([{ name: "zusammen" }, { name: "einzeln" }])
+const signUpOptions = ref([
+	{ name: t("CompetitionSettings.individual"), value: SignUp.INDIVIDUAL },
+	{ name: t("CompetitionSettings.together"), value: SignUp.TOGETHER },
+])
 const signUp = defineComponentBinds("signUp")
 
-const sexOptions = ref([{ name: Sex.MALE }, { name: Sex.FEMALE }])
+const sexOptions = ref([
+	{ name: t("CompetitionSettings.any"), value: Sex.ANY },
+	{ name: t("CompetitionSettings.male"), value: Sex.MALE },
+	{ name: t("CompetitionSettings.female"), value: Sex.FEMALE },
+])
 
 const playerB_different = defineComponentBinds("playerB_different")
 
