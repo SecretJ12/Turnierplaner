@@ -31,11 +31,12 @@
 					/>
 				</template>
 
-				<ViewTable
-					class="mt-2"
-					:competition="props.competition"
-					:update="updateChildren"
-				/>
+				<div class="mt-4">
+					<ViewTable
+						:competition="props.competition"
+						:update="updateChildren"
+					/>
+				</div>
 			</template>
 		</Card>
 

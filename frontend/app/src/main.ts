@@ -78,6 +78,8 @@ import SelectButton from "primevue/selectbutton"
 import Skeleton from "primevue/skeleton"
 import Panel from "primevue/panel";
 import ScrollPanel from "primevue/scrollpanel";
+import DataTable from "primevue/datatable";
+import Column from "primevue/column";
 
 /* Primevue styling */
 import "primeflex/primeflex.css"
@@ -129,6 +131,8 @@ app
 	.component("Skeleton", Skeleton)
 	.component("Panel", Panel)
 	.component("ScrollPanel", ScrollPanel)
+	.component("DataTable", DataTable)
+	.component("Column", Column)
 	.mount("#app")
 
 export { router }

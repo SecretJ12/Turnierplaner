@@ -1,74 +1,71 @@
 <template>
 	<!-- SINGLE -->
-	<el-table
+	<DataTable
 		v-if="props.competition.mode === Mode.SINGLE"
-		:data="playersA"
-		:empty-text="t('ViewCompetition.no_registration')"
-		border
-		stripe
+		:value="playersA"
+		stripedRows
+		showGridlines
+		removableSort
 	>
-		<el-table-column :label="t('general.name')" prop="name" sortable="custom" />
-	</el-table>
+		<template #empty> t('ViewCompetition.no_registration')</template>
+		<Column :header="t('general.name')" sortable field="name" />
+	</DataTable>
+
 	<!-- DOUBLE TOGETHER -->
-	<el-table
+	<DataTable
 		v-else-if="props.competition.signUp === SignUp.TOGETHER"
-		:data="teams"
-		:empty-text="t('ViewCompetition.no_registration')"
-		border
-		stripe
+		:value="teams"
+		stripedRows
+		showGridlines
+		removableSort
 	>
-		<el-table-column
-			:label="t('ViewCompetition.playerA')"
-			prop="playerA.name"
-			sortable="custom"
+		<template #empty> t('ViewCompetition.no_registration')</template>
+		<Column
+			:header="t('ViewCompetition.playerA')"
+			sortable
+			field="playerA.name"
 		/>
-		<el-table-column
-			:label="t('ViewCompetition.playerB')"
-			prop="playerB.name"
-			sortable="custom"
+		<Column
+			:header="t('ViewCompetition.playerB')"
+			sortable
+			field="playerB.name"
 		/>
-	</el-table>
+	</DataTable>
 	<!-- DOUBLE INDIVIDUAL SAME -->
-	<el-table
+	<DataTable
 		v-else-if="!props.competition.playerB.different"
-		:data="playersA"
-		:empty-text="t('ViewCompetition.no_registration')"
-		border
-		stripe
+		:value="playersA"
+		stripedRows
+		showGridlines
+		removableSort
 	>
-		<el-table-column :label="t('general.name')" prop="name" sortable="custom" />
-	</el-table>
+		<template #empty> t('ViewCompetition.no_registration')</template>
+		<Column :header="t('general.name')" sortable field="name" />
+	</DataTable>
+
 	<!-- DOUBLE INDIVIDUAL DIFFERENT -->
-	<el-row v-else :gutter="20" justify="space-between">
-		<el-col :span="12">
-			<el-table
-				:data="playersA"
-				:empty-text="t('ViewCompetition.no_registration')"
-				border
-				stripe
-			>
-				<el-table-column
-					:label="t('ViewCompetition.playerA')"
-					prop="name"
-					sortable="custom"
-				/>
-			</el-table>
-		</el-col>
-		<el-col :span="12">
-			<el-table
-				:data="playersB"
-				:empty-text="t('ViewCompetition.no_registration')"
-				border
-				stripe
-			>
-				<el-table-column
-					:label="t('ViewCompetition.playerB')"
-					prop="name"
-					sortable="custom"
-				/>
-			</el-table>
-		</el-col>
-	</el-row>
+	<div v-else class="grid">
+		<DataTable
+			class="col"
+			:value="playersA"
+			stripedRows
+			showGridlines
+			removableSort
+		>
+			<template #empty> t('ViewCompetition.no_registration')</template>
+			<Column :header="t('ViewCompetition.playerA')" sortable field="name" />
+		</DataTable>
+		<DataTable
+			class="col"
+			:value="playersB"
+			stripedRows
+			showGridlines
+			removableSort
+		>
+			<template #empty> t('ViewCompetition.no_registration')</template>
+			<Column :header="t('ViewCompetition.playerB')" sortable field="name" />
+		</DataTable>
+	</div>
 </template>
 
 <script lang="ts" setup>
