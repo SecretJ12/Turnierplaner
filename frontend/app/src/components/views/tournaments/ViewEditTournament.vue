@@ -1,7 +1,7 @@
 <template>
 	<FormTournament
-		v-if="data.id === null"
-		:data="data"
+		v-if="data === null"
+		:data="TournamentFormDefault"
 		:disabled="true"
 		:submit-text="t('general.update')"
 		header="ViewEditTournament.tournamentUpdate"
@@ -19,7 +19,7 @@
 
 <script lang="ts" setup>
 import { useRoute } from "vue-router"
-import { TournamentServer } from "@/interfaces/tournament"
+import { TournamentFormDefault, TournamentServer } from "@/interfaces/tournament";
 import FormTournament from "@/components/views/tournaments/FormTournament.vue"
 import { useI18n } from "vue-i18n"
 import { useToast } from "primevue/usetoast"
@@ -34,16 +34,21 @@ const toast = useToast()
 
 const route = useRoute()
 
-const data = getTournamentFormDetails(
-	<string>route.params.tourId,
-	t,
-	toast,
-	() => {
+const data = getTournamentFormDetails(<string>route.params.tourId, t, toast, {
+	err: () => {
 		router.back()
 	},
-)
+})
 
 function submit(server_data: TournamentServer) {
+	if (!data.value) {
+		toast.add({
+			severity: "error",
+			summary: t("ViewEditTournament.tournamentUpdateFailed"),
+			life: 3000,
+		})
+		return
+	}
 	server_data["id"] = data.value.id
 
 	updateTournament(server_data, t, toast)

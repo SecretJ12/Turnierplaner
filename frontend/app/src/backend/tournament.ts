@@ -3,7 +3,6 @@ import axios from "axios"
 import {
 	Tournament,
 	TournamentForm,
-	TournamentFormDefault,
 	tournamentFormServerToClient,
 	TournamentServer,
 	tournamentServerToClient,
@@ -44,16 +43,19 @@ function getTournamentDetails_abs<T>(
 	tourId: string,
 	t: (s: string) => string,
 	toast: ToastServiceMethods,
-	defaultValue: T,
 	mapper: (arg0: TournamentServer) => UnwrapRef<T>,
-	errorHandler?: () => void,
+	handler: {
+		suc?: () => void
+		err?: () => void
+	},
 ) {
-	const tournament = ref<T>(defaultValue)
+	const tournament = ref<T | null>(null)
 
 	axios
 		.get<TournamentServer>(`/tournament/${tourId}/details`)
 		.then((response) => {
 			tournament.value = mapper(response.data)
+			if (handler.suc) handler.suc()
 		})
 		.catch((error) => {
 			toast.add({
@@ -63,7 +65,7 @@ function getTournamentDetails_abs<T>(
 				life: 3000,
 			})
 			console.log(error)
-			if (errorHandler) errorHandler()
+			if (handler.err) handler.err()
 		})
 
 	return tournament
@@ -73,15 +75,17 @@ export function getTournamentFormDetails(
 	tourId: string,
 	t: (s: string) => string,
 	toast: ToastServiceMethods,
-	errorHandler?: () => void,
+	handler: {
+		suc?: () => void
+		err?: () => void
+	},
 ) {
 	return getTournamentDetails_abs<TournamentForm>(
 		tourId,
 		t,
 		toast,
-		TournamentFormDefault,
 		tournamentFormServerToClient,
-		errorHandler,
+		handler,
 	)
 }
 
@@ -89,15 +93,17 @@ export function getTournamentDetails(
 	tourId: string,
 	t: (s: string) => string,
 	toast: ToastServiceMethods,
-	errorHandler?: () => void,
+	handler: {
+		suc?: () => void
+		err?: () => void
+	},
 ) {
-	return getTournamentDetails_abs<Tournament | null>(
+	return getTournamentDetails_abs<Tournament>(
 		tourId,
 		t,
 		toast,
-		null,
 		tournamentServerToClient,
-		errorHandler,
+		handler,
 	)
 }
 
