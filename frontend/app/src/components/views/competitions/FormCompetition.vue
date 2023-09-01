@@ -370,16 +370,16 @@ import { ref } from "vue"
 import { useI18n } from "vue-i18n"
 import {
 	Competition,
-	competitionClientToServer,
+	competitionForm,
+	competitionFormToServer,
 	Mode,
 	Sex,
-	SignUp,
 	TourType,
 } from "@/interfaces/competition"
 
 import { useForm } from "vee-validate"
 
-import { boolean, date, mixed, number, object, string } from "yup"
+import { boolean, date, mixed, object, string } from "yup"
 import { toTypedSchema } from "@vee-validate/yup"
 
 const { t } = useI18n({ inheritLocale: true })
@@ -442,7 +442,7 @@ const {
 		}),
 	),
 	initialValues: {
-		name: props.competition.name,
+		name: props.competition.name ? props.competition.name : undefined,
 		description: props.competition.description,
 		tourType: { name: props.competition.tourType },
 		mode: { name: props.competition.mode },
@@ -502,17 +502,6 @@ const playerBMaxAge = defineComponentBinds("playerB_maxAge")
 
 const emit = defineEmits(["submit"])
 
-function submit(formRef: HTMLFormElement | undefined) {
-	if (!formRef) return
-	formRef.validate((valid: boolean) => {
-		if (valid) {
-			emit("submit", competitionClientToServer(props.competition))
-		} else {
-			console.log("validation failed")
-		}
-	})
-}
-
 function updateAge(slideNumber: number) {
 	switch (slideNumber) {
 		case 1:
@@ -530,61 +519,18 @@ function updateAge(slideNumber: number) {
 	}
 }
 
-const checkAMin = (
-	rule: any, // eslint-disable-line @typescript-eslint/no-explicit-any
-	value: Date,
-	callback: (arg0?: Error) => void,
-) => {
-	if (
-		props.competition.playerA.hasMinAge &&
-		props.competition.playerA.minAge === null
+const onSubmit = handleSubmit((values) => {
+	emit(
+		"submit",
+		competitionFormToServer(
+			<competitionForm>values,
+			<string | null>props.competition.id,
+		),
 	)
-		callback(new Error(t("CompetitionSettings.missingAge")))
-	callback()
-}
-const checkAMax = (
-	rule: any, // eslint-disable-line @typescript-eslint/no-explicit-any
-	value: Date,
-	callback: (arg0?: Error) => void,
-) => {
-	if (
-		props.competition.playerA.hasMaxAge &&
-		props.competition.playerA.maxAge === null
-	)
-		callback(new Error(t("CompetitionSettings.missingAge")))
-	callback()
-}
-const checkBMin = (
-	rule: any, // eslint-disable-line @typescript-eslint/no-explicit-any
-	value: Date,
-	callback: (arg0?: Error) => void,
-) => {
-	if (
-		props.competition.playerB.hasMinAge &&
-		props.competition.playerB.minAge === null
-	)
-		callback(new Error(t("CompetitionSettings.missingAge")))
-	callback()
-}
-const checkBMax = (
-	rule: any, // eslint-disable-line @typescript-eslint/no-explicit-any
-	value: Date,
-	callback: (arg0?: Error) => void,
-) => {
-	if (
-		props.competition.playerB.hasMaxAge &&
-		props.competition.playerB.maxAge === null
-	)
-		callback(new Error(t("CompetitionSettings.missingAge")))
-	callback()
-}
+})
 </script>
 
 <style scoped>
-.full-width {
-	width: 100%;
-}
-
 #card {
 	width: min(90dvw, 50rem);
 }
