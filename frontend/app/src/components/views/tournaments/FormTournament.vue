@@ -4,8 +4,8 @@
 			<template #title>{{ t(props.header) }}</template>
 			<template #content>
 				<div class="formgrid grid">
-					<div class="field col-12 flex w-full justify-content-end">
-						<div style="flex-grow: 3">
+					<div class="field flex w-full justify-content-end">
+						<div class="col" style="flex-grow: 3">
 							<label for="name">{{ t("general.name") }}</label>
 							<InputText
 								id="name"
@@ -20,8 +20,7 @@
 							</InlineMessage>
 						</div>
 						<div
-							class="flex flex-column min-w-max flex-grow-0"
-							style="padding-left: 1rem"
+							class="col flex flex-column min-w-max flex-grow-0"
 						>
 							<label for="visible" class="text-900">{{
 								t("TournamentSettings.visible")
