@@ -13,7 +13,10 @@
 		</h2>
 		<div id="content">
 			<div id="competitions">
-				<item
+				<template v-if="competitions === null">
+					<Skeleton v-for="() in Array(5)" class="w-23rem h-12rem" />
+				</template>
+				<item v-else
 					v-for="competition in competitions"
 					:key="competition.id"
 					:can-edit="canEdit"
@@ -31,7 +34,11 @@
 				/>
 			</div>
 			<div id="aside">
-				<Timeline v-if="tournament !== null" id="progress" op :value="status">
+				<template v-if="tournament === null">
+					<Skeleton class="h-2rem mb-2" />
+					<Skeleton class="h-2rem" />
+				</template>
+				<Timeline v-else id="progress" op :value="status">
 					<template #marker="slotProps">
 						<span
 							class="progress-icon"
@@ -47,8 +54,8 @@
 					<template #content="slotProps">
 						<div style="height: 3px"></div>
 						<template v-if="slotProps.item.registration">
-							<strong>{{ t("TournamentSettings.registration_phase") }}</strong
-							><br />
+							<strong>{{ t("TournamentSettings.registration_phase") }}</strong>
+							<br />
 							<strong>{{ t("ViewCompetitions.from") }}</strong>
 							{{ formatDate(tournament?.registration_phase.begin) }}<br />
 							<strong>{{ t("ViewCompetitions.till") }}</strong>

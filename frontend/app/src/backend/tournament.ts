@@ -14,7 +14,7 @@ export function getListTournaments(
 	t: (s: string) => string,
 	toast: ToastServiceMethods,
 ) {
-	const tournaments = ref<Tournament[]>([])
+	const tournaments = ref<Tournament[] | null>(null)
 
 	watch(isLoggedIn, update)
 	update()

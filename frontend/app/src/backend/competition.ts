@@ -17,7 +17,7 @@ export function getListCompetitions(
 		err?: () => void
 	},
 ) {
-	const competitions = ref<Competition[]>([])
+	const competitions = ref<Competition[] | null>(null)
 
 	watch(isLoggedIn, update)
 	update()

@@ -1,6 +1,10 @@
 <template>
 	<div id="tournaments">
+		<template v-if="tournaments === null">
+			<Skeleton v-for="() in Array(5)" class="w-23rem h-12rem" />
+		</template>
 		<item
+			v-else
 			v-for="tournament in tournaments"
 			:key="tournament.name"
 			:can-create="canCreate"
