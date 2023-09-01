@@ -60,6 +60,7 @@ const router = VueRouter.createRouter({
 /* Primevue components*/
 import PrimeVue from "primevue/config"
 import ToastService from "primevue/toastservice"
+import Tooltip from "primevue/tooltip";
 import Steps from "primevue/steps"
 import TabView from "primevue/tabview"
 import TabMenu from "primevue/tabmenu"
@@ -80,6 +81,7 @@ import Panel from "primevue/panel";
 import ScrollPanel from "primevue/scrollpanel";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
+import Tag from "primevue/tag";
 
 /* Primevue styling */
 import "primeflex/primeflex.css"
@@ -133,6 +135,8 @@ app
 	.component("ScrollPanel", ScrollPanel)
 	.component("DataTable", DataTable)
 	.component("Column", Column)
+	.component("Tag", Tag)
+	.directive('tooltip', Tooltip)
 	.mount("#app")
 
 export { router }
