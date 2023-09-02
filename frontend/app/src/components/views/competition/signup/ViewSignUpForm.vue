@@ -7,20 +7,20 @@
 				:begin-game-phase="props.beginGamePhase"
 				:player="props.competition.playerA"
 			/>
-			<div class="grid">
-				<div class="col-8">
-					<el-autocomplete
+			<div class="flex justify-content-end gap-2">
+				<div class="p-inputgroup">
+					<AutoComplete
 						v-model="playerSearchA"
-						:fetch-suggestions="queryPlayerA"
+						class="w-full"
 						:placeholder="t('general.name')"
-						hide-loading
-						style="width: 100%"
+						:suggestions="suggestionsPlayerA"
+						optionLabel="value"
+						dataKey="id"
+						@complete="queryPlayerA"
 					/>
-				</div>
-				<div class="col-4">
-					<el-button style="width: 100%" @click="signUpSingle">
+					<Button @click="signUpSingle">
 						{{ t("general.signUp") }}
-					</el-button>
+					</Button>
 				</div>
 			</div>
 		</div>
@@ -105,10 +105,7 @@
 				:begin-game-phase="props.beginGamePhase"
 				:player="props.competition.playerA"
 			/>
-			<div
-				id="regDoubIndDifRegA"
-				class="grid"
-			>
+			<div id="regDoubIndDifRegA" class="grid">
 				<div class="col-8">
 					<el-autocomplete
 						v-model="playerSearchA"
@@ -130,10 +127,7 @@
 				:begin-game-phase="props.beginGamePhase"
 				:player="props.competition.playerB"
 			/>
-			<div
-				id="regDoubIndDifRegB"
-				class="grid"
-			>
+			<div id="regDoubIndDifRegB" class="grid">
 				<div class="col-8">
 					<el-autocomplete
 						v-model="playerSearchB"
@@ -163,6 +157,7 @@ import { Competition, Mode, Sex, SignUp } from "@/interfaces/competition"
 import { Player, searchedPlayer } from "@/interfaces/player"
 import { useI18n } from "vue-i18n"
 import { Team } from "@/interfaces/registration/team"
+import { AutoCompleteCompleteEvent } from "primevue/autocomplete"
 
 const { t } = useI18n({ inheritLocale: true })
 
@@ -174,19 +169,23 @@ const props = defineProps<{
 	competition: Competition
 }>()
 
+interface player {
+	id: string,
+	firstName: string,
+	lastName: string,
+	value: string
+}
+
 const playerSearchA = ref("")
-let queriedPlayerA: searchedPlayer[] = []
+const suggestionsPlayerA = ref<player[]>([])
 const playerSearchB = ref("")
 let queriedPlayerB: searchedPlayer[] = []
 
-function queryPlayerA(
-	search: string,
-	callback: (player: searchedPlayer[]) => void,
-) {
-	queriedPlayerA = queriedPlayerA.filter((item) => {
-		return item.value.toLowerCase().includes(search.toLowerCase())
+function queryPlayerA(event: AutoCompleteCompleteEvent) {
+	suggestionsPlayerA.value = suggestionsPlayerA.value.filter((item) => {
+		return item.value.toLowerCase().includes(event.query.toLowerCase())
 	})
-	callback(queriedPlayerA)
+
 	if (
 		props.competition.playerA.hasMinAge &&
 		props.competition.playerA.minAge === null
@@ -194,9 +193,10 @@ function queryPlayerA(
 		console.log("Data invalid")
 		return
 	}
+	// TODO put to backend file
 	axios
 		.get<Player[]>(
-			`/player/find?search=${search}` +
+			`/player/find?search=${event.query}` +
 				(props.competition.playerA.sex !== Sex.ANY
 					? `&sex=${props.competition.playerA.sex}`
 					: "") +
@@ -214,7 +214,7 @@ function queryPlayerA(
 					: ""),
 		)
 		.then((result) => {
-			queriedPlayerA = result.data.map((item) => {
+			suggestionsPlayerA.value = result.data.map((item) => {
 				return {
 					id: item.id,
 					firstName: item.firstName,
@@ -222,10 +222,10 @@ function queryPlayerA(
 					value: item.firstName + " " + item.lastName,
 				}
 			})
-			callback(queriedPlayerA)
 		})
 		.catch((error) => {
-			ElMessage.error(t("ViewCompetition.query_search_failed"))
+			//ElMessage.error(t("ViewCompetition.query_search_failed"))
+			// TODO toast
 			console.log(error)
 		})
 }
