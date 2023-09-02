@@ -13,7 +13,7 @@
 		</Card>
 
 		<!-- Show registration is over -->
-		<Card class="mt-2" style="width: 60%">
+		<Card class="mt-2 w-12 md:w-10 lg:w-6">
 			<template #content>
 				<p v-if="!allowRegistration" style="text-align: center">
 					{{ t("ViewCompetition.registration_over") }}

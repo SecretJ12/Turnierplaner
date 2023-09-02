@@ -24,11 +24,13 @@
 			:header="t('ViewCompetition.playerA')"
 			sortable
 			field="playerA.name"
+			style="width: 50%"
 		/>
 		<Column
 			:header="t('ViewCompetition.playerB')"
 			sortable
 			field="playerB.name"
+			style="width: 50%"
 		/>
 	</DataTable>
 	<!-- DOUBLE INDIVIDUAL SAME -->
