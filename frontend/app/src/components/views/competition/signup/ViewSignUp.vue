@@ -13,7 +13,7 @@
 		</Card>
 
 		<!-- Show registration is over -->
-		<Card class="mt-2 w-12 md:w-10 lg:w-6">
+		<Card class="mt-2 mb-2 w-12 md:w-10 lg:w-8 xl:w-7">
 			<template #content>
 				<p v-if="!allowRegistration" style="text-align: center">
 					{{ t("ViewCompetition.registration_over") }}
@@ -31,7 +31,7 @@
 					/>
 				</template>
 
-				<div class="mt-4">
+				<div class="mt-2">
 					<ViewTable
 						:competition="props.competition"
 						:update="updateChildren"
