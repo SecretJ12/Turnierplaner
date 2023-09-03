@@ -86,19 +86,19 @@ export interface settingsPlayer {
 	maxAge: Date | null
 }
 
-export interface competitionForm {
+export interface CompetitionForm {
 	name: string
 	description: string
-	tourType: { name: TourType }
-	mode: { name: Mode }
-	signUp: { name: SignUp }
-	playerA_Sex: { name: Sex }
+	tourType: TourType
+	mode: Mode
+	signUp: SignUp
+	playerA_Sex: Sex
 	playerA_hasMinAge: boolean
 	playerA_MinAge: Date | undefined
 	playerA_hasMaxAge: boolean
 	playerA_MaxAge: Date | undefined
 	playerB_Different: boolean
-	playerB_Sex: { name: Sex }
+	playerB_Sex: Sex
 	playerB_hasMinAge: boolean
 	playerB_MinAge: Date | undefined
 	playerB_hasMaxAge: boolean
@@ -110,18 +110,18 @@ export interface settingsPlayerB extends settingsPlayer {
 }
 
 export function competitionFormToServer(
-	form: competitionForm,
+	form: CompetitionForm,
 	id: string | null,
 ): CompetitionServer {
 	return {
 		id: id,
 		name: form.name,
 		description: form.description,
-		type: form.tourType.name,
-		mode: form.mode.name,
-		signUp: form.signUp.name,
+		type: form.tourType,
+		mode: form.mode,
+		signUp: form.signUp,
 		playerA: {
-			sex: form.playerA_Sex.name,
+			sex: form.playerA_Sex,
 			hasMinAge: form.playerA_hasMinAge,
 			minAge: form.playerA_MinAge ? dateToJson(form.playerA_MinAge) : null,
 			hasMaxAge: form.playerA_hasMaxAge,
@@ -129,7 +129,7 @@ export function competitionFormToServer(
 		},
 		playerB: {
 			different: form.playerB_Different,
-			sex: form.playerB_Sex.name,
+			sex: form.playerB_Sex,
 			hasMinAge: form.playerB_hasMinAge,
 			minAge: form.playerB_MinAge ? dateToJson(form.playerB_MinAge) : null,
 			hasMaxAge: form.playerB_hasMaxAge,
