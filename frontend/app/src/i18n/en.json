@@ -10,8 +10,8 @@
 		"name": "Name",
 		"description": "Description",
 		"name_missing": "Please input a name",
-		"signUp": "sign up",
-		"register": "register",
+		"signUp": "Sign up",
+		"register": "Register",
 		"success": "Success!",
 		"failure": "Failure!",
 		"loading": "Loading..."
@@ -114,6 +114,12 @@
 		"minAge": "Minimum age",
 		"maxAge": "Maximum age",
 		"missingAge": "Please choose a date"
+	},
+	"ViewSignUp":{
+		"atLeastOneLetter": "Please type at least one letter",
+		"noPlayerSelected": "No player selected",
+		"selectPlayerFirst": "Please select a player firrst",
+		"noPlayerFound": "No player found"
 	},
 	"ViewCreateCompetition": {
 		"creationFailed": "Couldn't create competition",

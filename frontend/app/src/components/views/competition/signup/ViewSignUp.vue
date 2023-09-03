@@ -1,4 +1,5 @@
 <template>
+	<!-- TODO place button to registration -->
 	<div class="w-full flex flex-column align-items-center">
 		<Card class="w-full md:w-30rem">
 			<template #content>

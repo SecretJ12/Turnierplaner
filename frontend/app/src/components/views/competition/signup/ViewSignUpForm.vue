@@ -7,21 +7,26 @@
 				:begin-game-phase="props.beginGamePhase"
 				:player="props.competition.playerA"
 			/>
-			<div class="flex justify-content-end gap-2">
-				<div class="p-inputgroup">
-					<AutoComplete
-						v-model="playerSearchA"
-						class="w-full"
-						:placeholder="t('general.name')"
-						:suggestions="suggestionsPlayerA"
-						optionLabel="value"
-						dataKey="id"
-						@complete="queryPlayerA"
-					/>
-					<Button @click="signUpSingle">
-						{{ t("general.signUp") }}
-					</Button>
-				</div>
+			<div class="p-inputgroup">
+				<Dropdown
+					v-model="selectedPlayerA"
+					:options="suggestionsPlayerA"
+					:loading="loadingA"
+					optionLabel="value"
+					dataKey="id"
+					filter
+					@filter="queryPlayerA"
+				>
+					<template #empty>
+						{{ t("ViewSignUp.atLeastOneLetter") }}
+					</template>
+					<template #emptyfilter>
+						{{ t("ViewSignUp.noPlayerFound") }}
+					</template>
+				</Dropdown>
+				<Button @click="signUpSingle">
+					{{ t("general.signUp") }}
+				</Button>
 			</div>
 		</div>
 	</template>
@@ -44,31 +49,47 @@
 			</div>
 			<div class="grid">
 				<div class="col-6">
-					<el-autocomplete
-						v-model="playerSearchA"
-						:fetch-suggestions="queryPlayerA"
-						:placeholder="t('ViewCompetition.playerA')"
-						hide-loading
-						style="width: 100%"
-					/>
+					<Dropdown
+						class="w-full"
+						v-model="selectedPlayerA"
+						:options="suggestionsPlayerA"
+						:loading="loadingA"
+						optionLabel="value"
+						dataKey="id"
+						filter
+						@filter="queryPlayerA"
+					>
+						<template #empty>
+							{{ t("ViewSignUp.atLeastOneLetter") }}
+						</template>
+						<template #emptyfilter>
+							{{ t("ViewSignUp.noPlayerFound") }}
+						</template>
+					</Dropdown>
 				</div>
 				<div clasS="col-6">
-					<el-autocomplete
-						v-model="playerSearchB"
-						:fetch-suggestions="queryPlayerB"
-						:placeholder="t('ViewCompetition.playerB')"
-						hide-loading
-						style="width: 100%"
-					/>
+					<Dropdown
+						class="w-full"
+						v-model="selectedPlayerB"
+						:options="suggestionsPlayerB"
+						:loading="loadingB"
+						optionLabel="value"
+						dataKey="id"
+						filter
+						@filter="queryPlayerB"
+					>
+						<template #empty>
+							{{ t("ViewSignUp.atLeastOneLetter") }}
+						</template>
+						<template #emptyfilter>
+							{{ t("ViewSignUp.noPlayerFound") }}
+						</template>
+					</Dropdown>
 				</div>
 			</div>
-			<div class="grid">
-				<div class="col-12">
-					<el-button class="w-full" @click="signUpDoubleTog">
-						{{ t("general.signUp") }}
-					</el-button>
-				</div>
-			</div>
+			<Button class="w-full" @click="signUpDoubleTog">
+				{{ t("general.signUp") }}
+			</Button>
 		</div>
 	</template>
 	<!-- DOUBLE INDIVIDUAL SAME -->
@@ -79,21 +100,26 @@
 				:begin-game-phase="props.beginGamePhase"
 				:player="props.competition.playerA"
 			/>
-			<div class="grid">
-				<div class="col-8">
-					<el-autocomplete
-						v-model="playerSearchA"
-						:fetch-suggestions="queryPlayerA"
-						:placeholder="t('general.name')"
-						hide-loading
-						style="width: 100%"
-					/>
-				</div>
-				<div class="col-4">
-					<el-button style="width: 100%" @click="signUpDoubleIndSame">
-						{{ t("general.signUp") }}
-					</el-button>
-				</div>
+			<div class="p-inputgroup">
+				<Dropdown
+					v-model="selectedPlayerA"
+					:options="suggestionsPlayerA"
+					:loading="loadingA"
+					optionLabel="value"
+					dataKey="id"
+					filter
+					@filter="queryPlayerA"
+				>
+					<template #empty>
+						{{ t("ViewSignUp.atLeastOneLetter") }}
+					</template>
+					<template #emptyfilter>
+						{{ t("ViewSignUp.noPlayerFound") }}
+					</template>
+				</Dropdown>
+				<Button @click="signUpDoubleIndSame">
+					{{ t("general.signUp") }}
+				</Button>
 			</div>
 		</div>
 	</template>
@@ -105,21 +131,26 @@
 				:begin-game-phase="props.beginGamePhase"
 				:player="props.competition.playerA"
 			/>
-			<div id="regDoubIndDifRegA" class="grid">
-				<div class="col-8">
-					<el-autocomplete
-						v-model="playerSearchA"
-						:fetch-suggestions="queryPlayerA"
-						:placeholder="t('ViewCompetition.playerA')"
-						hide-loading
-						style="width: 100%"
-					/>
-				</div>
-				<div class="col-4">
-					<el-button style="width: 100%" @click="signUpDoubleIndDifA">
-						{{ t("general.signUp") }}
-					</el-button>
-				</div>
+			<div id="regDoubIndDifRegA" class="p-inputgroup">
+				<Dropdown
+					v-model="selectedPlayerA"
+					:options="suggestionsPlayerA"
+					:loading="loadingA"
+					optionLabel="value"
+					dataKey="id"
+					filter
+					@filter="queryPlayerA"
+				>
+					<template #empty>
+						{{ t("ViewSignUp.atLeastOneLetter") }}
+					</template>
+					<template #emptyfilter>
+						{{ t("ViewSignUp.noPlayerFound") }}
+					</template>
+				</Dropdown>
+				<Button @click="signUpDoubleIndDifA">
+					{{ t("general.signUp") }}
+				</Button>
 			</div>
 
 			<ViewConditions
@@ -127,21 +158,26 @@
 				:begin-game-phase="props.beginGamePhase"
 				:player="props.competition.playerB"
 			/>
-			<div id="regDoubIndDifRegB" class="grid">
-				<div class="col-8">
-					<el-autocomplete
-						v-model="playerSearchB"
-						:fetch-suggestions="queryPlayerB"
-						:placeholder="t('ViewCompetition.playerB')"
-						hide-loading
-						style="width: 100%"
-					/>
-				</div>
-				<div class="col-4">
-					<el-button style="width: 100%" @click="signUpDoubleIndDifB">
-						{{ t("general.signUp") }}
-					</el-button>
-				</div>
+			<div id="regDoubIndDifRegB" class="p-inputgroup">
+				<Dropdown
+					v-model="selectedPlayerB"
+					:options="suggestionsPlayerB"
+					:loading="loadingB"
+					optionLabel="value"
+					dataKey="id"
+					filter
+					@filter="queryPlayerB"
+				>
+					<template #empty>
+						{{ t("ViewSignUp.atLeastOneLetter") }}
+					</template>
+					<template #emptyfilter>
+						{{ t("ViewSignUp.noPlayerFound") }}
+					</template>
+				</Dropdown>
+				<Button @click="signUpDoubleIndDifB">
+					{{ t("general.signUp") }}
+				</Button>
 			</div>
 		</div>
 	</template>
@@ -150,16 +186,17 @@
 <script lang="ts" setup>
 import { ref } from "vue"
 import axios from "axios"
-import { ElMessage } from "element-plus"
 import ViewConditions from "@/components/views/competition/signup/ViewConditions.vue"
 import { useRoute } from "vue-router"
 import { Competition, Mode, Sex, SignUp } from "@/interfaces/competition"
 import { Player, searchedPlayer } from "@/interfaces/player"
 import { useI18n } from "vue-i18n"
 import { Team } from "@/interfaces/registration/team"
-import { AutoCompleteCompleteEvent } from "primevue/autocomplete"
+import { DropdownFilterEvent } from "primevue/dropdown"
+import { useToast } from "primevue/usetoast"
 
 const { t } = useI18n({ inheritLocale: true })
+const toast = useToast()
 
 const route = useRoute()
 
@@ -169,21 +206,17 @@ const props = defineProps<{
 	competition: Competition
 }>()
 
-interface player {
-	id: string,
-	firstName: string,
-	lastName: string,
-	value: string
-}
+const selectedPlayerA = ref<searchedPlayer | null>(null)
+const suggestionsPlayerA = ref<searchedPlayer[]>([])
+const loadingA = ref<boolean>(false)
+const selectedPlayerB = ref<searchedPlayer | null>(null)
+const suggestionsPlayerB = ref<searchedPlayer[]>([])
+const loadingB = ref<boolean>(false)
 
-const playerSearchA = ref("")
-const suggestionsPlayerA = ref<player[]>([])
-const playerSearchB = ref("")
-let queriedPlayerB: searchedPlayer[] = []
-
-function queryPlayerA(event: AutoCompleteCompleteEvent) {
+function queryPlayerA(event: DropdownFilterEvent) {
+	loadingA.value = true
 	suggestionsPlayerA.value = suggestionsPlayerA.value.filter((item) => {
-		return item.value.toLowerCase().includes(event.query.toLowerCase())
+		return item.value.toLowerCase().includes(event.value.toLowerCase())
 	})
 
 	if (
@@ -196,7 +229,7 @@ function queryPlayerA(event: AutoCompleteCompleteEvent) {
 	// TODO put to backend file
 	axios
 		.get<Player[]>(
-			`/player/find?search=${event.query}` +
+			`/player/find?search=${event.value}` +
 				(props.competition.playerA.sex !== Sex.ANY
 					? `&sex=${props.competition.playerA.sex}`
 					: "") +
@@ -214,6 +247,7 @@ function queryPlayerA(event: AutoCompleteCompleteEvent) {
 					: ""),
 		)
 		.then((result) => {
+			// TODO avoid races
 			suggestionsPlayerA.value = result.data.map((item) => {
 				return {
 					id: item.id,
@@ -224,38 +258,55 @@ function queryPlayerA(event: AutoCompleteCompleteEvent) {
 			})
 		})
 		.catch((error) => {
-			//ElMessage.error(t("ViewCompetition.query_search_failed"))
-			// TODO toast
+			toast.add({
+				severity: "error",
+				summary: t("ViewCompetition.query_search_failed"),
+				detail: error,
+				life: 3000,
+			})
 			console.log(error)
+		})
+		.finally(() => {
+			loadingA.value = false
 		})
 }
 
-function queryPlayerB(search: string, callback: (player: Player[]) => void) {
-	queriedPlayerB = queriedPlayerB.filter((item) => {
-		return item.value.toLowerCase().includes(search.toLowerCase())
+function queryPlayerB(event: DropdownFilterEvent) {
+	loadingB.value = true
+	suggestionsPlayerB.value = suggestionsPlayerB.value.filter((item) => {
+		return item.value.toLowerCase().includes(event.value.toLowerCase())
 	})
-	callback(queriedPlayerB)
+
+	if (
+		props.competition.playerB.hasMinAge &&
+		props.competition.playerB.minAge === null
+	) {
+		console.log("Data invalid")
+		return
+	}
+	// TODO put to backend file
 	axios
 		.get<Player[]>(
-			`/player/find?search=${search}` +
-				(props.competition.playerB.sex !== "ANY"
-					? `&sex=${props.competition.playerB.sex}`
-					: "") +
-				(props.competition.playerB.hasMinAge &&
-				props.competition.playerB.minAge !== null
-					? `&minAge=${props.competition.playerB.minAge
-							.toISOString()
-							.slice(0, 10)}`
-					: "") +
-				(props.competition.playerB.hasMaxAge &&
-				props.competition.playerB.maxAge !== null
-					? `&minAge=${props.competition.playerB.maxAge
-							.toISOString()
-							.slice(0, 10)}`
-					: ""),
+			`/player/find?search=${event.value}` +
+			(props.competition.playerB.sex !== Sex.ANY
+				? `&sex=${props.competition.playerB.sex}`
+				: "") +
+			(props.competition.playerB.hasMinAge &&
+			props.competition.playerB.minAge !== null
+				? `&minAge=${props.competition.playerB.minAge
+					.toISOString()
+					.slice(0, 10)}`
+				: "") +
+			(props.competition.playerB.hasMaxAge &&
+			props.competition.playerB.maxAge !== null
+				? `&minAge=${props.competition.playerB.maxAge
+					.toISOString()
+					.slice(0, 10)}`
+				: ""),
 		)
 		.then((result) => {
-			queriedPlayerB = result.data.map((item) => {
+			// TODO avoid races
+			suggestionsPlayerB.value = result.data.map((item) => {
 				return {
 					id: item.id,
 					firstName: item.firstName,
@@ -263,43 +314,52 @@ function queryPlayerB(search: string, callback: (player: Player[]) => void) {
 					value: item.firstName + " " + item.lastName,
 				}
 			})
-			callback(queriedPlayerB)
 		})
 		.catch((error) => {
-			ElMessage.error(t("ViewCompetition.query_search_failed"))
+			toast.add({
+				severity: "error",
+				summary: t("ViewCompetition.query_search_failed"),
+				detail: error,
+				life: 3000,
+			})
 			console.log(error)
+		})
+		.finally(() => {
+			loadingB.value = false
 		})
 }
 
-function signUpPlayer(
-	queriedPlayer: searchedPlayer[],
-	playerSearch: string,
-	playerA: boolean,
-) {
-	const validPlayers = queriedPlayer.filter((p) => {
-		return p.value.includes(playerSearch)
-	})
-	if (validPlayers.length > 1) {
-		ElMessage.error(t("Player.too_many_results"))
-		return
-	}
-	if (validPlayers.length === 0) {
-		ElMessage.error(t("Player.no_result"))
-		return
-	}
-	const player = validPlayers[0]
-
+function signUpPlayer(playerA: boolean) {
 	const form: Team = {}
-	if (playerA)
+	if (playerA) {
+		if (!selectedPlayerA.value) {
+			toast.add({
+				severity: "error",
+				summary: t("ViewSignUp.noPlayerSelected"),
+				detail: t("ViewSignUp.selectPlayerFirst"),
+				life: 3000,
+			})
+			return
+		}
 		form["playerA"] = {
-			firstName: player.firstName,
-			lastName: player.lastName,
+			firstName: selectedPlayerA.value.firstName,
+			lastName: selectedPlayerA.value.lastName,
 		}
-	else
+	} else {
+		if (!selectedPlayerB.value) {
+			toast.add({
+				severity: "error",
+				summary: t("ViewSignUp.noPlayerSelected"),
+				detail: t("ViewSignUp.selectPlayerFirst"),
+				life: 3000,
+			})
+			return
+		}
 		form["playerB"] = {
-			firstName: player.firstName,
-			lastName: player.lastName,
+			firstName: selectedPlayerB.value.firstName,
+			lastName: selectedPlayerB.value.lastName,
 		}
+	}
 
 	axios
 		.post(
@@ -307,67 +367,64 @@ function signUpPlayer(
 			form,
 		)
 		.then(() => {
-			ElMessage.success(t("Player.register_success"))
+			toast.add({
+				severity: "success",
+				summary: t("Player.register_success"),
+				life: 3000,
+			})
 			emit("registered", "")
 		})
 		.catch((error) => {
 			if (error.response.status === 409)
-				ElMessage.error(t("Player.already_exists"))
-			else ElMessage.error(t("Player.register_failed"))
+				toast.add({
+					severity: "error",
+					summary: t("Player.already_exists"),
+					life: 3000,
+				})
+			else
+				toast.add({
+					severity: "error",
+					summary: t("Player.register_failed"),
+					detail: error,
+					life: 3000,
+				})
 		})
 }
 
 function signUpSingle() {
-	signUpPlayer(queriedPlayerA, playerSearchA.value, true)
+	signUpPlayer(true)
 }
 
 function signUpDoubleIndSame() {
-	signUpPlayer(queriedPlayerA, playerSearchA.value, true)
+	signUpPlayer(true)
 }
 
 function signUpDoubleIndDifA() {
-	signUpPlayer(queriedPlayerA, playerSearchA.value, true)
+	signUpPlayer(true)
 }
 
 function signUpDoubleIndDifB() {
-	signUpPlayer(queriedPlayerB, playerSearchB.value, false)
+	signUpPlayer(false)
 }
 
 function signUpDoubleTog() {
-	const validPlayersA = queriedPlayerA.filter((p) => {
-		return p.value.includes(playerSearchA.value)
-	})
-	if (validPlayersA.length > 1) {
-		ElMessage.error(t("Player.too_many_results"))
+	if (!selectedPlayerA.value || !selectedPlayerB.value) {
+		toast.add({
+			severity: "error",
+			summary: t("ViewSignUp.noPlayerSelected"),
+			detail: t("ViewSignUp.selectPlayerFirst"),
+			life: 3000,
+		})
 		return
 	}
-	if (validPlayersA.length === 0) {
-		ElMessage.error(t("Player.no_result"))
-		return
-	}
-	const playerA = validPlayersA[0]
-
-	const validPlayersB = queriedPlayerB.filter((p) => {
-		return p.value.includes(playerSearchB.value)
-	})
-	if (validPlayersB.length > 1) {
-		ElMessage.error(t("Player.too_many_results"))
-		return
-	}
-	if (validPlayersB.length === 0) {
-		ElMessage.error(t("Player.no_result"))
-		return
-	}
-	const playerB = validPlayersB[0]
-
 	const form = {
 		playerA: {
-			firstName: playerA.firstName,
-			lastName: playerA.lastName,
+			firstName: selectedPlayerA.value.firstName,
+			lastName: selectedPlayerA.value.lastName,
 		},
 		playerB: {
-			firstName: playerB.firstName,
-			lastName: playerB.lastName,
+			firstName: selectedPlayerB.value.firstName,
+			lastName: selectedPlayerB.value.lastName,
 		},
 	}
 
@@ -377,13 +434,28 @@ function signUpDoubleTog() {
 			form,
 		)
 		.then(() => {
-			ElMessage.success(t("Player.register_success"))
+			toast.add({
+				severity: "success",
+				summary: t("Player.register_success"),
+				life: 3000,
+			})
 			emit("registered", "")
 		})
 		.catch((error) => {
+			// TODO checks for team already partially registered also in backend
 			if (error.response.status === 409)
-				ElMessage.error(t("Player.already_exists"))
-			else ElMessage.error(t("Player.register_failed"))
+				toast.add({
+					severity: "error",
+					summary: t("Player.already_exists"),
+					life: 3000,
+				})
+			else
+				toast.add({
+					severity: "error",
+					summary: t("Player.register_failed"),
+					detail: error,
+					life: 3000,
+				})
 		})
 }
 </script>
