@@ -1,10 +1,12 @@
 <template>
 	<!-- TODO optimize mobile -->
-	<header>
-		<HeaderLeft />
-		<HeaderRight />
-	</header>
-	<LoadingBar />
+	<div class="sticky top-0">
+		<header>
+			<HeaderLeft />
+			<HeaderRight />
+		</header>
+		<LoadingBar />
+	</div>
 </template>
 
 <script lang="ts" setup>
