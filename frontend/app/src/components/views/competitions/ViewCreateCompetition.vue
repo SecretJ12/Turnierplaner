@@ -2,6 +2,7 @@
 	<FormCompetition
 		:competition="competition"
 		:submit-text="t('general.create')"
+		:header="t('ViewCreateCompetition.header')"
 		@submit="submit"
 	/>
 </template>

@@ -69,12 +69,14 @@
 		"add_content": "Click to add new tournament"
 	},
 	"ViewCreateTournament": {
+		"header": "Create tournament",
 		"tournamentCreating": "Creation of tournament",
 		"tournamentCreated": "Turnier created",
 		"tournamentCreationFailed": "Couldn't create tournament",
 		"tournamentCreation": "Create tournament"
 	},
 	"ViewEditTournament": {
+		"header" : "Edit tournament",
 		"tournamentUpdating": "Updating of tournament",
 		"loadingDetailsFailed": "Couldn't load tournament details",
 		"tournamentUpdated": "Tournament updated",

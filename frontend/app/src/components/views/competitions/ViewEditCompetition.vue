@@ -4,6 +4,7 @@
 		:competition="CompetitionDefault"
 		:disabled="true"
 		:submit-text="t('general.update')"
+		:header="t('ViewEditCompetition.header')"
 		@submit="submit"
 	/>
 	<FormCompetition

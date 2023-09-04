@@ -121,11 +121,13 @@
 		"noPlayerFound": "Keinen Spieler gefunden"
 	},
 	"ViewCreateCompetition": {
+		"header" : "Neue Konkurrenz",
 		"creationFailed": "Konkurrenz konnte nicht erstellt werden",
 		"competitionCreated": "Konkurrenz erstellt",
 		"competitionCreation": "Konkurrenzerstellung"
 	},
 	"ViewEditCompetition": {
+		"header": "Konkurrenz bearbeiten",
 		"saved": "Konkurrenz wurde gespeichert",
 		"saving_failed": "Beim Speichern hat etwas nicht funktioniert",
 		"loadingDetailsFailed": "Details der Konkurrenz konnten nicht geladen werden",

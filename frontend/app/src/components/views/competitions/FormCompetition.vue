@@ -1,7 +1,7 @@
 <template>
 	<div class="flex justify-content-center w-full">
 		<div class="card" id="card">
-			<h3>Tournament registration</h3>
+			<h3>{{ props.header }}</h3>
 			<div class="formgrid grid">
 				<div class="field col-12">
 					<label for="name">{{ t("general.name") }}</label>
@@ -398,6 +398,7 @@ const props = withDefaults(
 		submitText: string
 		disabled: boolean
 		competition: Competition
+		header: string
 	}>(),
 	{
 		disabled: false,
