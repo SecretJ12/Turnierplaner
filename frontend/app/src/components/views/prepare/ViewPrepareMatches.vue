@@ -1,5 +1,5 @@
 <template>
-	<div id="prepare">
+	<div id="button">
 		<div>
 			<div class="card">
 				<Steps :model="stepList" aria-label="Form Steps" :exact="false" />
@@ -224,7 +224,7 @@ function tabChange(event: TabMenuChangeEvent) {
 </script>
 
 <style scoped>
-#prepare {
+#button {
 	width: 100%;
 	margin: 10px;
 	display: flex;

@@ -16,7 +16,8 @@
 				<template v-if="competitions === null">
 					<Skeleton v-for="() in Array(5)" class="w-23rem h-12rem" />
 				</template>
-				<item v-else
+				<item
+					v-else
 					v-for="competition in competitions"
 					:key="competition.id"
 					:can-edit="canEdit"
@@ -73,10 +74,16 @@
 				</Timeline>
 				<Button
 					v-if="isLoggedIn"
-					id="prepare"
+					id="button"
 					:label="t('ViewCompetition.prepare') + ' >>'"
 					@click="prepare"
-				></Button>
+				/>
+				<Button
+					v-if="openRegistration"
+					id="button"
+					:label="t('general.register') + ' >>'"
+					@click="router.push('/player/registration')"
+				/>
 			</div>
 		</div>
 	</div>
@@ -136,6 +143,8 @@ const status = ref([
 		color: "#000000",
 	},
 ])
+
+const openRegistration = ref(false)
 const tournament = getTournamentDetails(<string>route.params.tourId, t, toast, {
 	suc: () => {
 		if (tournament.value === null) return
@@ -144,8 +153,10 @@ const tournament = getTournamentDetails(<string>route.params.tourId, t, toast, {
 		if (date > tournament.value.registration_phase.end) {
 			status.value[0].color = "green"
 			status.value[0].icon = "pi-check"
+			openRegistration.value = false
 		} else if (date > tournament.value.registration_phase.begin) {
 			status.value[0].color = "blue"
+			openRegistration.value = true
 		}
 		if (date > tournament.value.game_phase.end) {
 			status.value[1].color = "green"
@@ -242,7 +253,7 @@ function addCompetition() {
 	height: fit-content;
 }
 
-#prepare {
+#button {
 	margin-top: 20px;
 	width: min(100%, 30rem);
 }
