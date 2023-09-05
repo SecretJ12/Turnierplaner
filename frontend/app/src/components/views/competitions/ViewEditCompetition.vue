@@ -12,6 +12,7 @@
 		:competition="competition"
 		:disabled="false"
 		:submit-text="t('general.update')"
+		:header="t('ViewEditCompetition.header')"
 		@submit="submit"
 	/>
 </template>

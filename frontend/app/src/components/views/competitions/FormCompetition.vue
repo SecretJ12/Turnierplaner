@@ -27,11 +27,11 @@
 						v-bind="description"
 					></textarea>
 				</div>
-				<Divider align="left">
+				<Divider align="left col-12">
 					<b>{{ t("CompetitionSettings.tournament_settings") }}</b>
 				</Divider>
-				<div class="field col-12 flex flex-column">
-					<!--						<label for="tournamentType">Placeholder </label>-->
+				<div class="field col-12 md:col-6 md:mr-8">
+					<label for="name">{{ t("CompetitionSettings.type") }}</label>
 					<Dropdown
 						v-bind="selectedTourType"
 						:options="[
@@ -44,23 +44,25 @@
 								value: TourType.GROUPS,
 							},
 						]"
-						option-label="name"
-						option-value="value"
+						optionLabel="name"
+						optionValue="value"
 						:placeholder="t(`CompetitionSettings.type`)"
-						class="w-full md:w-14rem"
+						class="w-full"
 					>
 						<template #value="slotProps">
 							<div v-if="slotProps.value" class="flex align-items-center">
 								<span
 									v-if="slotProps.value === 'GROUPS'"
-									class="material-symbols-outlined"
+									class="material-symbols-outlined mr-2"
 									>groups</span
 								>
-								<span v-else class="material-symbols-outlined">grid_view</span>
-								<div v-if="slotProps.value === 'GROUPS'">
+								<span v-else class="material-symbols-outlined mr-2"
+									>grid_view</span
+								>
+								<div v-if="slotProps.value === 'GROUPS'" class="mt-1">
 									{{ t("CompetitionSettings.groups") }}
 								</div>
-								<div v-else>
+								<div v-else class="mt-1">
 									{{ t("CompetitionSettings.knockout") }}
 								</div>
 							</div>
@@ -69,44 +71,49 @@
 							</span>
 						</template>
 						<template #option="slotProps">
-							<div class="flex align-items-center">
+							<div class="flex flex-row align-items-center">
 								<span
 									v-if="slotProps.option.value === 'GROUPS'"
-									class="material-symbols-outlined"
+									class="material-symbols-outlined mr-2"
 									>groups</span
 								>
-								<span v-else class="material-symbols-outlined">grid_view</span>
-								<div>{{ slotProps.option.name }}</div>
+								<span v-else class="material-symbols-outlined mr-2"
+									>grid_view</span
+								>
+								<div class="mt-1">{{ slotProps.option.name }}</div>
 							</div>
 						</template>
 					</Dropdown>
 				</div>
 
-				<div class="field col-12 flex flex-column">
+				<div class="field col-6">
+					<label for="name">{{ t("CompetitionSettings.mode") }}</label>
 					<Dropdown
 						v-bind="selectedTourMode"
 						:options="[
 							{ name: t('CompetitionSettings.single'), value: Mode.SINGLE },
 							{ name: t('CompetitionSettings.double'), value: Mode.DOUBLE },
 						]"
-						option-label="name"
-						option-value="value"
+						optionLabel="name"
+						optionValue="value"
 						:placeholder="t(`CompetitionSettings.mode`)"
-						class="w-full md:w-14rem"
+						class="w-full"
 					>
 						<template #value="slotProps">
 							<div v-if="slotProps.value" class="flex align-items-center">
 								<span
 									v-if="slotProps.value === 'DOUBLE'"
-									class="material-symbols-outlined"
+									class="material-symbols-outlined mr-2"
 								>
 									group
 								</span>
-								<span v-else class="material-symbols-outlined">person</span>
-								<div v-if="slotProps.value === 'DOUBLE'">
+								<span v-else class="material-symbols-outlined mr-2"
+									>person</span
+								>
+								<div v-if="slotProps.value === 'DOUBLE'" class="mt-1">
 									{{ t("CompetitionSettings.double") }}
 								</div>
-								<div v-else>
+								<div v-else class="mt-1">
 									{{ t("CompetitionSettings.single") }}
 								</div>
 							</div>
@@ -118,71 +125,100 @@
 							<div class="flex align-items-center">
 								<span
 									v-if="slotProps.option.value === 'DOUBLE'"
-									class="material-symbols-outlined"
+									class="material-symbols-outlined mr-2"
 									>group</span
 								>
-								<span v-else class="material-symbols-outlined">person</span>
+								<span v-else class="material-symbols-outlined mr-2"
+									>person</span
+								>
+								<div class="mt-1">{{ slotProps.option.name }}</div>
+							</div>
+						</template>
+					</Dropdown>
+				</div>
+
+				<div
+					v-if="values.mode === Mode.DOUBLE"
+					class="field col-6 flex flex-column"
+				>
+					<label for="name">{{ t("CompetitionSettings.signup") }}</label>
+					<Dropdown
+						v-bind="signUp"
+						:options="[
+							{
+								name: t('CompetitionSettings.individual'),
+								value: SignUp.INDIVIDUAL,
+							},
+							{
+								name: t('CompetitionSettings.together'),
+								value: SignUp.TOGETHER,
+							},
+						]"
+						optionLabel="name"
+						optionValue="value"
+						:placeholder="t(`CompetitionSettings.signup`)"
+						class="w-full"
+					>
+						<template #value="slotProps">
+							<div v-if="slotProps.value" class="flex align-items-center">
+								<span
+									v-if="slotProps.value == 'TOGETHER'"
+									class="material-symbols-outlined mr-2"
+								>
+									group_work
+								</span>
+								<span v-else class="material-symbols-outlined mr-2"
+									>workspaces</span
+								>
+								<div v-if="slotProps.value === 'TOGETHER'" class="mt-1">
+									{{ t("CompetitionSettings.together") }}
+								</div>
+								<div v-else class="mt-1">
+									{{ t("CompetitionSettings.individual") }}
+								</div>
+							</div>
+							<span v-else>
+								{{ slotProps.placeholder }}
+							</span>
+						</template>
+						<template #option="slotProps">
+							<div class="flex align-items-center">
+								<span
+									v-if="slotProps.option.value === 'TOGETHER'"
+									class="material-symbols-outlined mr-2"
+									>group_work</span
+								>
+								<span v-else class="material-symbols-outlined mr-2"
+									>workspaces</span
+								>
 								<div>{{ slotProps.option.name }}</div>
 							</div>
 						</template>
 					</Dropdown>
 				</div>
 
-				<div v-if="selectedTourMode.modelValue?.name === Mode.DOUBLE">
-					<div class="field col-12 flex flex-column">
-						<Dropdown
-							v-bind="signUp"
-							:options="[
-								{
-									name: t('CompetitionSettings.individual'),
-									value: SignUp.INDIVIDUAL,
-								},
-								{
-									name: t('CompetitionSettings.together'),
-									value: SignUp.TOGETHER,
-								},
-							]"
-							option-label="name"
-							option-value="value"
-							:placeholder="t(`CompetitionSettings.signup`)"
-							class="w-full md:w-14rem"
-						>
-							<template #value="slotProps">
-								<div v-if="slotProps.value" class="flex align-items-center">
-									<span
-										v-if="slotProps.value.name == 'DOUBLE'"
-										class="material-symbols-outlined"
-										>group</span
-									>
-									<span v-else class="material-symbols-outlined">person</span>
-									<div>{{ slotProps.value.name }}</div>
-								</div>
-								<span v-else>
-									{{ slotProps.placeholder }}
-								</span>
-							</template>
-							<template #option="slotProps">
-								<div class="flex align-items-center">
-									<span
-										v-if="slotProps.option.name === 'DOUBLE'"
-										class="material-symbols-outlined"
-										>group</span
-									>
-									<span v-else class="material-symbols-outlined">person</span>
-									<div>{{ slotProps.option.name }}</div>
-								</div>
-							</template>
-						</Dropdown>
-					</div>
-				</div>
 				<Divider align="left">
 					<b>{{ t("CompetitionSettings.player") }}</b>
 				</Divider>
-				<Divider v-if="playerB_different.modelValue" align="left">
-					<!--	TODO internalization	-->
-					Spieler 1
-				</Divider>
-				<div class="field col-12 flex flex-column">
+				<div class="field col-12 flex flex-row align-items-center">
+					<Checkbox v-bind="playerB_different" inputId="playerB_different_input" id="playerB_different" :binary="true" />
+					<label for="playerB_different_input" class="ml-2 mb-0 mt-1">{{
+							t("CompetitionSettings.differentB")
+						}}</label>
+				</div>
+
+				<div :class="{ 'col-12': !values.playerB_different, 'col-6': values.playerB_different }">
+					<Divider class="col-6" align="left">
+						{{ t("CompetitionSettings.playerA") }}
+					</Divider>
+				</div>
+				<div v-if="values.playerB_different" class="col-6">
+					<Divider class="col-6" align="left">
+						{{ t("CompetitionSettings.playerB") }}
+					</Divider>
+				</div>
+
+				<div class="field flex flex-column" :class="{ 'col-12': !values.playerB_different, 'col-6': values.playerB_different }">
 					<Dropdown
 						v-bind="playerASex"
 						:options="[
@@ -190,10 +226,10 @@
 							{ name: t('CompetitionSettings.female'), value: Sex.FEMALE },
 							{ name: t('CompetitionSettings.any'), value: Sex.ANY },
 						]"
-						option-label="name"
-						option-value="value"
+						optionLabel="name"
+						optionValue="value"
 						:placeholder="t(`CompetitionSettings.sex`)"
-						class="w-full md:w-14rem"
+						class="w-full"
 					>
 						<template #option="slotProps">
 							<div>
@@ -202,165 +238,117 @@
 						</template>
 					</Dropdown>
 				</div>
-				<div class="field col-12 flex flex-column">
-					<label for="minAge" class="text-900">{{
-						t("CompetitionSettings.minAge")
-					}}</label>
-					<div>
-						<InputSwitch
-							v-if="!playerAHasMinAge.modelValue"
-							id="minAge"
-							v-bind="playerAHasMinAge"
-						>
-						</InputSwitch>
-
-						<Calendar
-							v-if="playerAHasMinAge.modelValue"
-							id="minAge"
-							v-bind="playerAMinAge"
-							:manual-input="false"
-							date-format="dd/mm/yy"
-							show-icon
-						/>
-						<Button
-							v-if="playerAHasMinAge.modelValue"
-							rounded
-							text
-							@click="updateAge(1)"
-						>
-							<template #icon>
-								<span class="material-icons">cancel</span>
-							</template>
-						</Button>
-					</div>
-				</div>
-
-				<div class="field col-12 flex flex-column">
-					<label for="maxAge" class="text-900">{{
-						t("CompetitionSettings.maxAge")
-					}}</label>
-					<div>
-						<InputSwitch
-							v-if="!playerAHasMaxAge.modelValue"
-							id="maxAge"
-							v-bind="playerAHasMaxAge"
-						>
-						</InputSwitch>
-						<Calendar
-							v-if="playerAHasMaxAge.modelValue"
-							id="minAge"
-							v-bind="playerAMaxAge"
-							:manual-input="false"
-							date-format="dd/mm/yy"
-							show-icon
-						/>
-						<Button
-							v-if="playerAHasMaxAge.modelValue"
-							rounded
-							text
-							@click="updateAge(2)"
-						>
-							<template #icon>
-								<span class="material-icons">cancel</span>
-							</template>
-						</Button>
-					</div>
-				</div>
-
-				<div class="field col-12 flex flex-column">
-					<label for="different" class="text-900">{{
-						t("CompetitionSettings.differentB")
-					}}</label>
-					<InputSwitch id="different" v-bind="playerB_different"> </InputSwitch>
-				</div>
-
-				<div v-if="playerB_different.modelValue">
-					<!-- TODO internalization-->
-					<Divider align="left"> Spieler 2 </Divider>
-					<div class="field col-12 flex flex-column">
-						<Dropdown
-							v-bind="playerBSex"
-							:options="[
+				<div v-if="values.playerB_different" class="field col-6 flex flex-column">
+					<Dropdown
+						v-bind="playerBSex"
+						:options="[
 								{ name: t('CompetitionSettings.male'), value: Sex.MALE },
 								{ name: t('CompetitionSettings.female'), value: Sex.FEMALE },
 								{ name: t('CompetitionSettings.any'), value: Sex.ANY },
 							]"
-							option-label="name"
-							option-value="value"
-							:placeholder="t(`CompetitionSettings.sex`)"
-							class="w-full md:w-14rem"
-						>
-							<template #option="slotProps">
-								<div>{{ slotProps.option.name }}</div>
-							</template>
-						</Dropdown>
-					</div>
+						optionLabel="name"
+						optionValue="value"
+						:placeholder="t(`CompetitionSettings.sex`)"
+						class="w-full"
+					>
+						<template #option="slotProps">
+							<div>{{ slotProps.option.name }}</div>
+						</template>
+					</Dropdown>
+				</div>
 
-					<div class="field col-12 flex flex-column">
-						<label for="minAge" class="text-900">{{
-							t("CompetitionSettings.minAge")
-						}}</label>
-						<div>
-							<InputSwitch
-								v-if="!playerBHasMinAge.modelValue"
-								id="minAge"
-								v-bind="playerBHasMinAge"
-							>
-							</InputSwitch>
-							<Calendar
-								v-if="playerBHasMinAge.modelValue"
-								id="minAge"
-								v-bind="playerBMinAge"
-								:manual-input="false"
-								date-format="dd/mm/yy"
-								show-icon
-							/>
-							<Button
-								v-if="playerBHasMinAge.modelValue"
-								rounded
-								text
-								@click="updateAge(3)"
-							>
-								<template #icon>
-									<span class="material-icons">cancel</span>
-								</template>
-							</Button>
-						</div>
-					</div>
-					<div class="field col-12 flex flex-column">
-						<label for="maxAge" class="text-900">{{
-							t("CompetitionSettings.maxAge")
-						}}</label>
-						<div>
-							<InputSwitch
-								v-if="!playerBHasMaxAge.modelValue"
-								id="maxAge"
-								v-bind="playerBHasMaxAge"
-							>
-							</InputSwitch>
-							<Calendar
-								v-if="playerBHasMaxAge.modelValue"
-								id="minAge"
-								v-bind="playerBMaxAge"
-								:manual-input="false"
-								date-format="dd/mm/yy"
-								show-icon
-							/>
-							<Button
-								v-if="playerBHasMaxAge.modelValue"
-								rounded
-								text
-								@click="updateAge(4)"
-							>
-								<template #icon>
-									<span class="material-icons">cancel</span>
-								</template>
-							</Button>
-						</div>
+				<div class="field flex flex-column" :class="{ 'col-12': !values.playerB_different, 'col-6': values.playerB_different }">
+					<label for="minAge" class="text-900">{{
+						t("CompetitionSettings.minAge")
+					}}</label>
+					<div class="flex flex-row align-items-center gap-2">
+						<Checkbox
+							id="minAge"
+							v-bind="playerAHasMinAge"
+							:binary="true"
+						/>
+
+						<Calendar
+							id="minAge"
+							v-bind="playerAMinAge"
+							:manualInput="false"
+							class="w-full"
+							:dateFormat="t('date_format')"
+							show-icon
+							:disabled="!playerAHasMinAge.modelValue"
+						/>
 					</div>
 				</div>
+				<div v-if="values.playerB_different" class="field flex flex-column col-6">
+					<label for="minAge" class="text-900">{{
+							t("CompetitionSettings.minAge")
+						}}</label>
+					<div class="flex flex-row align-items-center gap-2">
+						<Checkbox
+							id="minAge"
+							v-bind="playerBHasMinAge"
+							:binary="true"
+						/>
+
+						<Calendar
+							id="minAge"
+							v-bind="playerBMinAge"
+							class="w-full"
+							:manualInput="false"
+							:dateFormat="t('date_format')"
+							show-icon
+							:disabled="!playerBHasMinAge.modelValue"
+						/>
+					</div>
+				</div>
+
+				<div class="field flex flex-column" :class="{ 'col-12': !values.playerB_different, 'col-6': values.playerB_different }">
+					<label for="minAge" class="text-900">{{
+							t("CompetitionSettings.maxAge")
+						}}</label>
+					<div class="flex flex-row align-items-center gap-2">
+						<Checkbox
+							id="minAge"
+							v-bind="playerAHasMaxAge"
+							:binary="true"
+						/>
+
+						<Calendar
+							id="minAge"
+							v-bind="playerAMaxAge"
+							class="w-full"
+							:manualInput="false"
+							:dateFormat="t('date_format')"
+							show-icon
+							:disabled="!playerAHasMaxAge.modelValue"
+						/>
+					</div>
+				</div>
+				<div v-if="values.playerB_different" class="field flex flex-column col-6">
+					<label for="minAge" class="text-900">{{
+							t("CompetitionSettings.maxAge")
+						}}</label>
+					<div class="flex flex-row align-items-center gap-2">
+						<Checkbox
+							id="minAge"
+							v-bind="playerBHasMaxAge"
+							:binary="true"
+						/>
+
+						<Calendar
+							id="minAge"
+							v-bind="playerBMaxAge"
+							class="w-full"
+							:manualInput="false"
+							:dateFormat="t('date_format')"
+							show-icon
+							:disabled="!playerBHasMaxAge.modelValue"
+						/>
+					</div>
+				</div>
+
 				<div class="field col-12">
-					<Button :label="props.submitText" @click="onSubmit"> </Button>
+					<Button :label="props.submitText" @click="onSubmit"></Button>
 				</div>
 			</div>
 		</div>
@@ -368,7 +356,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue"
 import { useI18n } from "vue-i18n"
 import {
 	Competition,
@@ -387,12 +374,6 @@ import { toTypedSchema } from "@vee-validate/yup"
 
 const { t } = useI18n({ inheritLocale: true })
 
-// TODO use primeflex responsive grid
-let windowWidth = ref(window.innerWidth)
-window.addEventListener("resize", () => {
-	windowWidth.value = window.innerWidth
-})
-
 const props = withDefaults(
 	defineProps<{
 		submitText: string
@@ -406,6 +387,7 @@ const props = withDefaults(
 )
 
 const {
+	values,
 	defineInputBinds,
 	errors,
 	defineComponentBinds,
@@ -447,21 +429,21 @@ const {
 		playerA_hasMinAge: props.competition.playerA.hasMinAge,
 		playerA_minAge: props.competition.playerA.minAge
 			? props.competition.playerA.minAge
-			: undefined,
+			: new Date(),
 		playerA_hasMaxAge: props.competition.playerA.hasMaxAge,
 		playerA_maxAge: props.competition.playerA.maxAge
 			? props.competition.playerA.maxAge
-			: undefined,
+			: new Date(),
 		playerB_different: props.competition.playerB.different,
 		playerB_Sex: props.competition.playerB.sex,
 		playerB_hasMinAge: props.competition.playerB.hasMinAge,
 		playerB_minAge: props.competition.playerB.minAge
 			? props.competition.playerB.minAge
-			: undefined,
+			: new Date(),
 		playerB_hasMaxAge: props.competition.playerB.hasMaxAge,
 		playerB_maxAge: props.competition.playerB.maxAge
 			? props.competition.playerB.maxAge
-			: undefined,
+			: new Date(),
 	},
 })
 
@@ -483,23 +465,6 @@ const playerBMinAge = defineComponentBinds("playerB_minAge")
 const playerBMaxAge = defineComponentBinds("playerB_maxAge")
 
 const emit = defineEmits(["submit"])
-
-function updateAge(slideNumber: number) {
-	switch (slideNumber) {
-		case 1:
-			setFieldValue("playerA_hasMinAge", false)
-			break
-		case 2:
-			setFieldValue("playerA_hasMaxAge", false)
-			break
-		case 3:
-			setFieldValue("playerB_hasMinAge", false)
-			break
-		case 4:
-			setFieldValue("playerB_hasMaxAge", false)
-			break
-	}
-}
 
 const onSubmit = handleSubmit((values) => {
 	emit(

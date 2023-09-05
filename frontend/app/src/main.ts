@@ -83,6 +83,7 @@ import DataTable from "primevue/datatable"
 import Column from "primevue/column"
 import Tag from "primevue/tag"
 import AutoComplete from "primevue/autocomplete"
+import Checkbox from "primevue/checkbox";
 
 /* Primevue styling */
 import "primeflex/primeflex.css"
@@ -138,6 +139,7 @@ app
 	.component("Column", Column)
 	.component("Tag", Tag)
 	.component("AutoComplete", AutoComplete)
+	.component("Checkbox", Checkbox)
 	.directive("tooltip", Tooltip)
 	.mount("#app")
 

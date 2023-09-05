@@ -113,7 +113,9 @@
 		"any": "Egal",
 		"minAge": "Mindestalter",
 		"maxAge": "Maximalalter",
-		"missingAge": "Bitte wähle ein Datum"
+		"missingAge": "Bitte wähle ein Datum",
+		"playerA": "Spieler 1",
+		"playerB": "Spieler 2"
 	},
 	"ViewSignUp": {
 		"atLeastOneLetter": "Bitte tippe mindestens einen Buchstaben ein",

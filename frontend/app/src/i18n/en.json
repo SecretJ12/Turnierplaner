@@ -116,7 +116,9 @@
 		"any": "Any",
 		"minAge": "Minimum age",
 		"maxAge": "Maximum age",
-		"missingAge": "Please choose a date"
+		"missingAge": "Please choose a date",
+		"playerA": "Player 1",
+		"playerB": "Player 2"
 	},
 	"ViewSignUp": {
 		"atLeastOneLetter": "Please type at least one letter",
@@ -130,6 +132,7 @@
 		"competitionCreation": "Creating competition"
 	},
 	"ViewEditCompetition": {
+		"header": "Edit competition",
 		"saved": "Competition saved",
 		"saving_failed": "Something went wrong while saving",
 		"loadingDetailsFailed": "Couldn't load competition details",
