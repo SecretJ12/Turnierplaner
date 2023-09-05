@@ -4,9 +4,9 @@
 			<span
 				v-if="canEdit"
 				id="settings"
-				@click="settings"
 				class="material-icons cursor-pointer"
 				style="font-size: 1.7rem"
+				@click="settings"
 				>settings</span
 			>
 			<div id="tourName">

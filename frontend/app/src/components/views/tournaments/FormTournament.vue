@@ -31,8 +31,8 @@
 									{ name: t('no'), value: false },
 									{ name: t('yes'), value: true },
 								]"
-								optionLabel="name"
-								optionValue="value"
+								option-label="name"
+								option-value="value"
 								:disabled="disabled"
 							/>
 						</div>
@@ -96,8 +96,8 @@
 				<div class="justify-content-end flex">
 					<Button
 						:label="props.submitText"
-						@click="onSubmit"
 						:disabled="disabled"
+						@click="onSubmit"
 					></Button>
 				</div>
 			</template>

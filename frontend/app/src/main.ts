@@ -60,7 +60,7 @@ const router = VueRouter.createRouter({
 /* Primevue components*/
 import PrimeVue from "primevue/config"
 import ToastService from "primevue/toastservice"
-import Tooltip from "primevue/tooltip";
+import Tooltip from "primevue/tooltip"
 import Steps from "primevue/steps"
 import TabView from "primevue/tabview"
 import TabMenu from "primevue/tabmenu"
@@ -77,12 +77,12 @@ import InlineMessage from "primevue/inlinemessage"
 import Toast from "primevue/toast"
 import SelectButton from "primevue/selectbutton"
 import Skeleton from "primevue/skeleton"
-import Panel from "primevue/panel";
-import ScrollPanel from "primevue/scrollpanel";
-import DataTable from "primevue/datatable";
-import Column from "primevue/column";
-import Tag from "primevue/tag";
-import AutoComplete from "primevue/autocomplete";
+import Panel from "primevue/panel"
+import ScrollPanel from "primevue/scrollpanel"
+import DataTable from "primevue/datatable"
+import Column from "primevue/column"
+import Tag from "primevue/tag"
+import AutoComplete from "primevue/autocomplete"
 
 /* Primevue styling */
 import "primeflex/primeflex.css"
@@ -138,7 +138,7 @@ app
 	.component("Column", Column)
 	.component("Tag", Tag)
 	.component("AutoComplete", AutoComplete)
-	.directive('tooltip', Tooltip)
+	.directive("tooltip", Tooltip)
 	.mount("#app")
 
 export { router }

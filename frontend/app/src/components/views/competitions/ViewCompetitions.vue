@@ -4,9 +4,9 @@
 			<span
 				v-if="canEdit"
 				id="settings"
-				@click="settings"
 				class="material-icons cursor-pointer"
 				style="font-size: 2rem"
+				@click="settings"
 				>settings</span
 			>
 			{{ route.params.tourId }}
@@ -17,8 +17,8 @@
 					<Skeleton v-for="() in Array(5)" class="w-23rem h-12rem" />
 				</template>
 				<item
-					v-else
 					v-for="competition in competitions"
+					v-else
 					:key="competition.id"
 					:can-edit="canEdit"
 					:description="competition.description"

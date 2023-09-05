@@ -12,8 +12,8 @@
 					v-model="selectedPlayerA"
 					:options="suggestionsPlayerA"
 					:loading="loadingA"
-					optionLabel="value"
-					dataKey="id"
+					option-label="value"
+					data-key="id"
 					filter
 					@filter="queryPlayerA"
 				>
@@ -50,12 +50,12 @@
 			<div class="grid">
 				<div class="col-6">
 					<Dropdown
-						class="w-full"
 						v-model="selectedPlayerA"
+						class="w-full"
 						:options="suggestionsPlayerA"
 						:loading="loadingA"
-						optionLabel="value"
-						dataKey="id"
+						option-label="value"
+						data-key="id"
 						filter
 						@filter="queryPlayerA"
 					>
@@ -69,12 +69,12 @@
 				</div>
 				<div clasS="col-6">
 					<Dropdown
-						class="w-full"
 						v-model="selectedPlayerB"
+						class="w-full"
 						:options="suggestionsPlayerB"
 						:loading="loadingB"
-						optionLabel="value"
-						dataKey="id"
+						option-label="value"
+						data-key="id"
 						filter
 						@filter="queryPlayerB"
 					>
@@ -105,8 +105,8 @@
 					v-model="selectedPlayerA"
 					:options="suggestionsPlayerA"
 					:loading="loadingA"
-					optionLabel="value"
-					dataKey="id"
+					option-label="value"
+					data-key="id"
 					filter
 					@filter="queryPlayerA"
 				>
@@ -136,8 +136,8 @@
 					v-model="selectedPlayerA"
 					:options="suggestionsPlayerA"
 					:loading="loadingA"
-					optionLabel="value"
-					dataKey="id"
+					option-label="value"
+					data-key="id"
 					filter
 					@filter="queryPlayerA"
 				>
@@ -163,8 +163,8 @@
 					v-model="selectedPlayerB"
 					:options="suggestionsPlayerB"
 					:loading="loadingB"
-					optionLabel="value"
-					dataKey="id"
+					option-label="value"
+					data-key="id"
 					filter
 					@filter="queryPlayerB"
 				>
@@ -288,21 +288,21 @@ function queryPlayerB(event: DropdownFilterEvent) {
 	axios
 		.get<Player[]>(
 			`/player/find?search=${event.value}` +
-			(props.competition.playerB.sex !== Sex.ANY
-				? `&sex=${props.competition.playerB.sex}`
-				: "") +
-			(props.competition.playerB.hasMinAge &&
-			props.competition.playerB.minAge !== null
-				? `&minAge=${props.competition.playerB.minAge
-					.toISOString()
-					.slice(0, 10)}`
-				: "") +
-			(props.competition.playerB.hasMaxAge &&
-			props.competition.playerB.maxAge !== null
-				? `&minAge=${props.competition.playerB.maxAge
-					.toISOString()
-					.slice(0, 10)}`
-				: ""),
+				(props.competition.playerB.sex !== Sex.ANY
+					? `&sex=${props.competition.playerB.sex}`
+					: "") +
+				(props.competition.playerB.hasMinAge &&
+				props.competition.playerB.minAge !== null
+					? `&minAge=${props.competition.playerB.minAge
+							.toISOString()
+							.slice(0, 10)}`
+					: "") +
+				(props.competition.playerB.hasMaxAge &&
+				props.competition.playerB.maxAge !== null
+					? `&minAge=${props.competition.playerB.maxAge
+							.toISOString()
+							.slice(0, 10)}`
+					: ""),
 		)
 		.then((result) => {
 			// TODO avoid races

@@ -115,14 +115,14 @@
 		"maxAge": "Maximalalter",
 		"missingAge": "Bitte wähle ein Datum"
 	},
-	"ViewSignUp":{
+	"ViewSignUp": {
 		"atLeastOneLetter": "Bitte tippe mindestens einen Buchstaben ein",
 		"noPlayerSelected": "Keinen Spieler ausgewählt",
 		"selectPlayerFirst": "Bitte wähle zuerst einen Spieler aus",
 		"noPlayerFound": "Keinen Spieler gefunden"
 	},
 	"ViewCreateCompetition": {
-		"header" : "Neue Konkurrenz",
+		"header": "Neue Konkurrenz",
 		"creationFailed": "Konkurrenz konnte nicht erstellt werden",
 		"competitionCreated": "Konkurrenz erstellt",
 		"competitionCreation": "Konkurrenzerstellung"

@@ -1,8 +1,8 @@
 <template>
 	<div class="flex justify-content-center w-full">
-		<div class="card" id="card">
+		<div id="card" class="card">
 			<h3 v-if="!registered">{{ t("ViewPlayerRegistration.headline") }}</h3>
-			<div class="formgrid grid" v-if="!registered">
+			<div v-if="!registered" class="formgrid grid">
 				<div class="field col-6">
 					<label for="first_name">{{
 						t("ViewPlayerRegistration.first_name.field")
@@ -37,10 +37,10 @@
 				</div>
 				<div class="field col-6">
 					<Calendar
-						showIcon
+						show-icon
 						class="w-full"
 						v-bind="birthdate"
-						:manualInput="false"
+						:manual-input="false"
 						:date-format="t('date_format')"
 						:class="{ 'p-invalid': errors.birthdate }"
 					/>
@@ -53,8 +53,8 @@
 							{ name: t('CompetitionSettings.female'), value: Sex.FEMALE },
 							{ name: t('CompetitionSettings.any'), value: Sex.ANY },
 						]"
-						optionLabel="name"
-						optionValue="value"
+						option-label="name"
+						option-value="value"
 						:placeholder="t(`CompetitionSettings.sex`)"
 						class="w-full"
 						:class="{ 'p-invalid': errors.sex }"
@@ -131,34 +131,28 @@ const registered = ref(false)
 const phoneRegExp =
 	/^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
 
-const {
-	values,
-	defineInputBinds,
-	errors,
-	defineComponentBinds,
-	handleSubmit,
-	setFieldValue,
-} = useForm({
-	validationSchema: toTypedSchema(
-		object({
-			firstName: string()
-				.min(4, t("validation.field_too_short"))
-				.max(40, "validation.field_too_long")
-				.required(t("validation.field_required")),
-			lastName: string()
-				.min(4, t("validation.field_too_short"))
-				.max(40, "validation.field_too_long")
-				.required(t("validation.field_required")),
-			sex: mixed().oneOf(Object.values(Sex)).required(),
-			birthdate: date().required(),
-			email: string().email().required(),
-			phone: string()
-				.matches(phoneRegExp, t("ViewPlayerRegistration.phone.correct"))
-				.required(),
-		}),
-	),
-	initialValues: {},
-})
+const { defineInputBinds, errors, defineComponentBinds, handleSubmit } =
+	useForm({
+		validationSchema: toTypedSchema(
+			object({
+				firstName: string()
+					.min(4, t("validation.field_too_short"))
+					.max(40, "validation.field_too_long")
+					.required(t("validation.field_required")),
+				lastName: string()
+					.min(4, t("validation.field_too_short"))
+					.max(40, "validation.field_too_long")
+					.required(t("validation.field_required")),
+				sex: mixed().oneOf(Object.values(Sex)).required(),
+				birthdate: date().required(),
+				email: string().email().required(),
+				phone: string()
+					.matches(phoneRegExp, t("ViewPlayerRegistration.phone.correct"))
+					.required(),
+			}),
+		),
+		initialValues: {},
+	})
 
 const firstName = defineInputBinds("firstName")
 const lastName = defineInputBinds("lastName")

@@ -3,9 +3,9 @@
 	<DataTable
 		v-if="props.competition.mode === Mode.SINGLE"
 		:value="playersA"
-		stripedRows
-		showGridlines
-		removableSort
+		striped-rows
+		show-gridlines
+		removable-sort
 	>
 		<template #empty> t('ViewCompetition.no_registration')</template>
 		<Column :header="t('general.name')" sortable field="name" />
@@ -15,9 +15,9 @@
 	<DataTable
 		v-else-if="props.competition.signUp === SignUp.TOGETHER"
 		:value="teams"
-		stripedRows
-		showGridlines
-		removableSort
+		striped-rows
+		show-gridlines
+		removable-sort
 	>
 		<template #empty> t('ViewCompetition.no_registration')</template>
 		<Column
@@ -37,9 +37,9 @@
 	<DataTable
 		v-else-if="!props.competition.playerB.different"
 		:value="playersA"
-		stripedRows
-		showGridlines
-		removableSort
+		striped-rows
+		show-gridlines
+		removable-sort
 	>
 		<template #empty> t('ViewCompetition.no_registration')</template>
 		<Column :header="t('general.name')" sortable field="name" />
@@ -50,9 +50,9 @@
 		<DataTable
 			class="col"
 			:value="playersA"
-			stripedRows
-			showGridlines
-			removableSort
+			striped-rows
+			show-gridlines
+			removable-sort
 		>
 			<template #empty> t('ViewCompetition.no_registration')</template>
 			<Column :header="t('ViewCompetition.playerA')" sortable field="name" />
@@ -60,9 +60,9 @@
 		<DataTable
 			class="col"
 			:value="playersB"
-			stripedRows
-			showGridlines
-			removableSort
+			striped-rows
+			show-gridlines
+			removable-sort
 		>
 			<template #empty> t('ViewCompetition.no_registration')</template>
 			<Column :header="t('ViewCompetition.playerB')" sortable field="name" />

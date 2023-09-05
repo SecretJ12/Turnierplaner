@@ -52,7 +52,7 @@
 		},
 		"sign_up": "Sign up",
 		"registration_failed": "Player registration failed",
-		"registration_failed_detail" : "Please check your input and if you are already registered.",
+		"registration_failed_detail": "Please check your input and if you are already registered.",
 		"registration_successful": "Player registered successfully",
 		"not_found": "Can't find yourself? Maybe you forgot to register yourself."
 	},
@@ -77,7 +77,7 @@
 		"tournamentCreation": "Create tournament"
 	},
 	"ViewEditTournament": {
-		"header" : "Edit tournament",
+		"header": "Edit tournament",
 		"tournamentUpdating": "Updating of tournament",
 		"loadingDetailsFailed": "Couldn't load tournament details",
 		"tournamentUpdated": "Tournament updated",
@@ -118,7 +118,7 @@
 		"maxAge": "Maximum age",
 		"missingAge": "Please choose a date"
 	},
-	"ViewSignUp":{
+	"ViewSignUp": {
 		"atLeastOneLetter": "Please type at least one letter",
 		"noPlayerSelected": "No player selected",
 		"selectPlayerFirst": "Please select a player firrst",

@@ -8,25 +8,29 @@
 		/>
 		<Tag
 			v-if="props.player.hasMinAge"
-			class="w-min font-medium"
-			:value="generateAboveTag()"
-			rounded
-			v-tooltip="t('ViewCompetition.born_before') +
+			v-tooltip="
+				t('ViewCompetition.born_before') +
 				' ' +
 				(props.player.minAge !== null
 					? props.player.minAge.toLocaleString(t('lang'), dateOptions)
-					: 'Error')"
+					: 'Error')
+			"
+			class="w-min font-medium"
+			:value="generateAboveTag()"
+			rounded
 		/>
 		<Tag
 			v-if="props.player.hasMaxAge"
-			class="w-min font-medium"
-			:value="generateUnderTag()"
-			rounded
-			v-tooltip="t('ViewCompetition.born_after') +
+			v-tooltip="
+				t('ViewCompetition.born_after') +
 				' ' +
 				(props.player.maxAge !== null
 					? props.player.maxAge.toLocaleString(t('lang'), dateOptions)
-					: 'Error')"
+					: 'Error')
+			"
+			class="w-min font-medium"
+			:value="generateUnderTag()"
+			rounded
 		/>
 	</div>
 </template>

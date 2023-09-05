@@ -1,6 +1,6 @@
 <template>
 	<div class="flex justify-content-center w-full">
-		<div class="card" id="card">
+		<div id="card" class="card">
 			<h3>{{ props.header }}</h3>
 			<div class="formgrid grid">
 				<div class="field col-12">
@@ -44,8 +44,8 @@
 								value: TourType.GROUPS,
 							},
 						]"
-						optionLabel="name"
-						optionValue="value"
+						option-label="name"
+						option-value="value"
 						:placeholder="t(`CompetitionSettings.type`)"
 						class="w-full md:w-14rem"
 					>
@@ -89,8 +89,8 @@
 							{ name: t('CompetitionSettings.single'), value: Mode.SINGLE },
 							{ name: t('CompetitionSettings.double'), value: Mode.DOUBLE },
 						]"
-						optionLabel="name"
-						optionValue="value"
+						option-label="name"
+						option-value="value"
 						:placeholder="t(`CompetitionSettings.mode`)"
 						class="w-full md:w-14rem"
 					>
@@ -142,8 +142,8 @@
 									value: SignUp.TOGETHER,
 								},
 							]"
-							optionLabel="name"
-							optionValue="value"
+							option-label="name"
+							option-value="value"
 							:placeholder="t(`CompetitionSettings.signup`)"
 							class="w-full md:w-14rem"
 						>
@@ -190,8 +190,8 @@
 							{ name: t('CompetitionSettings.female'), value: Sex.FEMALE },
 							{ name: t('CompetitionSettings.any'), value: Sex.ANY },
 						]"
-						optionLabel="name"
-						optionValue="value"
+						option-label="name"
+						option-value="value"
 						:placeholder="t(`CompetitionSettings.sex`)"
 						class="w-full md:w-14rem"
 					>
@@ -215,18 +215,18 @@
 						</InputSwitch>
 
 						<Calendar
+							v-if="playerAHasMinAge.modelValue"
 							id="minAge"
 							v-bind="playerAMinAge"
-							:manualInput="false"
-							dateFormat="dd/mm/yy"
+							:manual-input="false"
+							date-format="dd/mm/yy"
 							show-icon
-							v-if="playerAHasMinAge.modelValue"
 						/>
 						<Button
 							v-if="playerAHasMinAge.modelValue"
-							@click="updateAge(1)"
 							rounded
 							text
+							@click="updateAge(1)"
 						>
 							<template #icon>
 								<span class="material-icons">cancel</span>
@@ -247,18 +247,18 @@
 						>
 						</InputSwitch>
 						<Calendar
+							v-if="playerAHasMaxAge.modelValue"
 							id="minAge"
 							v-bind="playerAMaxAge"
-							:manualInput="false"
-							dateFormat="dd/mm/yy"
+							:manual-input="false"
+							date-format="dd/mm/yy"
 							show-icon
-							v-if="playerAHasMaxAge.modelValue"
 						/>
 						<Button
 							v-if="playerAHasMaxAge.modelValue"
-							@click="updateAge(2)"
 							rounded
 							text
+							@click="updateAge(2)"
 						>
 							<template #icon>
 								<span class="material-icons">cancel</span>
@@ -285,8 +285,8 @@
 								{ name: t('CompetitionSettings.female'), value: Sex.FEMALE },
 								{ name: t('CompetitionSettings.any'), value: Sex.ANY },
 							]"
-							optionLabel="name"
-							optionValue="value"
+							option-label="name"
+							option-value="value"
 							:placeholder="t(`CompetitionSettings.sex`)"
 							class="w-full md:w-14rem"
 						>
@@ -302,24 +302,24 @@
 						}}</label>
 						<div>
 							<InputSwitch
+								v-if="!playerBHasMinAge.modelValue"
 								id="minAge"
 								v-bind="playerBHasMinAge"
-								v-if="!playerBHasMinAge.modelValue"
 							>
 							</InputSwitch>
 							<Calendar
+								v-if="playerBHasMinAge.modelValue"
 								id="minAge"
 								v-bind="playerBMinAge"
-								:manualInput="false"
-								dateFormat="dd/mm/yy"
+								:manual-input="false"
+								date-format="dd/mm/yy"
 								show-icon
-								v-if="playerBHasMinAge.modelValue"
 							/>
 							<Button
 								v-if="playerBHasMinAge.modelValue"
-								@click="updateAge(3)"
 								rounded
 								text
+								@click="updateAge(3)"
 							>
 								<template #icon>
 									<span class="material-icons">cancel</span>
@@ -339,18 +339,18 @@
 							>
 							</InputSwitch>
 							<Calendar
+								v-if="playerBHasMaxAge.modelValue"
 								id="minAge"
 								v-bind="playerBMaxAge"
-								:manualInput="false"
-								dateFormat="dd/mm/yy"
+								:manual-input="false"
+								date-format="dd/mm/yy"
 								show-icon
-								v-if="playerBHasMaxAge.modelValue"
 							/>
 							<Button
 								v-if="playerBHasMaxAge.modelValue"
-								@click="updateAge(4)"
 								rounded
 								text
+								@click="updateAge(4)"
 							>
 								<template #icon>
 									<span class="material-icons">cancel</span>
@@ -406,7 +406,6 @@ const props = withDefaults(
 )
 
 const {
-	values,
 	defineInputBinds,
 	errors,
 	defineComponentBinds,
