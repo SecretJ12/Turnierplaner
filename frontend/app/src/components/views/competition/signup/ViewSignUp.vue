@@ -25,11 +25,6 @@
 						:competition="props.competition"
 						@registered="childUpdate"
 					/>
-
-					<ViewRegistrationNotice
-						v-if="false"
-						:comp-details="props.competition"
-					/>
 				</template>
 
 				<div class="mt-2">
@@ -51,7 +46,6 @@ import { auth } from "@/security/AuthService"
 import axios from "axios"
 import { useRoute } from "vue-router"
 import ViewTable from "@/components/views/competition/signup/ViewTable.vue"
-import ViewRegistrationNotice from "@/components/views/competition/signup/ViewRegistrationNotice.vue"
 import ViewSignUpForm from "@/components/views/competition/signup/ViewSignUpForm.vue"
 import { Competition } from "@/interfaces/competition"
 import { useI18n } from "vue-i18n"
