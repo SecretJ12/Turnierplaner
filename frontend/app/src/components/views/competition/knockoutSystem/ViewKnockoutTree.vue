@@ -1,79 +1,72 @@
 <template>
-	<el-scrollbar>
-		<table
-			:class="props.mode === Mode.SINGLE ? 'tableSingles' : 'tableDoubles'"
-		>
-			<tr>
-				<template v-for="index in rangeArr(maxDepth)" :key="index">
-					<th>
-						{{ roundTitle(index + 1, maxDepth) }}
-					</th>
-					<template v-if="index < maxDepth - 1">
-						<th class="interCell"></th>
-						<th class="interCell"></th>
-					</template>
+	<table :class="props.mode === Mode.SINGLE ? 'tableSingles' : 'tableDoubles'">
+		<tr>
+			<template v-for="index in rangeArr(maxDepth)" :key="index">
+				<th>
+					{{ roundTitle(index + 1, maxDepth) }}
+				</th>
+				<template v-if="index < maxDepth - 1">
+					<th class="interCell"></th>
+					<th class="interCell"></th>
 				</template>
-			</tr>
-			<tr v-for="indexR in rangeArr(height)" :key="indexR">
-				<template v-for="indexC in rangeArr(maxDepth)" :key="indexC">
+			</template>
+		</tr>
+		<tr v-for="indexR in rangeArr(height)" :key="indexR">
+			<template v-for="indexC in rangeArr(maxDepth)" :key="indexC">
+				<td
+					v-if="matchColumnCellType(indexR, indexC) === cellType.match"
+					rowspan="5"
+					class="matchCol"
+				>
+					<ViewMatchV3 :match="getMatch(indexR, indexC)" :mode="props.mode" />
+				</td>
+				<td
+					v-else-if="matchColumnCellType(indexR, indexC) === cellType.emptyCell"
+				></td>
+				<td
+					v-else-if="
+						matchColumnCellType(indexR, indexC) === cellType.thirdPlace
+					"
+					class="fixHeight"
+				>
+					{{ t("ViewKnockout.thirdPlace") }}
+				</td>
+
+				<template v-if="indexC < maxDepth - 1">
 					<td
-						v-if="matchColumnCellType(indexR, indexC) === cellType.match"
-						rowspan="5"
-						class="matchCol"
-					>
-						<ViewMatchV3 :match="getMatch(indexR, indexC)" :mode="props.mode" />
-					</td>
-					<td
-						v-else-if="
-							matchColumnCellType(indexR, indexC) === cellType.emptyCell
+						v-if="
+							interColumnCellType(indexR, indexC) === interCellType.topRight
 						"
+						class="topRightInterCell interCell"
 					></td>
 					<td
 						v-else-if="
-							matchColumnCellType(indexR, indexC) === cellType.thirdPlace
+							interColumnCellType(indexR, indexC) === interCellType.bottomRight
 						"
-						class="fixHeight"
-					>
-						{{ t("ViewKnockout.thirdPlace") }}
-					</td>
+						class="bottomRightInterCell interCell"
+					></td>
+					<td
+						v-else-if="
+							interColumnCellType(indexR, indexC) === interCellType.right
+						"
+						class="rightInterCell interCell"
+					></td>
+					<td
+						v-else-if="
+							interColumnCellType(indexR, indexC) === interCellType.blank
+						"
+						class="interCell"
+					></td>
 
-					<template v-if="indexC < maxDepth - 1">
-						<td
-							v-if="
-								interColumnCellType(indexR, indexC) === interCellType.topRight
-							"
-							class="topRightInterCell interCell"
-						></td>
-						<td
-							v-else-if="
-								interColumnCellType(indexR, indexC) ===
-								interCellType.bottomRight
-							"
-							class="bottomRightInterCell interCell"
-						></td>
-						<td
-							v-else-if="
-								interColumnCellType(indexR, indexC) === interCellType.right
-							"
-							class="rightInterCell interCell"
-						></td>
-						<td
-							v-else-if="
-								interColumnCellType(indexR, indexC) === interCellType.blank
-							"
-							class="interCell"
-						></td>
-
-						<td
-							v-if="isBottomInterCell(indexR, indexC)"
-							class="bottomInterCell interCell"
-						></td>
-						<td v-else class="interCell"></td>
-					</template>
+					<td
+						v-if="isBottomInterCell(indexR, indexC)"
+						class="bottomInterCell interCell"
+					></td>
+					<td v-else class="interCell"></td>
 				</template>
-			</tr>
-		</table>
-	</el-scrollbar>
+			</template>
+		</tr>
+	</table>
 </template>
 
 <script setup lang="ts">
