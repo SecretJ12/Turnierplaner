@@ -50,8 +50,7 @@
 						v-bind="sex"
 						:options="[
 							{ name: t('CompetitionSettings.male'), value: Sex.MALE },
-							{ name: t('CompetitionSettings.female'), value: Sex.FEMALE },
-							{ name: t('CompetitionSettings.any'), value: Sex.ANY },
+							{ name: t('CompetitionSettings.female'), value: Sex.FEMALE }
 						]"
 						option-label="name"
 						option-value="value"
@@ -129,7 +128,7 @@ const { t } = useI18n({ inheritLocale: true })
 const registered = ref(false)
 
 const phoneRegExp =
-	/^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
+	/^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)$/
 
 const { defineInputBinds, errors, defineComponentBinds, handleSubmit } =
 	useForm({
@@ -163,6 +162,7 @@ const phone = defineInputBinds("phone")
 
 const toast = useToast()
 const onSubmit = handleSubmit((values) => {
+	// TODO move to external files
 	axios
 		.post("/player/registration", {
 			firstName: values.firstName,
@@ -177,6 +177,7 @@ const onSubmit = handleSubmit((values) => {
 				severity: "success",
 				summary: t("ViewPlayerRegistration.registration_successful"),
 				detail: t("ViewPlayerRegistration.after"),
+				life: 3000
 			})
 			registered.value = true
 		})
@@ -186,6 +187,7 @@ const onSubmit = handleSubmit((values) => {
 				severity: "error",
 				summary: t("ViewPlayerRegistration.registration_failed"),
 				detail: t("ViewPlayerRegistration.registration_failed_detail"),
+				life: 3000
 			})
 		})
 })
@@ -197,4 +199,8 @@ function dateToJson(d: Date): string {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+#card {
+	width: min(90dvw, 50rem);
+}
+</style>
