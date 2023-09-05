@@ -3,44 +3,51 @@
 		<div class="card" id="card">
 			<h3>{{ t("ViewPlayerRegistration.headline") }}</h3>
 			<div class="formgrid grid">
-				<div class="field col-12">
-					<label for="name">{{
+				<div class="field col-6">
+					<label for="first_name">{{
 						t("ViewPlayerRegistration.first_name.field")
 					}}</label>
 					<InputText
-						id="name"
+						id="first_name"
 						type="text"
-						v-bind="name"
+						v-bind="firstName"
 						maxlength="30"
 						class="w-full"
-						:class="{ 'p-invalid': errors.name }"
+						:class="{ 'p-invalid': errors.firstName }"
 					/>
-					<InlineMessage v-if="errors.name" class="mt-2"
-						>{{ t(errors.name || "") }}
+					<InlineMessage v-if="errors.firstName" class="mt-2"
+						>{{ t(errors.firstName || "") }}
 					</InlineMessage>
 				</div>
-				<div class="field col-12">
+				<div class="field col-6">
 					<label for="name">{{
 						t("ViewPlayerRegistration.last_name.field")
 					}}</label>
 					<InputText
 						id="name"
 						type="text"
-						v-bind="name"
+						v-bind="lastName"
 						maxlength="30"
 						class="w-full"
-						:class="{ 'p-invalid': errors.name }"
+						:class="{ 'p-invalid': errors.lastName }"
 					/>
-					<InlineMessage v-if="errors.name" class="mt-2"
-						>{{ t(errors.name || "") }}
+					<InlineMessage v-if="errors.lastName" class="mt-2"
+						>{{ t(errors.lastName || "") }}
 					</InlineMessage>
 				</div>
-				<div class="field col-12">
-					<Calendar showIcon />
+				<div class="field col-6">
+					<Calendar
+						showIcon
+						class="w-full"
+						v-bind="birthdate"
+						manual-input="false"
+						:date-format="t('date_format')"
+						:class="{ 'p-invalid': errors.birthdate }"
+					/>
 				</div>
-				<div class="field col-12">
+				<div class="field col-6">
 					<Dropdown
-						v-bind="playerASex"
+						v-bind="sex"
 						:options="[
 							{ name: t('CompetitionSettings.male'), value: Sex.MALE },
 							{ name: t('CompetitionSettings.female'), value: Sex.FEMALE },
@@ -49,7 +56,7 @@
 						optionLabel="name"
 						optionValue="value"
 						:placeholder="t(`CompetitionSettings.sex`)"
-						class="w-full md:w-14rem"
+						class="w-full"
 					>
 						<template #option="slotProps">
 							<div>
@@ -58,37 +65,41 @@
 						</template>
 					</Dropdown>
 				</div>
-			</div>
-			<div class="field col-12">
-				<label for="name">{{ t("ViewPlayerRegistration.email.field") }}</label>
-				<InputText
-					id="name"
-					type="text"
-					v-bind="name"
-					maxlength="30"
-					class="w-full"
-					:class="{ 'p-invalid': errors.name }"
-				/>
-				<InlineMessage v-if="errors.name" class="mt-2"
-					>{{ t(errors.name || "") }}
-				</InlineMessage>
-			</div>
-			<div class="field col-12">
-				<label for="name">{{ t("ViewPlayerRegistration.phone.field") }}</label>
-				<InputText
-					id="name"
-					type="text"
-					v-bind="name"
-					maxlength="30"
-					class="w-full"
-					:class="{ 'p-invalid': errors.name }"
-				/>
-				<InlineMessage v-if="errors.name" class="mt-2"
-					>{{ t(errors.name || "") }}
-				</InlineMessage>
-			</div>
-			<div class="field col-12">
-				<Button> </Button>
+				<div class="field col-12">
+					<label for="email">{{
+						t("ViewPlayerRegistration.email.field")
+					}}</label>
+					<InputText
+						id="email"
+						type="text"
+						v-bind="email"
+						maxlength="30"
+						class="w-full"
+						:class="{ 'p-invalid': errors.email }"
+					/>
+					<InlineMessage v-if="errors.email" class="mt-2"
+						>{{ t(errors.email || "") }}
+					</InlineMessage>
+				</div>
+				<div class="field col-12">
+					<label for="phone">{{
+						t("ViewPlayerRegistration.phone.field")
+					}}</label>
+					<InputText
+						id="phone"
+						type="text"
+						v-bind="phone"
+						maxlength="30"
+						class="w-full"
+						:class="{ 'p-invalid': errors.phone }"
+					/>
+					<InlineMessage v-if="errors.phone" class="mt-2"
+						>{{ t(errors.phone || "") }}
+					</InlineMessage>
+				</div>
+				<div class="field col-12">
+					<Button :label="t('general.create')" @click="onSubmit"> </Button>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -255,7 +266,7 @@ import { reactive, ref } from "vue"
 import axios from "axios"
 import { ElMessage } from "element-plus"
 import { useI18n } from "vue-i18n"
-import { Mode, Sex, SignUp, TourType } from "@/interfaces/competition"
+import { Sex } from "@/interfaces/competition"
 import { useForm } from "vee-validate"
 import { toTypedSchema } from "@vee-validate/yup"
 import { boolean, date, mixed, object, string } from "yup"
@@ -290,48 +301,29 @@ const {
 } = useForm({
 	validationSchema: toTypedSchema(
 		object({
-			name: string()
+			firstName: string()
 				.min(4, t("validation.field_too_short"))
 				.max(40, "validation.field_too_long")
 				.required(t("validation.field_required")),
-			description: string().max(50),
-			tourType: mixed().oneOf(Object.values(TourType)).required(),
-			mode: mixed().oneOf(Object.values(Mode)).required(),
-			signUp: mixed().oneOf(Object.values(SignUp)).required(),
-
-			playerA_Sex: mixed().oneOf(Object.values(Sex)).required(),
-			playerA_hasMinAge: boolean(),
-			playerA_minAge: date(),
-			playerA_hasMaxAge: boolean(),
-			playerA_maxAge: date(),
-
-			playerB_different: boolean(),
-			playerB_Sex: mixed().oneOf(Object.values(Sex)),
-			playerB_hasMinAge: boolean(),
-			playerB_minAge: date(),
-			playerB_hasMaxAge: boolean(),
-			playerB_maxAge: date(),
+			lastName: string()
+				.min(4, t("validation.field_too_short"))
+				.max(40, "validation.field_too_long")
+				.required(t("validation.field_required")),
+			sex: mixed().oneOf(Object.values(Sex)).required(),
+			birthdate: date().required(),
+			email: string().email().required(),
+			phone: string().required(),
 		}),
 	),
 	initialValues: {},
 })
 
-const name = defineInputBinds("name")
-const description = defineInputBinds("description")
-const selectedTourType = defineComponentBinds("tourType")
-const selectedTourMode = defineComponentBinds("mode")
-const signUp = defineComponentBinds("signUp")
-const playerB_different = defineComponentBinds("playerB_different")
-const playerASex = defineComponentBinds("playerA_Sex")
-const playerBSex = defineComponentBinds("playerB_Sex")
-const playerAHasMinAge = defineComponentBinds("playerA_hasMinAge")
-const playerBHasMinAge = defineComponentBinds("playerB_hasMinAge")
-const playerAHasMaxAge = defineComponentBinds("playerA_hasMaxAge")
-const playerBHasMaxAge = defineComponentBinds("playerB_hasMaxAge")
-const playerAMinAge = defineComponentBinds("playerA_minAge")
-const playerAMaxAge = defineComponentBinds("playerA_maxAge")
-const playerBMinAge = defineComponentBinds("playerB_minAge")
-const playerBMaxAge = defineComponentBinds("playerB_maxAge")
+const firstName = defineInputBinds("firstName")
+const lastName = defineInputBinds("lastName")
+const sex = defineComponentBinds("sex")
+const birthdate = defineComponentBinds("birthdate")
+const email = defineInputBinds("email")
+const phone = defineInputBinds("phone")
 
 function submitForm(formEl: HTMLFormElement | undefined) {
 	if (!formEl) return
@@ -361,6 +353,22 @@ function submitForm(formEl: HTMLFormElement | undefined) {
 		}
 	})
 }
+
+const onSubmit = handleSubmit((values) => {
+	axios
+		.post("/player/registration", {
+			firstName: values.firstName,
+			lastName: values.lastName,
+			sex: values.sex,
+			birthdate: dateToJson(values.birthdate),
+			email: values.email,
+			phone: values.phone,
+		})
+		.then(() => {
+			ElMessage.success(t("ViewPlayerRegistration.registration_successful"))
+			registered.value = true
+		})
+})
 
 function dateToJson(d: Date): string {
 	return `${d.getFullYear()}-${d.getMonth() < 9 ? "0" : ""}${
