@@ -52,6 +52,7 @@
 		},
 		"sign_up": "Sign up",
 		"registration_failed": "Player registration failed",
+		"registration_failed_detail" : "Please check your input and if you are already registered.",
 		"registration_successful": "Player registered successfully",
 		"not_found": "Can't find yourself? Maybe you forgot to register yourself."
 	},

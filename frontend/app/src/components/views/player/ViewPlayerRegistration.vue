@@ -1,8 +1,8 @@
 <template>
 	<div class="flex justify-content-center w-full">
 		<div class="card" id="card">
-			<h3>{{ t("ViewPlayerRegistration.headline") }}</h3>
-			<div class="formgrid grid">
+			<h3 v-if="!registered">{{ t("ViewPlayerRegistration.headline") }}</h3>
+			<div class="formgrid grid" v-if="!registered">
 				<div class="field col-6">
 					<label for="first_name">{{
 						t("ViewPlayerRegistration.first_name.field")
@@ -40,7 +40,7 @@
 						showIcon
 						class="w-full"
 						v-bind="birthdate"
-						manual-input="false"
+						:manualInput="false"
 						:date-format="t('date_format')"
 						:class="{ 'p-invalid': errors.birthdate }"
 					/>
@@ -57,6 +57,7 @@
 						optionValue="value"
 						:placeholder="t(`CompetitionSettings.sex`)"
 						class="w-full"
+						:class="{ 'p-invalid': errors.sex }"
 					>
 						<template #option="slotProps">
 							<div>
@@ -101,195 +102,34 @@
 					<Button :label="t('general.create')" @click="onSubmit"> </Button>
 				</div>
 			</div>
+			<div v-else>
+				<h2>
+					{{ t("general.success") }}
+				</h2>
+				<p>
+					{{ t("ViewPlayerRegistration.after") }}
+				</p>
+			</div>
 		</div>
-	</div>
-
-	<div v-if="!registered" id="container">
-		<div>
-			<h2>
-				{{ t("ViewPlayerRegistration.headline") }}
-			</h2>
-		</div>
-		<div id="form">
-			<el-form
-				ref="formRef"
-				:model="data"
-				label-position="top"
-				label-width="120px"
-				scroll-to-error="scroll-to-error"
-			>
-				<el-row :gutter="20" class="row-bg" justify="space-between">
-					<el-col :span="12">
-						<el-form-item
-							:label="t('ViewPlayerRegistration.first_name.field')"
-							:rules="[
-								{
-									required: true,
-									message: t('ViewPlayerRegistration.first_name.prompt'),
-									trigger: 'blur',
-								},
-							]"
-							prop="firstName"
-						>
-							<el-input v-model="data.firstName" />
-						</el-form-item>
-					</el-col>
-					<el-col :span="12">
-						<el-form-item
-							:label="t('ViewPlayerRegistration.last_name.field')"
-							:rules="[
-								{
-									required: true,
-									message: t('ViewPlayerRegistration.last_name.prompt'),
-									trigger: 'blur',
-								},
-							]"
-							prop="lastName"
-						>
-							<el-input v-model="data.lastName" />
-						</el-form-item>
-					</el-col>
-				</el-row>
-
-				<el-row :gutter="20" class="row-bg" justify="space-between">
-					<el-col :span="12">
-						<el-form-item
-							:label="t('ViewPlayerRegistration.sex.field')"
-							:rules="[
-								{
-									required: true,
-									message: t('ViewPlayerRegistration.sex.prompt'),
-									trigger: 'blur',
-								},
-							]"
-							prop="sex"
-						>
-							<el-select
-								v-model="data.sex"
-								:placeholder="t('ViewPlayerRegistration.sex.select')"
-							>
-								<el-option
-									:label="t('ViewPlayerRegistration.sex.Option1')"
-									value="MALE"
-								/>
-								<el-option
-									:label="t('ViewPlayerRegistration.sex.Option2')"
-									value="FEMALE"
-								/>
-							</el-select>
-						</el-form-item>
-					</el-col>
-					<el-col :span="12">
-						<el-form-item
-							:label="t('ViewPlayerRegistration.birthdate.field')"
-							required
-						>
-							<el-form-item
-								:rules="[
-									{
-										type: 'date',
-										required: true,
-										message: t('ViewPlayerRegistration.birthdate.prompt'),
-										trigger: 'blur',
-									},
-								]"
-								prop="birthday"
-							>
-								<el-date-picker v-model="data.birthday" type="date" />
-							</el-form-item>
-						</el-form-item>
-					</el-col>
-				</el-row>
-
-				<el-form-item
-					:label="t('ViewPlayerRegistration.email.field')"
-					:rules="[
-						{
-							required: true,
-							message: t('ViewPlayerRegistration.email.empty'),
-							trigger: 'blur',
-						},
-						{
-							type: 'email',
-							message: t('ViewPlayerRegistration.email.correct'),
-							trigger: ['blur', 'change'],
-						},
-					]"
-					prop="email"
-				>
-					<el-input v-model="data.email" />
-				</el-form-item>
-
-				<el-form-item
-					:label="t('ViewPlayerRegistration.phone.field')"
-					:rules="[
-						{
-							required: true,
-							message: t('ViewPlayerRegistration.phone.empty'),
-							trigger: 'blur',
-						},
-						{
-							type: 'tel',
-							message: t('ViewPlayerRegistration.phone.correct'),
-							trigger: ['blur', 'change'],
-						},
-					]"
-					prop="phone"
-				>
-					<el-input v-model="data.phone" />
-				</el-form-item>
-
-				<!-- TODO ich bin einverstanden, dass meine Daten gespeichert werden... (checkbox) -->
-
-				<el-row class="row-bg" justify="end">
-					<el-form-item>
-						<el-button type="primary" @click="submitForm(formRef)"
-							>Submit</el-button
-						>
-					</el-form-item>
-				</el-row>
-			</el-form>
-		</div>
-	</div>
-	<div v-else id="container">
-		<h2>
-			{{ t("general.success") }}
-		</h2>
-		<p>
-			{{ t("ViewPlayerRegistration.after") }}
-		</p>
 	</div>
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from "vue"
+import { ref } from "vue"
 import axios from "axios"
-import { ElMessage } from "element-plus"
 import { useI18n } from "vue-i18n"
 import { Sex } from "@/interfaces/competition"
 import { useForm } from "vee-validate"
 import { toTypedSchema } from "@vee-validate/yup"
-import { boolean, date, mixed, object, string } from "yup"
+import { date, mixed, object, string } from "yup"
+import { useToast } from "primevue/usetoast"
 
 const { t } = useI18n({ inheritLocale: true })
 
-const formRef = ref<HTMLFormElement>()
 const registered = ref(false)
-const data = reactive<{
-	firstName: string
-	lastName: string
-	sex: string
-	birthday: null | Date
-	email: string
-	phone: string
-}>({
-	firstName: "",
-	lastName: "",
-	sex: "",
-	birthday: null,
-	email: "",
-	phone: "",
-})
+
+const phoneRegExp =
+	/^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
 
 const {
 	values,
@@ -312,7 +152,9 @@ const {
 			sex: mixed().oneOf(Object.values(Sex)).required(),
 			birthdate: date().required(),
 			email: string().email().required(),
-			phone: string().required(),
+			phone: string()
+				.matches(phoneRegExp, t("ViewPlayerRegistration.phone.correct"))
+				.required(),
 		}),
 	),
 	initialValues: {},
@@ -325,35 +167,7 @@ const birthdate = defineComponentBinds("birthdate")
 const email = defineInputBinds("email")
 const phone = defineInputBinds("phone")
 
-function submitForm(formEl: HTMLFormElement | undefined) {
-	if (!formEl) return
-	formEl.validate((valid: boolean) => {
-		if (valid) {
-			if (data.birthday === null) return
-			axios
-				.post("/player/registration", {
-					firstName: data.firstName,
-					lastName: data.lastName,
-					sex: data.sex,
-					birthday: dateToJson(data.birthday),
-					email: data.email,
-					phone: data.phone,
-				})
-				.then(() => {
-					ElMessage.success(t("ViewPlayerRegistration.registration_successful"))
-					registered.value = true
-				})
-				.catch((error) => {
-					console.log(error)
-					ElMessage.error(t("ViewPlayerRegistration.registration_failed"))
-				})
-		} else {
-			console.log("error submit!")
-			return false
-		}
-	})
-}
-
+const toast = useToast()
 const onSubmit = handleSubmit((values) => {
 	axios
 		.post("/player/registration", {
@@ -365,8 +179,20 @@ const onSubmit = handleSubmit((values) => {
 			phone: values.phone,
 		})
 		.then(() => {
-			ElMessage.success(t("ViewPlayerRegistration.registration_successful"))
+			toast.add({
+				severity: "success",
+				summary: t("ViewPlayerRegistration.registration_successful"),
+				detail: t("ViewPlayerRegistration.after"),
+			})
 			registered.value = true
+		})
+		.catch((error) => {
+			console.log(error)
+			toast.add({
+				severity: "error",
+				summary: t("ViewPlayerRegistration.registration_failed"),
+				detail: t("ViewPlayerRegistration.registration_failed_detail"),
+			})
 		})
 })
 
@@ -377,20 +203,4 @@ function dateToJson(d: Date): string {
 }
 </script>
 
-<style scoped>
-#form {
-	width: 100%;
-	margin: 10px;
-	display: flex;
-	flex-wrap: wrap;
-	flex-direction: row;
-	justify-content: center;
-}
-
-#container {
-	width: 100%;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-}
-</style>
+<style scoped></style>

@@ -51,8 +51,9 @@
 			"correct": "Bitte gib eine korrekte Telefonnummer an"
 		},
 		"sign_up": "Registrieren",
-		"registration_failed": "Player registration failed",
-		"registration_successful": "Player registered successfully",
+		"registration_failed": "Die Spielerregistrierung ist fehlgeschlagen",
+		"registration_failed_detail": "Bitte überprüfe Ihre Eingaben und ob Sie schon registriert sind",
+		"registration_successful": "Die Registrierung war erfolgreich",
 		"not_found": "Bevor du dich anmelden kannst musst du dich einmalig registrieren"
 	},
 	"TournamentSettings": {
