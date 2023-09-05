@@ -50,7 +50,7 @@
 						v-bind="sex"
 						:options="[
 							{ name: t('CompetitionSettings.male'), value: Sex.MALE },
-							{ name: t('CompetitionSettings.female'), value: Sex.FEMALE }
+							{ name: t('CompetitionSettings.female'), value: Sex.FEMALE },
 						]"
 						option-label="name"
 						option-value="value"
@@ -177,7 +177,7 @@ const onSubmit = handleSubmit((values) => {
 				severity: "success",
 				summary: t("ViewPlayerRegistration.registration_successful"),
 				detail: t("ViewPlayerRegistration.after"),
-				life: 3000
+				life: 3000,
 			})
 			registered.value = true
 		})
@@ -187,7 +187,7 @@ const onSubmit = handleSubmit((values) => {
 				severity: "error",
 				summary: t("ViewPlayerRegistration.registration_failed"),
 				detail: t("ViewPlayerRegistration.registration_failed_detail"),
-				life: 3000
+				life: 3000,
 			})
 		})
 })

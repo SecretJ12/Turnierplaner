@@ -1,13 +1,14 @@
 <template>
 	<!-- TODO show on card -->
 	<!-- TODO add toggle to show as list? -->
-	<ViewGroupTable
-		v-if="groupSystem !== undefined"
-		v-for="group in groupSystem.groups"
-		:key="group.index"
-		:group="group"
-		style="width: 1000px"
-	/>
+	<template v-if="groupSystem !== undefined">
+		<ViewGroupTable
+			v-for="group in groupSystem.groups"
+			:key="group.index"
+			:group="group"
+			style="width: 1000px"
+		/>
+	</template>
 
 	<!-- show finals -->
 </template>

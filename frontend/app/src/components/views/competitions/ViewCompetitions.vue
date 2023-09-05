@@ -14,7 +14,7 @@
 		<div id="content">
 			<div id="competitions">
 				<template v-if="competitions === null">
-					<Skeleton v-for="() in Array(5)" class="w-23rem h-12rem" />
+					<Skeleton v-for="i in Array(5)" :key="i" class="w-23rem h-12rem" />
 				</template>
 				<item
 					v-for="competition in competitions"

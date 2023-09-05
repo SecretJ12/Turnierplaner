@@ -27,7 +27,7 @@ axios.interceptors.request.use(
 
 /* i18n */
 import languages from "./i18n"
-const messages = languages;
+const messages = languages
 
 export type MessageSchema = (typeof messages)["de"]
 
@@ -83,7 +83,7 @@ import DataTable from "primevue/datatable"
 import Column from "primevue/column"
 import Tag from "primevue/tag"
 import AutoComplete from "primevue/autocomplete"
-import Checkbox from "primevue/checkbox";
+import Checkbox from "primevue/checkbox"
 
 /* Primevue styling */
 import "primeflex/primeflex.css"

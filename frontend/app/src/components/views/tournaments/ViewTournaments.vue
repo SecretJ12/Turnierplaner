@@ -1,7 +1,7 @@
 <template>
 	<div id="tournaments">
 		<template v-if="tournaments === null">
-			<Skeleton v-for="() in Array(5)" class="w-23rem h-12rem" />
+			<Skeleton v-for="i in Array(5)" :key="i" class="w-23rem h-12rem" />
 		</template>
 		<item
 			v-for="tournament in tournaments"
