@@ -1,103 +1,81 @@
 <template>
-	<div id="prepare">
-		<el-tabs
-			v-if="route.params.step === 'editPlayers'"
-			v-model="route.params.competition"
-			type="border-card"
-			class="step"
-			@tab-click="tabClick"
-		>
-			<el-tab-pane
-				v-for="competition in competitions"
-				:key="competition.id"
-				:label="competition.name"
-				:name="competition.name"
-			>
-				<ViewEditPlayer :competition="competition" />
-			</el-tab-pane>
-		</el-tabs>
-		<el-tabs
-			v-else-if="route.params.step === 'selectMode'"
-			v-model="route.params.competition"
-			type="border-card"
-			class="step"
-			@tab-click="tabClick"
-		>
-			<el-tab-pane
-				v-for="competition in competitions"
-				:key="competition.id"
-				:label="competition.name"
-				:name="competition.name"
-			>
-				<ViewChooseMode :competition="competition" />
-			</el-tab-pane>
-		</el-tabs>
-		<el-tabs
-			v-else-if="route.params.step === 'assignTeams'"
-			v-model="route.params.competition"
-			type="border-card"
-			class="step"
-			@tab-click="tabClick"
-		>
-			<el-tab-pane
-				v-for="competition in competitions"
-				:key="competition.id"
-				:label="competition.name"
-				:name="competition.name"
-			>
-				<ViewAssignTeams :competition="competition" />
-			</el-tab-pane>
-		</el-tabs>
-		<el-tabs
-			v-else-if="route.params.step === 'assignMatches'"
-			v-model="route.params.competition"
-			type="border-card"
-			class="step"
-			@tab-click="tabClick"
-		>
-			<el-tab-pane
-				v-for="competition in competitions"
-				:key="competition.id"
-				:label="competition.name"
-				:name="competition.name"
-			>
-				<ViewAssignMatches :competition="competition" />
-			</el-tab-pane>
-		</el-tabs>
-		<el-tabs
-			v-else-if="route.params.step === 'scheduleMatches'"
-			v-model="route.params.competition"
-			type="border-card"
-			class="step"
-			@tab-click="tabClick"
-		>
-			<el-tab-pane
-				v-for="competition in competitions"
-				:key="competition.id"
-				:label="competition.name"
-				:name="competition.name"
-			>
-				<ViewScheduleMatches :competition="competition" />
-			</el-tab-pane>
-		</el-tabs>
-
-		<!-- TODO color depending on progress of step -->
-		<el-space direction="vertical">
-			<el-button @click="previous">{{
-				t("ViewPrepare.steps.previous")
-			}}</el-button>
-			<el-steps
-				direction="vertical"
-				:active="stepToIndex(<string>route.params.step)"
-			>
-				<el-step :title="t('ViewPrepare.steps.editPlayers')" />
-				<el-step :title="t('ViewPrepare.steps.chooseMode')" />
-				<el-step :title="t('ViewPrepare.steps.assignTeams')" />
-				<el-step :title="t('ViewPrepare.steps.assignMatches')" />
-				<el-step :title="t('ViewPrepare.steps.scheduleMatches')" />
-			</el-steps>
-			<el-button @click="next">{{ t("ViewPrepare.steps.next") }}</el-button>
-		</el-space>
+	<div id="button">
+		<div>
+			<div class="card">
+				<Steps :model="stepList" aria-label="Form Steps" :exact="false" />
+			</div>
+			<TabMenu
+				v-model:activeIndex="activeTab"
+				:model="compList"
+				@tab-change="tabChange"
+			/>
+			<Card>
+				<template #title>
+					<span v-if="route.params.step === 'editPlayers'">Edit Player</span>
+					<span v-else-if="route.params.step === 'selectMode'"
+						>Select Mode</span
+					>
+					<span v-else-if="route.params.step === 'assignTeams'"
+						>Assign Teams</span
+					>
+					<span v-else-if="route.params.step === 'assignMatches'"
+						>Assign Matches</span
+					>
+					<span v-else-if="route.params.step === 'scheduleMatches'"
+						>Schedule Matches</span
+					>
+					- {{ currentComp?.name }}:
+				</template>
+				<template #content>
+					<ViewEditPlayer
+						v-if="route.params.step === 'editPlayers'"
+						:competition="competitions[activeTab]"
+					></ViewEditPlayer>
+					<ViewChooseMode
+						v-else-if="route.params.step === 'selectMode'"
+						:competition="competitions[activeTab]"
+					></ViewChooseMode>
+					<ViewAssignTeams
+						v-else-if="route.params.step === 'assignTeams'"
+						:competition="competitions[activeTab]"
+					/>
+					<ViewAssignMatches
+						v-else-if="route.params.step === 'assignMatches'"
+						:competition="competitions[activeTab]"
+					/>
+					<ViewScheduleMatches
+						v-else-if="route.params.step === 'scheduleMatches'"
+						:competition="competitions[activeTab]"
+					/>
+				</template>
+				<template #footer>
+					<div class="grid grid-nogutter justify-content-between">
+						<i v-if="route.params.step === 'editPlayers'" />
+						<Button
+							v-else
+							label="Back"
+							icon="pi pi-angle-left"
+							@click="prevPage"
+						/>
+						<Button
+							v-if="route.params.step !== 'scheduleMatches'"
+							label="Next"
+							icon="pi pi-angle-right"
+							icon-pos="right"
+							@click="nextPage"
+						/>
+						<Button
+							v-else
+							label="Complete"
+							icon="pi pi-check"
+							icon-pos="right"
+							class="p-button-success"
+							@click="complete"
+						/>
+					</div>
+				</template>
+			</Card>
+		</div>
 	</div>
 </template>
 
@@ -113,17 +91,31 @@ import {
 	CompetitionServer,
 	competitionServerToClient,
 } from "@/interfaces/competition"
-import { ElMessage } from "element-plus"
 import { router } from "@/main"
 import { useRoute } from "vue-router"
 import { ref } from "vue"
 import { useI18n } from "vue-i18n"
+import { useToast } from "primevue/usetoast"
+import { TabMenuChangeEvent } from "primevue/tabmenu"
 
 const { t } = useI18n({ inheritLocale: true })
 const route = useRoute()
+const toast = useToast()
 
 const competitions = ref<Competition[]>([])
-axios
+const activeTab = ref<number>(0)
+const compList = ref<{ label: string }[]>([])
+
+// TODO add internalization
+const stepNames = [
+	"editPlayers",
+	"selectMode",
+	"assignTeams",
+	"assignMatches",
+	"scheduleMatches",
+]
+
+await axios
 	.get<CompetitionServer[]>(
 		`/tournament/${route.params.tourId}/competition/list`,
 	)
@@ -132,32 +124,60 @@ axios
 			competitions.value = response.data.map(competitionServerToClient)
 			checkComp()
 		} else {
-			ElMessage.error(t("ViewCompetitions.loadingFailed"))
+			toast.add({
+				severity: "error",
+				summary: t("ViewCompetitions.loadingFailed"),
+				life: 3000,
+			})
+		}
+		for (const compElement of competitions.value) {
+			compList.value.push({ label: compElement.name })
 		}
 	})
 	.catch((error) => {
-		ElMessage.error(t("ViewCompetitions.loadingFailed"))
+		toast.add({
+			severity: "error",
+			summary: t("ViewCompetitions.loadingFailed"),
+			life: 3000,
+		})
 		console.log(error)
 		router.push("/")
 	})
 
-const steps = [
-	"editPlayers",
-	"selectMode",
-	"assignTeams",
-	"assignMatches",
-	"scheduleMatches",
-]
+const currentComp = ref<Competition>(competitions.value[0])
+
+const stepList = ref([
+	{
+		label: "Edit Players",
+		to: `/tournament/${route.params.tourId}/prepare/editPlayers/${route.params.competition}`,
+	},
+	{
+		label: "Choose Mode",
+		to: `/tournament/${route.params.tourId}/prepare/selectMode/${route.params.competition}`,
+	},
+	{
+		label: "Assign Teams",
+		to: `/tournament/${route.params.tourId}/prepare/assignTeams/${route.params.competition}`,
+	},
+	{
+		label: "Assign Matches",
+		to: `/tournament/${route.params.tourId}/prepare/assignMatches/${route.params.competition}`,
+	},
+	{
+		label: "Schedule Matches",
+		to: `/tournament/${route.params.tourId}/prepare/scheduleMatches/${route.params.competition}`,
+	},
+])
 
 function stepToIndex(step: string): number {
-	return steps.findIndex((s) => s === step)
+	return stepNames.findIndex((s) => s === step)
 }
 
 function checkComp() {
 	let change = false
 	let step = route.params.step
 	let comp = route.params.competition
-	if (!steps.find((s) => s === route.params.step)) {
+	if (!stepNames.find((s) => s === route.params.step)) {
 		change = true
 		step = "editPlayers"
 	}
@@ -169,31 +189,49 @@ function checkComp() {
 		router.replace(`/tournament/${route.params.tourId}/prepare/${step}/${comp}`)
 }
 
-function previous() {
+function nextPage() {
 	router.replace(
 		`/tournament/${route.params.tourId}/prepare/${
-			steps[Math.max(0, stepToIndex(<string>route.params.step) - 1)]
+			stepNames[stepToIndex(<string>route.params.step) + 1]
 		}/${route.params.competition}`,
 	)
 }
 
-function next() {
+function prevPage() {
 	router.replace(
 		`/tournament/${route.params.tourId}/prepare/${
-			steps[Math.min(4, stepToIndex(<string>route.params.step) + 1)]
+			stepNames[stepToIndex(<string>route.params.step) - 1]
 		}/${route.params.competition}`,
 	)
 }
 
-function tabClick(tab: { paneName: string }) {
+function complete() {
+	toast.add({
+		severity: "success",
+		summary: "Competition updated",
+		detail: "The tournament has been updated.",
+	})
+}
+
+function tabChange(event: TabMenuChangeEvent) {
+	activeTab.value = event.index
+	currentComp.value = competitions.value[event.index]
 	router.replace(
-		`/tournament/${route.params.tourId}/prepare/${route.params.step}/${tab.paneName}`,
+		`/tournament/${route.params.tourId}/prepare/${route.params.step}/${
+			competitions.value[event.index].name
+		}`,
 	)
+
+	for (let i = 0; i < stepList.value.length; i++) {
+		stepList.value[i].to = `/tournament/${route.params.tourId}/prepare/${
+			stepNames[i]
+		}/${competitions.value[event.index].name}`
+	}
 }
 </script>
 
 <style scoped>
-#prepare {
+#button {
 	width: 100%;
 	margin: 10px;
 	display: flex;
@@ -202,8 +240,11 @@ function tabClick(tab: { paneName: string }) {
 	justify-content: center;
 }
 
-.step {
-	width: 70dvw;
-	margin-right: 20px;
+::v-deep(b) {
+	display: block;
+}
+
+::v-deep(.p-card-body) {
+	padding: 2rem;
 }
 </style>

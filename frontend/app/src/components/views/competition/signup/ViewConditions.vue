@@ -1,49 +1,38 @@
 <template>
-	<el-space style="margin-bottom: 2px">
-		<el-tag
+	<div class="flex flex-row gap-2">
+		<Tag
 			v-if="props.player.sex !== Sex.ANY"
-			effect="plain"
-			round
-			size="small"
-		>
-			{{ t("CompetitionSettings." + props.player.sex.toLowerCase()) }}
-		</el-tag>
-
-		<el-tooltip
+			class="w-min font-medium"
+			rounded
+			:value="t('CompetitionSettings.' + props.player.sex.toLowerCase())"
+		/>
+		<Tag
 			v-if="props.player.hasMinAge"
-			:content="
+			v-tooltip="
 				t('ViewCompetition.born_before') +
 				' ' +
 				(props.player.minAge !== null
 					? props.player.minAge.toLocaleString(t('lang'), dateOptions)
 					: 'Error')
 			"
-			class="box-item"
-			effect="dark"
-			placement="top-start"
-		>
-			<el-tag effect="plain" round size="small">
-				{{ generateAboveTag() }}
-			</el-tag>
-		</el-tooltip>
-		<el-tooltip
+			class="w-min font-medium"
+			:value="generateAboveTag()"
+			rounded
+		/>
+		<Tag
 			v-if="props.player.hasMaxAge"
-			:content="
+			v-tooltip="
 				t('ViewCompetition.born_after') +
 				' ' +
 				(props.player.maxAge !== null
 					? props.player.maxAge.toLocaleString(t('lang'), dateOptions)
 					: 'Error')
 			"
-			class="box-item"
-			effect="dark"
-			placement="top-start"
-		>
-			<el-tag effect="plain" round size="small">
-				{{ generateUnderTag() }}
-			</el-tag>
-		</el-tooltip>
-	</el-space>
+			class="w-min font-medium"
+			:value="generateUnderTag()"
+			rounded
+		/>
+	</div>
 </template>
 
 <script lang="ts" setup>

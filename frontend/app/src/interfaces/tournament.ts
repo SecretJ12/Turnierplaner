@@ -3,8 +3,17 @@ export interface TournamentForm {
 	name: string
 	visible: boolean
 	description: string
-	registration_phase: Date[] | null
-	game_phase: Date[] | null
+	registration_phase: Date[] | undefined
+	game_phase: Date[] | undefined
+}
+
+export const TournamentFormDefault: TournamentForm = {
+	id: null,
+	name: "",
+	visible: false,
+	description: "",
+	registration_phase: [new Date(), new Date()],
+	game_phase: [new Date(), new Date()],
 }
 
 export interface TournamentServer {
@@ -36,11 +45,11 @@ export interface Tournament {
 export function tournamentFormClientToServer(
 	tournament: TournamentForm,
 ): TournamentServer {
-	if (tournament.registration_phase === null) {
+	if (tournament.registration_phase === undefined) {
 		console.error("Registration phase is null")
 		throw new Error("Registration phase is null")
 	}
-	if (tournament.game_phase === null) {
+	if (tournament.game_phase === undefined) {
 		console.error("Game phase is null")
 		throw new Error("Game phase is null")
 	}

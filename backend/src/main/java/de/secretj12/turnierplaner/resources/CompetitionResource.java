@@ -148,6 +148,9 @@ public class CompetitionResource {
     @Produces(MediaType.TEXT_PLAIN)
     public String signUpPlayer(@PathParam("tourName") String tourName, @PathParam(
         "compName") String compName, jUserPlayerSignUpForm reg) {
+        // TODO better checks if team or members of it are already registered in team
+        // TODO check if both layers are the same
+        // TODO check if players match conditions
         checkTournamentAccessibility(tourName);
 
         Competition competition = competitions.getByName(tourName, compName);

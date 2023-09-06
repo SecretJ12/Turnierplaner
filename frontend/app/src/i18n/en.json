@@ -1,14 +1,17 @@
 {
 	"title": "TOURNAMENT PLANNER",
 	"lang": "en-US",
+	"date_format": "mm/dd/yy",
+	"no": "No",
+	"yes": "Yes",
 	"general": {
 		"create": "Create",
 		"update": "Update",
 		"name": "Name",
 		"description": "Description",
 		"name_missing": "Please input a name",
-		"signUp": "sign up",
-		"register": "register",
+		"signUp": "Sign up",
+		"register": "Register",
 		"success": "Success!",
 		"failure": "Failure!",
 		"loading": "Loading..."
@@ -49,6 +52,7 @@
 		},
 		"sign_up": "Sign up",
 		"registration_failed": "Player registration failed",
+		"registration_failed_detail": "Please check your input and if you are already registered.",
 		"registration_successful": "Player registered successfully",
 		"not_found": "Can't find yourself? Maybe you forgot to register yourself."
 	},
@@ -61,19 +65,31 @@
 	},
 	"ViewTournaments": {
 		"loadingFailed": "Couldn't load tournaments",
-		"overview": "Tournament overview"
+		"overview": "Tournament overview",
+		"add_title": "New tournament",
+		"add_content": "Click to add new tournament"
 	},
 	"ViewCreateTournament": {
-		"tournamentCreated": "Turnier erstellt",
-		"tournamentCreationFailed": "Couldn't create tournament"
+		"header": "Create tournament",
+		"tournamentCreating": "Creation of tournament",
+		"tournamentCreated": "Turnier created",
+		"tournamentCreationFailed": "Couldn't create tournament",
+		"tournamentCreation": "Create tournament"
 	},
 	"ViewEditTournament": {
+		"header": "Edit tournament",
+		"tournamentUpdating": "Updating of tournament",
 		"loadingDetailsFailed": "Couldn't load tournament details",
 		"tournamentUpdated": "Tournament updated",
-		"tournamentUpdateFailed": "Updating tournament failed"
+		"tournamentUpdateFailed": "Updating tournament failed",
+		"tournamentUpdate": "Update tournament"
 	},
 	"ViewCompetitions": {
-		"loadingFailed": "Couldn't load competitions"
+		"loadingFailed": "Couldn't load competitions",
+		"add_title": "New competition",
+		"add_content": "Click to add new competition",
+		"from": "Von",
+		"till": "Bis"
 	},
 	"ViewGroupSystem": {
 		"group": "group",
@@ -100,15 +116,29 @@
 		"any": "Any",
 		"minAge": "Minimum age",
 		"maxAge": "Maximum age",
-		"missingAge": "Please choose a date"
+		"missingAge": "Please choose a date",
+		"playerA": "Player 1",
+		"playerB": "Player 2"
+	},
+	"ViewSignUp": {
+		"atLeastOneLetter": "Please type at least one letter",
+		"noPlayerSelected": "No player selected",
+		"selectPlayerFirst": "Please select a player firrst",
+		"noPlayerFound": "No player found"
 	},
 	"ViewCreateCompetition": {
-		"creationFailed": "Couldn't create competition"
+		"creationFailed": "Couldn't create competition",
+		"competitionCreated": "Competition created",
+		"competitionCreation": "Creating competition"
 	},
 	"ViewEditCompetition": {
+		"header": "Edit competition",
 		"saved": "Competition saved",
 		"saving_failed": "Something went wrong while saving",
-		"loadingDetailsFailed": "Couldn't load competition details"
+		"loadingDetailsFailed": "Couldn't load competition details",
+		"competitionUpdated": "Competition updated",
+		"competitionUpdateFailed": "Updating competition failed",
+		"competitionUpdate": "Update competition"
 	},
 	"ViewCompetition": {
 		"tournament_system": "Tournament system",
@@ -149,5 +179,17 @@
 			"previous": "Previous",
 			"next": "Next"
 		}
+	},
+	"validation": {
+		"field_invalid": "Field is invalid",
+		"field_required": "Field is required",
+		"field_too_short": "Field is too short",
+		"field_too_long": "Field is too long",
+		"field_invalid_email": "Field is not a valid email address",
+		"field_invalid_phone": "Field is not a valid phone number",
+		"field_invalid_date": "Field is not a valid date",
+		"field_invalid_number": "Field is not a valid number",
+		"field_invalid_url": "Field is not a valid URL",
+		"date_missing": "Please choose start and end date"
 	}
 }

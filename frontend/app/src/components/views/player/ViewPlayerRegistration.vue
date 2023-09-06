@@ -1,215 +1,196 @@
 <template>
-	<div v-if="!registered" id="container">
-		<div>
-			<h2>
-				{{ t("ViewPlayerRegistration.headline") }}
-			</h2>
+	<div class="flex justify-content-center w-full">
+		<div id="card" class="card">
+			<h3 v-if="!registered">{{ t("ViewPlayerRegistration.headline") }}</h3>
+			<div v-if="!registered" class="formgrid grid">
+				<div class="field col-6">
+					<label for="first_name">{{
+						t("ViewPlayerRegistration.first_name.field")
+					}}</label>
+					<InputText
+						id="first_name"
+						type="text"
+						v-bind="firstName"
+						maxlength="30"
+						class="w-full"
+						:class="{ 'p-invalid': errors.firstName }"
+					/>
+					<InlineMessage v-if="errors.firstName" class="mt-2"
+						>{{ t(errors.firstName || "") }}
+					</InlineMessage>
+				</div>
+				<div class="field col-6">
+					<label for="name">{{
+						t("ViewPlayerRegistration.last_name.field")
+					}}</label>
+					<InputText
+						id="name"
+						type="text"
+						v-bind="lastName"
+						maxlength="30"
+						class="w-full"
+						:class="{ 'p-invalid': errors.lastName }"
+					/>
+					<InlineMessage v-if="errors.lastName" class="mt-2"
+						>{{ t(errors.lastName || "") }}
+					</InlineMessage>
+				</div>
+				<div class="field col-6">
+					<Calendar
+						show-icon
+						class="w-full"
+						v-bind="birthdate"
+						:manual-input="false"
+						:date-format="t('date_format')"
+						:class="{ 'p-invalid': errors.birthdate }"
+					/>
+				</div>
+				<div class="field col-6">
+					<Dropdown
+						v-bind="sex"
+						:options="[
+							{ name: t('CompetitionSettings.male'), value: Sex.MALE },
+							{ name: t('CompetitionSettings.female'), value: Sex.FEMALE },
+						]"
+						option-label="name"
+						option-value="value"
+						:placeholder="t(`CompetitionSettings.sex`)"
+						class="w-full"
+						:class="{ 'p-invalid': errors.sex }"
+					>
+						<template #option="slotProps">
+							<div>
+								{{ slotProps.option.name }}
+							</div>
+						</template>
+					</Dropdown>
+				</div>
+				<div class="field col-12">
+					<label for="email">{{
+						t("ViewPlayerRegistration.email.field")
+					}}</label>
+					<InputText
+						id="email"
+						type="text"
+						v-bind="email"
+						maxlength="30"
+						class="w-full"
+						:class="{ 'p-invalid': errors.email }"
+					/>
+					<InlineMessage v-if="errors.email" class="mt-2"
+						>{{ t(errors.email || "") }}
+					</InlineMessage>
+				</div>
+				<div class="field col-12">
+					<label for="phone">{{
+						t("ViewPlayerRegistration.phone.field")
+					}}</label>
+					<InputText
+						id="phone"
+						type="text"
+						v-bind="phone"
+						maxlength="30"
+						class="w-full"
+						:class="{ 'p-invalid': errors.phone }"
+					/>
+					<InlineMessage v-if="errors.phone" class="mt-2"
+						>{{ t(errors.phone || "") }}
+					</InlineMessage>
+				</div>
+				<div class="field col-12">
+					<Button :label="t('general.create')" @click="onSubmit"> </Button>
+				</div>
+			</div>
+			<div v-else>
+				<h2>
+					{{ t("general.success") }}
+				</h2>
+				<p>
+					{{ t("ViewPlayerRegistration.after") }}
+				</p>
+			</div>
 		</div>
-		<div id="form">
-			<el-form
-				ref="formRef"
-				:model="data"
-				label-position="top"
-				label-width="120px"
-				scroll-to-error="scroll-to-error"
-			>
-				<el-row :gutter="20" class="row-bg" justify="space-between">
-					<el-col :span="12">
-						<el-form-item
-							:label="t('ViewPlayerRegistration.first_name.field')"
-							:rules="[
-								{
-									required: true,
-									message: t('ViewPlayerRegistration.first_name.prompt'),
-									trigger: 'blur',
-								},
-							]"
-							prop="firstName"
-						>
-							<el-input v-model="data.firstName" />
-						</el-form-item>
-					</el-col>
-					<el-col :span="12">
-						<el-form-item
-							:label="t('ViewPlayerRegistration.last_name.field')"
-							:rules="[
-								{
-									required: true,
-									message: t('ViewPlayerRegistration.last_name.prompt'),
-									trigger: 'blur',
-								},
-							]"
-							prop="lastName"
-						>
-							<el-input v-model="data.lastName" />
-						</el-form-item>
-					</el-col>
-				</el-row>
-
-				<el-row :gutter="20" class="row-bg" justify="space-between">
-					<el-col :span="12">
-						<el-form-item
-							:label="t('ViewPlayerRegistration.sex.field')"
-							:rules="[
-								{
-									required: true,
-									message: t('ViewPlayerRegistration.sex.prompt'),
-									trigger: 'blur',
-								},
-							]"
-							prop="sex"
-						>
-							<el-select
-								v-model="data.sex"
-								:placeholder="t('ViewPlayerRegistration.sex.select')"
-							>
-								<el-option
-									:label="t('ViewPlayerRegistration.sex.Option1')"
-									value="MALE"
-								/>
-								<el-option
-									:label="t('ViewPlayerRegistration.sex.Option2')"
-									value="FEMALE"
-								/>
-							</el-select>
-						</el-form-item>
-					</el-col>
-					<el-col :span="12">
-						<el-form-item
-							:label="t('ViewPlayerRegistration.birthdate.field')"
-							required
-						>
-							<el-form-item
-								:rules="[
-									{
-										type: 'date',
-										required: true,
-										message: t('ViewPlayerRegistration.birthdate.prompt'),
-										trigger: 'blur',
-									},
-								]"
-								prop="birthday"
-							>
-								<el-date-picker v-model="data.birthday" type="date" />
-							</el-form-item>
-						</el-form-item>
-					</el-col>
-				</el-row>
-
-				<el-form-item
-					:label="t('ViewPlayerRegistration.email.field')"
-					:rules="[
-						{
-							required: true,
-							message: t('ViewPlayerRegistration.email.empty'),
-							trigger: 'blur',
-						},
-						{
-							type: 'email',
-							message: t('ViewPlayerRegistration.email.correct'),
-							trigger: ['blur', 'change'],
-						},
-					]"
-					prop="email"
-				>
-					<el-input v-model="data.email" />
-				</el-form-item>
-
-				<el-form-item
-					:label="t('ViewPlayerRegistration.phone.field')"
-					:rules="[
-						{
-							required: true,
-							message: t('ViewPlayerRegistration.phone.empty'),
-							trigger: 'blur',
-						},
-						{
-							type: 'tel',
-							message: t('ViewPlayerRegistration.phone.correct'),
-							trigger: ['blur', 'change'],
-						},
-					]"
-					prop="phone"
-				>
-					<el-input v-model="data.phone" />
-				</el-form-item>
-
-				<!-- TODO ich bin einverstanden, dass meine Daten gespeichert werden... (checkbox) -->
-
-				<el-row class="row-bg" justify="end">
-					<el-form-item>
-						<el-button type="primary" @click="submitForm(formRef)"
-							>Submit</el-button
-						>
-					</el-form-item>
-				</el-row>
-			</el-form>
-		</div>
-	</div>
-	<div v-else id="container">
-		<h2>
-			{{ t("general.success") }}
-		</h2>
-		<p>
-			{{ t("ViewPlayerRegistration.after") }}
-		</p>
 	</div>
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from "vue"
+import { ref } from "vue"
 import axios from "axios"
-import { ElMessage } from "element-plus"
 import { useI18n } from "vue-i18n"
+import { Sex } from "@/interfaces/competition"
+import { useForm } from "vee-validate"
+import { toTypedSchema } from "@vee-validate/yup"
+import { date, mixed, object, string } from "yup"
+import { useToast } from "primevue/usetoast"
 
 const { t } = useI18n({ inheritLocale: true })
 
-const formRef = ref<HTMLFormElement>()
 const registered = ref(false)
-const data = reactive<{
-	firstName: string
-	lastName: string
-	sex: string
-	birthday: null | Date
-	email: string
-	phone: string
-}>({
-	firstName: "",
-	lastName: "",
-	sex: "",
-	birthday: null,
-	email: "",
-	phone: "",
-})
 
-function submitForm(formEl: HTMLFormElement | undefined) {
-	if (!formEl) return
-	formEl.validate((valid: boolean) => {
-		if (valid) {
-			if (data.birthday === null) return
-			axios
-				.post("/player/registration", {
-					firstName: data.firstName,
-					lastName: data.lastName,
-					sex: data.sex,
-					birthday: dateToJson(data.birthday),
-					email: data.email,
-					phone: data.phone,
-				})
-				.then(() => {
-					ElMessage.success(t("ViewPlayerRegistration.registration_successful"))
-					registered.value = true
-				})
-				.catch((error) => {
-					console.log(error)
-					ElMessage.error(t("ViewPlayerRegistration.registration_failed"))
-				})
-		} else {
-			console.log("error submit!")
-			return false
-		}
+const phoneRegExp =
+	/^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)$/
+
+const { defineInputBinds, errors, defineComponentBinds, handleSubmit } =
+	useForm({
+		validationSchema: toTypedSchema(
+			object({
+				firstName: string()
+					.min(4, t("validation.field_too_short"))
+					.max(40, "validation.field_too_long")
+					.required(t("validation.field_required")),
+				lastName: string()
+					.min(4, t("validation.field_too_short"))
+					.max(40, "validation.field_too_long")
+					.required(t("validation.field_required")),
+				sex: mixed().oneOf(Object.values(Sex)).required(),
+				birthdate: date().required(),
+				email: string().email().required(),
+				phone: string()
+					.matches(phoneRegExp, t("ViewPlayerRegistration.phone.correct"))
+					.required(),
+			}),
+		),
+		initialValues: {},
 	})
-}
+
+const firstName = defineInputBinds("firstName")
+const lastName = defineInputBinds("lastName")
+const sex = defineComponentBinds("sex")
+const birthdate = defineComponentBinds("birthdate")
+const email = defineInputBinds("email")
+const phone = defineInputBinds("phone")
+
+const toast = useToast()
+const onSubmit = handleSubmit((values) => {
+	// TODO move to external files
+	axios
+		.post("/player/registration", {
+			firstName: values.firstName,
+			lastName: values.lastName,
+			sex: values.sex,
+			birthdate: dateToJson(values.birthdate),
+			email: values.email,
+			phone: values.phone,
+		})
+		.then(() => {
+			toast.add({
+				severity: "success",
+				summary: t("ViewPlayerRegistration.registration_successful"),
+				detail: t("ViewPlayerRegistration.after"),
+				life: 3000,
+			})
+			registered.value = true
+		})
+		.catch((error) => {
+			console.log(error)
+			toast.add({
+				severity: "error",
+				summary: t("ViewPlayerRegistration.registration_failed"),
+				detail: t("ViewPlayerRegistration.registration_failed_detail"),
+				life: 3000,
+			})
+		})
+})
 
 function dateToJson(d: Date): string {
 	return `${d.getFullYear()}-${d.getMonth() < 9 ? "0" : ""}${
@@ -219,19 +200,7 @@ function dateToJson(d: Date): string {
 </script>
 
 <style scoped>
-#form {
-	width: 100%;
-	margin: 10px;
-	display: flex;
-	flex-wrap: wrap;
-	flex-direction: row;
-	justify-content: center;
-}
-
-#container {
-	width: 100%;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
+#card {
+	width: min(90dvw, 50rem);
 }
 </style>

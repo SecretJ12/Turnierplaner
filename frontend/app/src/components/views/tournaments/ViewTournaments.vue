@@ -1,68 +1,42 @@
 <template>
 	<div id="tournaments">
+		<template v-if="tournaments === null">
+			<Skeleton v-for="i in Array(5)" :key="i" class="w-23rem h-12rem" />
+		</template>
 		<item
 			v-for="tournament in tournaments"
+			v-else
 			:key="tournament.name"
 			:can-create="canCreate"
 			:tournament="tournament"
 			@selected="selected"
 			@settings="settingsItem"
 		/>
-		<AddItem v-if="canCreate" @selected="addTournament" />
+		<AddItem
+			v-if="canCreate"
+			:title="t('ViewTournaments.add_title')"
+			:content="t('ViewTournaments.add_content')"
+			@selected="addTournament"
+		/>
 	</div>
 </template>
 
 <script lang="ts" setup>
-import { inject, ref, watch } from "vue"
+import { inject, ref } from "vue"
 import Item from "../../items/ItemTournament.vue"
 import AddItem from "../../items/ItemAdd.vue"
 import { router } from "@/main"
-import axios from "axios"
-import { auth } from "@/security/AuthService"
-import { ElMessage } from "element-plus"
-import {
-	Tournament,
-	TournamentServer,
-	tournamentServerToClient,
-} from "@/interfaces/tournament"
 import { useI18n } from "vue-i18n"
+import { getCanCreate } from "@/backend/security"
+import { getListTournaments } from "@/backend/tournament"
+import { useToast } from "primevue/usetoast"
 
 const { t } = useI18n({ inheritLocale: true })
-
-const tournaments = ref<Tournament[]>([])
+const toast = useToast()
 
 const isLoggedIn = inject("loggedIn", ref(false))
-const canCreate = ref<boolean>(false)
-
-watch(isLoggedIn, async () => {
-	update()
-})
-update()
-
-function update() {
-	canCreate.value = false
-	axios
-		.get<TournamentServer[]>("/tournament/list")
-		.then((response) => {
-			tournaments.value = response.data.map(tournamentServerToClient)
-		})
-		.catch((error) => {
-			ElMessage.error(t("ViewTournaments.loadingFailed"))
-			console.log(error)
-		})
-	auth.getUser().then((user) => {
-		if (user !== null) {
-			axios
-				.get<boolean>("/tournament/canCreate")
-				.then((response) => {
-					canCreate.value = response.data
-				})
-				.catch(() => {
-					canCreate.value = false
-				})
-		}
-	})
-}
+const canCreate = getCanCreate(isLoggedIn)
+const tournaments = getListTournaments(isLoggedIn, t, toast)
 
 function selected(tournament: string) {
 	router.push({ path: "/tournament/" + tournament })

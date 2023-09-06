@@ -1,30 +1,47 @@
 <template>
-	<div id="item">
-		<div id="content" @click="selected">
-			<h2>{{ name }}</h2>
-			<p>{{ description }}</p>
-		</div>
-		<div id="type">
-			<font-awesome-icon
-				v-if="type === 'GROUPS'"
-				:icon="['fas', 'table-cells-large']"
-				class="fa-2x"
-			></font-awesome-icon>
-			<font-awesome-icon
+	<Card
+		id="card"
+		class="relative cursor-pointer md:w-23rem w-full"
+		@click="selected"
+	>
+		<template #title>
+			{{ name }}
+		</template>
+		<template #content>
+			{{ description }}
+		</template>
+		<template #footer>
+			<Button outlined disabled style="visibility: hidden"> </Button>
+			<Button v-if="type === 'GROUPS'" text outlined disabled class="icon">
+				<template #icon>
+					<span class="material-symbols-outlined">grid_view</span>
+				</template>
+			</Button>
+			<Button
 				v-else-if="type === 'KNOCKOUT'"
-				:icon="['fas', 'user-group']"
-				class="fa-2x"
-			></font-awesome-icon>
-		</div>
-		<font-awesome-icon
-			v-if="canEdit"
-			id="settings"
-			:icon="['fas', 'gear']"
-			class="fa-2x"
-			@click="settings"
-		>
-		</font-awesome-icon>
-	</div>
+				disabled
+				text
+				outlined
+				class="icon"
+			>
+				<template #icon>
+					<span class="material-symbols-outlined">groups</span>
+				</template>
+			</Button>
+			<Button
+				v-if="canEdit"
+				rounded
+				outlined
+				class="settings"
+				@click="settings"
+				@click.stop
+			>
+				<template #icon>
+					<span class="material-icons">settings</span>
+				</template>
+			</Button>
+		</template>
+	</Card>
 </template>
 
 <script lang="ts" setup>
@@ -42,83 +59,20 @@ function selected() {
 }
 
 function settings() {
-	console.log("settings")
 	emit("settings", props.name)
 }
 </script>
 
 <style scoped>
-#item {
-	border-radius: 15px;
-	padding: 0;
-	width: 420px;
-	height: 300px;
-	position: relative;
-	overflow: hidden;
-}
-
-#content {
-	padding: 20px 10px 0 10px;
-	background-color: #d0d0d0;
-	box-shadow: 0 0 5px #909090;
-	width: 100%;
-	height: 100%;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-}
-
-#settings {
+.icon {
 	position: absolute;
-	right: 10px;
-	bottom: 10px;
-	color: #303030;
+	left: 1.25rem;
+	bottom: 1.25rem;
 }
 
-#type {
+.settings {
 	position: absolute;
-	left: 10px;
-	bottom: 10px;
-	color: #303030;
-}
-
-#settings:hover {
-	filter: drop-shadow(0 0 10px #808080);
-}
-
-#settings:active {
-	color: #404040;
-}
-
-h2 {
-	margin-top: 0;
-	text-align: center;
-	overflow-wrap: break-word;
-}
-
-p {
-	text-align: center;
-	overflow-wrap: break-word;
-	max-width: calc(100% - 100px);
-}
-
-#content:hover {
-	cursor: pointer;
-}
-
-#item:hover {
-	box-shadow: 0 0 10px black;
-}
-
-#content:active {
-	background-color: #c0c0c0;
-}
-
-@media only screen and (max-width: 900px) {
-	#item {
-		width: 100%;
-		min-height: 100px;
-		height: auto;
-	}
+	right: 1.25rem;
+	bottom: 1.25rem;
 }
 </style>

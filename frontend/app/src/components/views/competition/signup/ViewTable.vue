@@ -1,87 +1,87 @@
 <template>
 	<!-- SINGLE -->
-	<el-table
+	<DataTable
 		v-if="props.competition.mode === Mode.SINGLE"
-		:data="playersA"
-		:empty-text="t('ViewCompetition.no_registration')"
-		border
-		stripe
+		:value="playersA"
+		striped-rows
+		show-gridlines
+		removable-sort
 	>
-		<el-table-column :label="t('general.name')" prop="name" sortable="custom" />
-	</el-table>
+		<template #empty> t('ViewCompetition.no_registration')</template>
+		<Column :header="t('general.name')" sortable field="name" />
+	</DataTable>
+
 	<!-- DOUBLE TOGETHER -->
-	<el-table
+	<DataTable
 		v-else-if="props.competition.signUp === SignUp.TOGETHER"
-		:data="teams"
-		:empty-text="t('ViewCompetition.no_registration')"
-		border
-		stripe
+		:value="teams"
+		striped-rows
+		show-gridlines
+		removable-sort
 	>
-		<el-table-column
-			:label="t('ViewCompetition.playerA')"
-			prop="playerA.name"
-			sortable="custom"
+		<template #empty> t('ViewCompetition.no_registration')</template>
+		<Column
+			:header="t('ViewCompetition.playerA')"
+			sortable
+			field="playerA.name"
+			style="width: 50%"
 		/>
-		<el-table-column
-			:label="t('ViewCompetition.playerB')"
-			prop="playerB.name"
-			sortable="custom"
+		<Column
+			:header="t('ViewCompetition.playerB')"
+			sortable
+			field="playerB.name"
+			style="width: 50%"
 		/>
-	</el-table>
+	</DataTable>
 	<!-- DOUBLE INDIVIDUAL SAME -->
-	<el-table
+	<DataTable
 		v-else-if="!props.competition.playerB.different"
-		:data="playersA"
-		:empty-text="t('ViewCompetition.no_registration')"
-		border
-		stripe
+		:value="playersA"
+		striped-rows
+		show-gridlines
+		removable-sort
 	>
-		<el-table-column :label="t('general.name')" prop="name" sortable="custom" />
-	</el-table>
+		<template #empty> t('ViewCompetition.no_registration')</template>
+		<Column :header="t('general.name')" sortable field="name" />
+	</DataTable>
+
 	<!-- DOUBLE INDIVIDUAL DIFFERENT -->
-	<el-row v-else :gutter="20" justify="space-between">
-		<el-col :span="12">
-			<el-table
-				:data="playersA"
-				:empty-text="t('ViewCompetition.no_registration')"
-				border
-				stripe
-			>
-				<el-table-column
-					:label="t('ViewCompetition.playerA')"
-					prop="name"
-					sortable="custom"
-				/>
-			</el-table>
-		</el-col>
-		<el-col :span="12">
-			<el-table
-				:data="playersB"
-				:empty-text="t('ViewCompetition.no_registration')"
-				border
-				stripe
-			>
-				<el-table-column
-					:label="t('ViewCompetition.playerB')"
-					prop="name"
-					sortable="custom"
-				/>
-			</el-table>
-		</el-col>
-	</el-row>
+	<div v-else class="grid">
+		<DataTable
+			class="col"
+			:value="playersA"
+			striped-rows
+			show-gridlines
+			removable-sort
+		>
+			<template #empty> t('ViewCompetition.no_registration')</template>
+			<Column :header="t('ViewCompetition.playerA')" sortable field="name" />
+		</DataTable>
+		<DataTable
+			class="col"
+			:value="playersB"
+			striped-rows
+			show-gridlines
+			removable-sort
+		>
+			<template #empty> t('ViewCompetition.no_registration')</template>
+			<Column :header="t('ViewCompetition.playerB')" sortable field="name" />
+		</DataTable>
+	</div>
 </template>
 
 <script lang="ts" setup>
 import axios from "axios"
-import { ElMessage } from "element-plus"
 import { ref, watch } from "vue"
 import { useRoute } from "vue-router"
 import { Competition, Mode, SignUp } from "@/interfaces/competition"
 import { signedUpTeam, Team } from "@/interfaces/registration/team"
 import { useI18n } from "vue-i18n"
 import { signedUpPlayer } from "@/interfaces/player"
+import { useToast } from "primevue/usetoast"
 
 const { t } = useI18n({ inheritLocale: true })
+const toast = useToast()
 
 const props = defineProps<{
 	update: number
@@ -172,14 +172,23 @@ function updateTeams() {
 					}
 				})
 			} else {
-				ElMessage.error("invalid mode")
+				// TODO internalization
+				toast.add({
+					severity: "error",
+					summary: "invalid mode",
+					life: 3000,
+				})
 			}
 		})
 		.catch((error) => {
 			teams.value = []
 			playersA.value = []
 			playersB.value = []
-			ElMessage.error(t("ViewCompetition.query_player_failed"))
+			toast.add({
+				severity: "error",
+				summary: t("ViewCompetition.query_player_failed"),
+				life: 3000,
+			})
 			console.log(error)
 		})
 }

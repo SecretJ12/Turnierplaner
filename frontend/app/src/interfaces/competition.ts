@@ -30,6 +30,30 @@ export interface Competition {
 	playerB: settingsPlayerB
 }
 
+export const CompetitionDefault: Competition = {
+	id: null,
+	name: "",
+	description: "",
+	tourType: TourType.KNOCKOUT,
+	mode: Mode.SINGLE,
+	signUp: SignUp.INDIVIDUAL,
+	playerA: {
+		sex: Sex.ANY,
+		hasMinAge: false,
+		minAge: null,
+		hasMaxAge: false,
+		maxAge: null,
+	},
+	playerB: {
+		different: false,
+		sex: Sex.ANY,
+		hasMinAge: false,
+		minAge: null,
+		hasMaxAge: false,
+		maxAge: null,
+	},
+}
+
 export interface CompetitionServer {
 	id?: null | string
 	name: string
@@ -40,17 +64,17 @@ export interface CompetitionServer {
 	playerA: {
 		sex: Sex
 		hasMinAge: boolean
-		minAge: string
+		minAge: string | null
 		hasMaxAge: boolean
-		maxAge: string
+		maxAge: string | null
 	}
 	playerB: {
 		different: boolean
 		sex: Sex
 		hasMinAge: boolean
-		minAge: string
+		minAge: string | null
 		hasMaxAge: boolean
-		maxAge: string
+		maxAge: string | null
 	}
 }
 
@@ -62,50 +86,54 @@ export interface settingsPlayer {
 	maxAge: Date | null
 }
 
+export interface CompetitionForm {
+	name: string
+	description: string
+	tourType: TourType
+	mode: Mode
+	signUp: SignUp
+	playerA_Sex: Sex
+	playerA_hasMinAge: boolean
+	playerA_minAge: Date | undefined
+	playerA_hasMaxAge: boolean
+	playerA_maxAge: Date | undefined
+	playerB_Different: boolean
+	playerB_Sex: Sex
+	playerB_hasMinAge: boolean
+	playerB_minAge: Date | undefined
+	playerB_hasMaxAge: boolean
+	playerB_maxAge: Date | undefined
+}
+
 export interface settingsPlayerB extends settingsPlayer {
 	different: boolean
 }
 
-export function competitionClientToServer(
-	competition: Competition,
+export function competitionFormToServer(
+	form: CompetitionForm,
+	id: string | null,
 ): CompetitionServer {
-	if (competition.playerA.minAge === null) {
-		console.error("Player A minAge is null")
-		throw new Error("Player A minAge is null")
-	}
-	if (competition.playerA.maxAge === null) {
-		console.error("Player A maxAge is null")
-		throw new Error("Player A maxAge is null")
-	}
-	if (competition.playerB.minAge === null) {
-		console.error("Player B minAge is null")
-		throw new Error("Player B minAge is null")
-	}
-	if (competition.playerB.maxAge === null) {
-		console.error("Player B maxAge is null")
-		throw new Error("Player B maxAge is null")
-	}
 	return {
-		id: competition.id,
-		name: competition.name,
-		description: competition.description,
-		type: competition.tourType,
-		mode: competition.mode,
-		signUp: competition.signUp,
+		id: id,
+		name: form.name,
+		description: form.description,
+		type: form.tourType,
+		mode: form.mode,
+		signUp: form.signUp,
 		playerA: {
-			sex: competition.playerA.sex,
-			hasMinAge: competition.playerA.hasMinAge,
-			minAge: dateToJson(competition.playerA.minAge),
-			hasMaxAge: competition.playerA.hasMaxAge,
-			maxAge: dateToJson(competition.playerA.maxAge),
+			sex: form.playerA_Sex,
+			hasMinAge: form.playerA_hasMinAge,
+			minAge: form.playerA_minAge ? dateToJson(form.playerA_minAge) : null,
+			hasMaxAge: form.playerA_hasMaxAge,
+			maxAge: form.playerA_maxAge ? dateToJson(form.playerA_maxAge) : null,
 		},
 		playerB: {
-			different: competition.playerB.different,
-			sex: competition.playerB.sex,
-			hasMinAge: competition.playerB.hasMinAge,
-			minAge: dateToJson(competition.playerB.minAge),
-			hasMaxAge: competition.playerB.hasMaxAge,
-			maxAge: dateToJson(competition.playerB.maxAge),
+			different: form.playerB_Different,
+			sex: form.playerB_Sex,
+			hasMinAge: form.playerB_hasMinAge,
+			minAge: form.playerB_minAge ? dateToJson(form.playerB_minAge) : null,
+			hasMaxAge: form.playerB_hasMaxAge,
+			maxAge: form.playerA_maxAge ? dateToJson(form.playerA_maxAge) : null,
 		},
 	}
 }
@@ -123,17 +151,25 @@ export function competitionServerToClient(
 		playerA: {
 			sex: competition.playerA.sex,
 			hasMinAge: competition.playerA.hasMinAge,
-			minAge: new Date(competition.playerA.minAge),
+			minAge: competition.playerA.minAge
+				? new Date(competition.playerA.minAge)
+				: null,
 			hasMaxAge: competition.playerA.hasMaxAge,
-			maxAge: new Date(competition.playerA.maxAge),
+			maxAge: competition.playerA.maxAge
+				? new Date(competition.playerA.maxAge)
+				: null,
 		},
 		playerB: {
 			different: competition.playerB.different,
 			sex: competition.playerB.sex,
 			hasMinAge: competition.playerB.hasMinAge,
-			minAge: new Date(competition.playerB.minAge),
+			minAge: competition.playerB.minAge
+				? new Date(competition.playerB.minAge)
+				: null,
 			hasMaxAge: competition.playerB.hasMaxAge,
-			maxAge: new Date(competition.playerB.maxAge),
+			maxAge: competition.playerB.maxAge
+				? new Date(competition.playerB.maxAge)
+				: null,
 		},
 	}
 }

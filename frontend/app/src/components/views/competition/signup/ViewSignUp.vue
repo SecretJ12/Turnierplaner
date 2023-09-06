@@ -1,54 +1,43 @@
 <template>
-	<el-space direction="vertical" fill>
-		<el-descriptions
-			:column="windowWidth < 600 ? 1 : 2"
-			:direction="windowWidth < 400 ? 'vertical' : 'horizontal'"
-			border
-		>
-			<el-descriptions-item :span="windowWidth < 600 ? 1 : 2">
-				<template #label>
-					{{ t("general.description") }}
-				</template>
-				{{ props.competition.description }}
-			</el-descriptions-item>
-			<el-descriptions-item>
-				<template #label>
-					{{ t("ViewCompetition.tournament_system") }}
-				</template>
-				{{
-					t("CompetitionSettings." + props.competition.tourType.toLowerCase())
-				}}
-			</el-descriptions-item>
-			<el-descriptions-item>
-				<template #label>
-					{{ t("ViewCompetition.game_mode") }}
-				</template>
+	<!-- TODO place button to registration -->
+	<div class="w-full flex flex-column align-items-center">
+		<Card class="w-full md:w-30rem">
+			<template #content>
+				<strong>{{ t("general.description") }}:</strong>
+				{{ props.competition.description }}<br />
+				<strong>{{ t("ViewCompetition.tournament_system") }}:</strong>
+				{{ t("CompetitionSettings." + props.competition.tourType.toLowerCase())
+				}}<br />
+				<strong>{{ t("ViewCompetition.game_mode") }}:</strong>
 				{{ t("CompetitionSettings." + props.competition.mode.toLowerCase()) }}
-			</el-descriptions-item>
-		</el-descriptions>
-
-		<el-space />
-		<el-space />
-		<el-space />
+			</template>
+		</Card>
 
 		<!-- Show registration is over -->
-		<p v-if="!allowRegistration" style="text-align: center">
-			{{ t("ViewCompetition.registration_over") }}
-		</p>
-		<template v-else>
-			<ViewSignUpForm
-				:begin-game-phase="props.beginGamePhase"
-				:competition="props.competition"
-				@registered="childUpdate"
-			/>
+		<Card class="mt-2 mb-2 w-12 md:w-10 lg:w-8 xl:w-7">
+			<template #content>
+				<p v-if="!allowRegistration" style="text-align: center">
+					{{ t("ViewCompetition.registration_over") }}
+				</p>
+				<template v-else>
+					<ViewSignUpForm
+						:begin-game-phase="props.beginGamePhase"
+						:competition="props.competition"
+						@registered="childUpdate"
+					/>
+				</template>
 
-			<ViewRegistrationNotice v-if="false" :comp-details="props.competition" />
-		</template>
-
-		<ViewTable :competition="props.competition" :update="updateChildren" />
+				<div class="mt-2">
+					<ViewTable
+						:competition="props.competition"
+						:update="updateChildren"
+					/>
+				</div>
+			</template>
+		</Card>
 
 		<!-- TODO add options for admin -->
-	</el-space>
+	</div>
 </template>
 
 <script lang="ts" setup>
@@ -57,7 +46,6 @@ import { auth } from "@/security/AuthService"
 import axios from "axios"
 import { useRoute } from "vue-router"
 import ViewTable from "@/components/views/competition/signup/ViewTable.vue"
-import ViewRegistrationNotice from "@/components/views/competition/signup/ViewRegistrationNotice.vue"
 import ViewSignUpForm from "@/components/views/competition/signup/ViewSignUpForm.vue"
 import { Competition } from "@/interfaces/competition"
 import { useI18n } from "vue-i18n"

@@ -2,15 +2,12 @@
 import HeadContent from "@/components/header/HeadContent.vue"
 import { provide, ref } from "vue"
 import { access_token, auth } from "@/security/AuthService"
-import { useI18n } from "vue-i18n"
-
-const { t } = useI18n({ inheritLocale: true })
 
 let aside = false
 
 const silentLoginCompleted = ref(false)
 auth
-	.silentLogin(t)
+	.silentLogin()
 	.then(() => {
 		silentLoginCompleted.value = true
 	})
@@ -49,10 +46,14 @@ auth.addUserUnloadedListener(() => {
 			<h2>Aside content</h2>
 		</aside>
 	</div>
+	<Toast />
 </template>
 
 <style>
-@import "assets/base.css";
+body {
+	margin: 0;
+	padding: 0 !important;
+}
 </style>
 
 <style scoped>

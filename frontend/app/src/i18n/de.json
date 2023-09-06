@@ -1,6 +1,9 @@
 {
 	"title": "TURNIERPLANER",
 	"lang": "de-DE",
+	"date_format": "dd.mm.yy",
+	"no": "Nein",
+	"yes": "Ja",
 	"general": {
 		"create": "Erstellen",
 		"update": "Aktualisieren",
@@ -48,8 +51,9 @@
 			"correct": "Bitte gib eine korrekte Telefonnummer an"
 		},
 		"sign_up": "Registrieren",
-		"registration_failed": "Player registration failed",
-		"registration_successful": "Player registered successfully",
+		"registration_failed": "Die Spielerregistrierung ist fehlgeschlagen",
+		"registration_failed_detail": "Bitte überprüfe Ihre Eingaben und ob Sie schon registriert sind",
+		"registration_successful": "Die Registrierung war erfolgreich",
 		"not_found": "Bevor du dich anmelden kannst musst du dich einmalig registrieren"
 	},
 	"TournamentSettings": {
@@ -61,19 +65,28 @@
 	},
 	"ViewTournaments": {
 		"loadingFailed": "Turniere konnten nicht geladen werden",
-		"overview": "Turnierübersicht"
+		"overview": "Turnierübersicht",
+		"add_title": "Neues Turnier",
+		"add_content": "Klicke um neues Turnier hinzuzufügen"
 	},
 	"ViewCreateTournament": {
 		"tournamentCreated": "Turnier erstellt",
-		"tournamentCreationFailed": "Turnier konnte nicht erstellt werden"
+		"tournamentCreationFailed": "Turnier konnte nicht erstellt werden",
+		"tournamentCreation": "Turniererstellung"
 	},
 	"ViewEditTournament": {
+		"tournamentUpdating": "Turnieraktualisierung",
 		"loadingDetailsFailed": "Turnierdetails konnten nicht geladen werden",
 		"tournamentUpdated": "Turnier aktualisiert",
-		"tournamentUpdateFailed": "Aktualisieren fehlgeschlagen"
+		"tournamentUpdateFailed": "Aktualisieren fehlgeschlagen",
+		"tournamentUpdate": "Turnier aktualisieren"
 	},
 	"ViewCompetitions": {
-		"loadingFailed": "Konkurrenzen konnten nicht geladen werden"
+		"loadingFailed": "Konkurrenzen konnten nicht geladen werden",
+		"add_title": "Neue Konkurrenz",
+		"add_content": "Klicke um neue Konkurrenz hinzuzufügen",
+		"from": "Von",
+		"till": "Bis"
 	},
 	"ViewGroupSystem": {
 		"group": "Gruppe",
@@ -100,15 +113,30 @@
 		"any": "Egal",
 		"minAge": "Mindestalter",
 		"maxAge": "Maximalalter",
-		"missingAge": "Bitte wähle ein Datum"
+		"missingAge": "Bitte wähle ein Datum",
+		"playerA": "Spieler 1",
+		"playerB": "Spieler 2"
+	},
+	"ViewSignUp": {
+		"atLeastOneLetter": "Bitte tippe mindestens einen Buchstaben ein",
+		"noPlayerSelected": "Keinen Spieler ausgewählt",
+		"selectPlayerFirst": "Bitte wähle zuerst einen Spieler aus",
+		"noPlayerFound": "Keinen Spieler gefunden"
 	},
 	"ViewCreateCompetition": {
-		"creationFailed": "Konkurrenz konnte nicht erstellt werden"
+		"header": "Neue Konkurrenz",
+		"creationFailed": "Konkurrenz konnte nicht erstellt werden",
+		"competitionCreated": "Konkurrenz erstellt",
+		"competitionCreation": "Konkurrenzerstellung"
 	},
 	"ViewEditCompetition": {
+		"header": "Konkurrenz bearbeiten",
 		"saved": "Konkurrenz wurde gespeichert",
 		"saving_failed": "Beim Speichern hat etwas nicht funktioniert",
-		"loadingDetailsFailed": "Details der Konkurrenz konnten nicht geladen werden"
+		"loadingDetailsFailed": "Details der Konkurrenz konnten nicht geladen werden",
+		"competitionUpdated": "Konkurrenz aktualisiert",
+		"competitionUpdateFailed": "Aktualisierung fehlgeschlagen",
+		"competitionUpdate": "Konkurrenzaktualisierung"
 	},
 	"ViewCompetition": {
 		"tournament_system": "Turniersystem",
@@ -149,5 +177,17 @@
 			"previous": "Zurück",
 			"next": "Weiter"
 		}
+	},
+	"validation": {
+		"field_invalid": "Feld ist ungültig",
+		"field_required": "Das Feld ist erforderlich",
+		"field_too_short": "Die Eingabe ist zu kurz",
+		"field_too_long": "Die Eingabe ist zu lang",
+		"field_invalid_email": "Bitte geben Sie eine gültige Email-Adresse an",
+		"field_invalid_phone": "Bitte geben Sie eine gültige Telefonnummer an",
+		"field_invalid_date": "Bitte geben Sie ein gültiges Datum an",
+		"field_invalid_number": "Bitte geben Sie eine gültige Zahl an",
+		"field_invalid_url": "Bitte geben Sie eine gültige URL an",
+		"date_missing": "Bitte wähle ein Anfangs- und Enddatum"
 	}
 }
