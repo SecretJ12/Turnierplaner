@@ -139,12 +139,12 @@ setLocale({
 })
 
 const { defineInputBinds, errors, defineComponentBinds, handleSubmit } =
-	useForm({
+	useForm<TournamentForm>({
 		validationSchema: toTypedSchema(
 			object({
 				name: string()
-					.required("validation.field_required")
-					.min(4, "validation.field_too_short"),
+					.required()
+					.min(4),
 				visible: boolean(),
 				description: string().max(255),
 				registration_phase: array()

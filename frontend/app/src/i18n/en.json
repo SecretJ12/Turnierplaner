@@ -37,7 +37,7 @@
 			"Option2": "Woman"
 		},
 		"birthdate": {
-			"field": "birthdate",
+			"field": "Birthdate",
 			"prompt": "Please input your birthdate"
 		},
 		"email": {

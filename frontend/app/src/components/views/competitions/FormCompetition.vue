@@ -439,13 +439,13 @@ const props = withDefaults(
 )
 
 const { values, defineInputBinds, errors, defineComponentBinds, handleSubmit } =
-	useForm({
+	useForm<CompetitionForm>({
 		validationSchema: toTypedSchema(
 			object({
 				name: string()
-					.min(4, t("validation.field_too_short"))
-					.max(40, "validation.field_too_long")
-					.required(t("validation.field_required")),
+					.min(4)
+					.max(40)
+					.required(),
 				description: string().max(50),
 				tourType: mixed().oneOf(Object.values(TourType)).required(),
 				mode: mixed().oneOf(Object.values(Mode)).required(),

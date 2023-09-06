@@ -13,3 +13,17 @@ export interface signedUpPlayer {
 	lastName: string
 	name: string
 }
+
+export enum Sex {
+	MALE = "MALE",
+	FEMALE = "FEMALE",
+}
+
+export interface PlayerRegistration {
+	firstName: string
+	lastName: string
+	sex: Sex
+	birthdate: Date
+	email: string
+	phone: string
+}
