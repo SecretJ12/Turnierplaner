@@ -62,7 +62,7 @@ export default [
 	{
 		path: "/player/verification",
 		name: "Player verified",
-		component: () => import("@/components/views/ViewTemplates.vue"),
+		component: () => import("@/components/views/player/ViewVerification.vue"),
 	},
 	{
 		path: "/templates",
