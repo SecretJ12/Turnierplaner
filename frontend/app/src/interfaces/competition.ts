@@ -97,7 +97,7 @@ export interface CompetitionForm {
 	playerA_minAge: Date | undefined
 	playerA_hasMaxAge: boolean
 	playerA_maxAge: Date | undefined
-	playerB_Different: boolean
+	playerB_different: boolean
 	playerB_Sex: Sex
 	playerB_hasMinAge: boolean
 	playerB_minAge: Date | undefined
@@ -128,7 +128,7 @@ export function competitionFormToServer(
 			maxAge: form.playerA_maxAge ? dateToJson(form.playerA_maxAge) : null,
 		},
 		playerB: {
-			different: form.playerB_Different,
+			different: form.playerB_different,
 			sex: form.playerB_Sex,
 			hasMinAge: form.playerB_hasMinAge,
 			minAge: form.playerB_minAge ? dateToJson(form.playerB_minAge) : null,
