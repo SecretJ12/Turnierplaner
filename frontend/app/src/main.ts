@@ -61,6 +61,7 @@ const router = VueRouter.createRouter({
 import PrimeVue from "primevue/config"
 import ToastService from "primevue/toastservice"
 import Tooltip from "primevue/tooltip"
+import FocusTrap from "primevue/focustrap"
 import Steps from "primevue/steps"
 import TabView from "primevue/tabview"
 import TabMenu from "primevue/tabmenu"
@@ -141,6 +142,7 @@ app
 	.component("AutoComplete", AutoComplete)
 	.component("Checkbox", Checkbox)
 	.directive("tooltip", Tooltip)
+	.directive("focustrap", FocusTrap)
 	.mount("#app")
 
 export { router }
