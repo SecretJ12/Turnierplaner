@@ -71,7 +71,6 @@
 
 <script setup lang="ts">
 import { KnockoutMatch } from "@/interfaces/knockoutSystem"
-import { rangeArr } from "element-plus"
 import { useI18n } from "vue-i18n"
 import ViewMatchV3 from "@/components/views/competition/knockoutSystem/ViewMatch.vue"
 import { Mode } from "@/interfaces/competition"
@@ -231,6 +230,10 @@ enum interCellType {
 	bottomRight,
 	right,
 	blank,
+}
+
+function rangeArr(r: number) {
+	return Array.from({ length: r }, (value, index) => index)
 }
 </script>
 

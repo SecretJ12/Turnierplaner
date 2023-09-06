@@ -72,15 +72,16 @@
 
 <script lang="ts" setup>
 import axios from "axios"
-import { ElMessage } from "element-plus"
 import { ref, watch } from "vue"
 import { useRoute } from "vue-router"
 import { Competition, Mode, SignUp } from "@/interfaces/competition"
 import { signedUpTeam, Team } from "@/interfaces/registration/team"
 import { useI18n } from "vue-i18n"
 import { signedUpPlayer } from "@/interfaces/player"
+import { useToast } from "primevue/usetoast"
 
 const { t } = useI18n({ inheritLocale: true })
+const toast = useToast()
 
 const props = defineProps<{
 	update: number
@@ -171,14 +172,23 @@ function updateTeams() {
 					}
 				})
 			} else {
-				ElMessage.error("invalid mode")
+				// TODO internalization
+				toast.add({
+					severity: "error",
+					summary: "invalid mode",
+					life: 3000,
+				})
 			}
 		})
 		.catch((error) => {
 			teams.value = []
 			playersA.value = []
 			playersB.value = []
-			ElMessage.error(t("ViewCompetition.query_player_failed"))
+			toast.add({
+				severity: "error",
+				summary: t("ViewCompetition.query_player_failed"),
+				life: 3000,
+			})
 			console.log(error)
 		})
 }

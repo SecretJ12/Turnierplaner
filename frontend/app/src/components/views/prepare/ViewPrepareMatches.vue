@@ -91,7 +91,6 @@ import {
 	CompetitionServer,
 	competitionServerToClient,
 } from "@/interfaces/competition"
-import { ElMessage } from "element-plus"
 import { router } from "@/main"
 import { useRoute } from "vue-router"
 import { ref } from "vue"
@@ -125,14 +124,22 @@ await axios
 			competitions.value = response.data.map(competitionServerToClient)
 			checkComp()
 		} else {
-			ElMessage.error(t("ViewCompetitions.loadingFailed"))
+			toast.add({
+				severity: "error",
+				summary: t("ViewCompetitions.loadingFailed"),
+				life: 3000,
+			})
 		}
 		for (const compElement of competitions.value) {
 			compList.value.push({ label: compElement.name })
 		}
 	})
 	.catch((error) => {
-		ElMessage.error(t("ViewCompetitions.loadingFailed"))
+		toast.add({
+			severity: "error",
+			summary: t("ViewCompetitions.loadingFailed"),
+			life: 3000,
+		})
 		console.log(error)
 		router.push("/")
 	})
