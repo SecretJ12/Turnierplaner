@@ -7,7 +7,7 @@
 		show-gridlines
 		removable-sort
 	>
-		<template #empty>{{ t('ViewCompetition.no_registration') }}</template>
+		<template #empty>{{ t("ViewCompetition.no_registration") }}</template>
 		<Column :header="t('general.name')" sortable field="name" />
 	</DataTable>
 
@@ -19,7 +19,7 @@
 		show-gridlines
 		removable-sort
 	>
-		<template #empty>{{ t('ViewCompetition.no_registration') }}</template>
+		<template #empty>{{ t("ViewCompetition.no_registration") }}</template>
 		<Column
 			:header="t('ViewCompetition.playerA')"
 			sortable
@@ -41,7 +41,7 @@
 		show-gridlines
 		removable-sort
 	>
-		<template #empty>{{ t('ViewCompetition.no_registration') }}</template>
+		<template #empty>{{ t("ViewCompetition.no_registration") }}</template>
 		<Column :header="t('general.name')" sortable field="name" />
 	</DataTable>
 
@@ -54,7 +54,7 @@
 			show-gridlines
 			removable-sort
 		>
-			<template #empty>{{ t('ViewCompetition.no_registration') }}</template>
+			<template #empty>{{ t("ViewCompetition.no_registration") }}</template>
 			<Column :header="t('ViewCompetition.playerA')" sortable field="name" />
 		</DataTable>
 		<DataTable
@@ -64,7 +64,7 @@
 			show-gridlines
 			removable-sort
 		>
-			<template #empty>{{ t('ViewCompetition.no_registration') }}</template>
+			<template #empty>{{ t("ViewCompetition.no_registration") }}</template>
 			<Column :header="t('ViewCompetition.playerB')" sortable field="name" />
 		</DataTable>
 	</div>

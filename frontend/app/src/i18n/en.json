@@ -153,7 +153,9 @@
 		"born_after": "Born after",
 		"playerA": "Player A",
 		"playerB": "Player B",
-		"prepare": "Prepare tournament"
+		"prepare": "Prepare tournament",
+		"selectPlayer": "Select a player",
+		"searchPlayer": "Search for players..."
 	},
 	"Player": {
 		"too_many_results": "Result ist not unique enough",
