@@ -127,6 +127,7 @@
 		"noPlayerFound": "No player found"
 	},
 	"ViewCreateCompetition": {
+		"header": "Create competition",
 		"creationFailed": "Couldn't create competition",
 		"competitionCreated": "Competition created",
 		"competitionCreation": "Creating competition"
