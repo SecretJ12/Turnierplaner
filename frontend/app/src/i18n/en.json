@@ -134,7 +134,7 @@
 	},
 	"ViewEditCompetition": {
 		"header": "Edit competition",
-		"saved": "Competition saved",
+		"saved": "Changes saved",
 		"saving_failed": "Something went wrong while saving",
 		"loadingDetailsFailed": "Couldn't load competition details",
 		"competitionUpdated": "Competition updated",
