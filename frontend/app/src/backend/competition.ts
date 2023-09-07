@@ -94,7 +94,7 @@ export function updateCompetition(
 			toast.add({
 				severity: "success",
 				summary: t("ViewEditCompetition.competitionUpdate"),
-				detail: t("ViewEditCompetition.saved"),
+				detail: t("ViewEditCompetition.competitionUpdated"),
 				life: 3000,
 			})
 			if (handler.suc) handler.suc()

@@ -134,7 +134,7 @@
 		"saved": "Konkurrenz wurde gespeichert",
 		"saving_failed": "Beim Speichern hat etwas nicht funktioniert",
 		"loadingDetailsFailed": "Details der Konkurrenz konnten nicht geladen werden",
-		"competitionUpdated": "Konkurrenz aktualisiert",
+		"competitionUpdated": "Änderungen wurden gespeichert",
 		"competitionUpdateFailed": "Aktualisierung fehlgeschlagen",
 		"competitionUpdate": "Konkurrenzaktualisierung"
 	},
