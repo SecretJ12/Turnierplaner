@@ -1,10 +1,12 @@
 <template>
-	<ViewGroupSystem v-if="props.tourType === TourType.GROUPS" />
-	<ViewKnockoutSystem
-		v-else-if="props.tourType === TourType.KNOCKOUT"
-		:mode="props.mode"
-	/>
-	<p v-else>Invalid type</p>
+	<Suspense>
+		<ViewGroupSystem v-if="props.tourType === TourType.GROUPS" />
+		<ViewKnockoutSystem
+			v-else-if="props.tourType === TourType.KNOCKOUT"
+			:mode="props.mode"
+		/>
+		<p v-else>Invalid type</p>
+	</Suspense>
 </template>
 
 <script lang="ts" setup>

@@ -38,10 +38,7 @@ auth.addUserUnloadedListener(() => {
 	<HeadContent />
 
 	<div v-if="silentLoginCompleted" id="body">
-		<Suspense>
-			<router-view />
-			<template #fallback> Loading...</template>
-		</Suspense>
+		<router-view />
 		<aside v-if="aside">
 			<h2>Aside content</h2>
 		</aside>
