@@ -115,7 +115,32 @@ const stepNames = [
 	"scheduleMatches",
 ]
 
-await axios
+const stepList = ref([
+	{
+		label: "Edit Players",
+		to: `/tournament/${route.params.tourId}/prepare/editPlayers/${route.params.compId}`,
+	},
+	{
+		label: "Choose Mode",
+		to: `/tournament/${route.params.tourId}/prepare/selectMode/${route.params.compId}`,
+	},
+	{
+		label: "Assign Teams",
+		to: `/tournament/${route.params.tourId}/prepare/assignTeams/${route.params.compId}`,
+	},
+	{
+		label: "Assign Matches",
+		to: `/tournament/${route.params.tourId}/prepare/assignMatches/${route.params.compId}`,
+	},
+	{
+		label: "Schedule Matches",
+		to: `/tournament/${route.params.tourId}/prepare/scheduleMatches/${route.params.compId}`,
+	},
+])
+
+// TODO remove await
+// TODO update stepper after refresh (solution: call prevPage() nextPage() or use router path without space!)
+axios
 	.get<CompetitionServer[]>(
 		`/tournament/${route.params.tourId}/competition/prepare`,
 	)
@@ -143,56 +168,19 @@ await axios
 		router.push("/")
 	})
 
-const currentComp = ref<Competition>(competitions.value[0])
-
-const stepList = ref([
-	{
-		label: "Edit Players",
-		to: `/tournament/${route.params.tourId}/prepare/editPlayers/${route.params.competition}`,
-	},
-	{
-		label: "Choose Mode",
-		to: `/tournament/${route.params.tourId}/prepare/selectMode/${route.params.competition}`,
-	},
-	{
-		label: "Assign Teams",
-		to: `/tournament/${route.params.tourId}/prepare/assignTeams/${route.params.competition}`,
-	},
-	{
-		label: "Assign Matches",
-		to: `/tournament/${route.params.tourId}/prepare/assignMatches/${route.params.competition}`,
-	},
-	{
-		label: "Schedule Matches",
-		to: `/tournament/${route.params.tourId}/prepare/scheduleMatches/${route.params.competition}`,
-	},
-])
+const currentComp = ref<Competition | null>(
+	competitions.value ? competitions.value[0] : null,
+)
 
 function stepToIndex(step: string): number {
 	return stepNames.findIndex((s) => s === step)
-}
-
-function checkComp() {
-	let change = false
-	let step = route.params.step
-	let comp = route.params.competition
-	if (!stepNames.find((s) => s === route.params.step)) {
-		change = true
-		step = "editPlayers"
-	}
-	if (!competitions.value.some((c) => c.name === route.params.competition)) {
-		change = true
-		comp = competitions.value[0].name
-	}
-	if (change)
-		router.replace(`/tournament/${route.params.tourId}/prepare/${step}/${comp}`)
 }
 
 function nextPage() {
 	router.replace(
 		`/tournament/${route.params.tourId}/prepare/${
 			stepNames[stepToIndex(<string>route.params.step) + 1]
-		}/${route.params.competition}`,
+		}/${route.params.compId}`,
 	)
 }
 
@@ -200,7 +188,7 @@ function prevPage() {
 	router.replace(
 		`/tournament/${route.params.tourId}/prepare/${
 			stepNames[stepToIndex(<string>route.params.step) - 1]
-		}/${route.params.competition}`,
+		}/${route.params.compId}`,
 	)
 }
 
