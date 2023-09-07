@@ -44,13 +44,8 @@ export default [
 		component: viewCompetition,
 	},
 	{
-		path: "/tournament/:tourId/prepare/:step/:competition",
+		path: "/tournament/:tourId/prepare/:step/:compId",
 		name: "Prepare matches",
-		component: viewPrepareMatches,
-	},
-	{
-		path: "/tournament/:tourId/prepare",
-		name: "Prepare all matches",
 		component: viewPrepareMatches,
 	},
 	{
