@@ -122,7 +122,6 @@ await axios
 	.then((response) => {
 		if (response.status === 200) {
 			competitions.value = response.data.map(competitionServerToClient)
-			checkComp()
 		} else {
 			toast.add({
 				severity: "error",
