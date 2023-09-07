@@ -2,7 +2,7 @@
 	<div id="button">
 		<div>
 			<div class="card">
-				<Steps :model="stepList" aria-label="Form Steps" :exact="false" />
+				<Steps :model="stepList" aria-label="Form Steps" />
 			</div>
 			<TabMenu
 				v-model:activeIndex="activeTab"
@@ -117,7 +117,7 @@ const stepNames = [
 
 await axios
 	.get<CompetitionServer[]>(
-		`/tournament/${route.params.tourId}/competition/list`,
+		`/tournament/${route.params.tourId}/competition/prepare`,
 	)
 	.then((response) => {
 		if (response.status === 200) {
