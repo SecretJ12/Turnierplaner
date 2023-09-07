@@ -2,7 +2,7 @@
 	<div id="button">
 		<div>
 			<div class="card">
-				<Steps :model="stepList" aria-label="Form Steps" />
+				<Steps :model="stepList" aria-label="Form Steps" :readonly="false" />
 			</div>
 			<TabMenu
 				v-model:activeIndex="activeTab"
@@ -32,7 +32,9 @@
 						:competition="competitions[activeTab]"
 					></ViewEditPlayer>
 					<ViewChooseMode
-						v-else-if="route.params.step === 'selectMode'"
+						v-else-if="
+							route.params.step === 'selectMode' && competitions[activeTab]
+						"
 						:competition="competitions[activeTab]"
 					></ViewChooseMode>
 					<ViewAssignTeams
@@ -91,14 +93,14 @@ import {
 	CompetitionServer,
 	competitionServerToClient,
 } from "@/interfaces/competition"
-import { router } from "@/main"
-import { useRoute } from "vue-router"
+import { useRoute, useRouter } from "vue-router"
 import { ref } from "vue"
 import { useI18n } from "vue-i18n"
 import { useToast } from "primevue/usetoast"
 import { TabMenuChangeEvent } from "primevue/tabmenu"
 
 const { t } = useI18n({ inheritLocale: true })
+const router = useRouter()
 const route = useRoute()
 const toast = useToast()
 
@@ -138,8 +140,7 @@ const stepList = ref([
 	},
 ])
 
-// TODO remove await
-// TODO update stepper after refresh (solution: call prevPage() nextPage() or use router path without space!)
+// TODO BUG steps doesnt show current step after refresh (solution: call prevPage() nextPage() or use router path without space!)
 axios
 	.get<CompetitionServer[]>(
 		`/tournament/${route.params.tourId}/competition/prepare`,
