@@ -182,9 +182,10 @@ function selected(competition: string) {
 }
 
 function prepare() {
-	router.push({
-		path: `/tournament/${route.params.tourId}/prepare/editPlayers/${competitions.value[0].name}`,
-	})
+	if (competitions.value)
+		router.push({
+			path: `/tournament/${route.params.tourId}/prepare/editPlayers/${competitions.value[0].name}`,
+		})
 }
 
 function settingsItem(competition: string) {
