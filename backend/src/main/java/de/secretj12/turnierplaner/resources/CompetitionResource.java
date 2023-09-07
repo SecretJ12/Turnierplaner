@@ -55,6 +55,16 @@ public class CompetitionResource {
     }
 
     @GET
+    @Path("/prepare")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<jDirectorCompetitionUpdate> getPrepareCompetitions(@PathParam("tourName") String tourName) {
+        if(securityIdentity.hasRole("director"))
+            return competitions.listByName(tourName).stream().map(jDirectorCompetitionUpdate::new).toList();
+        throw new UnauthorizedException("Not authorized");
+    }
+
+    @GET
     @Path("/{compName}/details")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)

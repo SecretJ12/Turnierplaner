@@ -138,6 +138,42 @@ export function competitionFormToServer(
 	}
 }
 
+export function competitionClientToServer(
+	competition: Competition,
+): CompetitionServer {
+	return {
+		id: competition.id,
+		name: competition.name,
+		description: competition.description,
+		type: competition.tourType,
+		mode: competition.mode,
+		signUp: competition.signUp,
+		playerA: {
+			sex: competition.playerA.sex,
+			hasMinAge: competition.playerA.hasMinAge,
+			minAge: competition.playerA.minAge
+				? dateToJson(competition.playerA.minAge)
+				: null,
+			hasMaxAge: competition.playerA.hasMaxAge,
+			maxAge: competition.playerA.maxAge
+				? dateToJson(competition.playerA.maxAge)
+				: null,
+		},
+		playerB: {
+			different: competition.playerB.different,
+			sex: competition.playerB.sex,
+			hasMinAge: competition.playerB.hasMinAge,
+			minAge: competition.playerB.minAge
+				? dateToJson(competition.playerB.minAge)
+				: null,
+			hasMaxAge: competition.playerB.hasMaxAge,
+			maxAge: competition.playerB.maxAge
+				? dateToJson(competition.playerB.maxAge)
+				: null,
+		},
+	}
+}
+
 export function competitionServerToClient(
 	competition: CompetitionServer,
 ): Competition {
