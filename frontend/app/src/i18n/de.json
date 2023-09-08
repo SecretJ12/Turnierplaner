@@ -151,7 +151,9 @@
 		"born_after": "Geboren nach dem",
 		"playerA": "Spieler A",
 		"playerB": "Spieler B",
-		"prepare": "Turnier vorbereiten"
+		"prepare": "Turnier vorbereiten",
+		"selectPlayer": "Wähle einen Spieler aus",
+		"searchPlayer": "Suche nach Spielern..."
 	},
 	"Player": {
 		"too_many_results": "Die Eingabe ist nicht eindeutig",

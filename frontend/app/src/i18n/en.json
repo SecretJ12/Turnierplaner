@@ -37,7 +37,7 @@
 			"Option2": "Woman"
 		},
 		"birthdate": {
-			"field": "birthdate",
+			"field": "Birthdate",
 			"prompt": "Please input your birthdate"
 		},
 		"email": {
@@ -127,6 +127,7 @@
 		"noPlayerFound": "No player found"
 	},
 	"ViewCreateCompetition": {
+		"header": "Create competition",
 		"creationFailed": "Couldn't create competition",
 		"competitionCreated": "Competition created",
 		"competitionCreation": "Creating competition"
@@ -153,7 +154,9 @@
 		"born_after": "Born after",
 		"playerA": "Player A",
 		"playerB": "Player B",
-		"prepare": "Prepare tournament"
+		"prepare": "Prepare tournament",
+		"selectPlayer": "Select a player",
+		"searchPlayer": "Search for players..."
 	},
 	"Player": {
 		"too_many_results": "Result ist not unique enough",

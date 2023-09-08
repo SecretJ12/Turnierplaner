@@ -61,6 +61,7 @@ const router = VueRouter.createRouter({
 import PrimeVue from "primevue/config"
 import ToastService from "primevue/toastservice"
 import Tooltip from "primevue/tooltip"
+import FocusTrap from "primevue/focustrap"
 import Steps from "primevue/steps"
 import TabView from "primevue/tabview"
 import TabMenu from "primevue/tabmenu"
@@ -102,11 +103,12 @@ setLocale({
 	// use constant translation keys for messages without values
 	mixed: {
 		default: "field_invalid",
+		required: "validation.field_required",
 	},
 	// use functions to generate an error object that includes the value from the schema
 	string: {
-		min: ({ min }) => ({ key: "field_too_short", values: { min } }),
-		max: ({ max }) => ({ key: "field_too_big", values: { max } }),
+		min: "validation.field_too_short",
+		max: "validation.field_too_big",
 	},
 })
 
@@ -141,6 +143,7 @@ app
 	.component("AutoComplete", AutoComplete)
 	.component("Checkbox", Checkbox)
 	.directive("tooltip", Tooltip)
+	.directive("focustrap", FocusTrap)
 	.mount("#app")
 
 export { router }

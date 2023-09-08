@@ -19,17 +19,11 @@
 
 <script lang="ts" setup>
 import axios from "axios"
-import { ElLoading } from "element-plus"
 import { ref } from "vue"
 import { useI18n } from "vue-i18n"
 
 const { t } = useI18n({ inheritLocale: true })
 
-const loadingAnimation = ElLoading.service({
-	lock: true,
-	text: t("general.loading"),
-	background: "rgba(0, 0, 0, 0.7)",
-})
 const verified = ref(false)
 const success = ref(false)
 
@@ -43,7 +37,6 @@ axios
 	.catch(() => {})
 	.finally(() => {
 		verified.value = true
-		loadingAnimation.close()
 	})
 </script>
 

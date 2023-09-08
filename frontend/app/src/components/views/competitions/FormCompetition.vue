@@ -13,6 +13,7 @@
 							maxlength="30"
 							class="w-full"
 							:class="{ 'p-invalid': errors.name }"
+							:disabled="disabled"
 						/>
 						<InlineMessage v-if="errors.name" class="mt-2"
 							>{{ t(errors.name || "") }}
@@ -26,6 +27,7 @@
 							rows="4"
 							class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
 							v-bind="description"
+							:disabled="disabled"
 						></textarea>
 					</div>
 					<Divider align="left col-12">
@@ -49,6 +51,7 @@
 							option-value="value"
 							:placeholder="t(`CompetitionSettings.type`)"
 							class="w-full"
+							:disabled="disabled"
 						>
 							<template #value="slotProps">
 								<div v-if="slotProps.value" class="flex align-items-center">
@@ -99,6 +102,7 @@
 							option-value="value"
 							:placeholder="t(`CompetitionSettings.mode`)"
 							class="w-full"
+							:disabled="disabled"
 						>
 							<template #value="slotProps">
 								<div v-if="slotProps.value" class="flex align-items-center">
@@ -159,6 +163,7 @@
 							option-value="value"
 							:placeholder="t(`CompetitionSettings.signup`)"
 							class="w-full"
+							:disabled="disabled"
 						>
 							<template #value="slotProps">
 								<div v-if="slotProps.value" class="flex align-items-center">
@@ -201,24 +206,20 @@
 					<Divider align="left">
 						<b>{{ t("CompetitionSettings.player") }}</b>
 					</Divider>
-					<div class="field col-12 flex flex-row align-items-center">
+					<div class="field col-12 flex flex-row align-items-center mb-4">
 						<Checkbox
 							v-bind="playerB_different"
 							id="playerB_different"
 							input-id="playerB_different_input"
 							:binary="true"
+							:disabled="disabled"
 						/>
 						<label for="playerB_different_input" class="ml-2 mb-0 mt-1">{{
 							t("CompetitionSettings.differentB")
 						}}</label>
 					</div>
 
-					<div
-						:class="{
-							'col-12': !values.playerB_different,
-							'col-6': values.playerB_different,
-						}"
-					>
+					<div v-if="values.playerB_different" class="col-6">
 						<Divider class="col-6" align="left">
 							{{ t("CompetitionSettings.playerA") }}
 						</Divider>
@@ -236,6 +237,9 @@
 							'col-6': values.playerB_different,
 						}"
 					>
+						<label for="playerASex" class="text-900">{{
+							t("CompetitionSettings.sex")
+						}}</label>
 						<Dropdown
 							v-bind="playerASex"
 							:options="[
@@ -247,6 +251,7 @@
 							option-value="value"
 							:placeholder="t(`CompetitionSettings.sex`)"
 							class="w-full"
+							:disabled="disabled"
 						>
 							<template #option="slotProps">
 								<div>
@@ -259,6 +264,9 @@
 						v-if="values.playerB_different"
 						class="field col-6 flex flex-column"
 					>
+						<label for="playerBSex" class="text-900">{{
+							t("CompetitionSettings.sex")
+						}}</label>
 						<Dropdown
 							v-bind="playerBSex"
 							:options="[
@@ -270,6 +278,7 @@
 							option-value="value"
 							:placeholder="t(`CompetitionSettings.sex`)"
 							class="w-full"
+							:disabled="disabled"
 						>
 							<template #option="slotProps">
 								<div>{{ slotProps.option.name }}</div>
@@ -288,7 +297,12 @@
 							t("CompetitionSettings.minAge")
 						}}</label>
 						<div class="flex flex-row align-items-center gap-2">
-							<Checkbox id="minAge" v-bind="playerAHasMinAge" :binary="true" />
+							<Checkbox
+								id="minAge"
+								v-bind="playerAHasMinAge"
+								:binary="true"
+								:disabled="disabled"
+							/>
 
 							<Calendar
 								id="minAge"
@@ -297,7 +311,7 @@
 								class="w-full"
 								:date-format="t('date_format')"
 								show-icon
-								:disabled="!playerAHasMinAge.modelValue"
+								:disabled="!playerAHasMinAge.modelValue || disabled"
 							/>
 						</div>
 					</div>
@@ -318,7 +332,7 @@
 								:manual-input="false"
 								:date-format="t('date_format')"
 								show-icon
-								:disabled="!playerBHasMinAge.modelValue"
+								:disabled="!playerBHasMinAge.modelValue || disabled"
 							/>
 						</div>
 					</div>
@@ -334,7 +348,12 @@
 							t("CompetitionSettings.maxAge")
 						}}</label>
 						<div class="flex flex-row align-items-center gap-2">
-							<Checkbox id="minAge" v-bind="playerAHasMaxAge" :binary="true" />
+							<Checkbox
+								id="minAge"
+								v-bind="playerAHasMaxAge"
+								:binary="true"
+								:disabled="disabled"
+							/>
 
 							<Calendar
 								id="minAge"
@@ -343,7 +362,7 @@
 								:manual-input="false"
 								:date-format="t('date_format')"
 								show-icon
-								:disabled="!playerAHasMaxAge.modelValue"
+								:disabled="!playerAHasMaxAge.modelValue || disabled"
 							/>
 						</div>
 					</div>
@@ -355,7 +374,12 @@
 							t("CompetitionSettings.maxAge")
 						}}</label>
 						<div class="flex flex-row align-items-center gap-2">
-							<Checkbox id="minAge" v-bind="playerBHasMaxAge" :binary="true" />
+							<Checkbox
+								id="minAge"
+								v-bind="playerBHasMaxAge"
+								:binary="true"
+								:disabled="disabled"
+							/>
 
 							<Calendar
 								id="minAge"
@@ -364,14 +388,19 @@
 								:manual-input="false"
 								:date-format="t('date_format')"
 								show-icon
-								:disabled="!playerBHasMaxAge.modelValue"
+								:disabled="!playerBHasMaxAge.modelValue || disabled"
 							/>
 						</div>
 					</div>
-
-					<div class="field col-12">
-						<Button :label="props.submitText" @click="onSubmit"></Button>
-					</div>
+				</div>
+			</template>
+			<template #footer>
+				<div class="justify-content-end flex">
+					<Button
+						:label="props.submitText"
+						:disabled="disabled"
+						@click="onSubmit"
+					/>
 				</div>
 			</template>
 		</Card>
@@ -410,13 +439,10 @@ const props = withDefaults(
 )
 
 const { values, defineInputBinds, errors, defineComponentBinds, handleSubmit } =
-	useForm({
+	useForm<CompetitionForm>({
 		validationSchema: toTypedSchema(
 			object({
-				name: string()
-					.min(4, t("validation.field_too_short"))
-					.max(40, "validation.field_too_long")
-					.required(t("validation.field_required")),
+				name: string().min(4).max(40).required(),
 				description: string().max(50),
 				tourType: mixed().oneOf(Object.values(TourType)).required(),
 				mode: mixed().oneOf(Object.values(Mode)).required(),
