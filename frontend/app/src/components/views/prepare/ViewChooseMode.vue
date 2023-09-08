@@ -17,6 +17,7 @@
 				</div>
 			</template>
 		</Card>
+		<!-- TODO choose size of groups -->
 		<Card
 			style="width: 25em"
 			:class="{
@@ -41,7 +42,6 @@
 import {
 	Competition,
 	competitionClientToServer,
-	competitionFormToServer,
 	CompetitionServer,
 	TourType,
 } from "@/interfaces/competition"
