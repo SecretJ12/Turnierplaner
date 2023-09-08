@@ -14,7 +14,8 @@
 		"register": "Registrieren",
 		"success": "Erfolg",
 		"failure": "Fehler",
-		"loading": "Lädt..."
+		"loading": "Lädt...",
+		"save": "Speichern"
 	},
 	"ViewPlayerRegistration": {
 		"headline": "Spielerregistrierung",

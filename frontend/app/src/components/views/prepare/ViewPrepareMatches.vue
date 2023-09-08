@@ -13,26 +13,39 @@
 					/>
 				</template>
 				<template #title>
-					<span v-if="route.params.step === 'editPlayers'">Edit Player</span>
-					<span v-else-if="route.params.step === 'selectMode'"
-						>Select Mode</span
-					>
-					<span v-else-if="route.params.step === 'assignTeams'"
-						>Assign Teams</span
-					>
-					<span v-else-if="route.params.step === 'assignMatches'"
-						>Assign Matches</span
-					>
-					<span v-else-if="route.params.step === 'scheduleMatches'"
-						>Schedule Matches</span
-					>
-					- {{ currentComp?.name }}:
+					<div class="flex justify-content-between flex-wrap">
+						<div>
+							<span v-if="route.params.step === 'editPlayers'">
+								Edit Player
+							</span>
+							<span v-else-if="route.params.step === 'selectMode'"
+								>Select Mode</span
+							>
+							<span v-else-if="route.params.step === 'assignTeams'"
+								>Assign Teams</span
+							>
+							<span v-else-if="route.params.step === 'assignMatches'"
+								>Assign Matches</span
+							>
+							<span v-else-if="route.params.step === 'scheduleMatches'"
+								>Schedule Matches</span
+							>
+							- {{ currentComp?.name }}:
+						</div>
+						<Button
+							v-if="route.params.step === 'editPlayers'"
+							:label="t('general.save')"
+							@click="updatePlayers"
+						>
+						</Button>
+					</div>
 				</template>
 				<template #content>
 					<!-- TODO check if this can be replaced with router implementation -->
 					<ViewEditPlayer
 						v-if="route.params.step === 'editPlayers'"
 						:competition="competitions[activeTab]"
+						ref="editPlayer"
 					></ViewEditPlayer>
 					<ViewChooseMode
 						v-else-if="
@@ -175,6 +188,12 @@ axios
 const currentComp = ref<Competition | null>(
 	competitions.value ? competitions.value[0] : null,
 )
+
+const editPlayer = ref<null | { save: Function }>(null)
+
+function updatePlayers() {
+	editPlayer.value?.save()
+}
 
 function stepToIndex(step: string): number {
 	return stepNames.findIndex((s) => s === step)
