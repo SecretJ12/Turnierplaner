@@ -442,10 +442,7 @@ const { values, defineInputBinds, errors, defineComponentBinds, handleSubmit } =
 	useForm<CompetitionForm>({
 		validationSchema: toTypedSchema(
 			object({
-				name: string()
-					.min(4)
-					.max(40)
-					.required(),
+				name: string().min(4).max(40).required(),
 				description: string().max(50),
 				tourType: mixed().oneOf(Object.values(TourType)).required(),
 				mode: mixed().oneOf(Object.values(Mode)).required(),
