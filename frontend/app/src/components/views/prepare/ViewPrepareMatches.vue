@@ -4,12 +4,14 @@
 			<div class="card">
 				<Steps :model="stepList" aria-label="Form Steps" :readonly="false" />
 			</div>
-			<TabMenu
-				v-model:activeIndex="activeTab"
-				:model="compList"
-				@tab-change="tabChange"
-			/>
 			<Card>
+				<template #header>
+					<TabMenu
+						v-model:activeIndex="activeTab"
+						:model="compList"
+						@tab-change="tabChange"
+					/>
+				</template>
 				<template #title>
 					<span v-if="route.params.step === 'editPlayers'">Edit Player</span>
 					<span v-else-if="route.params.step === 'selectMode'"
@@ -27,6 +29,7 @@
 					- {{ currentComp?.name }}:
 				</template>
 				<template #content>
+					<!-- TODO check if this can be replaced with router implementation -->
 					<ViewEditPlayer
 						v-if="route.params.step === 'editPlayers'"
 						:competition="competitions[activeTab]"
