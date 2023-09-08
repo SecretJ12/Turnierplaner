@@ -1,6 +1,6 @@
 <template>
 	<div class="flex justify-content-center w-full">
-		<Card id="card" v-if="!registered">
+		<Card v-if="!registered" id="card">
 			<template #title>{{ t("ViewPlayerRegistration.headline") }}</template>
 			<template #content>
 				<div class="formgrid grid">
@@ -49,7 +49,7 @@
 							:class="{ 'p-invalid': errors.birthdate }"
 						/>
 						<InlineMessage v-if="errors.birthdate" class="mt-2"
-						>{{ t(errors.birthdate || "") }}
+							>{{ t(errors.birthdate || "") }}
 						</InlineMessage>
 					</div>
 					<div class="field col-6">
@@ -73,7 +73,7 @@
 							</template>
 						</Dropdown>
 						<InlineMessage v-if="errors.sex" class="mt-2"
-						>{{ t(errors.sex || "") }}
+							>{{ t(errors.sex || "") }}
 						</InlineMessage>
 					</div>
 					<div class="field col-12">
@@ -149,16 +149,9 @@ const { defineInputBinds, errors, defineComponentBinds, handleSubmit } =
 	useForm<PlayerRegistration>({
 		validationSchema: toTypedSchema(
 			object({
-				firstName: string()
-					.min(4)
-					.max(40)
-					.required(),
-				lastName: string()
-					.min(4)
-					.max(40)
-					.required(),
-				sex: mixed().oneOf(Object.values(Sex))
-					.required(),
+				firstName: string().min(4).max(40).required(),
+				lastName: string().min(4).max(40).required(),
+				sex: mixed().oneOf(Object.values(Sex)).required(),
 				birthdate: date().required(),
 				email: string().email().required(),
 				phone: string()

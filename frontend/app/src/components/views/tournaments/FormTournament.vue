@@ -142,9 +142,7 @@ const { defineInputBinds, errors, defineComponentBinds, handleSubmit } =
 	useForm<TournamentForm>({
 		validationSchema: toTypedSchema(
 			object({
-				name: string()
-					.required()
-					.min(4),
+				name: string().required().min(4),
 				visible: boolean(),
 				description: string().max(255),
 				registration_phase: array()
