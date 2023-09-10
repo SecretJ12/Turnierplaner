@@ -1,14 +1,34 @@
 <template>
+	<!-- TODO add loading indicator -->
 	<!-- SINGLE -->
 	<DataTable
 		v-if="props.competition.mode === Mode.SINGLE"
 		:value="playersA"
 		striped-rows
-		show-gridlines
 		removable-sort
 	>
 		<template #empty>{{ t("ViewCompetition.no_registration") }}</template>
-		<Column :header="t('general.name')" sortable field="name" />
+		<Column :header="t('general.name')" field="name" sortable>
+			<template #body="{ data }">
+				<div class="flex justify-content-between align-items-center">
+					{{
+						// @ts-ignore
+						data.name
+					}}
+					<Button
+						v-if="canEdit"
+						severity="danger"
+						text
+						rounded
+						size="small"
+						class="h-2rem"
+						@click="deletePlayer(data)"
+					>
+						<span class="material-icons">delete_forever</span>
+					</Button>
+				</div>
+			</template>
+		</Column>
 	</DataTable>
 
 	<!-- DOUBLE TOGETHER -->
@@ -31,7 +51,27 @@
 			sortable
 			field="playerB.name"
 			style="width: 50%"
-		/>
+		>
+			<template #body="{ data }">
+				<div class="flex justify-content-between align-items-center">
+					{{
+						// @ts-ignore
+						data.playerB.name
+					}}
+					<Button
+						v-if="canEdit"
+						severity="danger"
+						text
+						rounded
+						size="small"
+						class="h-2rem"
+						@click="deletePlayer(data)"
+					>
+						<span class="material-icons">delete_forever</span>
+					</Button>
+				</div>
+			</template>
+		</Column>
 	</DataTable>
 	<!-- DOUBLE INDIVIDUAL SAME -->
 	<DataTable
@@ -42,7 +82,27 @@
 		removable-sort
 	>
 		<template #empty>{{ t("ViewCompetition.no_registration") }}</template>
-		<Column :header="t('general.name')" sortable field="name" />
+		<Column :header="t('general.name')" sortable field="name">
+			<template #body="{ data }">
+				<div class="flex justify-content-between align-items-center">
+					{{
+						// @ts-ignore
+						data.name
+					}}
+					<Button
+						v-if="canEdit"
+						severity="danger"
+						text
+						rounded
+						size="small"
+						class="h-2rem"
+						@click="deletePlayer(data)"
+					>
+						<span class="material-icons">delete_forever</span>
+					</Button>
+				</div>
+			</template>
+		</Column>
 	</DataTable>
 
 	<!-- DOUBLE INDIVIDUAL DIFFERENT -->
@@ -55,7 +115,27 @@
 			removable-sort
 		>
 			<template #empty>{{ t("ViewCompetition.no_registration") }}</template>
-			<Column :header="t('ViewCompetition.playerA')" sortable field="name" />
+			<Column :header="t('ViewCompetition.playerA')" sortable field="name">
+				<template #body="{ data }">
+					<div class="flex justify-content-between align-items-center">
+						{{
+							// @ts-ignore
+							data.name
+						}}
+						<Button
+							v-if="canEdit"
+							severity="danger"
+							text
+							rounded
+							size="small"
+							class="h-2rem"
+							@click="deletePlayer(data)"
+						>
+							<span class="material-icons">delete_forever</span>
+						</Button>
+					</div>
+				</template>
+			</Column>
 		</DataTable>
 		<DataTable
 			class="col"
@@ -65,20 +145,41 @@
 			removable-sort
 		>
 			<template #empty>{{ t("ViewCompetition.no_registration") }}</template>
-			<Column :header="t('ViewCompetition.playerB')" sortable field="name" />
+			<Column :header="t('ViewCompetition.playerB')" sortable field="name">
+				<template #body="{ data }">
+					<div class="flex justify-content-between align-items-center">
+						{{
+							// @ts-ignore
+							data.name
+						}}
+						<Button
+							v-if="canEdit"
+							severity="danger"
+							text
+							rounded
+							size="small"
+							class="h-2rem"
+							@click="deletePlayer(data)"
+						>
+							<span class="material-icons">delete_forever</span>
+						</Button>
+					</div>
+				</template>
+			</Column>
 		</DataTable>
 	</div>
 </template>
 
 <script lang="ts" setup>
 import axios from "axios"
-import { ref, watch } from "vue"
+import { inject, ref, watch } from "vue"
 import { useRoute } from "vue-router"
 import { Competition, Mode, SignUp } from "@/interfaces/competition"
 import { signedUpTeam, Team } from "@/interfaces/registration/team"
 import { useI18n } from "vue-i18n"
 import { signedUpPlayer } from "@/interfaces/player"
 import { useToast } from "primevue/usetoast"
+import { getCanEdit } from "@/backend/security"
 
 const { t } = useI18n({ inheritLocale: true })
 const toast = useToast()
@@ -89,6 +190,9 @@ const props = defineProps<{
 }>()
 
 const route = useRoute()
+
+const isLoggedIn = inject("loggedIn", ref(false))
+const canEdit = getCanEdit(<string>route.params.tourId, isLoggedIn)
 const teams = ref<signedUpTeam[]>([])
 const playersA = ref<signedUpPlayer[]>([])
 const playersB = ref<signedUpPlayer[]>([])
@@ -192,6 +296,17 @@ function updateTeams() {
 			})
 			console.log(error)
 		})
+}
+
+function deletePlayer(player: signedUpPlayer) {
+	// TODO delete and internalization
+	console.log(player)
+	toast.add({
+		severity: "success",
+		summary: "Deleted player",
+		detail: "player delete",
+		life: 3000,
+	})
 }
 </script>
 
