@@ -6,28 +6,32 @@ import {
 	CompetitionServer,
 	competitionServerToClient,
 } from "@/interfaces/competition"
+import { RouteLocationNormalizedLoaded } from "vue-router"
 
 export function getListCompetitions(
-	tourId: string,
+	route: RouteLocationNormalizedLoaded,
 	isLoggedIn: Ref<boolean>,
 	t: (s: string) => string,
 	toast: ToastServiceMethods,
 	handler: {
-		suc?: () => void
+		suc?: (err: () => void) => void
 		err?: () => void
 	},
 ) {
 	const competitions = ref<Competition[] | null>(null)
 
 	watch(isLoggedIn, update)
+	watch(route, update)
 	update()
 
 	function update() {
 		axios
-			.get<CompetitionServer[]>(`/tournament/${tourId}/competition/list`)
+			.get<CompetitionServer[]>(
+				`/tournament/${route.params.tourId}/competition/list`,
+			)
 			.then((response) => {
 				competitions.value = response.data.map(competitionServerToClient)
-				if (handler.suc) handler.suc()
+				if (handler.suc) handler.suc(handler.err || (() => {}))
 			})
 			.catch((error) => {
 				toast.add({
@@ -45,8 +49,7 @@ export function getListCompetitions(
 }
 
 export function getCompetitionDetails(
-	tourId: string,
-	compId: string,
+	route: RouteLocationNormalizedLoaded,
 	t: (s: string) => string,
 	toast: ToastServiceMethods,
 	handler: {
@@ -56,24 +59,32 @@ export function getCompetitionDetails(
 ) {
 	const competition = ref<Competition | null>(null)
 
-	axios
-		.get<CompetitionServer>(
-			`/tournament/${tourId}/competition/${compId}/details`,
-		)
-		.then((response) => {
-			competition.value = competitionServerToClient(response.data)
-			if (handler.suc) handler.suc()
-		})
-		.catch((error) => {
-			toast.add({
-				severity: "error",
-				summary: t("ViewEditCompetition.loadingDetailsFailed"),
-				detail: error,
-				life: 3000,
+	watch(route, update)
+	update()
+
+	function update() {
+		if (!route.params.tourId || !route.params.compId)
+			return
+
+		axios
+			.get<CompetitionServer>(
+				`/tournament/${route.params.tourId}/competition/${route.params.compId}/details`,
+			)
+			.then((response) => {
+				competition.value = competitionServerToClient(response.data)
+				if (handler.suc) handler.suc()
 			})
-			console.log(error)
-			if (handler.err) handler.err()
-		})
+			.catch((error) => {
+				toast.add({
+					severity: "error",
+					summary: t("ViewEditCompetition.loadingDetailsFailed"),
+					detail: error,
+					life: 3000,
+				})
+				console.log(error)
+				if (handler.err) handler.err()
+			})
+	}
 
 	return competition
 }

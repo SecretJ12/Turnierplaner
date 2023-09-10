@@ -73,13 +73,7 @@ const tournament = getTournamentDetails(
 	toast,
 	{},
 )
-const competition = getCompetitionDetails(
-	<string>route.params.tourId,
-	<string>route.params.compId,
-	t,
-	toast,
-	{},
-)
+const competition = getCompetitionDetails(route, t, toast, {})
 
 function settings() {
 	router.push({
