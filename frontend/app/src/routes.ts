@@ -2,6 +2,11 @@ import viewTournaments from "@/components/views/tournaments/ViewTournaments.vue"
 import viewCompetitions from "@/components/views/competitions/ViewCompetitions.vue"
 import viewCompetition from "@/components/views/competition/ViewCompetition.vue"
 import viewPrepareMatches from "@/components/views/prepare/ViewPrepareMatches.vue"
+import ViewEditPlayer from "@/components/views/prepare/ViewEditPlayer.vue"
+import ViewChooseMode from "@/components/views/prepare/ViewSelectType.vue"
+import ViewAssignTeams from "@/components/views/prepare/ViewAssignTeams.vue"
+import ViewAssignMatches from "@/components/views/prepare/ViewAssignMatches.vue"
+import ViewScheduleMatches from "@/components/views/prepare/ViewScheduleMatches.vue"
 
 export default [
 	{
@@ -44,9 +49,41 @@ export default [
 		component: viewCompetition,
 	},
 	{
-		path: "/tournament/:tourId/prepare/:step/:compId",
+		path: "/tournament/:tourId/prepare/:compId?",
 		name: "Prepare matches",
 		component: viewPrepareMatches,
+		children: [
+			{
+				path: "editPlayers",
+				name: "editPlayers",
+				component: ViewEditPlayer,
+				meta: { step: 1 },
+			},
+			{
+				path: "selectType",
+				name: "selectType",
+				component: ViewChooseMode,
+				meta: { step: 2 },
+			},
+			{
+				path: "assignTeams",
+				name: "assignTeams",
+				component: ViewAssignTeams,
+				meta: { step: 3 },
+			},
+			{
+				path: "assignMatches",
+				name: "assignMatches",
+				component: ViewAssignMatches,
+				meta: { step: 4 },
+			},
+			{
+				path: "scheduleMatches",
+				name: "scheduleMatches",
+				component: ViewScheduleMatches,
+				meta: { step: 5 },
+			},
+		],
 	},
 	{
 		path: "/player/registration",

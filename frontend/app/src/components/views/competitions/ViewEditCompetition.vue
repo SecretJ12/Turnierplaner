@@ -31,17 +31,11 @@ const toast = useToast()
 
 const route = useRoute()
 
-const competition = getCompetitionDetails(
-	<string>route.params.tourId,
-	<string>route.params.compId,
-	t,
-	toast,
-	{
-		err: () => {
-			router.back()
-		},
+const competition = getCompetitionDetails(route, t, toast, {
+	err: () => {
+		router.back()
 	},
-)
+})
 
 function submit(server_data: CompetitionServer) {
 	updateCompetition(server_data, <string>route.params.tourId, t, toast, {})

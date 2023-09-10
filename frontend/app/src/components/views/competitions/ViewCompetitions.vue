@@ -111,7 +111,7 @@ const route = useRoute()
 const isLoggedIn = inject("loggedIn", ref(false))
 const canEdit = getCanEdit(<string>route.params.tourId, isLoggedIn)
 const competitions = getListCompetitions(
-	<string>route.params.tourId,
+	route,
 	isLoggedIn,
 	t,
 	toast,
@@ -184,7 +184,7 @@ function selected(competition: string) {
 function prepare() {
 	if (competitions.value)
 		router.push({
-			path: `/tournament/${route.params.tourId}/prepare/editPlayers/${competitions.value[0].name}`,
+			path: `/tournament/${route.params.tourId}/prepare`,
 		})
 }
 
