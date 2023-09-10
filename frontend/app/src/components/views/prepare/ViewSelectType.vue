@@ -1,28 +1,43 @@
 <template>
 	<div class="w-full flex flex-row justify-content-around">
-		<Card
-			style="width: 25em"
-			:class="{
-				active: competition?.tourType === TourType.GROUPS,
-			}"
-			@click="updateMode(TourType.GROUPS)"
-		>
-			<template #content>
-				<div class="flex flex-row">
-					<span class="material-symbols-outlined">grid_view</span>
-					<b class="align-self-center">
-						&nbsp;
-						{{ t("CompetitionSettings.groups") }}
-					</b>
-				</div>
-			</template>
-		</Card>
-		<!-- TODO choose size of groups -->
+		<div>
+			<Card
+				style="width: 25em"
+				:class="{
+					active: competition?.tourType === TourType.GROUPS,
+				}"
+				class="h-fit"
+				@click="updateMode(TourType.GROUPS)"
+			>
+				<template #content>
+					<div class="flex flex-row">
+						<span class="material-symbols-outlined">grid_view</span>
+						<b class="align-self-center">
+							&nbsp;
+							{{ t("CompetitionSettings.groups") }}
+						</b>
+					</div>
+				</template>
+			</Card>
+			<div class="mt-3">
+				<label>Number of groups</label>
+				<!-- TODO select number of groups & internalization
+					Minimum: 2
+					Maximum: at least 3 persons per group -->
+				<Dropdown
+					v-if="competition?.tourType === TourType.GROUPS"
+					placeholder="Select number of groups"
+					:options="[2, 3, 4]"
+					class="w-full"
+				/>
+			</div>
+		</div>
 		<Card
 			style="width: 25em"
 			:class="{
 				active: competition?.tourType === TourType.KNOCKOUT,
 			}"
+			class="h-fit"
 			@click="updateMode(TourType.KNOCKOUT)"
 		>
 			<template #content>
@@ -36,6 +51,7 @@
 			</template>
 		</Card>
 	</div>
+
 	<div class="grid grid-nogutter justify-content-between mt-4">
 		<Button label="Back" icon="pi pi-angle-left" @click="prevPage" />
 		<!-- TODO add @click -->
