@@ -1,7 +1,7 @@
 <template>
 	<p>Knockout system</p>
 	<template v-if="knockoutSystem !== null">
-		<ViewKnockoutTreeV3
+		<ViewKnockoutTree
 			:match="knockoutSystem.finale"
 			:third-place="knockoutSystem.thirdPlace"
 			:mode="props.mode"
@@ -18,7 +18,7 @@ import {
 	KnockoutSystemServer,
 	knockoutSystemServerToClient,
 } from "@/interfaces/knockoutSystem"
-import ViewKnockoutTreeV3 from "@/components/views/competition/knockoutSystem/ViewKnockoutTree.vue"
+import ViewKnockoutTree from "@/components/views/competition/knockoutSystem/ViewKnockoutTree.vue"
 import { Mode } from "@/interfaces/competition"
 
 const props = defineProps<{
