@@ -79,7 +79,6 @@ function updateRoute(compId?: string) {
 
 	// TODO insert correct step for compId
 	let step = route.name
-	console.log(step)
 	if (!route.meta.step || !step) step = "editPlayers"
 
 	router.replace({
