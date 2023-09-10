@@ -3,12 +3,6 @@
 
 	<div class="grid grid-nogutter justify-content-between mt-4">
 		<Button label="Back" icon="pi pi-angle-left" @click="prevPage" />
-		<!-- TODO add @click -->
-		<Button
-			v-if="route.params.step === 'editPlayers'"
-			:label="t('general.save')"
-		>
-		</Button>
 		<Button
 			v-if="route.params.step !== 'scheduleMatches'"
 			label="Next"
