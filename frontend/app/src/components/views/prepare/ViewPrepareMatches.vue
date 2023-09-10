@@ -27,7 +27,8 @@
 					>
 					<template #item="{ label, index, props }">
 						<div v-bind="props.action">
-							<span v-bind="props.step" class="font-green">{{
+							<span v-bind="// @ts-expect-error
+							props.step" class="font-green">{{
 								index + 1
 							}}</span>
 							<span v-bind="props.label">{{ label }}</span>
