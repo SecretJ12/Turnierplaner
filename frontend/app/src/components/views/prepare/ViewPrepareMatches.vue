@@ -1,99 +1,78 @@
 <template>
 	<div id="button">
-		<div>
-			<div class="card">
-				<Steps :model="stepList" aria-label="Form Steps" :readonly="false" />
-			</div>
-			<Card>
-				<template #header>
-					<TabMenu
-						v-model:activeIndex="activeTab"
-						:model="compList"
-						@tab-change="tabChange"
+		<Card>
+			<template #header>
+				<TabMenu
+					v-model:activeIndex="activeTab"
+					:model="compList"
+
+					@tab-change="tabChange"
+				/>
+				<Steps
+					:model="stepList"
+					aria-label="Form Steps"
+					:readonly="true"
+					class="mt-5"
+				/>
+			</template>
+			<template #content>
+				<!-- TODO check if this can be replaced with router implementation -->
+				<ViewEditPlayer
+					v-if="route.params.step === 'editPlayers'"
+					:competition="competitions[activeTab]"
+					ref="editPlayer"
+				></ViewEditPlayer>
+				<ViewChooseMode
+					v-else-if="
+						route.params.step === 'selectMode' && competitions[activeTab]
+					"
+					:competition="competitions[activeTab]"
+				></ViewChooseMode>
+				<ViewAssignTeams
+					v-else-if="route.params.step === 'assignTeams'"
+					:competition="competitions[activeTab]"
+				/>
+				<ViewAssignMatches
+					v-else-if="route.params.step === 'assignMatches'"
+					:competition="competitions[activeTab]"
+				/>
+				<ViewScheduleMatches
+					v-else-if="route.params.step === 'scheduleMatches'"
+					:competition="competitions[activeTab]"
+				/>
+			</template>
+			<template #footer>
+				<div class="grid grid-nogutter justify-content-between">
+					<Button
+						label="Back"
+						icon="pi pi-angle-left"
+						@click="prevPage"
+						:disabled="route.params.step === 'editPlayers'"
 					/>
-				</template>
-				<template #title>
-					<div class="flex justify-content-between flex-wrap">
-						<div>
-							<span v-if="route.params.step === 'editPlayers'">
-								Edit Player
-							</span>
-							<span v-else-if="route.params.step === 'selectMode'"
-								>Select Mode</span
-							>
-							<span v-else-if="route.params.step === 'assignTeams'"
-								>Assign Teams</span
-							>
-							<span v-else-if="route.params.step === 'assignMatches'"
-								>Assign Matches</span
-							>
-							<span v-else-if="route.params.step === 'scheduleMatches'"
-								>Schedule Matches</span
-							>
-							- {{ currentComp?.name }}:
-						</div>
-						<Button
-							v-if="route.params.step === 'editPlayers'"
-							:label="t('general.save')"
-							@click="updatePlayers"
-						>
-						</Button>
-					</div>
-				</template>
-				<template #content>
-					<!-- TODO check if this can be replaced with router implementation -->
-					<ViewEditPlayer
+					<Button
 						v-if="route.params.step === 'editPlayers'"
-						:competition="competitions[activeTab]"
-						ref="editPlayer"
-					></ViewEditPlayer>
-					<ViewChooseMode
-						v-else-if="
-							route.params.step === 'selectMode' && competitions[activeTab]
-						"
-						:competition="competitions[activeTab]"
-					></ViewChooseMode>
-					<ViewAssignTeams
-						v-else-if="route.params.step === 'assignTeams'"
-						:competition="competitions[activeTab]"
+						:label="t('general.save')"
+						@click="updatePlayers"
+					>
+					</Button>
+					<Button
+						v-if="route.params.step !== 'scheduleMatches'"
+						label="Next"
+						icon="pi pi-angle-right"
+						icon-pos="right"
+						@click="nextPage"
 					/>
-					<ViewAssignMatches
-						v-else-if="route.params.step === 'assignMatches'"
-						:competition="competitions[activeTab]"
+					<Button
+						v-else
+						label="Complete"
+						icon="pi pi-check"
+						icon-pos="right"
+						class="p-button-success"
+						@click="complete"
 					/>
-					<ViewScheduleMatches
-						v-else-if="route.params.step === 'scheduleMatches'"
-						:competition="competitions[activeTab]"
-					/>
-				</template>
-				<template #footer>
-					<div class="grid grid-nogutter justify-content-between">
-						<i v-if="route.params.step === 'editPlayers'" />
-						<Button
-							v-else
-							label="Back"
-							icon="pi pi-angle-left"
-							@click="prevPage"
-						/>
-						<Button
-							v-if="route.params.step !== 'scheduleMatches'"
-							label="Next"
-							icon="pi pi-angle-right"
-							icon-pos="right"
-							@click="nextPage"
-						/>
-						<Button
-							v-else
-							label="Complete"
-							icon="pi pi-check"
-							icon-pos="right"
-							class="p-button-success"
-							@click="complete"
-						/>
-					</div>
-				</template>
-			</Card>
-		</div>
+				</div>
+			</template>
+		</Card>
 	</div>
 </template>
 
