@@ -9,7 +9,6 @@
 				>
 					<template #item="{ item, props }">
 						<div v-bind="props.action" class="cursor-pointer">
-							<span v-bind="props.icon" />
 							<span v-bind="props.label">{{ item.name }}</span>
 						</div>
 					</template>
