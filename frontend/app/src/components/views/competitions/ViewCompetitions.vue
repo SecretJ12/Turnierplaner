@@ -110,17 +110,11 @@ const route = useRoute()
 
 const isLoggedIn = inject("loggedIn", ref(false))
 const canEdit = getCanEdit(<string>route.params.tourId, isLoggedIn)
-const competitions = getListCompetitions(
-	route,
-	isLoggedIn,
-	t,
-	toast,
-	{
-		err: () => {
-			router.push("/")
-		},
+const competitions = getListCompetitions(route, isLoggedIn, t, toast, {
+	err: () => {
+		router.push("/")
 	},
-)
+})
 
 const options: Intl.DateTimeFormatOptions = {
 	weekday: "long",

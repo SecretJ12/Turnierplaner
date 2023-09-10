@@ -26,27 +26,20 @@ import { useToast } from "primevue/usetoast"
 import { useRoute, useRouter } from "vue-router"
 import { useI18n } from "vue-i18n"
 import { getCompetitionDetails } from "@/backend/competition"
-import { onUpdated } from "vue";
+import { onUpdated } from "vue"
 
 const { t } = useI18n({ inheritLocale: true })
 const router = useRouter()
 const route = useRoute()
 const toast = useToast()
 
-const competition = getCompetitionDetails(
-	route,
-	t,
-	toast,
-	{
-		suc: () => {
-			if (competition.value === null) return
-		}
+const competition = getCompetitionDetails(route, t, toast, {
+	suc: () => {
+		if (competition.value === null) return
 	},
-)
-
-onUpdated(() => {
-
 })
+
+onUpdated(() => {})
 
 function save() {
 	// TODO udpate players

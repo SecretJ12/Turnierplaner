@@ -93,10 +93,7 @@ const teams = ref<signedUpTeam[]>([])
 const playersA = ref<signedUpPlayer[]>([])
 const playersB = ref<signedUpPlayer[]>([])
 
-watch(
-	() => props.update,
-	updateTeams,
-)
+watch(() => props.update, updateTeams)
 watch(route, updateTeams)
 updateTeams()
 
@@ -104,8 +101,7 @@ function updateTeams() {
 	playersA.value = []
 	playersB.value = []
 	teams.value = []
-	if (!route.params.tourId || !route.params.compId)
-		return
+	if (!route.params.tourId || !route.params.compId) return
 
 	axios
 		.get<Team[]>(
