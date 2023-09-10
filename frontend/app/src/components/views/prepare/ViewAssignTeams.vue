@@ -27,14 +27,20 @@
 				striped-rows
 				removable-sort
 			>
-				<Column header="Player 1" field="name" sortabl>
+				<Column header="Player 1" field="name" sortable>
 					<template #body>
-						<div class="h-2rem border-dashed" style="margin: -0.5rem; width: calc(100% + 1rem)"></div>
+						<div
+							class="h-2rem border-dashed"
+							style="margin: -0.5rem; width: calc(100% + 1rem)"
+						></div>
 					</template>
 				</Column>
-				<Column header="Player 2" field="name" sortabl>
+				<Column header="Player 2" field="name" sortable>
 					<template #body>
-						<div class="h-2rem border-dashed" style="margin: -0.5rem; width: calc(100% + 1rem)"></div>
+						<div
+							class="h-2rem border-dashed"
+							style="margin: -0.5rem; width: calc(100% + 1rem)"
+						></div>
 					</template>
 				</Column>
 			</DataTable>
@@ -44,10 +50,7 @@
 	<div class="grid grid-nogutter justify-content-between mt-4">
 		<Button label="Back" icon="pi pi-angle-left" @click="prevPage" />
 		<!-- TODO add @click -->
-		<Button
-			:label="t('general.save')"
-		>
-		</Button>
+		<Button :label="t('general.save')"> </Button>
 		<Button
 			v-if="route.params.step !== 'scheduleMatches'"
 			label="Next"
@@ -91,5 +94,4 @@ function nextPage() {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
