@@ -27,10 +27,14 @@
 					>
 					<template #item="{ label, index, props }">
 						<div v-bind="props.action">
-							<span v-bind="// @ts-expect-error
-							props.step" class="font-green">{{
-								index + 1
-							}}</span>
+							<span
+								v-bind="
+									// @ts-expect-error
+									props.step
+								"
+								class="font-green"
+								>{{ index + 1 }}</span
+							>
 							<span v-bind="props.label">{{ label }}</span>
 						</div>
 					</template>
@@ -58,30 +62,24 @@ const route = useRoute()
 const toast = useToast()
 
 const isLoggedIn = inject("loggedIn", ref(false))
-const competitions = getListCompetitions(
-	route,
-	isLoggedIn,
-	t,
-	toast,
-	{
-		suc: () => updateRoute(),
-		err: () => {
-			router.push("/")
-		},
+const competitions = getListCompetitions(route, isLoggedIn, t, toast, {
+	suc: () => updateRoute(),
+	err: () => {
+		router.push("/")
 	},
-)
+})
 const activeTab = ref<number>(0)
 
 function updateRoute(compId?: string) {
 	if (competitions.value === null) return
 
 	if (!compId) compId = <string>route.params.compId
-	if (compId === "" || !competitions.value.find((c) => c.name === compId)) compId = competitions.value[0].name
+	if (compId === "" || !competitions.value.find((c) => c.name === compId))
+		compId = competitions.value[0].name
 
 	// TODO insert correct step for compId
 	let step = route.name
-	if (!step)
-		step = 'editPlayers'
+	if (!step) step = "editPlayers"
 
 	router.replace({
 		name: step,

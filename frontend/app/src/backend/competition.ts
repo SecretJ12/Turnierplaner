@@ -63,8 +63,7 @@ export function getCompetitionDetails(
 	update()
 
 	function update() {
-		if (!route.params.tourId || !route.params.compId)
-			return
+		if (!route.params.tourId || !route.params.compId) return
 
 		axios
 			.get<CompetitionServer>(

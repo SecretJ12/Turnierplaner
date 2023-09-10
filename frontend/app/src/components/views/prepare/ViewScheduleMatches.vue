@@ -50,7 +50,7 @@ function complete() {
 		severity: "success",
 		summary: "Competition updated",
 		detail: "TODO",
-		life: 3000
+		life: 3000,
 	})
 }
 </script>
