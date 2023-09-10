@@ -5,6 +5,7 @@
 		v-if="props.competition.mode === Mode.SINGLE"
 		:value="playersA"
 		striped-rows
+		show-gridlines
 		removable-sort
 	>
 		<template #empty>{{ t("ViewCompetition.no_registration") }}</template>
