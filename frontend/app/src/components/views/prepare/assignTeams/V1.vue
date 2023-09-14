@@ -25,7 +25,7 @@
 							:group="{ name: 'player', pull: 'clone', put: false }"
 						>
 							<template #item="{ element: element }">
-								<div>{{ element.name }}</div>
+								<Player :name="element.name" />
 							</template>
 						</draggable>
 					</template>
@@ -52,7 +52,7 @@
 							}"
 						>
 							<template #item="{ element: element }">
-								<div>{{ element.name }}</div>
+								<Player :name="element.name" />
 							</template>
 						</draggable>
 					</template>
@@ -71,7 +71,7 @@
 							}"
 						>
 							<template #item="{ element: element }">
-								<div>{{ element.name }}</div>
+								<Player :name="element.name" />
 							</template>
 						</draggable>
 					</template>
@@ -102,6 +102,7 @@ import { useToast } from "primevue/usetoast"
 import draggable from "vuedraggable"
 import { Mode, SignUp } from "@/interfaces/competition"
 import { ref } from "vue"
+import Player from "@/components/views/prepare/assignTeams/PlayerV1.vue";
 
 const route = useRoute()
 const router = useRouter()

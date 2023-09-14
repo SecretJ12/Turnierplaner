@@ -4,7 +4,7 @@ import viewCompetition from "@/components/views/competition/ViewCompetition.vue"
 import viewPrepareMatches from "@/components/views/prepare/ViewPrepareMatches.vue"
 import ViewEditPlayer from "@/components/views/prepare/ViewEditPlayer.vue"
 import ViewChooseMode from "@/components/views/prepare/ViewSelectType.vue"
-import ViewAssignTeams from "@/components/views/prepare/ViewAssignTeams.vue"
+import ViewAssignTeams from "@/components/views/prepare/assignTeams/ViewAssignTeams.vue"
 import ViewAssignMatches from "@/components/views/prepare/ViewAssignMatches.vue"
 import ViewScheduleMatches from "@/components/views/prepare/ViewScheduleMatches.vue"
 

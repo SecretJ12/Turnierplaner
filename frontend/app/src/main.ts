@@ -64,6 +64,7 @@ import Tooltip from "primevue/tooltip"
 import FocusTrap from "primevue/focustrap"
 import Steps from "primevue/steps"
 import TabView from "primevue/tabview"
+import TabPanel from "primevue/tabpanel";
 import TabMenu from "primevue/tabmenu"
 import Card from "primevue/card"
 import Button from "primevue/button"
@@ -122,6 +123,7 @@ app
 	.component("Steps", Steps)
 	.component("TabView", TabView)
 	.component("TabMenu", TabMenu)
+	.component("TabPanel", TabPanel)
 	.component("Card", Card)
 	.component("Button", Button)
 	.component("Toolbar", Toolbar)
