@@ -11,6 +11,14 @@
 	<template v-else>
 		<div class="grid">
 			<div class="col-4 flex flex-column gap-4">
+				<Button
+					severity="help"
+					class="flex justify-content-center align-items-center"
+					@click="randomize"
+				>
+					<span class="material-icons">casino</span>
+					<span class="mt-1">Randomize</span>
+				</Button>
 				<Fieldset legend="Player 1">
 					<draggable
 						:list="playersA"
@@ -130,6 +138,21 @@ const teams = ref<{ playerA: signedUpPlayer[]; playerB: signedUpPlayer[] }[]>(
 	[],
 )
 
+function randomize() {
+	for (const i in teams.value) {
+		if (teams.value[i].playerA.length === 0) {
+			const r = Math.floor(Math.random() * playersA.value.length)
+			teams.value[i].playerA.push(playersA.value[r])
+			playersA.value = playersA.value.filter((v, i) => i !== r)
+		}
+		if (teams.value[i].playerB.length === 0) {
+			const r = Math.floor(Math.random() * playersB.value.length)
+			teams.value[i].playerB.push(playersB.value[r])
+			playersB.value = playersB.value.filter((v, i) => i !== r)
+		}
+	}
+}
+
 watch(route, update)
 update()
 
@@ -172,6 +195,15 @@ function update() {
 								name: team.playerB.firstName + " " + team.playerB.lastName,
 							},
 						],
+					})
+				}
+				while (
+					teams.value.length <
+					Math.min(playersA.value.length, playersB.value.length)
+				) {
+					teams.value.push({
+						playerA: [],
+						playerB: [],
 					})
 				}
 			})
