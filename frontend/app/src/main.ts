@@ -86,6 +86,7 @@ import Column from "primevue/column"
 import Tag from "primevue/tag"
 import AutoComplete from "primevue/autocomplete"
 import Checkbox from "primevue/checkbox"
+import Fieldset from "primevue/fieldset";
 
 /* Primevue styling */
 import "primeflex/primeflex.css"
@@ -144,6 +145,7 @@ app
 	.component("Tag", Tag)
 	.component("AutoComplete", AutoComplete)
 	.component("Checkbox", Checkbox)
+	.component("Fieldset", Fieldset)
 	.directive("tooltip", Tooltip)
 	.directive("focustrap", FocusTrap)
 	.mount("#app")
