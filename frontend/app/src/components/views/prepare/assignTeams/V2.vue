@@ -19,7 +19,7 @@
 					<span class="material-icons">casino</span>
 					<span class="mt-1">Randomize</span>
 				</Button>
-				<Fieldset legend="Player 1">
+				<Fieldset :legend="competition?.playerB.different ? 'Player 1' : 'Player'">
 					<draggable
 						:list="playersA"
 						group="playerA"
@@ -82,9 +82,9 @@
 								:list="teams[index].playerB"
 								:group="
 									teams[index].playerB.length === 0
-										? 'playerB'
+										? (competition?.playerB.different ? 'playerB' : 'playerA')
 										: {
-												name: 'playerB',
+												name: (competition?.playerB.different ? 'playerB' : 'playerA'),
 												put: false,
 										  }
 								"
@@ -139,16 +139,27 @@ const teams = ref<{ playerA: signedUpPlayer[]; playerB: signedUpPlayer[] }[]>(
 )
 
 function randomize() {
+	if (!competition.value)
+		return
+
 	for (const i in teams.value) {
 		if (teams.value[i].playerA.length === 0) {
 			const r = Math.floor(Math.random() * playersA.value.length)
 			teams.value[i].playerA.push(playersA.value[r])
 			playersA.value = playersA.value.filter((v, i) => i !== r)
 		}
-		if (teams.value[i].playerB.length === 0) {
-			const r = Math.floor(Math.random() * playersB.value.length)
-			teams.value[i].playerB.push(playersB.value[r])
-			playersB.value = playersB.value.filter((v, i) => i !== r)
+		if (competition.value.playerB.different) {
+			if (teams.value[i].playerB.length === 0) {
+				const r = Math.floor(Math.random() * playersB.value.length)
+				teams.value[i].playerB.push(playersB.value[r])
+				playersB.value = playersB.value.filter((v, i) => i !== r)
+			}
+		} else {
+			if (teams.value[i].playerB.length === 0) {
+				const r = Math.floor(Math.random() * playersA.value.length)
+				teams.value[i].playerB.push(playersA.value[r])
+				playersA.value = playersA.value.filter((v, i) => i !== r)
+			}
 		}
 	}
 }
