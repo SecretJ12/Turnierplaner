@@ -149,7 +149,7 @@
 <script setup lang="ts">
 import PlayerV2 from "@/components/views/prepare/assignTeams/Player.vue"
 import draggable from "vuedraggable"
-import { ref, watch } from "vue"
+import { ref } from "vue"
 import { getCompetitionDetails } from "@/backend/competition"
 import { useRoute, useRouter } from "vue-router"
 import { useToast } from "primevue/usetoast"
@@ -163,7 +163,9 @@ const route = useRoute()
 const router = useRouter()
 const toast = useToast()
 const { t } = useI18n({ inheritLocale: true })
-const competition = getCompetitionDetails(route, t, toast, {})
+const competition = getCompetitionDetails(route, t, toast, {
+	suc: update,
+})
 
 const playersA = ref<signedUpPlayer[]>([])
 const playersB = ref<signedUpPlayer[]>([])
@@ -197,13 +199,18 @@ function randomize() {
 	}
 }
 
-watch(route, update)
 update()
 
 function update() {
 	playersA.value = []
 	playersB.value = []
 	teams.value = []
+
+	if (
+		competition.value?.mode === Mode.SINGLE ||
+		competition.value?.signUp === SignUp.TOGETHER
+	)
+		return
 
 	axios
 		.get<Team[]>(
