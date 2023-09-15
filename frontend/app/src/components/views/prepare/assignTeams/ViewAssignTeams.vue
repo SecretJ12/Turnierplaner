@@ -11,14 +11,17 @@
 	<template v-else>
 		<div class="grid">
 			<div class="col-5 flex flex-column gap-4">
-				<Button
+				<SplitButton
+					label="Randomize"
 					severity="help"
-					class="flex justify-content-center align-items-center"
+					:model="randomizeItems"
 					@click="randomize"
+					class="w-fit"
 				>
-					<span class="material-icons">casino</span>
-					<span class="mt-1">Randomize</span>
-				</Button>
+					<template #icon>
+						<span class="material-icons mb-1" style="font-size: 1.2rem">casino</span>
+					</template>
+				</SplitButton>
 				<Fieldset
 					:legend="competition?.playerB.different ? 'Player 1' : 'Player'"
 				>
@@ -197,6 +200,46 @@ function randomize() {
 			}
 		}
 	}
+}
+
+const randomizeItems = [
+	{
+		label: "Reroll",
+		icon: "pi pi-refresh",
+		command: reroll,
+	},
+	{
+		label: "Reset",
+		icon: "pi pi-times",
+		command: reset,
+	},
+]
+
+function reset() {
+	if (!competition.value) return
+
+	for (const i in teams.value) {
+		if (teams.value[i].playerA.length === 1) {
+			playersA.value.push(teams.value[i].playerA[0])
+			teams.value[i].playerA = []
+		}
+		if (competition.value.playerB.different) {
+			if (teams.value[i].playerB.length === 1) {
+				playersB.value.push(teams.value[i].playerB[0])
+				teams.value[i].playerB = []
+			}
+		} else {
+			if (teams.value[i].playerB.length === 1) {
+				playersA.value.push(teams.value[i].playerB[0])
+				teams.value[i].playerB = []
+			}
+		}
+	}
+}
+
+function reroll() {
+	reset()
+	randomize()
 }
 
 update()
