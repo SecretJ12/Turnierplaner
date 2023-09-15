@@ -1,6 +1,6 @@
 <template>
 	<div id="button">
-		<Card class="w-8">
+		<Card class="w-12">
 			<template #header>
 				<TabMenu
 					:active-index="activeTab"

@@ -28,12 +28,12 @@
 					<draggable
 						:list="playersA"
 						group="playerA"
-						tag="div"
+						tag="transition-group"
+						:component-data="{ tag: 'div', name: animation ? 'playerList' : 'default', type: 'transition' }"
 						class="flex flex-row flex-row flex-wrap gap-2"
-						itemKey="name"
 					>
 						<template #item="{ element }">
-							<PlayerV2 :player="element" />
+							<PlayerV2 :key="element.name" :player="element" />
 						</template>
 					</draggable>
 				</Fieldset>
@@ -41,12 +41,12 @@
 					<draggable
 						:list="playersB"
 						group="playerB"
-						tag="div"
+						tag="transition-group"
+						:component-data="{ tag: 'div', name: animation ? 'playerList' : 'default' }"
 						class="flex flex-row flex-row flex-wrap gap-2"
-						itemKey="name"
 					>
 						<template #item="{ element }">
-							<PlayerV2 :player="element" secondary />
+							<PlayerV2 :key="element.name" :player="element" secondary />
 						</template>
 					</draggable>
 				</Fieldset>
@@ -65,16 +65,16 @@
 												put: false,
 										  }
 								"
-								tag="div"
+								tag="transition-group"
+								:component-data="{ tag: 'div', name: animation ? 'teamList' : 'default' }"
 								class="mt-1 mb-1 flex align-items-center justify-content-center"
 								:class="{
 									'h-2rem border-dashed dragTo':
 										teams[index].playerA.length === 0,
 								}"
-								itemKey="name"
 							>
 								<template #item="{ element: element }">
-									<div>
+									<div :key="element.name">
 										<PlayerV2 :player="element" />
 									</div>
 								</template>
@@ -97,16 +97,16 @@
 												put: false,
 										  }
 								"
-								tag="div"
+								tag="transition-group"
+								:component-data="{ tag: 'div', name: animation ? 'teamList' : 'default' }"
 								class="mt-1 mb-1 flex align-items-center justify-content-center"
 								:class="{
 									'h-2rem border-dashed dragTo':
 										teams[index].playerB.length === 0,
 								}"
-								itemKey="name"
 							>
 								<template #item="{ element: element }">
-									<div>
+									<div :key="element.name">
 										<PlayerV2
 											:player="element"
 											:secondary="competition?.playerB.different || false"
@@ -170,6 +170,8 @@ const competition = getCompetitionDetails(route, t, toast, {
 	suc: update,
 })
 
+const animation = ref<boolean>(false)
+
 const playersA = ref<signedUpPlayer[]>([])
 const playersB = ref<signedUpPlayer[]>([])
 
@@ -177,29 +179,46 @@ const teams = ref<{ playerA: signedUpPlayer[]; playerB: signedUpPlayer[] }[]>(
 	[],
 )
 
-function randomize() {
+function sleep(milliseconds: number) {
+	return new Promise(resolve => setTimeout(resolve, milliseconds));
+}
+const delay = 300
+const delayBetween = 100
+
+async function randomize() {
 	if (!competition.value) return
 
+	animation.value = true
 	for (const i in teams.value) {
 		if (teams.value[i].playerA.length === 0) {
 			const r = Math.floor(Math.random() * playersA.value.length)
-			teams.value[i].playerA.push(playersA.value[r])
+			const element = playersA.value[r]
 			playersA.value = playersA.value.filter((v, i) => i !== r)
+			await sleep(delayBetween)
+			teams.value[i].playerA.push(element)
+			await sleep(delay)
 		}
 		if (competition.value.playerB.different) {
 			if (teams.value[i].playerB.length === 0) {
 				const r = Math.floor(Math.random() * playersB.value.length)
-				teams.value[i].playerB.push(playersB.value[r])
+				const element = playersB.value[r]
 				playersB.value = playersB.value.filter((v, i) => i !== r)
+				await sleep(delayBetween)
+				teams.value[i].playerB.push(element)
+				await sleep(delay)
 			}
 		} else {
 			if (teams.value[i].playerB.length === 0) {
 				const r = Math.floor(Math.random() * playersA.value.length)
-				teams.value[i].playerB.push(playersA.value[r])
+				const element = playersA.value[r]
 				playersA.value = playersA.value.filter((v, i) => i !== r)
+				await sleep(delayBetween)
+				teams.value[i].playerB.push(element)
+				await sleep(delay)
 			}
 		}
 	}
+	animation.value = false
 }
 
 const randomizeItems = [
@@ -215,34 +234,43 @@ const randomizeItems = [
 	},
 ]
 
-function reset() {
+async function reset() {
 	if (!competition.value) return
 
+	animation.value = true
 	for (const i in teams.value) {
 		if (teams.value[i].playerA.length === 1) {
-			playersA.value.push(teams.value[i].playerA[0])
+			const element = teams.value[i].playerA[0]
 			teams.value[i].playerA = []
+			await sleep(delayBetween)
+			playersA.value.push(element)
+			await sleep(delay)
 		}
 		if (competition.value.playerB.different) {
 			if (teams.value[i].playerB.length === 1) {
-				playersB.value.push(teams.value[i].playerB[0])
+				const element = teams.value[i].playerB[0]
 				teams.value[i].playerB = []
+				await sleep(delayBetween)
+				playersB.value.push(element)
+				await sleep(delay)
 			}
 		} else {
 			if (teams.value[i].playerB.length === 1) {
-				playersA.value.push(teams.value[i].playerB[0])
+				const element = teams.value[i].playerB[0]
 				teams.value[i].playerB = []
+				await sleep(delayBetween)
+				playersA.value.push(element)
+				await sleep(delay)
 			}
 		}
 	}
+	animation.value = true
 }
 
-function reroll() {
-	reset()
-	randomize()
+async function reroll() {
+	await reset()
+	await randomize()
 }
-
-update()
 
 function update() {
 	playersA.value = []
@@ -342,4 +370,19 @@ function nextPage() {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.playerList-move,
+.playerList-enter-active,
+.playerList-leave-active,
+.teamList-enter-active,
+.teamList-leave-active {
+	transition: all 0.5s ease;
+}
+.playerList-enter-from,
+.playerList-leave-to,
+.teamList-enter-from,
+.teamList-leave-to {
+	opacity: 0;
+	transform: scale(0%);
+}
+</style>
