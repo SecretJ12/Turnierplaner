@@ -30,7 +30,19 @@
 				<Fieldset
 					:legend="competition?.playerB.different ? 'Player 1' : 'Player'"
 				>
-					<draggable
+					<Draggable
+						:list="playersA"
+						:put="['playersA', 'playersB']"
+						itemKey="name"
+						tag="div"
+						group="playerA"
+						class="flex flex-row flex-row flex-wrap gap-2"
+					>
+						<template #default="{ item }">
+							<Player :key="item.name" :player="item" />
+						</template>
+					</Draggable>
+					<!--<Draggable
 						:list="playersA"
 						group="playerA"
 						tag="transition-group"
@@ -48,10 +60,22 @@
 						<template #item="{ element }">
 							<PlayerV2 :key="element.name" :player="element" />
 						</template>
-					</draggable>
+					</Draggable>-->
 				</Fieldset>
 				<Fieldset legend="Player 2" v-if="competition?.playerB.different">
-					<draggable
+					<Draggable
+						:list="playersB"
+						:put="['playersB']"
+						itemKey="name"
+						tag="div"
+						group="playersB"
+						class="flex flex-row flex-row flex-wrap gap-2"
+					>
+						<template #default="{ item }">
+							<Player :key="item.name" :player="item" />
+						</template>
+					</Draggable>
+					<!--<draggable
 						:list="playersB"
 						group="playerB"
 						tag="transition-group"
@@ -64,11 +88,11 @@
 						<template #item="{ element }">
 							<PlayerV2 :key="element.name" :player="element" secondary />
 						</template>
-					</draggable>
+					</draggable>-->
 				</Fieldset>
 			</div>
 			<div class="col-7 flex flex-column gap-4">
-				<DataTable :value="teams" showGridlines stripedRows>
+				<!--<DataTable :value="teams" showGridlines stripedRows>
 					<Column class="w-6" header="Player 1" field="name">
 						<template #body="{ index }">
 							<draggable
@@ -146,7 +170,7 @@
 							</draggable>
 						</template>
 					</Column>
-				</DataTable>
+				</DataTable>-->
 			</div>
 		</div>
 	</template>
@@ -180,8 +204,8 @@
 </template>
 
 <script setup lang="ts">
-import PlayerV2 from "@/components/views/prepare/assignTeams/Player.vue"
-import draggable from "vuedraggable"
+import Player from "@/components/views/prepare/assignTeams/Player.vue"
+import Draggable from "@/draggable/Draggable.vue"
 import { ref } from "vue"
 import { getCompetitionDetails } from "@/backend/competition"
 import { useRoute, useRouter } from "vue-router"
@@ -360,6 +384,7 @@ function update() {
 					})
 				}
 			})
+			reset()
 		})
 		.catch((error) => {
 			teams.value = []

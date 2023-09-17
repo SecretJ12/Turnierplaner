@@ -24,15 +24,16 @@
 		"primeicons": "^6.0.1",
 		"primevue": "^3.34.0",
 		"sass": "^1.61.0",
+		"sortablejs": "^1.15.0",
 		"vee-validate": "^4.11.3",
 		"vue": "^3.3.4",
 		"vue-axios": "^3.5.2",
 		"vue-i18n": "^9.2.2",
 		"vue-password": "^3.1.0",
-		"vue-router": "^4.1.6",
-		"vuedraggable": "^4.1.0"
+		"vue-router": "^4.1.6"
 	},
 	"devDependencies": {
+		"@types/sortablejs": "^1.15.2",
 		"@typescript-eslint/eslint-plugin": "^6.4.0",
 		"@typescript-eslint/parser": "^6.4.0",
 		"@vitejs/plugin-vue": "^4.1.0",
