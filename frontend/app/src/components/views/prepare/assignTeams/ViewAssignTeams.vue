@@ -9,6 +9,9 @@
 		There's nothing to do for this configuration
 	</template>
 	<template v-else>
+		PlayersA: {{ playersA }}<br />
+		PlayersB: {{ playersB }}<br />
+		Animation: {{ animation }}<br />
 		<div class="grid">
 			<div class="col-5 flex flex-column gap-4">
 				<SplitButton
@@ -19,7 +22,9 @@
 					class="w-fit"
 				>
 					<template #icon>
-						<span class="material-icons mb-1" style="font-size: 1.2rem">casino</span>
+						<span class="material-icons mb-1" style="font-size: 1.2rem"
+							>casino</span
+						>
 					</template>
 				</SplitButton>
 				<Fieldset
@@ -29,7 +34,15 @@
 						:list="playersA"
 						group="playerA"
 						tag="transition-group"
-						:component-data="{ tag: 'div', name: animation ? 'playerList' : 'default', type: 'transition' }"
+						:="{
+							animation: 200,
+							ghostClass: 'ghost',
+						}"
+						:component-data="{
+							tag: 'div',
+							name: animation ? 'playerList' : 'default',
+							type: 'transition',
+						}"
 						class="flex flex-row flex-row flex-wrap gap-2"
 					>
 						<template #item="{ element }">
@@ -42,7 +55,10 @@
 						:list="playersB"
 						group="playerB"
 						tag="transition-group"
-						:component-data="{ tag: 'div', name: animation ? 'playerList' : 'default' }"
+						:component-data="{
+							tag: 'div',
+							name: animation ? 'playerList' : 'default',
+						}"
 						class="flex flex-row flex-row flex-wrap gap-2"
 					>
 						<template #item="{ element }">
@@ -65,8 +81,15 @@
 												put: false,
 										  }
 								"
+								:="{
+									animation: 200,
+									ghostClass: 'ghost',
+								}"
 								tag="transition-group"
-								:component-data="{ tag: 'div', name: animation ? 'teamList' : 'default' }"
+								:component-data="{
+									tag: 'div',
+									name: animation ? 'teamList' : 'default',
+								}"
 								class="mt-1 mb-1 flex align-items-center justify-content-center"
 								:class="{
 									'h-2rem border-dashed dragTo':
@@ -97,8 +120,15 @@
 												put: false,
 										  }
 								"
+								:="{
+									animation: 200,
+									ghostClass: 'ghost',
+								}"
 								tag="transition-group"
-								:component-data="{ tag: 'div', name: animation ? 'teamList' : 'default' }"
+								:component-data="{
+									tag: 'div',
+									name: animation ? 'teamList' : 'default',
+								}"
 								class="mt-1 mb-1 flex align-items-center justify-content-center"
 								:class="{
 									'h-2rem border-dashed dragTo':
@@ -180,10 +210,11 @@ const teams = ref<{ playerA: signedUpPlayer[]; playerB: signedUpPlayer[] }[]>(
 )
 
 function sleep(milliseconds: number) {
-	return new Promise(resolve => setTimeout(resolve, milliseconds));
+	return new Promise((resolve) => setTimeout(resolve, milliseconds))
 }
-const delay = 300
-const delayBetween = 100
+
+const delay = 100
+const delayBetween = 50
 
 async function randomize() {
 	if (!competition.value) return
@@ -264,7 +295,7 @@ async function reset() {
 			}
 		}
 	}
-	animation.value = true
+	animation.value = false
 }
 
 async function reroll() {
@@ -371,18 +402,22 @@ function nextPage() {
 </script>
 
 <style scoped>
-.playerList-move,
 .playerList-enter-active,
 .playerList-leave-active,
 .teamList-enter-active,
 .teamList-leave-active {
 	transition: all 0.5s ease;
 }
+
 .playerList-enter-from,
 .playerList-leave-to,
 .teamList-enter-from,
 .teamList-leave-to {
 	opacity: 0;
 	transform: scale(0%);
+}
+
+.ghost {
+	visibility: hidden;
 }
 </style>
