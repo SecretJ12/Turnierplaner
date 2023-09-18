@@ -39,7 +39,7 @@
 						class="flex flex-row flex-row flex-wrap gap-2"
 					>
 						<template #default="{ item }">
-							<Player :key="item.name" :player="item" />
+							<Player :key="(<signedUpPlayer>item).name" :player="item" />
 						</template>
 					</Draggable>
 					<!--<Draggable
@@ -65,14 +65,14 @@
 				<Fieldset legend="Player 2" v-if="competition?.playerB.different">
 					<Draggable
 						:list="playersB"
-						:put="['playersB']"
+						:put="true"
 						itemKey="name"
 						tag="div"
 						group="playersB"
 						class="flex flex-row flex-row flex-wrap gap-2"
 					>
 						<template #default="{ item }">
-							<Player :key="item.name" :player="item" />
+							<Player :key="(<signedUpPlayer>item).name" :player="item" secondary />
 						</template>
 					</Draggable>
 					<!--<draggable
@@ -206,7 +206,7 @@
 <script setup lang="ts">
 import Player from "@/components/views/prepare/assignTeams/Player.vue"
 import Draggable from "@/draggable/Draggable.vue"
-import { ref } from "vue"
+import { defineComponent, ref } from "vue";
 import { getCompetitionDetails } from "@/backend/competition"
 import { useRoute, useRouter } from "vue-router"
 import { useToast } from "primevue/usetoast"

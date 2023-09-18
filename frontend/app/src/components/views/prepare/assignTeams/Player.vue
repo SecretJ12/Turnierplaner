@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-const props = withDefaults(defineProps<{ player: { name: string}, secondary?: boolean }>(),
+const props = withDefaults(defineProps<{ player: { name: string }, secondary?: boolean }>(),
 	{
 		secondary: false
 	})
