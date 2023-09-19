@@ -1,5 +1,5 @@
 <template>
-	<component ref="container" :is="props.tag" :key="index">
+	<component ref="container" :is="tag" v-bind="componentData" :key="index">
 		<slot
 			v-for="(item, index) in list"
 			:key="item['itemKey']"
@@ -12,13 +12,14 @@
 <script setup lang="ts">
 // @ts-ignore
 import Sortable, { SortableEvent } from "sortablejs"
-import { ref, watch } from "vue"
+import { ref, watch } from "vue";
 
 const props = withDefaults(
 	defineProps<{
 		list: any[]
 		itemKey: string
-		tag: string
+		tag: any
+		componentData?: any,
 		group: string
 		pull?: boolean | "clone"
 		put?: boolean | string[]
@@ -39,15 +40,17 @@ const props = withDefaults(
 
 const container = ref<HTMLElement | null>(null)
 const sortable = ref<Sortable | null>()
+watch(container, (el) => {
+	if (!el) return
+	if (!(el instanceof HTMLElement))
+		// @ts-ignore
+		el = <HTMLElement>el.$el
 
-watch(container, () => {
-	if (!container.value) return
-
-	sortable.value = Sortable.create(container.value, {
+	sortable.value = Sortable.create(el, {
 		group: { name: props.group, pull: props.pull, put: props.put },
 		animation: props.animation,
 		disabled: props.disabled,
-		sort: props.sort, // TODO enable tracking for move
+		sort: props.sort,
 		ghostClass: props.ghost,
 		onChoose: (event: Sortable.SortableEvent) => {
 			if (event.oldIndex === undefined) return
@@ -84,4 +87,19 @@ function reload() {
 let selectedElement = null
 </script>
 
-<style scoped></style>
+<style scoped>
+.playerList-enter-active,
+.playerList-leave-active,
+.teamList-enter-active,
+.teamList-leave-active {
+	transition: all 0.5s ease;
+}
+
+.playerList-enter-from,
+.playerList-leave-to,
+.teamList-enter-from,
+.teamList-leave-to {
+	opacity: 0;
+	transform: scale(0%);
+}
+</style>

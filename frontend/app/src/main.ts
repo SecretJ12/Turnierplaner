@@ -1,4 +1,4 @@
-import { createApp } from "vue"
+import { createApp, TransitionGroup } from "vue";
 import App from "./App.vue"
 import { createI18n, I18nOptions } from "vue-i18n"
 import * as VueRouter from "vue-router"
@@ -150,6 +150,7 @@ app
 	.component("SplitButton", SplitButton)
 	.directive("tooltip", Tooltip)
 	.directive("focustrap", FocusTrap)
+	.component("transition-group", TransitionGroup)
 	.mount("#app")
 
 export { router }

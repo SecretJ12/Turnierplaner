@@ -32,9 +32,14 @@
 				>
 					<Draggable
 						:list="playersA"
-						:put="['playersA', 'playersB']"
+						:put="['playersA']"
 						itemKey="name"
-						tag="div"
+						tag="transition-group"
+						:componentData="{
+							tag: 'div',
+							name: animation ? 'playerList' : 'default',
+							type: 'transition',
+						}"
 						group="playerA"
 						class="flex flex-row flex-row flex-wrap gap-2"
 					>
@@ -42,53 +47,29 @@
 							<Player :key="(<signedUpPlayer>item).name" :player="item" />
 						</template>
 					</Draggable>
-					<!--<Draggable
-						:list="playersA"
-						group="playerA"
-						tag="transition-group"
-						:="{
-							animation: 200,
-							ghostClass: 'ghost',
-						}"
-						:component-data="{
-							tag: 'div',
-							name: animation ? 'playerList' : 'default',
-							type: 'transition',
-						}"
-						class="flex flex-row flex-row flex-wrap gap-2"
-					>
-						<template #item="{ element }">
-							<PlayerV2 :key="element.name" :player="element" />
-						</template>
-					</Draggable>-->
 				</Fieldset>
 				<Fieldset legend="Player 2" v-if="competition?.playerB.different">
 					<Draggable
 						:list="playersB"
-						:put="true"
+						:put="['playersA']"
 						itemKey="name"
-						tag="div"
+						tag="transition-group"
+						:componentData="{
+							tag: 'div',
+							name: animation ? 'playerList' : 'default',
+							type: 'transition',
+						}"
 						group="playersB"
 						class="flex flex-row flex-row flex-wrap gap-2"
 					>
 						<template #default="{ item }">
-							<Player :key="(<signedUpPlayer>item).name" :player="item" secondary />
+							<Player
+								:key="(<signedUpPlayer>item).name"
+								:player="item"
+								secondary
+							/>
 						</template>
 					</Draggable>
-					<!--<draggable
-						:list="playersB"
-						group="playerB"
-						tag="transition-group"
-						:component-data="{
-							tag: 'div',
-							name: animation ? 'playerList' : 'default',
-						}"
-						class="flex flex-row flex-row flex-wrap gap-2"
-					>
-						<template #item="{ element }">
-							<PlayerV2 :key="element.name" :player="element" secondary />
-						</template>
-					</draggable>-->
 				</Fieldset>
 			</div>
 			<div class="col-7 flex flex-column gap-4">
@@ -206,7 +187,7 @@
 <script setup lang="ts">
 import Player from "@/components/views/prepare/assignTeams/Player.vue"
 import Draggable from "@/draggable/Draggable.vue"
-import { defineComponent, ref } from "vue";
+import { ref, TransitionGroup } from "vue"
 import { getCompetitionDetails } from "@/backend/competition"
 import { useRoute, useRouter } from "vue-router"
 import { useToast } from "primevue/usetoast"
@@ -215,6 +196,7 @@ import { Mode, SignUp } from "@/interfaces/competition"
 import axios from "axios"
 import { Team } from "@/interfaces/registration/team"
 import { signedUpPlayer } from "@/interfaces/player"
+import Button from "primevue/button"
 
 const route = useRoute()
 const router = useRouter()
