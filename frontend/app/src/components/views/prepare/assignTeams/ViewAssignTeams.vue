@@ -9,9 +9,6 @@
 		There's nothing to do for this configuration
 	</template>
 	<template v-else>
-		PlayersA: {{ playersA }}<br />
-		PlayersB: {{ playersB }}<br />
-		Teams: {{ teams }}<br />
 		<div class="grid">
 			<div class="col-5 flex flex-column gap-4">
 				<SplitButton
@@ -83,7 +80,7 @@
 										teams[index].playerA.length === 0 ? ['playersA'] : false
 									"
 									itemKey="name"
-									swap
+									:swap="teams[index].playerA.length !== 0"
 									:tag="TransitionGroup"
 									:componentData="{
 										tag: 'div',
@@ -117,7 +114,6 @@
 											: false
 									"
 									itemKey="name"
-									swap
 									:tag="TransitionGroup"
 									:componentData="{
 										tag: 'div',
