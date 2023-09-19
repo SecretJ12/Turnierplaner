@@ -11,7 +11,7 @@
 	<template v-else>
 		PlayersA: {{ playersA }}<br />
 		PlayersB: {{ playersB }}<br />
-		Animation: {{ animation }}<br />
+		Teams: {{ teams }}<br />
 		<div class="grid">
 			<div class="col-5 flex flex-column gap-4">
 				<SplitButton
@@ -34,13 +34,13 @@
 						:list="playersA"
 						:put="['playersA']"
 						itemKey="name"
-						tag="transition-group"
+						:tag="TransitionGroup"
 						:componentData="{
 							tag: 'div',
 							name: animation ? 'playerList' : 'default',
 							type: 'transition',
 						}"
-						group="playerA"
+						group="playersA"
 						class="flex flex-row flex-row flex-wrap gap-2"
 					>
 						<template #default="{ item }">
@@ -51,9 +51,9 @@
 				<Fieldset legend="Player 2" v-if="competition?.playerB.different">
 					<Draggable
 						:list="playersB"
-						:put="['playersA']"
+						:put="['playersB']"
 						itemKey="name"
-						tag="transition-group"
+						:tag="TransitionGroup"
 						:componentData="{
 							tag: 'div',
 							name: animation ? 'playerList' : 'default',
@@ -73,85 +73,70 @@
 				</Fieldset>
 			</div>
 			<div class="col-7 flex flex-column gap-4">
-				<!--<DataTable :value="teams" showGridlines stripedRows>
+				<DataTable :value="teams" showGridlines stripedRows>
 					<Column class="w-6" header="Player 1" field="name">
 						<template #body="{ index }">
-							<draggable
+							<Draggable
 								:list="teams[index].playerA"
-								:group="
-									teams[index].playerA.length === 0
-										? 'playerA'
-										: {
-												name: 'playerA',
-												put: false,
-										  }
-								"
-								:="{
-									animation: 200,
-									ghostClass: 'ghost',
-								}"
-								tag="transition-group"
-								:component-data="{
+								:put="teams[index].playerA.length === 0 ? ['playersA'] : false"
+								itemKey="name"
+								:tag="TransitionGroup"
+								:componentData="{
 									tag: 'div',
-									name: animation ? 'teamList' : 'default',
+									name: animation ? 'playerList' : 'default',
+									type: 'transition',
 								}"
-								class="mt-1 mb-1 flex align-items-center justify-content-center"
+								group="playersA"
+								class="mt-1 mb-1 flex align-items-center justify-content-center drag"
 								:class="{
 									'h-2rem border-dashed dragTo':
 										teams[index].playerA.length === 0,
 								}"
 							>
-								<template #item="{ element: element }">
-									<div :key="element.name">
-										<PlayerV2 :player="element" />
-									</div>
+								<template #default="{ item }">
+									<Player :key="(<signedUpPlayer>item).name" :player="item" />
 								</template>
-							</draggable>
+							</Draggable>
 						</template>
 					</Column>
 					<Column class="w-6" header="Player 2" field="name">
 						<template #body="{ index }">
-							<draggable
+							<Draggable
 								:list="teams[index].playerB"
-								:group="
+								:put="
 									teams[index].playerB.length === 0
 										? competition?.playerB.different
-											? 'playerB'
-											: 'playerA'
-										: {
-												name: competition?.playerB.different
-													? 'playerB'
-													: 'playerA',
-												put: false,
-										  }
+											? ['playersB']
+											: ['playersA']
+										: false
 								"
-								:="{
-									animation: 200,
-									ghostClass: 'ghost',
-								}"
-								tag="transition-group"
-								:component-data="{
+								itemKey="name"
+								:tag="TransitionGroup"
+								:componentData="{
 									tag: 'div',
-									name: animation ? 'teamList' : 'default',
+									name: animation ? 'playerList' : 'default',
+									type: 'transition',
 								}"
+								:group="
+									competition?.playerB.different ? 'playersB' : 'playersA'
+								"
 								class="mt-1 mb-1 flex align-items-center justify-content-center"
 								:class="{
 									'h-2rem border-dashed dragTo':
 										teams[index].playerB.length === 0,
 								}"
 							>
-								<template #item="{ element: element }">
-									<div :key="element.name">
-										<PlayerV2
-											:player="element"
-											:secondary="competition?.playerB.different || false"
-										/>
-									</div>
+								<template #default="{ item }">
+									<Player
+										:key="(<signedUpPlayer>item).name"
+										:player="item"
+										:secondary="competition?.playerB.different"
+									/>
 								</template>
-							</draggable>
+							</Draggable>
 						</template>
 					</Column>
-				</DataTable>-->
+				</DataTable>
 			</div>
 		</div>
 	</template>
@@ -366,7 +351,6 @@ function update() {
 					})
 				}
 			})
-			reset()
 		})
 		.catch((error) => {
 			teams.value = []

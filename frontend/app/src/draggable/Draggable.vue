@@ -63,6 +63,7 @@ watch(container, (el) => {
 		},
 		onAdd: (event: Sortable.SortableEvent) => {
 			if (event.newIndex === undefined) return
+			console.log(props.list)
 			// @ts-ignore
 			props.list.splice(event.newIndex, 0, selectedElement)
 			reload()
@@ -72,7 +73,23 @@ watch(container, (el) => {
 			if (oldIndex === undefined || newIndex === undefined) return
 			props.list.splice(newIndex, 0, props.list.splice(oldIndex, 1)[0])
 		},
+		revertOnSpill: true,
+		removeOnSpill: false
 	})
+})
+
+watch(() => [props.group, props.put, props.pull], () => {
+	if (!sortable.value)
+		return
+	sortable.value.option('group', { name: props.group, pull: props.pull, put: props.put })
+})
+watch(() => [props.animation, props.animation, props.sort, props.ghost], () => {
+	if (!sortable.value)
+		return
+	sortable.value.option('animation', props.animation)
+	sortable.value.option('disabled', props.disabled)
+	sortable.value.option('sort', props.sort)
+	sortable.value.option('ghostClass', props.ghost)
 })
 
 // reload list to ensure a consistent state

@@ -150,7 +150,6 @@ app
 	.component("SplitButton", SplitButton)
 	.directive("tooltip", Tooltip)
 	.directive("focustrap", FocusTrap)
-	.component("transition-group", TransitionGroup)
 	.mount("#app")
 
 export { router }
