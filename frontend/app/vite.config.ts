@@ -23,7 +23,7 @@ export default defineConfig({
 		alias: {
 			"@": resolve(__dirname, "src"),
 		},
-		extensions: ['.js', '.ts']
+		extensions: [".js", ".ts"],
 	},
 	define: {
 		__VUE_I18N_FULL_INSTALL__: true,

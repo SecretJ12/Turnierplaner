@@ -17,15 +17,15 @@
 		<template v-if="competition">
 			<template v-if="competition.tourType === TourType.GROUPS">
 				<DataTable
-					class="col-4"
-					v-for="i in [1,2]"
+					v-for="i in [1, 2]"
 					:key="i"
+					class="col-4"
 					:value="[{ name: 1 }, { name: 2 }, { name: 3 }, { name: 4 }]"
 					show-gridlines
 					striped-rows
 					removable-sort
 				>
-					<Column :header="'Group ' + (i)" field="name">
+					<Column :header="'Group ' + i" field="name">
 						<template #body>
 							<div
 								class="h-2rem border-dashed"

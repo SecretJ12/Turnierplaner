@@ -15,8 +15,8 @@
 					label="Randomize"
 					severity="help"
 					:model="randomizeItems"
-					@click="randomize"
 					class="w-fit"
+					@click="randomize"
 				>
 					<template #icon>
 						<span class="material-icons mb-1" style="font-size: 1.2rem"
@@ -27,12 +27,12 @@
 				<Fieldset
 					:legend="competition?.playerB.different ? 'Player 1' : 'Player'"
 				>
-					<Draggable
+					<DraggablePanel
 						:list="playersA"
 						:put="['playersA']"
-						itemKey="name"
+						item-key="name"
 						:tag="TransitionGroup"
-						:componentData="{
+						:component-data="{
 							tag: 'div',
 							name: animation ? 'playerList' : 'default',
 							type: 'transition',
@@ -41,17 +41,17 @@
 						class="flex flex-row flex-row flex-wrap gap-2 border-3 min-h-3rem border-round border-dashed"
 					>
 						<template #default="{ item }">
-							<Player :key="(<signedUpPlayer>item).name" :player="item" />
+							<PlayerCard :key="(<signedUpPlayer>item).name" :player="item" />
 						</template>
-					</Draggable>
+					</DraggablePanel>
 				</Fieldset>
-				<Fieldset legend="Player 2" v-if="competition?.playerB.different">
-					<Draggable
+				<Fieldset v-if="competition?.playerB.different" legend="Player 2">
+					<DraggablePanel
 						:list="playersB"
 						:put="['playersB']"
-						itemKey="name"
+						item-key="name"
 						:tag="TransitionGroup"
-						:componentData="{
+						:component-data="{
 							tag: 'div',
 							name: animation ? 'playerList' : 'default',
 							type: 'transition',
@@ -60,26 +60,26 @@
 						class="flex flex-row flex-row flex-wrap gap-2 border-3 min-h-3rem border-round border-dashed"
 					>
 						<template #default="{ item }">
-							<Player
+							<PlayerCard
 								:key="(<signedUpPlayer>item).name"
 								:player="item"
 								secondary
 							/>
 						</template>
-					</Draggable>
+					</DraggablePanel>
 				</Fieldset>
 			</div>
 			<div class="col-7 flex flex-column gap-4">
-				<DataTable :value="teams" showGridlines stripedRows>
+				<DataTable :value="teams" show-gridlines striped-rows>
 					<Column class="w-6" header="Player 1" field="name">
 						<template #body="{ index }">
 							<div class="flex justify-content-center">
-								<Draggable
+								<DraggablePanel
 									:list="teams[index].playerA"
 									:put="['playersA']"
-									itemKey="name"
+									item-key="name"
 									:tag="TransitionGroup"
-									:componentData="{
+									:component-data="{
 										tag: 'div',
 										name: animation ? 'playerList' : 'default',
 										type: 'transition',
@@ -93,23 +93,26 @@
 									}"
 								>
 									<template #default="{ item }">
-										<Player :key="(<signedUpPlayer>item).name" :player="item" />
+										<PlayerCard
+											:key="(<signedUpPlayer>item).name"
+											:player="item"
+										/>
 									</template>
-								</Draggable>
+								</DraggablePanel>
 							</div>
 						</template>
 					</Column>
 					<Column class="w-6" header="Player 2" field="name">
 						<template #body="{ index }">
 							<div class="flex justify-content-center">
-								<Draggable
+								<DraggablePanel
 									:list="teams[index].playerB"
 									:put="
 										competition?.playerB.different ? ['playersB'] : ['playersA']
 									"
-									itemKey="name"
+									item-key="name"
 									:tag="TransitionGroup"
-									:componentData="{
+									:component-data="{
 										tag: 'div',
 										name: animation ? 'playerList' : 'default',
 										type: 'transition',
@@ -125,13 +128,13 @@
 									}"
 								>
 									<template #default="{ item }">
-										<Player
+										<PlayerCard
 											:key="(<signedUpPlayer>item).name"
 											:player="item"
 											:secondary="competition?.playerB.different"
 										/>
 									</template>
-								</Draggable>
+								</DraggablePanel>
 							</div>
 						</template>
 					</Column>
@@ -169,8 +172,8 @@
 </template>
 
 <script setup lang="ts">
-import Player from "@/components/views/prepare/assignTeams/Player.vue"
-import Draggable from "@/draggable/Draggable.vue"
+import PlayerCard from "@/components/views/prepare/assignTeams/PlayerCard.vue"
+import DraggablePanel from "@/draggable/DraggablePanel.vue"
 import { ref, TransitionGroup } from "vue"
 import { getCompetitionDetails } from "@/backend/competition"
 import { useRoute, useRouter } from "vue-router"
