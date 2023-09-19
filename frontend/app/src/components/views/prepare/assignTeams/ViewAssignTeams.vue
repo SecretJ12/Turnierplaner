@@ -71,7 +71,7 @@
 				</Fieldset>
 			</div>
 			<div class="col-7 flex flex-column gap-4">
-				<DataTable :value="teams" show-gridlines striped-rows>
+				<DataTable :value="teams" show-gridlines striped-rows size="small">
 					<Column class="w-6" header="Player 1" field="name">
 						<template #body="{ index }">
 							<div
@@ -92,7 +92,7 @@
 									}"
 									single
 									group="playersA"
-									class="mt-1 mb-1 flex align-items-center justify-content-center border-round"
+									class="flex align-items-center justify-content-center border-round"
 									:class="{
 										'h-3rem border-dashed w-10rem':
 											teams[index].playerA.length === 0,
@@ -132,7 +132,7 @@
 									:group="
 										competition?.playerB.different ? 'playersB' : 'playersA'
 									"
-									class="mt-1 mb-1 flex align-items-center justify-content-center border-round"
+									class="flex align-items-center justify-content-center border-round"
 									:class="{
 										'h-3rem border-dashed w-10rem':
 											teams[index].playerB.length === 0,
