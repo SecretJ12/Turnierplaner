@@ -41,7 +41,7 @@
 							type: 'transition',
 						}"
 						group="playersA"
-						class="flex flex-row flex-row flex-wrap gap-2"
+						class="flex flex-row flex-row flex-wrap gap-2 border-3 min-h-3rem border-round border-dashed"
 					>
 						<template #default="{ item }">
 							<Player :key="(<signedUpPlayer>item).name" :player="item" />
@@ -60,7 +60,7 @@
 							type: 'transition',
 						}"
 						group="playersB"
-						class="flex flex-row flex-row flex-wrap gap-2"
+						class="flex flex-row flex-row flex-wrap gap-2 border-3 min-h-3rem border-round border-dashed"
 					>
 						<template #default="{ item }">
 							<Player
@@ -76,64 +76,72 @@
 				<DataTable :value="teams" showGridlines stripedRows>
 					<Column class="w-6" header="Player 1" field="name">
 						<template #body="{ index }">
-							<Draggable
-								:list="teams[index].playerA"
-								:put="teams[index].playerA.length === 0 ? ['playersA'] : false"
-								itemKey="name"
-								:tag="TransitionGroup"
-								:componentData="{
-									tag: 'div',
-									name: animation ? 'playerList' : 'default',
-									type: 'transition',
-								}"
-								group="playersA"
-								class="mt-1 mb-1 flex align-items-center justify-content-center drag"
-								:class="{
-									'h-2rem border-dashed dragTo':
-										teams[index].playerA.length === 0,
-								}"
-							>
-								<template #default="{ item }">
-									<Player :key="(<signedUpPlayer>item).name" :player="item" />
-								</template>
-							</Draggable>
+							<div class="flex justify-content-center">
+								<Draggable
+									:list="teams[index].playerA"
+									:put="
+										teams[index].playerA.length === 0 ? ['playersA'] : false
+									"
+									itemKey="name"
+									swap
+									:tag="TransitionGroup"
+									:componentData="{
+										tag: 'div',
+										name: animation ? 'playerList' : 'default',
+										type: 'transition',
+									}"
+									group="playersA"
+									class="mt-1 mb-1 flex align-items-center justify-content-center border-round"
+									:class="{
+										'h-3rem border-dashed w-10rem':
+											teams[index].playerA.length === 0,
+									}"
+								>
+									<template #default="{ item }">
+										<Player :key="(<signedUpPlayer>item).name" :player="item" />
+									</template>
+								</Draggable>
+							</div>
 						</template>
 					</Column>
 					<Column class="w-6" header="Player 2" field="name">
 						<template #body="{ index }">
-							<Draggable
-								:list="teams[index].playerB"
-								:put="
-									teams[index].playerB.length === 0
-										? competition?.playerB.different
-											? ['playersB']
-											: ['playersA']
-										: false
-								"
-								itemKey="name"
-								:tag="TransitionGroup"
-								:componentData="{
-									tag: 'div',
-									name: animation ? 'playerList' : 'default',
-									type: 'transition',
-								}"
-								:group="
-									competition?.playerB.different ? 'playersB' : 'playersA'
-								"
-								class="mt-1 mb-1 flex align-items-center justify-content-center"
-								:class="{
-									'h-2rem border-dashed dragTo':
-										teams[index].playerB.length === 0,
-								}"
-							>
-								<template #default="{ item }">
-									<Player
-										:key="(<signedUpPlayer>item).name"
-										:player="item"
-										:secondary="competition?.playerB.different"
-									/>
-								</template>
-							</Draggable>
+							<div class="flex justify-content-center">
+								<Draggable
+									:list="teams[index].playerB"
+									:put="
+										teams[index].playerB.length === 0
+											? competition?.playerB.different
+												? ['playersB']
+												: ['playersA']
+											: false
+									"
+									itemKey="name"
+									swap
+									:tag="TransitionGroup"
+									:componentData="{
+										tag: 'div',
+										name: animation ? 'playerList' : 'default',
+										type: 'transition',
+									}"
+									:group="
+										competition?.playerB.different ? 'playersB' : 'playersA'
+									"
+									class="mt-1 mb-1 flex align-items-center justify-content-center border-round"
+									:class="{
+										'h-3rem border-dashed w-10rem':
+											teams[index].playerB.length === 0,
+									}"
+								>
+									<template #default="{ item }">
+										<Player
+											:key="(<signedUpPlayer>item).name"
+											:player="item"
+											:secondary="competition?.playerB.different"
+										/>
+									</template>
+								</Draggable>
+							</div>
 						</template>
 					</Column>
 				</DataTable>
@@ -407,7 +415,12 @@ function nextPage() {
 	opacity: 0;
 	transform: scale(0%);
 }
+
 .ghost {
 	opacity: 50%;
+}
+
+.min-h-3rem {
+	min-height: 3rem;
 }
 </style>

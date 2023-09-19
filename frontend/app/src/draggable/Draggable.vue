@@ -12,7 +12,7 @@
 <script setup lang="ts">
 // @ts-ignore
 import Sortable, { SortableEvent } from "sortablejs"
-import { ref, watch } from "vue";
+import { ref, watch } from "vue"
 
 const props = withDefaults(
 	defineProps<{
@@ -40,11 +40,19 @@ const props = withDefaults(
 
 const container = ref<HTMLElement | null>(null)
 const sortable = ref<Sortable | null>()
-watch(container, (el) => {
+watch(container, () => {
+	create()
+})
+
+function create() {
+	let el = container.value
 	if (!el) return
 	if (!(el instanceof HTMLElement))
 		// @ts-ignore
 		el = <HTMLElement>el.$el
+
+	if (sortable.value)
+		sortable.value?.destroy()
 
 	sortable.value = Sortable.create(el, {
 		group: { name: props.group, pull: props.pull, put: props.put },
@@ -63,7 +71,6 @@ watch(container, (el) => {
 		},
 		onAdd: (event: Sortable.SortableEvent) => {
 			if (event.newIndex === undefined) return
-			console.log(props.list)
 			// @ts-ignore
 			props.list.splice(event.newIndex, 0, selectedElement)
 			reload()
@@ -72,11 +79,12 @@ watch(container, (el) => {
 			if (from !== to) return
 			if (oldIndex === undefined || newIndex === undefined) return
 			props.list.splice(newIndex, 0, props.list.splice(oldIndex, 1)[0])
+			reload()
 		},
 		revertOnSpill: true,
 		removeOnSpill: false
 	})
-})
+}
 
 watch(() => [props.group, props.put, props.pull], () => {
 	if (!sortable.value)
@@ -97,6 +105,7 @@ const index = ref(0)
 
 function reload() {
 	index.value++
+	create()
 }
 </script>
 <script lang="ts">
@@ -105,18 +114,4 @@ let selectedElement = null
 </script>
 
 <style scoped>
-.playerList-enter-active,
-.playerList-leave-active,
-.teamList-enter-active,
-.teamList-leave-active {
-	transition: all 0.5s ease;
-}
-
-.playerList-enter-from,
-.playerList-leave-to,
-.teamList-enter-from,
-.teamList-leave-to {
-	opacity: 0;
-	transform: scale(0%);
-}
 </style>
