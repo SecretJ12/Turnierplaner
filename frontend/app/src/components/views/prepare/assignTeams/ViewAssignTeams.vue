@@ -407,8 +407,7 @@ function nextPage() {
 	opacity: 0;
 	transform: scale(0%);
 }
-
 .ghost {
-	visibility: hidden;
+	opacity: 50%;
 }
 </style>
