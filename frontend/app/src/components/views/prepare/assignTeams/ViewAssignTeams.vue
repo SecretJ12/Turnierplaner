@@ -17,7 +17,7 @@
 					:model="randomizeItems"
 					class="w-fit"
 					@click="randomize"
-					:disabled="disable"
+					:disabled="isSorting"
 				>
 					<template #icon>
 						<span class="material-icons mb-1" style="font-size: 1.2rem"
@@ -35,7 +35,7 @@
 						:tag="TransitionGroup"
 						:component-data="{
 							tag: 'div',
-							name: animation ? 'playerList' : 'default',
+							name: isSorting ? 'playerList' : 'default',
 							type: 'transition',
 						}"
 						group="playersA"
@@ -54,7 +54,7 @@
 						:tag="TransitionGroup"
 						:component-data="{
 							tag: 'div',
-							name: animation ? 'playerList' : 'default',
+							name: isSorting ? 'playerList' : 'default',
 							type: 'transition',
 						}"
 						group="playersB"
@@ -87,7 +87,7 @@
 									:tag="TransitionGroup"
 									:component-data="{
 										tag: 'div',
-										name: animation ? 'playerList' : 'default',
+										name: isSorting ? 'playerList' : 'default',
 										type: 'transition',
 									}"
 									single
@@ -125,7 +125,7 @@
 									:tag="TransitionGroup"
 									:component-data="{
 										tag: 'div',
-										name: animation ? 'playerList' : 'default',
+										name: isSorting ? 'playerList' : 'default',
 										type: 'transition',
 									}"
 									single
@@ -204,7 +204,7 @@ const competition = getCompetitionDetails(route, t, toast, {
 	suc: update,
 })
 
-const animation = ref<boolean>(false)
+const isSorting = ref<boolean>(false)
 
 const playersA = ref<signedUpPlayer[]>([])
 const playersB = ref<signedUpPlayer[]>([])
@@ -220,12 +220,10 @@ function sleep(milliseconds: number) {
 const delay = 100
 const delayBetween = 50
 
-const disable = ref<boolean>(false)
 async function randomize() {
 	if (!competition.value) return
-	disable.value = true
+	isSorting.value = true
 
-	animation.value = true
 	for (const i in teams.value) {
 		if (teams.value[i].playerA.length === 0) {
 			const r = Math.floor(Math.random() * playersA.value.length)
@@ -255,8 +253,7 @@ async function randomize() {
 			}
 		}
 	}
-	animation.value = false
-	disable.value = false
+	isSorting.value = false
 }
 
 const randomizeItems = [
@@ -274,10 +271,8 @@ const randomizeItems = [
 
 async function reset() {
 	if (!competition.value) return
+	isSorting.value = true
 
-	disable.value = true
-
-	animation.value = true
 	for (const i in teams.value) {
 		if (teams.value[i].playerA.length === 1) {
 			const element = teams.value[i].playerA[0]
@@ -304,8 +299,7 @@ async function reset() {
 			}
 		}
 	}
-	animation.value = false
-	disable.value = false
+	isSorting.value = false
 }
 
 async function reroll() {
