@@ -33,35 +33,50 @@
 					<VueDraggable
 						v-model="playersA"
 						group="playerA"
-            ghostClass="ghost"
-						class="flex flex-row flex-wrap gap-2"
+						ghostClass="ghost"
+						class="flex flex-wrap gap-2"
 					>
-            <div v-for="element in playersA" :key="element.name">
-							<Player :key="element.name" :player="element" />
-            </div>
+						<Player
+							v-for="element in playersA"
+							:key="element.name"
+							:player="element"
+						/>
 					</VueDraggable>
 				</Fieldset>
 				<Fieldset legend="Player 2" v-if="competition?.playerB.different">
 					<VueDraggable
-              v-model="playersB"
-              group="playerB"
-              ghostClass="ghost"
-              class="flex flex-row flex-wrap gap-2"
+						v-model="playersB"
+						group="playerB"
+						ghostClass="ghost"
+						class="flex flex-row flex-wrap gap-2"
+						@start="onStart(2)"
+						@end="onEnd(2)"
 					>
-              <div v-for="element in playersB" :key="element.name">
-							<Player :key="element.name" :player="element" secondary />
-						</div>
-					</Vuedraggable>
+						<TransitionGroup type="transition" :name="!drag[1] ? 'fade' : null">
+							<Player
+								v-for="element in playersB"
+								:key="element.name"
+								:player="element"
+								secondary
+							/>
+						</TransitionGroup>
+					</VueDraggable>
 				</Fieldset>
 			</div>
 			<div class="col-7 flex flex-row gap-4">
-				<DataTable :value="teamsA" showGridlines stripedRows :reorderableColumns="true" @rowReorder="onRowReorderA">
-					<Column class="w-6 " header="Player 1" field="name" >
-						<template #body="{ index }" >
-              <VueDraggable
-                  v-model="teamsA[index]"
-                  ghostClass="ghost"
-                  :group="
+				<DataTable
+					:value="teamsA"
+					showGridlines
+					stripedRows
+					:reorderableColumns="true"
+					@rowReorder="onRowReorderA"
+				>
+					<Column class="w-6" header="Player 1" field="name">
+						<template #body="{ index }">
+							<VueDraggable
+								v-model="teamsA[index]"
+								ghostClass="ghost"
+								:group="
 									teamsA[index].length === 0
 										? 'playerA'
 										: {
@@ -69,34 +84,38 @@
 												put: false,
 										  }
 								"
-                  :="{
+								:="{
 									animation: 200,
 									ghostClass: 'ghost',
 								}"
-
-                  class="mt-1 mb-1 flex align-items-center justify-content-center"
-                  :class="{
-									'h-2rem border-dashed dragTo':
-										teamsB[index].length === 0,
+								class="mt-1 mb-1 flex align-items-center justify-content-center"
+								:class="{
+									'h-2rem border-dashed dragTo': teamsA[index].length === 0,
 								}"
-              >
-                <div v-for="element in teamsA[index]" :key="element.name">
+							>
+								<div v-for="element in teamsA[index]" :key="element.name">
 									<div :key="element.name">
 										<Player :player="element" />
 									</div>
-                  </div>
-        </Vuedraggable>
+								</div>
+							</VueDraggable>
 						</template>
 					</Column>
-        </DataTable>
+				</DataTable>
 
-        <DataTable :value="teamsB" showGridlines stripedRows :reorderableColumns="true" @rowReorder="onRowReorderB">
-          <Column class="w-6 " header="Player 1" field="name" >
-            <template #body="{ index }" >
-              <VueDraggable
-                  v-model="teamsB[index]"
-                  ghostClass="ghost"
-                  :group="
+				<DataTable
+					:value="teamsB"
+					showGridlines
+					stripedRows
+					:reorderableColumns="true"
+					@rowReorder="onRowReorderB"
+				>
+					<Column class="w-6" header="Player 1" field="name">
+						<template #body="{ index }">
+							<VueDraggable
+								v-model="teamsB[index]"
+								ghostClass="ghost"
+								:group="
 									teamsB[index].length === 0
 										? competition?.playerB.different
 											? 'playerB'
@@ -108,62 +127,21 @@
 												put: false,
 										  }
 								"
-
-
-                  class="mt-1 mb-1 flex align-items-center justify-content-center"
-
-                  :class="{
-									'h-2rem border-dashed dragTo':
-										teamsB[index].length === 0,
+								class="mt-1 mb-1 flex align-items-center justify-content-center"
+								:class="{
+									'h-2rem border-dashed dragTo': teamsB[index].length === 0,
 								}"
-              >
-                <div v-for="element in teamsB[index]" :key="element.name">
-                  <div :key="element.name">
-                    <Player :player="element"
-                            :secondary="competition?.playerB.different || false"
-                    />
-                  </div>
-                </div>
-              </Vuedraggable>
-            </template>
-          </Column>
-        </DataTable>
-<!--        <DataTable :value="teamsB" show-gridlines stripedRows :reorderableColumns="true" @rowReorder="onRowReorderB">-->
-<!--					<Column class="w-6" header="Player 2" field="name">-->
-<!--						<template #body="{ index }">-->
-<!--							<VueDraggable-->
-<!--								:v-model="teamsB[index]"-->
-<!--                ghostClass="ghost"-->
-<!--								:group="-->
-<!--									teamsB[index].length === 0-->
-<!--										? competition?.playerB.different-->
-<!--											? 'playerB'-->
-<!--											: 'playerA'-->
-<!--										: {-->
-<!--												name: competition?.playerB.different-->
-<!--													? 'playerB'-->
-<!--													: 'playerA',-->
-<!--												put: false,-->
-<!--										  }-->
-<!--								"-->
-<!--								class="mt-1 mb-1 flex align-items-center justify-content-center"-->
-<!--								:class="{-->
-<!--									'h-2rem border-dashed dragTo':-->
-<!--										teamsB[index].length === 0,-->
-<!--								}"-->
-<!--							>-->
-<!--                  <div v-for="element in teamsB[index]" :key="element.name">-->
-<!--									<div :key="element.name">-->
-<!--										<Player-->
-<!--											:player="element"-->
-<!--											:secondary="competition?.playerB.different || false"-->
-<!--										/>-->
-<!--									</div>-->
-<!--                  </div>-->
-<!--							</VueDraggable>-->
-<!--						</template>-->
-<!--					</Column>-->
-<!--				</DataTable>-->
+							>
+								<div v-for="element in teamsB[index]" :key="element.name">
+									<Player
+										:player="element"
+										:secondary="competition?.playerB.different || false"
+									/>
+								</div>
+							</VueDraggable>
+						</template>
+					</Column>
+				</DataTable>
 			</div>
 		</div>
 	</template>
@@ -197,7 +175,7 @@
 </template>
 
 <script setup lang="ts">
-import { VueDraggable } from 'vue-draggable-plus'
+import { VueDraggable } from "vue-draggable-plus"
 import { ref } from "vue"
 import { getCompetitionDetails } from "@/backend/competition"
 import { useRoute, useRouter } from "vue-router"
@@ -207,6 +185,7 @@ import { Mode, SignUp } from "@/interfaces/competition"
 import axios from "axios"
 import { Team } from "@/interfaces/registration/team"
 import { signedUpPlayer } from "@/interfaces/player"
+import Player from "@/components/views/prepare/assignTeams/Player.vue"
 
 const route = useRoute()
 const router = useRouter()
@@ -221,12 +200,10 @@ const animation = ref<boolean>(false)
 const playersA = ref<signedUpPlayer[]>([])
 const playersB = ref<signedUpPlayer[]>([])
 
-// const teams = ref<{ playerA: signedUpPlayer[]; playerB: signedUpPlayer[] }[]>(
-// 	[],
-// )
-
 const teamsA = ref<signedUpPlayer[][]>([])
 const teamsB = ref<signedUpPlayer[][]>([])
+
+const drag = ref<Boolean[]>([false, false])
 
 function sleep(milliseconds: number) {
 	return new Promise((resolve) => setTimeout(resolve, milliseconds))
@@ -240,16 +217,16 @@ async function randomize() {
 
 	animation.value = true
 	for (const i in teamsA.value) {
-    if (teamsA.value[i].length === 0) {
-      const r = Math.floor(Math.random() * playersA.value.length)
-      const element = playersA.value[r]
-      playersA.value = playersA.value.filter((v, i) => i !== r)
-      await sleep(delayBetween)
-      teamsA.value[i].push(element)
-      await sleep(delay)
-    }
-  }
-  for(const i in teamsB.value){
+		if (teamsA.value[i].length === 0) {
+			const r = Math.floor(Math.random() * playersA.value.length)
+			const element = playersA.value[r]
+			playersA.value = playersA.value.filter((v, i) => i !== r)
+			await sleep(delayBetween)
+			teamsA.value[i].push(element)
+			await sleep(delay)
+		}
+	}
+	for (const i in teamsB.value) {
 		if (competition.value.playerB.different) {
 			if (teamsB.value[i].length === 0) {
 				const r = Math.floor(Math.random() * playersB.value.length)
@@ -287,14 +264,12 @@ const randomizeItems = [
 ]
 
 const onRowReorderA = (event) => {
-  teamsA.value = event.value;
-  toast.add({severity:'success', summary: 'Rows Reordered', life: 3000});
-};
+	teamsA.value = event.value
+}
 
 const onRowReorderB = (event) => {
-  teamsB.value = event.value;
-  toast.add({severity:'success', summary: 'Rows Reordered', life: 3000});
-};
+	teamsB.value = event.value
+}
 
 async function reset() {
 	if (!competition.value) return
@@ -334,6 +309,16 @@ async function reroll() {
 	await randomize()
 }
 
+function onStart(index: number) {
+	drag.value[index] = true
+	console.log(drag.value)
+}
+
+function onEnd(index: number) {
+	drag.value[index] = false
+	console.log(drag.value)
+}
+
 function update() {
 	playersA.value = []
 	playersB.value = []
@@ -365,39 +350,33 @@ function update() {
 						name: team.playerB.firstName + " " + team.playerB.lastName,
 					})
 				else if (team.playerA !== undefined && team.playerB !== undefined) {
-					teamsA.value.push(
-						 [
-							{
-								firstName: team.playerA.firstName,
-								lastName: team.playerA.lastName,
-								name: team.playerA.firstName + " " + team.playerA.lastName,
-							},
-						])
-          teamsB.value.push(
-						 [
-							{
-								firstName: team.playerB.firstName,
-								lastName: team.playerB.lastName,
-								name: team.playerB.firstName + " " + team.playerB.lastName,
-							},
-						])
+					teamsA.value.push([
+						{
+							firstName: team.playerA.firstName,
+							lastName: team.playerA.lastName,
+							name: team.playerA.firstName + " " + team.playerA.lastName,
+						},
+					])
+					teamsB.value.push([
+						{
+							firstName: team.playerB.firstName,
+							lastName: team.playerB.lastName,
+							name: team.playerB.firstName + " " + team.playerB.lastName,
+						},
+					])
 				}
 				while (
 					teamsA.value.length <
 					Math.min(playersA.value.length, playersB.value.length)
 				) {
-					teamsA.value.push(
-						[]
-					)
+					teamsA.value.push([])
 				}
-        while (
-            teamsB.value.length <
-            Math.min(playersA.value.length, playersB.value.length)
-            ) {
-          teamsB.value.push(
-              []
-          )
-        }
+				while (
+					teamsB.value.length <
+					Math.min(playersA.value.length, playersB.value.length)
+				) {
+					teamsB.value.push([])
+				}
 			})
 		})
 		.catch((error) => {
