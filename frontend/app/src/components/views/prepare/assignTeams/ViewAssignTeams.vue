@@ -76,17 +76,15 @@
 							<div class="flex justify-content-center">
 								<Draggable
 									:list="teams[index].playerA"
-									:put="
-										teams[index].playerA.length === 0 ? ['playersA'] : false
-									"
+									:put="['playersA']"
 									itemKey="name"
-									:swap="teams[index].playerA.length !== 0"
 									:tag="TransitionGroup"
 									:componentData="{
 										tag: 'div',
 										name: animation ? 'playerList' : 'default',
 										type: 'transition',
 									}"
+									single
 									group="playersA"
 									class="mt-1 mb-1 flex align-items-center justify-content-center border-round"
 									:class="{
@@ -107,11 +105,7 @@
 								<Draggable
 									:list="teams[index].playerB"
 									:put="
-										teams[index].playerB.length === 0
-											? competition?.playerB.different
-												? ['playersB']
-												: ['playersA']
-											: false
+										competition?.playerB.different ? ['playersB'] : ['playersA']
 									"
 									itemKey="name"
 									:tag="TransitionGroup"
@@ -120,6 +114,7 @@
 										name: animation ? 'playerList' : 'default',
 										type: 'transition',
 									}"
+									single
 									:group="
 										competition?.playerB.different ? 'playersB' : 'playersA'
 									"
@@ -414,6 +409,9 @@ function nextPage() {
 
 .ghost {
 	opacity: 50%;
+}
+.swapGhost {
+	display: none !important;
 }
 
 .min-h-3rem {
