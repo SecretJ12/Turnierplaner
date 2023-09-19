@@ -76,6 +76,8 @@ function updateRoute(compId?: string) {
 	if (compId === "" || !competitions.value.find((c) => c.name === compId))
 		compId = competitions.value[0].name
 
+	activeTab.value = competitions.value.findIndex((c) => c.name === compId)
+
 	// TODO insert correct step for compId
 	let step = route.name
 	if (!route.meta.step || !step) step = "editPlayers"
