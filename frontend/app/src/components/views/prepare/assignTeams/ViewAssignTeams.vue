@@ -73,7 +73,7 @@
 				<DataTable :value="teams" show-gridlines striped-rows>
 					<Column class="w-6" header="Player 1" field="name">
 						<template #body="{ index }">
-							<div class="justify-content-center">
+							<div :class="{'flex justify-content-center': teams[index].playerA.length === 0 }">
 								<DraggablePanel
 									:list="teams[index].playerA"
 									:put="['playersA']"
@@ -104,7 +104,7 @@
 					</Column>
 					<Column class="w-6" header="Player 2" field="name">
 						<template #body="{ index }">
-							<div class="justify-content-center">
+							<div :class="{'flex justify-content-center': teams[index].playerB.length === 0 }">
 								<DraggablePanel
 									:list="teams[index].playerB"
 									:put="
