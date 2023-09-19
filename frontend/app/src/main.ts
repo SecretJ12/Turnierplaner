@@ -1,4 +1,4 @@
-import { createApp, TransitionGroup } from "vue";
+import { createApp } from "vue"
 import App from "./App.vue"
 import { createI18n, I18nOptions } from "vue-i18n"
 import * as VueRouter from "vue-router"
@@ -64,7 +64,7 @@ import Tooltip from "primevue/tooltip"
 import FocusTrap from "primevue/focustrap"
 import Steps from "primevue/steps"
 import TabView from "primevue/tabview"
-import TabPanel from "primevue/tabpanel";
+import TabPanel from "primevue/tabpanel"
 import TabMenu from "primevue/tabmenu"
 import Card from "primevue/card"
 import Button from "primevue/button"
@@ -87,7 +87,7 @@ import Tag from "primevue/tag"
 import AutoComplete from "primevue/autocomplete"
 import Checkbox from "primevue/checkbox"
 import Fieldset from "primevue/fieldset"
-import SplitButton from "primevue/splitbutton";
+import SplitButton from "primevue/splitbutton"
 
 /* Primevue styling */
 import "primeflex/primeflex.css"

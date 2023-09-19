@@ -1,24 +1,28 @@
 <template>
-	<component ref="container" :is="tag" v-bind="componentData" :key="index">
+	<component :is="tag" ref="container" v-bind="componentData" :key="index">
 		<slot
-			v-for="(item, index) in list"
+			v-for="(item, i) in list"
 			:key="item['itemKey']"
 			:item="item"
-			:index="index"
+			:index="i"
 		/>
 	</component>
 </template>
 
 <script setup lang="ts">
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import Sortable, { SortableEvent } from "sortablejs"
+import Sortable from "sortablejs"
 import { ref, watch } from "vue"
 
 const props = withDefaults(
 	defineProps<{
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		list: any[]
 		itemKey: string
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		tag: any
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		componentData?: any
 		group: string
 		pull?: boolean | "clone"
@@ -30,6 +34,7 @@ const props = withDefaults(
 		single?: boolean
 	}>(),
 	{
+		componentData: {},
 		animation: 150,
 		disabled: false,
 		sort: true,
@@ -54,6 +59,7 @@ function create() {
 	let el = container.value
 	if (!el) return
 	if (!(el instanceof HTMLElement))
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
 		el = <HTMLElement>el.$el
 
@@ -75,6 +81,7 @@ function create() {
 			if (event.oldIndex === undefined) return
 
 			if (targetSingle) {
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
 				props.list.splice(event.oldIndex, 1, selectedElement)
 			} else {
@@ -87,9 +94,11 @@ function create() {
 
 			targetSingle = props.single && props.list.length === 1
 			if (props.single && props.list.length === 1) {
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
 				selectedElement = props.list.splice(0, 1, selectedElement)[0]
 			} else {
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
 				props.list.splice(event.newIndex, 0, selectedElement)
 			}
@@ -146,6 +155,7 @@ function reload() {
 }
 </script>
 <script lang="ts">
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 let selectedElement = null
 let targetSingle = false
