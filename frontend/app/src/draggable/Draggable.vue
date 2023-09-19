@@ -19,7 +19,7 @@ const props = withDefaults(
 		list: any[]
 		itemKey: string
 		tag: any
-		componentData?: any,
+		componentData?: any
 		group: string
 		pull?: boolean | "clone"
 		put?: boolean | string[]
@@ -27,6 +27,7 @@ const props = withDefaults(
 		disabled?: boolean
 		sort?: boolean
 		ghost?: string
+		swap?: boolean
 	}>(),
 	{
 		animation: 150,
@@ -35,6 +36,7 @@ const props = withDefaults(
 		pull: true,
 		put: true,
 		ghost: "ghost",
+		swap: false,
 	},
 )
 
@@ -51,8 +53,10 @@ function create() {
 		// @ts-ignore
 		el = <HTMLElement>el.$el
 
-	if (sortable.value)
+	if (sortable.value) {
 		sortable.value?.destroy()
+		sortable.value = null
+	}
 
 	sortable.value = Sortable.create(el, {
 		group: { name: props.group, pull: props.pull, put: props.put },
@@ -60,6 +64,7 @@ function create() {
 		disabled: props.disabled,
 		sort: props.sort,
 		ghostClass: props.ghost,
+		swap: props.swap,
 		onChoose: (event: Sortable.SortableEvent) => {
 			if (event.oldIndex === undefined) return
 			selectedElement = props.list[event.oldIndex]
@@ -78,34 +83,50 @@ function create() {
 		onEnd: ({ from, to, oldIndex, newIndex }) => {
 			if (from !== to) return
 			if (oldIndex === undefined || newIndex === undefined) return
-			props.list.splice(newIndex, 0, props.list.splice(oldIndex, 1)[0])
+
+			if (!props.swap) {
+				props.list.splice(newIndex, 0, props.list.splice(oldIndex, 1)[0])
+			} else {
+				const a = props.list[oldIndex]
+				const b = props.list[newIndex]
+				props.list.splice(oldIndex, 1, b)
+				props.list.splice(newIndex, 1, a)
+			}
 			reload()
 		},
 		revertOnSpill: true,
-		removeOnSpill: false
+		removeOnSpill: false,
 	})
 }
 
-watch(() => [props.group, props.put, props.pull], () => {
-	if (!sortable.value)
-		return
-	sortable.value.option('group', { name: props.group, pull: props.pull, put: props.put })
-})
-watch(() => [props.animation, props.animation, props.sort, props.ghost], () => {
-	if (!sortable.value)
-		return
-	sortable.value.option('animation', props.animation)
-	sortable.value.option('disabled', props.disabled)
-	sortable.value.option('sort', props.sort)
-	sortable.value.option('ghostClass', props.ghost)
-})
+watch(
+	() => [props.group, props.put, props.pull],
+	() => {
+		if (!sortable.value) return
+		sortable.value.option("group", {
+			name: props.group,
+			pull: props.pull,
+			put: props.put,
+		})
+	},
+)
+watch(
+	() => [props.animation, props.animation, props.sort, props.ghost, props.swap],
+	() => {
+		if (!sortable.value) return
+		sortable.value?.option("animation", props.animation)
+		sortable.value?.option("disabled", props.disabled)
+		sortable.value?.option("sort", props.sort)
+		sortable.value?.option("ghostClass", props.ghost)
+		sortable.value?.option("swap", props.swap)
+	},
+)
 
 // reload list to ensure a consistent state
 const index = ref(0)
 
 function reload() {
 	index.value++
-	create()
 }
 </script>
 <script lang="ts">
@@ -113,5 +134,4 @@ function reload() {
 let selectedElement = null
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
