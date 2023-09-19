@@ -27,7 +27,7 @@ const props = withDefaults(
 		disabled?: boolean
 		sort?: boolean
 		ghost?: string
-		swap?: boolean
+		single?: boolean
 	}>(),
 	{
 		animation: 150,
@@ -36,9 +36,13 @@ const props = withDefaults(
 		pull: true,
 		put: true,
 		ghost: "ghost",
-		swap: false,
+		single: false,
 	},
 )
+
+if (props.single && props.list.length > 1) {
+	throw new Error("List of single cannot contain more than one element")
+}
 
 const container = ref<HTMLElement | null>(null)
 const sortable = ref<Sortable | null>()
@@ -63,40 +67,45 @@ function create() {
 		animation: props.animation,
 		disabled: props.disabled,
 		sort: props.sort,
-		ghostClass: props.ghost,
-		swap: props.swap,
 		onChoose: (event: Sortable.SortableEvent) => {
 			if (event.oldIndex === undefined) return
 			selectedElement = props.list[event.oldIndex]
 		},
 		onRemove: (event: Sortable.SortableEvent) => {
 			if (event.oldIndex === undefined) return
-			props.list.splice(event.oldIndex, 1)
+
+			if (targetSingle) {
+				// @ts-ignore
+				props.list.splice(event.oldIndex, 1, selectedElement)
+			} else {
+				props.list.splice(event.oldIndex, 1)
+			}
 			reload()
 		},
 		onAdd: (event: Sortable.SortableEvent) => {
 			if (event.newIndex === undefined) return
-			// @ts-ignore
-			props.list.splice(event.newIndex, 0, selectedElement)
+
+			targetSingle = props.single && props.list.length === 1
+			if (props.single && props.list.length === 1) {
+				// @ts-ignore
+				selectedElement = props.list.splice(0, 1, selectedElement)[0]
+			} else {
+				// @ts-ignore
+				props.list.splice(event.newIndex, 0, selectedElement)
+			}
 			reload()
 		},
 		onEnd: ({ from, to, oldIndex, newIndex }) => {
 			if (from !== to) return
 			if (oldIndex === undefined || newIndex === undefined) return
 
-			if (!props.swap) {
-				props.list.splice(newIndex, 0, props.list.splice(oldIndex, 1)[0])
-			} else {
-				const a = props.list[oldIndex]
-				const b = props.list[newIndex]
-				props.list.splice(oldIndex, 1, b)
-				props.list.splice(newIndex, 1, a)
-			}
+			props.list.splice(newIndex, 0, props.list.splice(oldIndex, 1)[0])
 			reload()
 		},
 		revertOnSpill: true,
 		removeOnSpill: false,
 	})
+	setGhost()
 }
 
 watch(
@@ -111,16 +120,23 @@ watch(
 	},
 )
 watch(
-	() => [props.animation, props.animation, props.sort, props.ghost, props.swap],
+	() => [props.animation, props.animation, props.sort],
 	() => {
 		if (!sortable.value) return
 		sortable.value?.option("animation", props.animation)
 		sortable.value?.option("disabled", props.disabled)
 		sortable.value?.option("sort", props.sort)
-		sortable.value?.option("ghostClass", props.ghost)
-		sortable.value?.option("swap", props.swap)
 	},
 )
+
+watch(() => [props.ghost, props.single, props.list], setGhost)
+function setGhost() {
+	if (!sortable.value) return
+	sortable.value?.option(
+		"ghostClass",
+		props.single && props.list.length === 1 ? "swapGhost" : props.ghost,
+	)
+}
 
 // reload list to ensure a consistent state
 const index = ref(0)
@@ -132,6 +148,7 @@ function reload() {
 <script lang="ts">
 // @ts-ignore
 let selectedElement = null
+let targetSingle = false
 </script>
 
 <style scoped></style>
