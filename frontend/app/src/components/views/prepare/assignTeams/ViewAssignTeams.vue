@@ -17,6 +17,7 @@
 					:model="randomizeItems"
 					class="w-fit"
 					@click="randomize"
+					:disabled="disable"
 				>
 					<template #icon>
 						<span class="material-icons mb-1" style="font-size: 1.2rem"
@@ -73,7 +74,12 @@
 				<DataTable :value="teams" show-gridlines striped-rows>
 					<Column class="w-6" header="Player 1" field="name">
 						<template #body="{ index }">
-							<div :class="{'flex justify-content-center': teams[index].playerA.length === 0 }">
+							<div
+								:class="{
+									'flex justify-content-center':
+										teams[index].playerA.length === 0,
+								}"
+							>
 								<DraggablePanel
 									:list="teams[index].playerA"
 									:put="['playersA']"
@@ -104,7 +110,12 @@
 					</Column>
 					<Column class="w-6" header="Player 2" field="name">
 						<template #body="{ index }">
-							<div :class="{'flex justify-content-center': teams[index].playerB.length === 0 }">
+							<div
+								:class="{
+									'flex justify-content-center':
+										teams[index].playerB.length === 0,
+								}"
+							>
 								<DraggablePanel
 									:list="teams[index].playerB"
 									:put="
@@ -209,8 +220,10 @@ function sleep(milliseconds: number) {
 const delay = 100
 const delayBetween = 50
 
+const disable = ref<boolean>(false)
 async function randomize() {
 	if (!competition.value) return
+	disable.value = true
 
 	animation.value = true
 	for (const i in teams.value) {
@@ -243,6 +256,7 @@ async function randomize() {
 		}
 	}
 	animation.value = false
+	disable.value = false
 }
 
 const randomizeItems = [
@@ -260,6 +274,8 @@ const randomizeItems = [
 
 async function reset() {
 	if (!competition.value) return
+
+	disable.value = true
 
 	animation.value = true
 	for (const i in teams.value) {
@@ -289,6 +305,7 @@ async function reset() {
 		}
 	}
 	animation.value = false
+	disable.value = false
 }
 
 async function reroll() {
