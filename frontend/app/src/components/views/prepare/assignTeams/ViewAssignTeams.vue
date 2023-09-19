@@ -185,7 +185,7 @@
 <script setup lang="ts">
 import PlayerCard from "@/components/views/prepare/assignTeams/PlayerCard.vue"
 import DraggablePanel from "@/draggable/DraggablePanel.vue"
-import { ref, TransitionGroup } from "vue"
+import { computed, ref, TransitionGroup } from "vue";
 import { getCompetitionDetails } from "@/backend/competition"
 import { useRoute, useRouter } from "vue-router"
 import { useToast } from "primevue/usetoast"
@@ -217,8 +217,10 @@ function sleep(milliseconds: number) {
 	return new Promise((resolve) => setTimeout(resolve, milliseconds))
 }
 
-const delay = 100
-const delayBetween = 50
+const duration = 2000
+const playerCount = ref(0)
+const delay = computed(() => Math.min(duration*2/3/playerCount.value, 100))
+const delayBetween = computed(() => delay.value / 2)
 
 async function randomize() {
 	if (!competition.value) return
@@ -229,27 +231,27 @@ async function randomize() {
 			const r = Math.floor(Math.random() * playersA.value.length)
 			const element = playersA.value[r]
 			playersA.value = playersA.value.filter((v, i) => i !== r)
-			await sleep(delayBetween)
+			await sleep(delayBetween.value)
 			teams.value[i].playerA.push(element)
-			await sleep(delay)
+			await sleep(delay.value)
 		}
 		if (competition.value.playerB.different) {
 			if (teams.value[i].playerB.length === 0) {
 				const r = Math.floor(Math.random() * playersB.value.length)
 				const element = playersB.value[r]
 				playersB.value = playersB.value.filter((v, i) => i !== r)
-				await sleep(delayBetween)
+				await sleep(delayBetween.value)
 				teams.value[i].playerB.push(element)
-				await sleep(delay)
+				await sleep(delay.value)
 			}
 		} else {
 			if (teams.value[i].playerB.length === 0) {
 				const r = Math.floor(Math.random() * playersA.value.length)
 				const element = playersA.value[r]
 				playersA.value = playersA.value.filter((v, i) => i !== r)
-				await sleep(delayBetween)
+				await sleep(delayBetween.value)
 				teams.value[i].playerB.push(element)
-				await sleep(delay)
+				await sleep(delay.value)
 			}
 		}
 	}
@@ -277,25 +279,25 @@ async function reset() {
 		if (teams.value[i].playerA.length === 1) {
 			const element = teams.value[i].playerA[0]
 			teams.value[i].playerA = []
-			await sleep(delayBetween)
+			await sleep(delayBetween.value)
 			playersA.value.push(element)
-			await sleep(delay)
+			await sleep(delay.value)
 		}
 		if (competition.value.playerB.different) {
 			if (teams.value[i].playerB.length === 1) {
 				const element = teams.value[i].playerB[0]
 				teams.value[i].playerB = []
-				await sleep(delayBetween)
+				await sleep(delayBetween.value)
 				playersB.value.push(element)
-				await sleep(delay)
+				await sleep(delay.value)
 			}
 		} else {
 			if (teams.value[i].playerB.length === 1) {
 				const element = teams.value[i].playerB[0]
 				teams.value[i].playerB = []
-				await sleep(delayBetween)
+				await sleep(delayBetween.value)
 				playersA.value.push(element)
-				await sleep(delay)
+				await sleep(delay.value)
 			}
 		}
 	}
@@ -323,6 +325,7 @@ function update() {
 			`/tournament/${route.params.tourId}/competition/${route.params.compId}/signedUpTeams`,
 		)
 		.then((response) => {
+			playerCount.value = 0
 			response.data.forEach((team) => {
 				if (team.playerA !== undefined && team.playerB === undefined)
 					playersA.value.push({
@@ -353,17 +356,19 @@ function update() {
 							},
 						],
 					})
+					playerCount.value++
 				}
-				while (
-					teams.value.length <
-					Math.min(playersA.value.length, playersB.value.length)
-				) {
-					teams.value.push({
-						playerA: [],
-						playerB: [],
-					})
-				}
+				playerCount.value++
 			})
+			while (
+				teams.value.length <
+				Math.min(playersA.value.length, playersB.value.length)
+				) {
+				teams.value.push({
+					playerA: [],
+					playerB: [],
+				})
+			}
 		})
 		.catch((error) => {
 			teams.value = []
