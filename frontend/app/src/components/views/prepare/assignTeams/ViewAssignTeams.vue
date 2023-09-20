@@ -185,7 +185,7 @@
 <script setup lang="ts">
 import PlayerCard from "@/components/views/prepare/assignTeams/PlayerCard.vue"
 import DraggablePanel from "@/draggable/DraggablePanel.vue"
-import { computed, ref, TransitionGroup } from "vue";
+import { computed, ref, TransitionGroup } from "vue"
 import { getCompetitionDetails } from "@/backend/competition"
 import { useRoute, useRouter } from "vue-router"
 import { useToast } from "primevue/usetoast"
@@ -219,7 +219,9 @@ function sleep(milliseconds: number) {
 
 const duration = 2000
 const playerCount = ref(0)
-const delay = computed(() => Math.min(duration*2/3/playerCount.value, 100))
+const delay = computed(() =>
+	Math.min((duration * 2) / 3 / playerCount.value, 100),
+)
 const delayBetween = computed(() => delay.value / 2)
 
 async function randomize() {
@@ -363,7 +365,7 @@ function update() {
 			while (
 				teams.value.length <
 				Math.min(playersA.value.length, playersB.value.length)
-				) {
+			) {
 				teams.value.push({
 					playerA: [],
 					playerB: [],
@@ -397,14 +399,14 @@ defineExpose({ save })
 
 function previousPage() {
 	router.replace({
-		name: "chooseMode",
+		name: "selectType",
 		params: { tourId: route.params.tourId, compId: route.params.compId },
 	})
 }
 
 function nextPage() {
 	router.replace({
-		name: "selectType",
+		name: "assignMatches",
 		params: { tourId: route.params.tourId, compId: route.params.compId },
 	})
 }
