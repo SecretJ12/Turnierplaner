@@ -2,14 +2,43 @@
 	<div class="grid">
 		<div class="col-4">
 			<Button class="mb-2"> Shuffle</Button>
-			<DataTable
-				:value="[{ name: 1 }, { name: 2 }, { name: 3 }, { name: 4 }]"
-				show-gridlines
-				striped-rows
-				removable-sort
-			>
-				<Column header="Player 1" field="name" />
-				<Column header="Player 2" field="name" />
+			<DataTable :value="teams" show-gridlines striped-rows removable-sort>
+				<Column header="Teams" field="id">
+					<template #body="{ index }">
+						<div>
+							<DraggablePanel
+								:list="[teams[index]]"
+								item-key="id"
+								:tag="TransitionGroup"
+								:componentData="{
+									tag: 'div',
+									name: 'teamList',
+									type: 'transition',
+								}"
+								group="teams"
+								single
+								class="flex align-tems-center justify-content-center border-round"
+							>
+								<template #default="{ item }">
+									<div>
+										<PlayerCard
+											:player="{
+												name:
+													item.playerA.firstName +
+													item.playerA.lastName +
+													(item.playerB?.firstName
+														? ' // ' +
+														  item.playerB?.firstName +
+														  item.playerB?.lastName
+														: ''),
+											}"
+										/>
+									</div>
+								</template>
+							</DraggablePanel>
+						</div>
+					</template>
+				</Column>
 			</DataTable>
 		</div>
 
@@ -68,6 +97,11 @@ import { useToast } from "primevue/usetoast"
 import ViewKnockoutTree from "@/components/views/competition/knockoutSystem/ViewKnockoutTree.vue"
 import { TourType } from "@/interfaces/competition"
 import { KnockoutMatch } from "@/interfaces/knockoutSystem"
+import { ref, TransitionGroup } from "vue"
+import axios from "axios"
+import DraggablePanel from "@/draggable/DraggablePanel.vue"
+import { Team } from "@/interfaces/match"
+import PlayerCard from "@/components/views/prepare/assignTeams/PlayerCard.vue"
 
 const route = useRoute()
 const router = useRouter()
@@ -77,8 +111,11 @@ const { t } = useI18n({ inheritLocale: true })
 const competition = getCompetitionDetails(route, t, toast, {
 	suc: () => {
 		if (competition.value === null) return
+		update()
 	},
 })
+
+const teams = ref<Team[]>([])
 
 function generateTree(size: number): KnockoutMatch {
 	return {
@@ -105,6 +142,20 @@ function generateTree(size: number): KnockoutMatch {
 const knockoutSystem = {
 	finale: generateTree(1),
 	thirdPlace: generateTree(0),
+}
+
+function update() {
+	axios
+		.get<Team[]>(
+			`tournament/${route.params.tourId}/competition/${route.params.compId}/signedUpTeams`,
+		)
+		.then((response) => {
+			teams.value = response.data
+			console.log(teams.value)
+		})
+		.catch((error) => {
+			console.log(error)
+		})
 }
 
 function prevPage() {

@@ -46,6 +46,8 @@ const props = withDefaults(
 )
 
 if (props.single && props.list.length > 1) {
+	console.log("single")
+	console.log(props.list)
 	throw new Error("List of single cannot contain more than one element")
 }
 
