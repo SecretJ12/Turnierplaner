@@ -16,16 +16,15 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-
+  format:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
-      - name: Set up JDK 20
+      - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
-          java-version: '20'
+          java-version: '21'
           distribution: 'temurin'
           cache: maven
       - name: Validate backend format
@@ -36,5 +35,17 @@ jobs:
         run: cd frontend/app && npm run lint:validate
       - name: Validate frontend prettier
         run: cd frontend/app && npm run prettier:validate
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
       - name: Build with Maven
         run: mvn package
