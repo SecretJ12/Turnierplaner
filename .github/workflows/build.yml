@@ -1,4 +1,4 @@
-name: Build application
+name: Validate format & build
 
 on:
   push:
@@ -9,6 +9,7 @@ on:
 
 jobs:
   formatBackend:
+    name: Validate format of backend
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -21,6 +22,7 @@ jobs:
       - name: Validate backend format
         run: mvn formatter:validate
   buildBackend:
+    name: Build backend
     runs-on: ubuntu-latest
     needs: formatBackend
     steps:
@@ -35,6 +37,7 @@ jobs:
         run: cd backend && mvn package
 
   formatFrontend:
+    name: Validate format of frontend
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -45,6 +48,7 @@ jobs:
       - name: Validate frontend prettier
         run: cd frontend/app && npm run prettier:validate
   buildFrontend:
+    name: Build frontend
     runs-on: ubuntu-latest
     needs: formatFrontend
     steps:
@@ -54,7 +58,8 @@ jobs:
       - name: Validate frontend linter
         run: cd frontend/app && npm run build
 
-  build:
+  buildAll:
+    name: Test and build whole application
     runs-on: ubuntu-latest
     needs: [buildBackend, buildFrontend]
     steps:
