@@ -92,7 +92,7 @@
 									}"
 									single
 									group="playersA"
-									class="flex align-items-center justify-content-center border-round"
+									class="flex justify-content-center border-round"
 									:class="{
 										'h-3rem border-dashed w-10rem':
 											teams[index].playerA.length === 0,
@@ -132,7 +132,7 @@
 									:group="
 										competition?.playerB.different ? 'playersB' : 'playersA'
 									"
-									class="flex align-items-center justify-content-center border-round"
+									class="flex justify-content-center border-round"
 									:class="{
 										'h-3rem border-dashed w-10rem':
 											teams[index].playerB.length === 0,
