@@ -80,7 +80,7 @@ function updateRoute(compId?: string) {
 
 	// TODO insert correct step for compId
 	let step = route.name
-	if (!route.meta.step || !step) step = "editPlayers"
+	if (route.meta.step === undefined || !step) step = "editPlayers"
 
 	router.replace({
 		name: step,
@@ -97,6 +97,11 @@ function tabChange(event: TabMenuChangeEvent) {
 
 // TODO internalization
 const stepList = ref([
+	{
+		label: "Edit Teams",
+		name: "editTeams",
+		index: 0,
+	},
 	{
 		label: "Edit Players",
 		name: "editPlayers",

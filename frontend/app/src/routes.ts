@@ -7,6 +7,7 @@ import ViewChooseMode from "@/components/views/prepare/ViewSelectType.vue"
 import ViewAssignTeams from "@/components/views/prepare/assignTeams/ViewAssignTeams.vue"
 import ViewAssignMatches from "@/components/views/prepare/assignMatches/ViewAssignMatches.vue"
 import ViewScheduleMatches from "@/components/views/prepare/ViewScheduleMatches.vue"
+import ViewEditTeams from "@/components/views/prepare/editTeams/ViewEditTeams.vue";
 
 export default [
 	{
@@ -53,6 +54,12 @@ export default [
 		name: "Prepare matches",
 		component: viewPrepareMatches,
 		children: [
+			{
+				path: "editTeams",
+				name: "editTeams",
+				component: ViewEditTeams,
+				meta: { step: 0 },
+			},
 			{
 				path: "editPlayers",
 				name: "editPlayers",

@@ -5,11 +5,20 @@
 		<Button
 			label="Back"
 			icon="pi pi-angle-left"
-			style="visibility: hidden"
-			disabled
+			icon-pos="left"
+			@click="previousPage"
 		/>
 		<!-- TODO add @click -->
-		<Button :label="t('general.save')"> </Button>
+		<Button
+			v-if="
+				!(
+					competition?.mode === Mode.SINGLE ||
+					competition?.signUp === SignUp.TOGETHER
+				)
+			"
+			:label="t('general.save')"
+		>
+		</Button>
 		<Button
 			v-if="route.params.step !== 'scheduleMatches'"
 			label="Next"
@@ -27,6 +36,8 @@ import { useRoute, useRouter } from "vue-router"
 import { useI18n } from "vue-i18n"
 import { getCompetitionDetails } from "@/backend/competition"
 import { onUpdated } from "vue"
+import { Mode, SignUp } from "@/interfaces/competition";
+import Button from "primevue/button";
 
 const { t } = useI18n({ inheritLocale: true })
 const router = useRouter()
@@ -53,6 +64,12 @@ function save() {
 
 defineExpose({ save })
 
+function previousPage() {
+	router.replace({
+		name: "editTeams",
+		params: { tourId: route.params.tourId, compId: route.params.compId },
+	})
+}
 function nextPage() {
 	router.replace({
 		name: "selectType",
