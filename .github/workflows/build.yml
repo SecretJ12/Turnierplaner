@@ -63,7 +63,7 @@ jobs:
         run: cd frontend && mvn package
 
   buildAll:
-    name: Test and build whole application
+    name: Build whole application
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
