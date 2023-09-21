@@ -2,38 +2,37 @@
 	<div class="grid">
 		<div class="col-4">
 			<Button class="mb-2"> Shuffle</Button>
-			<DataTable :value="teams" show-gridlines striped-rows removable-sort>
-				<Column header="Teams" field="id">
+			<DataTable :value="teams" show-gridlines striped-rows>
+				<Column header="Teams" field="id" class="w-6">
 					<template #body="{ index }">
 						<div>
 							<DraggablePanel
 								:list="[teams[index]]"
+								:put="['teams']"
 								item-key="id"
 								:tag="TransitionGroup"
 								:componentData="{
 									tag: 'div',
-									name: 'teamList',
+									name: 'default',
 									type: 'transition',
 								}"
 								group="teams"
 								single
-								class="flex align-tems-center justify-content-center border-round"
+								class="flex align-items-center justify-content-center"
 							>
 								<template #default="{ item }">
-									<div>
-										<PlayerCard
-											:player="{
-												name:
-													item.playerA.firstName +
-													item.playerA.lastName +
-													(item.playerB?.firstName
-														? ' // ' +
-														  item.playerB?.firstName +
-														  item.playerB?.lastName
-														: ''),
-											}"
-										/>
-									</div>
+									<PlayerCard
+										:player="{
+											name:
+												item.playerA.firstName +
+												item.playerA.lastName +
+												(item.playerB?.firstName
+													? ' // ' +
+													  item.playerB?.firstName +
+													  item.playerB?.lastName
+													: ''),
+										}"
+									/>
 								</template>
 							</DraggablePanel>
 						</div>
