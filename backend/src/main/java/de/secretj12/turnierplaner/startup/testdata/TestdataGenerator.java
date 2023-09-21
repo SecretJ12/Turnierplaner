@@ -7,11 +7,11 @@ import de.secretj12.turnierplaner.db.entities.groups.Group;
 import de.secretj12.turnierplaner.db.entities.groups.MatchOfGroup;
 import de.secretj12.turnierplaner.db.entities.knockout.NextMatch;
 import de.secretj12.turnierplaner.db.repositories.*;
+import io.smallrye.mutiny.tuples.Tuple2;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import net.datafaker.Faker;
-import org.graalvm.collections.Pair;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -130,7 +130,7 @@ public class TestdataGenerator {
         ArrayList<Set> setArrayList = new ArrayList<>();
         int numberOfSets = 2;
         int winDif = 0;
-        List<Pair<Integer, Integer>> possibleResults = List.of(Pair.create(6, 0), Pair.create(6, 1), Pair.create(6, 2), Pair.create(6, 3), Pair.create(6, 4), Pair.create(6, 5), Pair.create(7, 5), Pair.create(7, 6));
+        List<Tuple2<Integer, Integer>> possibleResults = List.of(Tuple2.of(6, 0), Tuple2.of(6, 1), Tuple2.of(6, 2), Tuple2.of(6, 3), Tuple2.of(6, 4), Tuple2.of(6, 5), Tuple2.of(7, 5), Tuple2.of(7, 6));
         for (int i = 0; i < numberOfSets; i++) {
             Set.SetKey setKey = new Set.SetKey();
             setKey.setMatch(match);
@@ -141,23 +141,23 @@ public class TestdataGenerator {
             int r = random.nextInt(possibleResults.size());
             switch (random.nextInt(Math.abs(winDif) + 2)) {
                 case 0 -> {
-                    set.setScoreA(possibleResults.get(r).getLeft());
-                    set.setScoreB(possibleResults.get(r).getRight());
+                    set.setScoreA(possibleResults.get(r).getItem1());
+                    set.setScoreB(possibleResults.get(r).getItem2());
                     winDif += winBias;
                 }
                 case 1 -> {
-                    set.setScoreA(possibleResults.get(r).getRight());
-                    set.setScoreB(possibleResults.get(r).getLeft());
+                    set.setScoreA(possibleResults.get(r).getItem1());
+                    set.setScoreB(possibleResults.get(r).getItem2());
                     winDif -= winBias;
                 }
                 default -> {
                     if (winDif > 0) {
-                        set.setScoreA(possibleResults.get(r).getLeft());
-                        set.setScoreB(possibleResults.get(r).getRight());
+                        set.setScoreA(possibleResults.get(r).getItem1());
+                        set.setScoreB(possibleResults.get(r).getItem2());
                         winDif += winBias;
                     } else {
-                        set.setScoreA(possibleResults.get(r).getRight());
-                        set.setScoreB(possibleResults.get(r).getLeft());
+                        set.setScoreA(possibleResults.get(r).getItem2());
+                        set.setScoreB(possibleResults.get(r).getItem1());
                         winDif -= winBias;
                     }
                 }

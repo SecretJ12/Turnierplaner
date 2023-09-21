@@ -107,7 +107,6 @@
             <groupId>net.datafaker</groupId>
             <artifactId>datafaker</artifactId>
             <version>1.9.0</version>
-            <scope>dev</scope>
         </dependency>
     </dependencies>
     <build>
