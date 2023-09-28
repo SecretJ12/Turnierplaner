@@ -32,6 +32,7 @@ const props = withDefaults(
 		sort?: boolean
 		ghost?: string
 		single?: boolean
+		wrap?: boolean
 	}>(),
 	{
 		componentData: {},
@@ -42,6 +43,7 @@ const props = withDefaults(
 		put: true,
 		ghost: "ghost",
 		single: false,
+		wrap: false,
 	},
 )
 
@@ -95,7 +97,13 @@ function create() {
 			if (event.newIndex === undefined) return
 
 			targetSingle = props.single && props.list.length === 1
-			if (props.single && props.list.length === 1) {
+			if (props.wrap) {
+				props.list.splice(event.newIndex, 0, {
+					id: (Math.random() * 900000000).toString(),
+					playerA: [selectedElement],
+					playerB: [],
+				})
+			} else if (props.single && props.list.length === 1) {
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
 				selectedElement = props.list.splice(0, 1, selectedElement)[0]
