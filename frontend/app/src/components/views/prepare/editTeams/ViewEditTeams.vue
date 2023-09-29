@@ -216,16 +216,13 @@ function save() {
 
 function update() {
 	teams.value = []
-	let counter = 0
 	axios
 		.get<Team[]>(
 			`/tournament/${route.params.tourId}/competition/${route.params.compId}/signedUpTeams`,
 		)
 		.then((response) => {
 			response.data.forEach((team) => {
-				counter += 1
-				if (counter >= 15) {
-				} else if (team.playerA !== undefined && team.playerB === undefined) {
+				if (team.playerA !== undefined && team.playerB === undefined) {
 					playersA.value.push({
 						id: team.playerA.id,
 						firstName: team.playerA.firstName,
