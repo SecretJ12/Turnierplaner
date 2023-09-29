@@ -10,7 +10,7 @@
 	<Fieldset legend="Team A">
 		<DraggablePanel
 			:list="playersA"
-			:put="['playersA', 'teams', 'playersB']"
+			:put="['playersA', 'playersB']"
 			item-key="id"
 			:tag="TransitionGroup"
 			:componentData="{
@@ -33,7 +33,7 @@
 	<Fieldset legend="Team B">
 		<DraggablePanel
 			:list="playersB"
-			:put="['playersB', 'teams', 'playersA']"
+			:put="['playersB', 'playersA']"
 			item-key="id"
 			:tag="TransitionGroup"
 			:componentData="{
