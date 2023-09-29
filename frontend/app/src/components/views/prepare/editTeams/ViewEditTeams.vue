@@ -1,130 +1,150 @@
 <template>
-	<div class="flex flex-row">
-		<Fieldset legend="Team A">
-			<DraggablePanel
-				id="playerA"
-				:list="playersA"
-				:put="['playersA', 'playersB']"
-				item-key="id"
-				:tag="TransitionGroup"
-				:componentData="{
-					tag: 'div',
-					name: 'default',
-					type: 'transition',
-				}"
-				group="playersA"
-				class="flex flex-row flex-wrap gap-2 border-3 min-h-3rem border-round border-dashed"
+	<div class="flex flex-column">
+		<div class="flex justify-content-around">
+			<Button label="Register Player 1"> </Button>
+			<SplitButton
+				label="Randomize"
+				severity="help"
+				:model="randomizeItems"
+				class="w-fit"
+				@click="randomize"
+				:disabled="isSorting"
 			>
-				<template #default="{ item }">
-					<div
-						class="border-round select-none bg-primary-400 cursor-pointer inline p-3 text-50"
+				<template #icon>
+					<span class="material-icons mb-1" style="font-size: 1.2rem"
+						>casino</span
 					>
-						{{ item.value }}
-					</div>
 				</template>
-			</DraggablePanel>
-		</Fieldset>
-		<Fieldset legend="team">
-			<DraggablePanel
-				:list="teams"
-				:put="['teams', 'playersA', 'playersB']"
-				item-key="id"
-				:tag="TransitionGroup"
-				:componentData="{
-					tag: 'div',
-					name: 'default',
-					type: 'transition',
-				}"
-				group="teams"
-				class="flex flex-row flex-wrap inline-block gap-2 border-3 min-h-3rem border-round border-dashed"
-				wrap
-			>
-				<template #default="{ item: outerItem }">
-					<div style="grid-auto-rows: 1fr">
-						<DraggablePanel
-							:list="outerItem.playerA"
-							:put="['playersA']"
-							item-key="id"
-							:tag="TransitionGroup"
-							single
-							:component-data="{
-								tag: 'div',
-								name: 'default',
-								type: 'transition',
-							}"
-							group="playersA"
-							class="gap-2 align-items-center bg-blue-50 justify-content-center border border-dashed"
-							style="min-width: 150px; min-height: 50px"
-							@onRemove="cleanUpTeams"
-							hook
+			</SplitButton>
+			<Button label="Register Player 2"> </Button>
+		</div>
+		<div class="flex flex-row">
+			<Fieldset legend="Team A">
+				<DraggablePanel
+					id="playerA"
+					:list="playersA"
+					:put="['playersA', 'playersB']"
+					item-key="id"
+					:tag="TransitionGroup"
+					:componentData="{
+						tag: 'div',
+						name: 'default',
+						type: 'transition',
+					}"
+					group="playersA"
+					class="flex flex-row flex-wrap gap-2 border-3 min-h-3rem border-round border-dashed"
+				>
+					<template #default="{ item }">
+						<div
+							class="border-round select-none bg-primary-400 cursor-pointer inline p-3 text-50"
 						>
-							<template #default="{ item: innerItem }">
-								<div
-									class="border-round select-none bg-primary-400 cursor-pointer p-3 text-50"
-								>
-									{{ innerItem.value }}
-								</div>
-							</template>
-						</DraggablePanel>
-						<DraggablePanel
-							:list="outerItem.playerB"
-							:put="['playersB']"
-							item-key="id"
-							:tag="TransitionGroup"
-							single
-							:component-data="{
-								tag: 'div',
-								name: 'default',
-								type: 'transition',
-							}"
-							group="playersB"
-							class="bg-red-50 border-round border-dashed"
-							style="min-width: 150px; min-height: 50px"
-							@onRemove="cleanUpTeams"
-							hook
+							{{ item.value }}
+						</div>
+					</template>
+				</DraggablePanel>
+			</Fieldset>
+			<Fieldset legend="team">
+				<DraggablePanel
+					:list="teams"
+					:put="['teams', 'playersA', 'playersB']"
+					item-key="id"
+					:tag="TransitionGroup"
+					:componentData="{
+						tag: 'div',
+						name: 'default',
+						type: 'transition',
+					}"
+					group="teams"
+					class="flex flex-row flex-wrap inline-block gap-2 border-3 min-h-3rem border-round border-dashed"
+					wrap
+				>
+					<template #default="{ item: outerItem }">
+						<div style="grid-auto-rows: 1fr">
+							<DraggablePanel
+								:list="outerItem.playerA"
+								:put="['playersA']"
+								item-key="id"
+								:tag="TransitionGroup"
+								single
+								:component-data="{
+									tag: 'div',
+									name: 'default',
+									type: 'transition',
+								}"
+								group="playersA"
+								class="gap-2 align-items-center bg-blue-50 justify-content-center border border-dashed"
+								style="min-width: 150px; min-height: 50px"
+								@onRemove="cleanUpTeams"
+								hook
+							>
+								<template #default="{ item: innerItem }">
+									<div
+										class="border-round select-none bg-primary-400 cursor-pointer p-3 text-50"
+									>
+										{{ innerItem.value }}
+									</div>
+								</template>
+							</DraggablePanel>
+							<DraggablePanel
+								:list="outerItem.playerB"
+								:put="['playersB']"
+								item-key="id"
+								:tag="TransitionGroup"
+								single
+								:component-data="{
+									tag: 'div',
+									name: 'default',
+									type: 'transition',
+								}"
+								group="playersB"
+								class="bg-red-50 border-round border-dashed"
+								style="min-width: 150px; min-height: 50px"
+								@onRemove="cleanUpTeams"
+								hook
+							>
+								<template #default="{ item: innerItem }">
+									<div
+										class="border-round select-none bg-primary-400 cursor-pointer p-3 text-50 w-full h-full"
+									>
+										{{ innerItem.value }}
+									</div>
+								</template>
+							</DraggablePanel>
+						</div>
+					</template>
+				</DraggablePanel>
+			</Fieldset>
+			<Fieldset legend="Team B">
+				<DraggablePanel
+					id="playerB"
+					:list="playersB"
+					:put="['playersB', 'playersA']"
+					item-key="id"
+					:tag="TransitionGroup"
+					:componentData="{
+						tag: 'div',
+						name: 'default',
+						type: 'transition',
+					}"
+					group="playersB"
+					class="flex flex-row flex-wrap gap-2 border-3 min-h-3rem border-round border-dashed"
+				>
+					<template #default="{ item }">
+						<div
+							class="border-round select-none bg-primary-400 cursor-pointer inline p-3 text-50"
 						>
-							<template #default="{ item: innerItem }">
-								<div
-									class="border-round select-none bg-primary-400 cursor-pointer p-3 text-50 w-full h-full"
-								>
-									{{ innerItem.value }}
-								</div>
-							</template>
-						</DraggablePanel>
-					</div>
-				</template>
-			</DraggablePanel>
-		</Fieldset>
-		<Fieldset legend="Team B">
-			<DraggablePanel
-				id="playerB"
-				:list="playersB"
-				:put="['playersB', 'playersA']"
-				item-key="id"
-				:tag="TransitionGroup"
-				:componentData="{
-					tag: 'div',
-					name: 'default',
-					type: 'transition',
-				}"
-				group="playersB"
-				class="flex flex-row flex-wrap gap-2 border-3 min-h-3rem border-round border-dashed"
-			>
-				<template #default="{ item }">
-					<div
-						class="border-round select-none bg-primary-400 cursor-pointer inline p-3 text-50"
-					>
-						{{ item.value }}
-					</div>
-				</template>
-			</DraggablePanel>
-		</Fieldset>
+							{{ item.value }}
+						</div>
+					</template>
+				</DraggablePanel>
+			</Fieldset>
+		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
 import { Team } from "@/interfaces/match"
-import { ref, TransitionGroup } from "vue"
+import { computed, ref, TransitionGroup } from "vue"
 import axios from "axios"
 import { useRoute, useRouter } from "vue-router"
 import { useToast } from "primevue/usetoast"
@@ -132,15 +152,42 @@ import { useI18n } from "vue-i18n"
 import { searchedPlayer, TeamArray } from "@/interfaces/player"
 import DraggablePanel from "@/draggable/DraggablePanel.vue"
 import PlayerCard from "@/components/views/prepare/assignTeams/PlayerCard.vue"
+import { getCompetitionDetails } from "@/backend/competition"
 
 const route = useRoute()
 const router = useRouter()
 const toast = useToast()
 const { t } = useI18n({ inheritLocale: true })
 
+const competition = getCompetitionDetails(route, t, toast, {
+	suc: update,
+})
+
+const isSorting = ref<boolean>(false)
+
 const teams = ref<TeamArray[]>([])
 const playersA = ref<searchedPlayer[]>([])
 const playersB = ref<searchedPlayer[]>([])
+
+const duration = 2000
+const playerCount = ref(0)
+const delay = computed(() =>
+	Math.min((duration * 2) / 3 / playerCount.value, 100),
+)
+const delayBetween = computed(() => delay.value / 2)
+
+const randomizeItems = [
+	{
+		label: "Reroll",
+		icon: "pi pi-refresh",
+		command: reroll,
+	},
+	{
+		label: "Reset",
+		icon: "pi pi-times",
+		command: reset,
+	},
+]
 
 update()
 
@@ -155,6 +202,16 @@ function cleanUpTeams() {
 		}
 	}
 	console.log("cleanupped")
+}
+
+function save() {
+	// TODO udpate players
+	toast.add({
+		severity: "success",
+		summary: "Success",
+		detail: "Players updated",
+		life: 3000,
+	})
 }
 
 function update() {
@@ -220,6 +277,83 @@ function update() {
 				}
 			})
 		})
+}
+
+function sleep(milliseconds: number) {
+	return new Promise((resolve) => setTimeout(resolve, milliseconds))
+}
+
+async function randomize() {
+	if (!competition.value) return
+	isSorting.value = true
+	for (const i in teams.value) {
+		if (teams.value[i].playerA.length === 0) {
+			const r = Math.floor(Math.random() * playersA.value.length)
+			const element = playersA.value[r]
+			playersA.value = playersA.value.filter((v, i) => i !== r)
+			await sleep(delayBetween.value)
+			teams.value[i].playerA.push(element)
+			await sleep(delay.value)
+		}
+		if (competition.value.playerB.different) {
+			if (teams.value[i].playerB.length === 0) {
+				const r = Math.floor(Math.random() * playersB.value.length)
+				const element = playersB.value[r]
+				playersB.value = playersB.value.filter((v, i) => i !== r)
+				await sleep(delayBetween.value)
+				teams.value[i].playerB.push(element)
+				await sleep(delay.value)
+			}
+		} else {
+			if (teams.value[i].playerB.length === 0) {
+				const r = Math.floor(Math.random() * playersA.value.length)
+				const element = playersA.value[r]
+				playersA.value = playersA.value.filter((v, i) => i !== r)
+				await sleep(delayBetween.value)
+				teams.value[i].playerB.push(element)
+				await sleep(delay.value)
+			}
+		}
+	}
+	isSorting.value = false
+}
+
+async function reset() {
+	if (!competition.value) return
+	isSorting.value = true
+
+	for (const i in teams.value) {
+		if (teams.value[i].playerA.length === 1) {
+			const element = teams.value[i].playerA[0]
+			teams.value[i].playerA = []
+			await sleep(delayBetween.value)
+			playersA.value.push(element)
+			await sleep(delay.value)
+		}
+		if (competition.value.playerB.different) {
+			if (teams.value[i].playerB.length === 1) {
+				const element = teams.value[i].playerB[0]
+				teams.value[i].playerB = []
+				await sleep(delayBetween.value)
+				playersB.value.push(element)
+				await sleep(delay.value)
+			}
+		} else {
+			if (teams.value[i].playerB.length === 1) {
+				const element = teams.value[i].playerB[0]
+				teams.value[i].playerB = []
+				await sleep(delayBetween.value)
+				playersA.value.push(element)
+				await sleep(delay.value)
+			}
+		}
+	}
+	isSorting.value = false
+}
+
+async function reroll() {
+	await reset()
+	await randomize()
 }
 </script>
 
