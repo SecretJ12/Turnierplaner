@@ -108,12 +108,21 @@ function create() {
 
 			targetSingle = props.single && props.list.length === 1
 			if (props.wrap) {
-				props.list.splice(event.newIndex, 0, {
-					// TODO id generation
-					id: (Math.random() * 900000000).toString(),
-					playerA: [selectedElement],
-					playerB: [],
-				})
+				if (event.from.id === "playerA") {
+					props.list.splice(event.newIndex, 0, {
+						// TODO id generation
+						id: (Math.random() * 900000000).toString(),
+						playerA: [selectedElement],
+						playerB: [],
+					})
+				} else {
+					props.list.splice(event.newIndex, 0, {
+						// TODO id generation
+						id: (Math.random() * 900000000).toString(),
+						playerA: [],
+						playerB: [selectedElement],
+					})
+				}
 			} else if (props.single && props.list.length === 1) {
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore

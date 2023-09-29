@@ -9,6 +9,7 @@
 	</div>
 	<Fieldset legend="Team A">
 		<DraggablePanel
+			id="playerA"
 			:list="playersA"
 			:put="['playersA', 'playersB']"
 			item-key="id"
@@ -32,6 +33,7 @@
 	</Fieldset>
 	<Fieldset legend="Team B">
 		<DraggablePanel
+			id="playerB"
 			:list="playersB"
 			:put="['playersB', 'playersA']"
 			item-key="id"
