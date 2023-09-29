@@ -33,6 +33,8 @@ const props = withDefaults(
 		ghost?: string
 		single?: boolean
 		wrap?: boolean
+		hook?: boolean
+		cleanUpHook?: any[]
 	}>(),
 	{
 		componentData: {},
@@ -44,6 +46,8 @@ const props = withDefaults(
 		ghost: "ghost",
 		single: false,
 		wrap: false,
+		hook: false,
+		cleanUpHook: [],
 	},
 )
 
@@ -58,6 +62,8 @@ const sortable = ref<Sortable | null>()
 watch(container, () => {
 	create()
 })
+
+const emit = defineEmits(["onRemove"])
 
 function create() {
 	let el = container.value
@@ -91,6 +97,10 @@ function create() {
 			} else {
 				props.list.splice(event.oldIndex, 1)
 			}
+			if (props.hook) {
+				emit("onRemove")
+				console.log(props.cleanUpHook)
+			}
 			reload()
 		},
 		onAdd: (event: Sortable.SortableEvent) => {
@@ -99,6 +109,7 @@ function create() {
 			targetSingle = props.single && props.list.length === 1
 			if (props.wrap) {
 				props.list.splice(event.newIndex, 0, {
+					// TODO id generation
 					id: (Math.random() * 900000000).toString(),
 					playerA: [selectedElement],
 					playerB: [],

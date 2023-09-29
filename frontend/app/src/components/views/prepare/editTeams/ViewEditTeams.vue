@@ -2,7 +2,9 @@
 	<div>
 		<div v-for="a in playersA">{{ a.value }}</div>
 		<br />
-		<div v-for="a in playersB">{{ a.value }}</div>
+		<!--		<div v-for="a in playersB">{{ a.value }}</div>-->
+		<div>{{ playersB }}</div>
+		<br />
 		<p v-for="a in teams">{{ a }}</p>
 	</div>
 	<Fieldset legend="Team A">
@@ -82,6 +84,8 @@
 						group="playersA"
 						class="gap-2 border-3 fle align-items-center bg-blue-50 justify-content-center border-round border-dashed"
 						style="min-width: 200px; min-height: 100px"
+						@onRemove="cleanUpTeams"
+						hook
 					>
 						<template #default="{ item: innerItem }">
 							<div class="border-2">
@@ -103,6 +107,8 @@
 						group="playersB"
 						class="bg-red-50 border-round border-dashed"
 						style="min-width: 200px; min-height: 100px"
+						@onRemove="cleanUpTeams"
+						hook
 					>
 						<template #default="{ item: innerItem }">
 							<div class="border-2 w-full h-full">
@@ -137,6 +143,20 @@ const playersA = ref<searchedPlayer[]>([])
 const playersB = ref<searchedPlayer[]>([])
 
 update()
+
+function cleanUpTeams() {
+	for (let i = 0; i < teams.value.length; i++) {
+		if (
+			teams.value[i].playerA.length === 0 &&
+			teams.value[i].playerB.length === 0
+		) {
+			teams.value.splice(i, 1)
+			return
+		}
+	}
+	console.log("cleanupped")
+}
+
 function update() {
 	teams.value = []
 	let counter = 0
