@@ -16,8 +16,8 @@ export interface signedUpPlayer {
 
 export interface TeamArray {
 	id: string
-	playerA: [searchedPlayer]
-	playerB: [searchedPlayer]
+	playerA: searchedPlayer[]
+	playerB: searchedPlayer[]
 }
 
 export enum Sex {
