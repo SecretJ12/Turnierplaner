@@ -112,6 +112,7 @@ function create() {
 					props.list.splice(event.newIndex, 0, {
 						// TODO id generation
 						id: (Math.random() * 900000000).toString(),
+						// @ts-ignore
 						playerA: [selectedElement],
 						playerB: [],
 					})
@@ -120,6 +121,7 @@ function create() {
 						// TODO id generation
 						id: (Math.random() * 900000000).toString(),
 						playerA: [],
+						// @ts-ignore
 						playerB: [selectedElement],
 					})
 				}
