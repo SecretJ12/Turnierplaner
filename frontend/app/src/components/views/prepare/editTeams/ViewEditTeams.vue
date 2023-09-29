@@ -1,127 +1,125 @@
 <template>
-	<div>
-		<div v-for="a in playersA">{{ a.value }}</div>
-		<br />
-		<!--		<div v-for="a in playersB">{{ a.value }}</div>-->
-		<div>{{ playersB }}</div>
-		<br />
-		<p v-for="a in teams">{{ a }}</p>
+	<div class="flex flex-row">
+		<Fieldset legend="Team A">
+			<DraggablePanel
+				id="playerA"
+				:list="playersA"
+				:put="['playersA', 'playersB']"
+				item-key="id"
+				:tag="TransitionGroup"
+				:componentData="{
+					tag: 'div',
+					name: 'default',
+					type: 'transition',
+				}"
+				group="playersA"
+				class="flex flex-row flex-wrap gap-2 border-3 min-h-3rem border-round border-dashed"
+			>
+				<template #default="{ item }">
+					<div
+						class="border-round select-none bg-primary-400 cursor-pointer inline p-3 text-50"
+					>
+						{{ item.value }}
+					</div>
+				</template>
+			</DraggablePanel>
+		</Fieldset>
+		<Fieldset legend="team">
+			<DraggablePanel
+				:list="teams"
+				:put="['teams', 'playersA', 'playersB']"
+				item-key="id"
+				:tag="TransitionGroup"
+				:componentData="{
+					tag: 'div',
+					name: 'default',
+					type: 'transition',
+				}"
+				group="teams"
+				class="flex flex-row flex-wrap inline-block gap-2 border-3 min-h-3rem border-round border-dashed"
+				wrap
+			>
+				<template #default="{ item: outerItem }">
+					<div style="grid-auto-rows: 1fr">
+						<DraggablePanel
+							:list="outerItem.playerA"
+							:put="['playersA']"
+							item-key="id"
+							:tag="TransitionGroup"
+							single
+							:component-data="{
+								tag: 'div',
+								name: 'default',
+								type: 'transition',
+							}"
+							group="playersA"
+							class="gap-2 align-items-center bg-blue-50 justify-content-center border border-dashed"
+							style="min-width: 150px; min-height: 50px"
+							@onRemove="cleanUpTeams"
+							hook
+						>
+							<template #default="{ item: innerItem }">
+								<div
+									class="border-round select-none bg-primary-400 cursor-pointer p-3 text-50"
+								>
+									{{ innerItem.value }}
+								</div>
+							</template>
+						</DraggablePanel>
+						<DraggablePanel
+							:list="outerItem.playerB"
+							:put="['playersB']"
+							item-key="id"
+							:tag="TransitionGroup"
+							single
+							:component-data="{
+								tag: 'div',
+								name: 'default',
+								type: 'transition',
+							}"
+							group="playersB"
+							class="bg-red-50 border-round border-dashed"
+							style="min-width: 150px; min-height: 50px"
+							@onRemove="cleanUpTeams"
+							hook
+						>
+							<template #default="{ item: innerItem }">
+								<div
+									class="border-round select-none bg-primary-400 cursor-pointer p-3 text-50 w-full h-full"
+								>
+									{{ innerItem.value }}
+								</div>
+							</template>
+						</DraggablePanel>
+					</div>
+				</template>
+			</DraggablePanel>
+		</Fieldset>
+		<Fieldset legend="Team B">
+			<DraggablePanel
+				id="playerB"
+				:list="playersB"
+				:put="['playersB', 'playersA']"
+				item-key="id"
+				:tag="TransitionGroup"
+				:componentData="{
+					tag: 'div',
+					name: 'default',
+					type: 'transition',
+				}"
+				group="playersB"
+				class="flex flex-row flex-wrap gap-2 border-3 min-h-3rem border-round border-dashed"
+			>
+				<template #default="{ item }">
+					<div
+						class="border-round select-none bg-primary-400 cursor-pointer inline p-3 text-50"
+					>
+						{{ item.value }}
+					</div>
+				</template>
+			</DraggablePanel>
+		</Fieldset>
 	</div>
-	<Fieldset legend="Team A">
-		<DraggablePanel
-			id="playerA"
-			:list="playersA"
-			:put="['playersA', 'playersB']"
-			item-key="id"
-			:tag="TransitionGroup"
-			:componentData="{
-				tag: 'div',
-				name: 'default',
-				type: 'transition',
-			}"
-			group="playersA"
-			class="flex flex-row flex-wrap gap-2 border-3 min-h-3rem border-round border-dashed"
-		>
-			<template #default="{ item }">
-				<div
-					class="border-round select-none bg-primary-400 cursor-pointer inline p-3 text-50"
-				>
-					{{ item.value }}
-				</div>
-			</template>
-		</DraggablePanel>
-	</Fieldset>
-	<Fieldset legend="Team B">
-		<DraggablePanel
-			id="playerB"
-			:list="playersB"
-			:put="['playersB', 'playersA']"
-			item-key="id"
-			:tag="TransitionGroup"
-			:componentData="{
-				tag: 'div',
-				name: 'default',
-				type: 'transition',
-			}"
-			group="playersB"
-			class="flex flex-row flex-wrap gap-2 border-3 min-h-3rem border-round border-dashed"
-		>
-			<template #default="{ item }">
-				<div
-					class="border-round select-none bg-primary-400 cursor-pointer inline p-3 text-50"
-				>
-					{{ item.value }}
-				</div>
-			</template>
-		</DraggablePanel>
-	</Fieldset>
-	<Fieldset legend="team">
-		<DraggablePanel
-			:list="teams"
-			:put="['teams', 'playersA', 'playersB']"
-			item-key="id"
-			:tag="TransitionGroup"
-			:componentData="{
-				tag: 'div',
-				name: 'default',
-				type: 'transition',
-			}"
-			group="teams"
-			class="flex flex-row flex-wrap gap-2 border-3 min-h-3rem border-round border-dashed bg-green-50"
-			wrap
-		>
-			<template #default="{ item: outerItem }">
-				<div style="grid-auto-rows: 1fr">
-					<DraggablePanel
-						:list="outerItem.playerA"
-						:put="['playersA']"
-						item-key="id"
-						:tag="TransitionGroup"
-						single
-						:component-data="{
-							tag: 'div',
-							name: 'default',
-							type: 'transition',
-						}"
-						group="playersA"
-						class="gap-2 border-3 fle align-items-center bg-blue-50 justify-content-center border-round border-dashed"
-						style="min-width: 200px; min-height: 100px"
-						@onRemove="cleanUpTeams"
-						hook
-					>
-						<template #default="{ item: innerItem }">
-							<div class="border-2">
-								{{ innerItem.value }}
-							</div>
-						</template>
-					</DraggablePanel>
-					<DraggablePanel
-						:list="outerItem.playerB"
-						:put="['playersB']"
-						item-key="id"
-						:tag="TransitionGroup"
-						single
-						:component-data="{
-							tag: 'div',
-							name: 'default',
-							type: 'transition',
-						}"
-						group="playersB"
-						class="bg-red-50 border-round border-dashed"
-						style="min-width: 200px; min-height: 100px"
-						@onRemove="cleanUpTeams"
-						hook
-					>
-						<template #default="{ item: innerItem }">
-							<div class="border-2 w-full h-full">
-								{{ innerItem.value }}
-							</div>
-						</template>
-					</DraggablePanel>
-				</div>
-			</template>
-		</DraggablePanel>
-	</Fieldset>
 </template>
 
 <script setup lang="ts">
