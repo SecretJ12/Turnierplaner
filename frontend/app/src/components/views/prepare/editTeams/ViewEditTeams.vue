@@ -16,7 +16,7 @@
 					>
 				</template>
 			</SplitButton>
-			<Button label="Register Player 2"> </Button>
+			<Button label="Register Player 2" v-if="competition?.playerB.different" />
 		</div>
 		<div class="flex flex-row justify-content-around">
 			<Fieldset legend="Team A" class="flex-1">
@@ -104,7 +104,11 @@
 							>
 								<template #default="{ item: innerItem }">
 									<div
-										class="border-round select-none bg-primary-400 cursor-pointer p-3 text-50 w-full h-full"
+										class="border-round select-none cursor-pointer p-3 text-50 w-full h-full"
+										:class="{
+											'bg-yellow-500': competition?.playerB.different,
+											'bg-primary-400': !competition?.playerB.different,
+										}"
 									>
 										{{ innerItem.value }}
 									</div>
@@ -114,7 +118,11 @@
 					</template>
 				</DraggablePanel>
 			</Fieldset>
-			<Fieldset legend="Team B" class="flex-1">
+			<Fieldset
+				legend="Team B"
+				class="flex-1"
+				v-if="competition?.playerB.different"
+			>
 				<DraggablePanel
 					id="playerB"
 					:list="playersB"
@@ -131,13 +139,29 @@
 				>
 					<template #default="{ item }">
 						<div
-							class="border-round select-none bg-primary-400 cursor-pointer inline p-3 text-50"
+							class="border-round select-none cursor-pointer inline p-3 text-50"
+							:class="{
+								'bg-yellow-500': competition?.playerB.different,
+								'bg-primary-400': !competition?.playerB.different,
+							}"
 						>
 							{{ item.value }}
 						</div>
 					</template>
 				</DraggablePanel>
 			</Fieldset>
+		</div>
+		<div class="mt-2 grid grid-nogutter justify-content-between">
+			<div></div>
+			<!-- TODO add @click -->
+			<Button :label="t('general.save')"> </Button>
+			<Button
+				v-if="route.params.step !== 'scheduleMatches'"
+				label="Next"
+				icon="pi pi-angle-right"
+				icon-pos="right"
+				@click="nextPage"
+			/>
 		</div>
 	</div>
 </template>
@@ -153,6 +177,7 @@ import { searchedPlayer, TeamArray } from "@/interfaces/player"
 import DraggablePanel from "@/draggable/DraggablePanel.vue"
 import PlayerCard from "@/components/views/prepare/assignTeams/PlayerCard.vue"
 import { getCompetitionDetails } from "@/backend/competition"
+import Button from "primevue/button"
 
 const route = useRoute()
 const router = useRouter()
@@ -237,40 +262,25 @@ function update() {
 						value: team.playerB.firstName + " " + team.playerB.lastName,
 					})
 				} else if (team.playerA !== undefined && team.playerB !== undefined) {
-					if (Math.random() > 0.5) {
-						playersA.value.push({
-							id: team.playerA.id,
-							firstName: team.playerA.firstName,
-							lastName: team.playerA.lastName,
-							value: team.playerA.firstName + " " + team.playerA.lastName,
-						})
-						playersB.value.push({
-							id: team.playerB.id,
-							firstName: team.playerB.firstName,
-							lastName: team.playerB.lastName,
-							value: team.playerB.firstName + " " + team.playerB.lastName,
-						})
-					} else {
-						teams.value.push({
-							id: team.id,
-							playerA: [
-								{
-									id: team.playerA.id,
-									firstName: team.playerA.firstName,
-									lastName: team.playerA.lastName,
-									value: team.playerA.firstName + " " + team.playerA.lastName,
-								},
-							],
-							playerB: [
-								{
-									id: team.playerB.id,
-									firstName: team.playerB.firstName,
-									lastName: team.playerB.lastName,
-									value: team.playerB.firstName + " " + team.playerB.lastName,
-								},
-							],
-						})
-					}
+					teams.value.push({
+						id: team.id,
+						playerA: [
+							{
+								id: team.playerA.id,
+								firstName: team.playerA.firstName,
+								lastName: team.playerA.lastName,
+								value: team.playerA.firstName + " " + team.playerA.lastName,
+							},
+						],
+						playerB: [
+							{
+								id: team.playerB.id,
+								firstName: team.playerB.firstName,
+								lastName: team.playerB.lastName,
+								value: team.playerB.firstName + " " + team.playerB.lastName,
+							},
+						],
+					})
 				}
 			})
 		})
@@ -351,6 +361,12 @@ async function reset() {
 async function reroll() {
 	await reset()
 	await randomize()
+}
+function nextPage() {
+	router.replace({
+		name: "editPlayers",
+		params: { tourId: route.params.tourId, compId: route.params.compId },
+	})
 }
 </script>
 
