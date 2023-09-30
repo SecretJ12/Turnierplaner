@@ -33,6 +33,7 @@
 					}"
 					group="playersA"
 					class="flex flex-wrap gap-2 border-3 min-h-3rem border-round border-dashed"
+					style="min-height: 4em"
 				>
 					<template #default="{ item }">
 						<div
@@ -56,6 +57,7 @@
 					}"
 					group="teams"
 					class="flex flex-wrap inline-block gap-2 border-3 border-round border-dashed"
+					style="min-height: 4em"
 					wrap
 				>
 					<template #default="{ item: outerItem }">
@@ -136,6 +138,7 @@
 					}"
 					group="playersB"
 					class="flex flex-wrap gap-2 border-3 min-h-3rem border-round border-dashed"
+					style="min-height: 4em"
 				>
 					<template #default="{ item }">
 						<div
