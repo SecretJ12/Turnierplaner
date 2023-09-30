@@ -18,8 +18,8 @@
 			</SplitButton>
 			<Button label="Register Player 2"> </Button>
 		</div>
-		<div class="flex flex-row">
-			<Fieldset legend="Team A">
+		<div class="flex flex-row justify-content-around">
+			<Fieldset legend="Team A" class="flex-1">
 				<DraggablePanel
 					id="playerA"
 					:list="playersA"
@@ -32,7 +32,7 @@
 						type: 'transition',
 					}"
 					group="playersA"
-					class="flex flex-row flex-wrap gap-2 border-3 min-h-3rem border-round border-dashed"
+					class="flex flex-wrap gap-2 border-3 min-h-3rem border-round border-dashed"
 				>
 					<template #default="{ item }">
 						<div
@@ -43,7 +43,7 @@
 					</template>
 				</DraggablePanel>
 			</Fieldset>
-			<Fieldset legend="team">
+			<Fieldset legend="team" class="flex-1">
 				<DraggablePanel
 					:list="teams"
 					:put="['teams', 'playersA', 'playersB']"
@@ -55,7 +55,7 @@
 						type: 'transition',
 					}"
 					group="teams"
-					class="flex flex-row flex-wrap inline-block gap-2 border-3 min-h-3rem border-round border-dashed"
+					class="flex flex-wrap inline-block gap-2 border-3 border-round border-dashed"
 					wrap
 				>
 					<template #default="{ item: outerItem }">
@@ -114,7 +114,7 @@
 					</template>
 				</DraggablePanel>
 			</Fieldset>
-			<Fieldset legend="Team B">
+			<Fieldset legend="Team B" class="flex-1">
 				<DraggablePanel
 					id="playerB"
 					:list="playersB"
@@ -127,7 +127,7 @@
 						type: 'transition',
 					}"
 					group="playersB"
-					class="flex flex-row flex-wrap gap-2 border-3 min-h-3rem border-round border-dashed"
+					class="flex flex-wrap gap-2 border-3 min-h-3rem border-round border-dashed"
 				>
 					<template #default="{ item }">
 						<div
