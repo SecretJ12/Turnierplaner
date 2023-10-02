@@ -19,7 +19,7 @@
 				<OverlayPanel ref="showDeletedPlayerA">
 					<DraggablePanel
 						:list="deletedPlayerA"
-						:put="['deletedPlayerA']"
+						:put="['deletedPlayerA', 'playersA']"
 						group="deletedPlayerA"
 						class="flex"
 						item-key="id"
@@ -73,7 +73,7 @@
 				<OverlayPanel ref="showDeletedPlayerB">
 					<DraggablePanel
 						:list="deletedPlayerB"
-						:put="['deletedPlayerB']"
+						:put="['playersB', 'deletedPlayerB']"
 						group="deletedPlayerB"
 						class="flex"
 						item-key="id"
@@ -86,7 +86,7 @@
 					>
 						<template #default="{ item }">
 							<div
-								class="border-round select-none bg-primary-400 cursor-pointer inline p-3 text-50"
+								class="border-round select-none bg-yellow-500 cursor-pointer inline p-3 text-50"
 							>
 								{{ item.value }}
 							</div>
@@ -100,7 +100,11 @@
 				<DraggablePanel
 					id="playerA"
 					:list="playersA"
-					:put="['playersA', 'playersB', 'deletedPlayerA']"
+					:put="
+						competition?.playerB.different
+							? ['playersA', 'deletedPlayerA']
+							: ['playersA', 'playersB', 'deletedPlayerA']
+					"
 					item-key="id"
 					:tag="TransitionGroup"
 					:componentData="{
@@ -176,7 +180,11 @@
 							</DraggablePanel>
 							<DraggablePanel
 								:list="outerItem.playerB"
-								:put="['playersB', 'deletedPlayerB']"
+								:put="
+									competition?.playerB.different
+										? ['playersB', 'deletedPlayerB']
+										: ['playersA', 'playersB', 'deletedPlayerA']
+								"
 								item-key="id"
 								:tag="TransitionGroup"
 								single
@@ -215,7 +223,7 @@
 				<DraggablePanel
 					id="playerB"
 					:list="playersB"
-					:put="['playersB', 'playersA', 'deletedPlayerB', 'deletedPlayerA']"
+					:put="['playersB', 'deletedPlayerB']"
 					item-key="id"
 					:tag="TransitionGroup"
 					:componentData="{
