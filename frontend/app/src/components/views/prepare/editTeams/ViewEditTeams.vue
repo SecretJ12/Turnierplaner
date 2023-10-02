@@ -342,6 +342,8 @@ function save() {
 
 function update() {
 	teams.value = []
+	playersA.value = []
+	playersB.value = []
 	axios
 		.get<Team[]>(
 			`/tournament/${route.params.tourId}/competition/${route.params.compId}/signedUpTeams`,
