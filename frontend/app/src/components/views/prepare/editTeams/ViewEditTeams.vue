@@ -380,7 +380,7 @@ function update() {
 		)
 		.then((response) => {
 			response.data.forEach((team) => {
-				if (team.playerA !== null && team.playerB === null) {
+				if (team.playerA && team.playerB === null) {
 					playersA.value.push({
 						id: team.playerA.id,
 						firstName: team.playerA.firstName,
@@ -393,7 +393,7 @@ function update() {
 						lastName: team.playerA.lastName,
 						value: team.playerA.firstName + " " + team.playerA.lastName,
 					})
-				} else if (team.playerA === null && team.playerB !== null) {
+				} else if (team.playerA === null && team.playerB) {
 					playersB.value.push({
 						id: team.playerB.id,
 						firstName: team.playerB.firstName,
@@ -406,7 +406,7 @@ function update() {
 						lastName: team.playerB.lastName,
 						value: team.playerB.firstName + " " + team.playerB.lastName,
 					})
-				} else if (team.playerA !== null && team.playerB !== null) {
+				} else if (team.playerA && team.playerB) {
 					teams.value.push({
 						id: team.id,
 						playerA: [
