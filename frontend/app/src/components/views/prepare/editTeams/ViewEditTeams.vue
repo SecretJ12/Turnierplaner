@@ -328,7 +328,6 @@ function cleanUpTeams() {
 			return
 		}
 	}
-	console.log("cleanupped")
 }
 
 function save() {
@@ -364,7 +363,6 @@ function update() {
 						value: team.playerB.firstName + " " + team.playerB.lastName,
 					})
 				} else if (team.playerA !== null && team.playerB !== null) {
-					console.log(team)
 					teams.value.push({
 						id: team.id,
 						playerA: [
