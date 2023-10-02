@@ -47,6 +47,7 @@
 				class="w-fit"
 				@click="randomize"
 				:disabled="isSorting"
+				v-if="competition?.mode === Mode.DOUBLE"
 			>
 				<template #icon>
 					<span class="material-icons mb-1" style="font-size: 1.2rem"
@@ -262,9 +263,9 @@ import { useToast } from "primevue/usetoast"
 import { useI18n } from "vue-i18n"
 import { searchedPlayer, TeamArray } from "@/interfaces/player"
 import DraggablePanel from "@/draggable/DraggablePanel.vue"
-import PlayerCard from "@/components/views/prepare/assignTeams/PlayerCard.vue"
 import { getCompetitionDetails } from "@/backend/competition"
 import Button from "primevue/button"
+import { Mode } from "@/interfaces/competition"
 
 const route = useRoute()
 const router = useRouter()
@@ -345,21 +346,22 @@ function update() {
 		)
 		.then((response) => {
 			response.data.forEach((team) => {
-				if (team.playerA !== undefined && team.playerB === undefined) {
+				if (team.playerA !== null && team.playerB === null) {
 					playersA.value.push({
 						id: team.playerA.id,
 						firstName: team.playerA.firstName,
 						lastName: team.playerA.lastName,
 						value: team.playerA.firstName + " " + team.playerA.lastName,
 					})
-				} else if (team.playerA === undefined && team.playerB !== undefined) {
+				} else if (team.playerA === null && team.playerB !== null) {
 					playersB.value.push({
 						id: team.playerB.id,
 						firstName: team.playerB.firstName,
 						lastName: team.playerB.lastName,
 						value: team.playerB.firstName + " " + team.playerB.lastName,
 					})
-				} else if (team.playerA !== undefined && team.playerB !== undefined) {
+				} else if (team.playerA !== null && team.playerB !== null) {
+					console.log(team)
 					teams.value.push({
 						id: team.id,
 						playerA: [
