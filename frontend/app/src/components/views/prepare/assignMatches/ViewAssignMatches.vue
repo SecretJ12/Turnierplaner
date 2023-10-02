@@ -11,7 +11,7 @@
 								:put="['teams']"
 								item-key="id"
 								:tag="TransitionGroup"
-								:componentData="{
+								:component-data="{
 									tag: 'div',
 									name: 'default',
 									type: 'transition',

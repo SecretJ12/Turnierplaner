@@ -24,7 +24,7 @@
 						class="flex"
 						item-key="id"
 						:tag="TransitionGroup"
-						:componentData="{
+						:component-data="{
 							tag: 'div',
 							name: 'default',
 							type: 'transition',
@@ -41,13 +41,13 @@
 				</OverlayPanel>
 			</div>
 			<SplitButton
+				v-if="competition?.mode === Mode.DOUBLE"
 				label="Randomize"
 				severity="help"
 				:model="randomizeItems"
 				class="w-fit"
-				@click="randomize"
 				:disabled="isSorting"
-				v-if="competition?.mode === Mode.DOUBLE"
+				@click="randomize"
 			>
 				<template #icon>
 					<span class="material-icons mb-1" style="font-size: 1.2rem"
@@ -55,7 +55,7 @@
 					>
 				</template>
 			</SplitButton>
-			<div class="flex flex-row gap-2" v-if="competition?.playerB.different">
+			<div v-if="competition?.playerB.different" class="flex flex-row gap-2">
 				<Button label="Register Player 2" />
 				<div @click="toggleB">
 					<DraggablePanel
@@ -78,7 +78,7 @@
 						class="flex"
 						item-key="id"
 						:tag="TransitionGroup"
-						:componentData="{
+						:component-data="{
 							tag: 'div',
 							name: 'default',
 							type: 'transition',
@@ -107,7 +107,7 @@
 					"
 					item-key="id"
 					:tag="TransitionGroup"
-					:componentData="{
+					:component-data="{
 						tag: 'div',
 						name: 'default',
 						type: 'transition',
@@ -126,9 +126,9 @@
 				</DraggablePanel>
 			</Fieldset>
 			<Fieldset
+				v-if="competition?.mode === Mode.DOUBLE"
 				legend="team"
 				class="flex-1"
-				v-if="competition?.mode === Mode.DOUBLE"
 			>
 				<DraggablePanel
 					:list="teams"
@@ -141,7 +141,7 @@
 					]"
 					item-key="id"
 					:tag="TransitionGroup"
-					:componentData="{
+					:component-data="{
 						tag: 'div',
 						name: 'default',
 						type: 'transition',
@@ -167,8 +167,8 @@
 								group="playersA"
 								class="gap-2 align-items-center bg-blue-50 justify-content-center border border-dashed"
 								style="min-width: 150px; min-height: 50px"
-								@onRemove="cleanUpTeams"
 								hook
+								@onRemove="cleanUpTeams"
 							>
 								<template #default="{ item: innerItem }">
 									<div
@@ -196,8 +196,8 @@
 								group="playersB"
 								class="bg-red-50 border-round border-dashed"
 								style="min-width: 150px; min-height: 50px"
-								@onRemove="cleanUpTeams"
 								hook
+								@onRemove="cleanUpTeams"
 							>
 								<template #default="{ item: innerItem }">
 									<div
@@ -216,9 +216,9 @@
 				</DraggablePanel>
 			</Fieldset>
 			<Fieldset
+				v-if="competition?.playerB.different"
 				legend="Team B"
 				class="flex-1"
-				v-if="competition?.playerB.different"
 			>
 				<DraggablePanel
 					id="playerB"
@@ -226,7 +226,7 @@
 					:put="['playersB', 'deletedPlayerB']"
 					item-key="id"
 					:tag="TransitionGroup"
-					:componentData="{
+					:component-data="{
 						tag: 'div',
 						name: 'default',
 						type: 'transition',

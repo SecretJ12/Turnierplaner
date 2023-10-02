@@ -16,8 +16,8 @@
 					severity="help"
 					:model="randomizeItems"
 					class="w-fit"
-					@click="randomize"
 					:disabled="isSorting"
+					@click="randomize"
 				>
 					<template #icon>
 						<span class="material-icons mb-1" style="font-size: 1.2rem"

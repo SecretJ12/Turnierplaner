@@ -36,8 +36,8 @@ import { useRoute, useRouter } from "vue-router"
 import { useI18n } from "vue-i18n"
 import { getCompetitionDetails } from "@/backend/competition"
 import { onUpdated } from "vue"
-import { Mode, SignUp } from "@/interfaces/competition";
-import Button from "primevue/button";
+import { Mode, SignUp } from "@/interfaces/competition"
+import Button from "primevue/button"
 
 const { t } = useI18n({ inheritLocale: true })
 const router = useRouter()

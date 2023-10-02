@@ -10,10 +10,10 @@
 	</div>
 	<component
 		:is="tag"
+		v-else
 		ref="container"
 		v-bind="componentData"
 		:key="index"
-		v-else
 	>
 		<slot
 			v-for="(item, i) in list"
