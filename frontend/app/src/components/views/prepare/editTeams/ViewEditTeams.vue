@@ -275,12 +275,6 @@ const router = useRouter()
 const toast = useToast()
 const { t } = useI18n({ inheritLocale: true })
 
-const competition = getCompetitionDetails(route, t, toast, {
-	suc: () => {
-		update()
-	},
-})
-
 const isSorting = ref<boolean>(false)
 
 // for restoring the initial state
@@ -297,6 +291,12 @@ const deletedPlayerB = ref<searchedPlayer[]>([])
 
 const showDeletedPlayerA = ref()
 const showDeletedPlayerB = ref()
+
+const competition = getCompetitionDetails(route, t, toast, {
+	suc: () => {
+		update()
+	},
+})
 
 console.log(playersA.value)
 
@@ -348,6 +348,14 @@ function update() {
 	teams.value = []
 	playersA.value = []
 	playersB.value = []
+
+	initialTeam.value = []
+	initialPlayerA.value = []
+	initialPlayerB.value = []
+
+	deletedPlayerA.value = []
+	deletedPlayerB.value = []
+
 	axios
 		.get<Team[]>(
 			`/tournament/${route.params.tourId}/competition/${route.params.compId}/signedUpTeams`,
