@@ -243,7 +243,7 @@
 		</div>
 		<div class="mt-2 grid grid-nogutter justify-content-between">
 			<!--TODO internalization-->
-			<Button label="Reset"></Button>
+			<Button label="Reset" @click="restore" />
 			<!-- TODO add @click -->
 			<Button :label="t('general.save')"> </Button>
 			<Button
@@ -276,7 +276,9 @@ const toast = useToast()
 const { t } = useI18n({ inheritLocale: true })
 
 const competition = getCompetitionDetails(route, t, toast, {
-	suc: update,
+	suc: () => {
+		update()
+	},
 })
 
 const isSorting = ref<boolean>(false)
@@ -295,6 +297,8 @@ const deletedPlayerB = ref<searchedPlayer[]>([])
 
 const showDeletedPlayerA = ref()
 const showDeletedPlayerB = ref()
+
+console.log(playersA.value)
 
 const duration = 2000
 const playerCount = ref(0)
@@ -316,7 +320,7 @@ const randomizeItems = [
 	},
 ]
 
-update()
+// update()
 
 function cleanUpTeams() {
 	for (let i = 0; i < teams.value.length; i++) {
@@ -357,6 +361,12 @@ function update() {
 						lastName: team.playerA.lastName,
 						value: team.playerA.firstName + " " + team.playerA.lastName,
 					})
+					initialPlayerA.value.push({
+						id: team.playerA.id,
+						firstName: team.playerA.firstName,
+						lastName: team.playerA.lastName,
+						value: team.playerA.firstName + " " + team.playerA.lastName,
+					})
 				} else if (team.playerA === null && team.playerB !== null) {
 					playersB.value.push({
 						id: team.playerB.id,
@@ -364,8 +374,33 @@ function update() {
 						lastName: team.playerB.lastName,
 						value: team.playerB.firstName + " " + team.playerB.lastName,
 					})
+					initialPlayerB.value.push({
+						id: team.playerB.id,
+						firstName: team.playerB.firstName,
+						lastName: team.playerB.lastName,
+						value: team.playerB.firstName + " " + team.playerB.lastName,
+					})
 				} else if (team.playerA !== null && team.playerB !== null) {
 					teams.value.push({
+						id: team.id,
+						playerA: [
+							{
+								id: team.playerA.id,
+								firstName: team.playerA.firstName,
+								lastName: team.playerA.lastName,
+								value: team.playerA.firstName + " " + team.playerA.lastName,
+							},
+						],
+						playerB: [
+							{
+								id: team.playerB.id,
+								firstName: team.playerB.firstName,
+								lastName: team.playerB.lastName,
+								value: team.playerB.firstName + " " + team.playerB.lastName,
+							},
+						],
+					})
+					initialTeam.value.push({
 						id: team.id,
 						playerA: [
 							{
@@ -478,6 +513,32 @@ const toggleA = (event) => {
 
 const toggleB = (event) => {
 	showDeletedPlayerB.value.toggle(event)
+}
+
+function restore() {
+	teams.value = initialTeam.value
+	teams.value = []
+
+	for (const team of initialTeam.value) {
+		teams.value.push({
+			id: team.id,
+			playerA: team.playerA.slice(),
+			playerB: team.playerB.slice(),
+		})
+	}
+
+	playersA.value = []
+	for (const playerA of initialPlayerA.value) {
+		playersA.value.push(playerA)
+	}
+
+	playersB.value = []
+	for (const playerB of initialPlayerB.value) {
+		playersB.value.push(playerB)
+	}
+
+	deletedPlayerA.value = []
+	deletedPlayerB.value = []
 }
 </script>
 
