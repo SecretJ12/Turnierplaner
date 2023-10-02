@@ -1,5 +1,5 @@
 <template>
-	<div class="flex flex-column">
+	<div class="flex flex-column gap-5">
 		<div class="flex justify-content-around">
 			<div class="flex flex-row gap-2">
 				<Button label="Register Player 1"> </Button>
@@ -55,9 +55,8 @@
 					>
 				</template>
 			</SplitButton>
-			<div class="flex flex-row gap-2">
-				<Button label="Register Player 2" v-if="competition?.playerB.different">
-				</Button>
+			<div class="flex flex-row gap-2" v-if="competition?.playerB.different">
+				<Button label="Register Player 2" />
 				<div @click="toggleB">
 					<DraggablePanel
 						:list="deletedPlayerB"
@@ -122,7 +121,11 @@
 					</template>
 				</DraggablePanel>
 			</Fieldset>
-			<Fieldset legend="team" class="flex-1">
+			<Fieldset
+				legend="team"
+				class="flex-1"
+				v-if="competition?.mode === Mode.DOUBLE"
+			>
 				<DraggablePanel
 					:list="teams"
 					:put="[
