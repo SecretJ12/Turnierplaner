@@ -88,6 +88,7 @@ import AutoComplete from "primevue/autocomplete"
 import Checkbox from "primevue/checkbox"
 import Fieldset from "primevue/fieldset"
 import SplitButton from "primevue/splitbutton"
+import OverlayPanel from "primevue/overlaypanel"
 
 /* Primevue styling */
 import "primeflex/primeflex.css"
@@ -148,6 +149,7 @@ app
 	.component("Checkbox", Checkbox)
 	.component("Fieldset", Fieldset)
 	.component("SplitButton", SplitButton)
+	.component("OverlayPanel", OverlayPanel)
 	.directive("tooltip", Tooltip)
 	.directive("focustrap", FocusTrap)
 	.mount("#app")

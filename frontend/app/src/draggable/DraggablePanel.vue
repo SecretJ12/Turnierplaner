@@ -1,5 +1,20 @@
 <template>
-	<component :is="tag" ref="container" v-bind="componentData" :key="index">
+	<div
+		v-if="props.bin"
+		ref="container"
+		:key="index"
+		class="border-round select-none bg-red-500 font-bold justify-content-center cursor-pointer inline p-3 text-100 w-full"
+	>
+		Delete
+		<span class="material-symbols-outlined"> delete </span>
+	</div>
+	<component
+		:is="tag"
+		ref="container"
+		v-bind="componentData"
+		:key="index"
+		v-else
+	>
 		<slot
 			v-for="(item, i) in list"
 			:key="item['itemKey']"
@@ -34,7 +49,7 @@ const props = withDefaults(
 		single?: boolean
 		wrap?: boolean
 		hook?: boolean
-		cleanUpHook?: any[]
+		bin?: boolean
 	}>(),
 	{
 		componentData: {},
@@ -47,7 +62,7 @@ const props = withDefaults(
 		single: false,
 		wrap: false,
 		hook: false,
-		cleanUpHook: [],
+		bin: false,
 	},
 )
 
@@ -83,6 +98,7 @@ function create() {
 		animation: props.animation,
 		disabled: props.disabled,
 		sort: props.sort,
+		revertOnSpill: true,
 		onChoose: (event: Sortable.SortableEvent) => {
 			if (event.oldIndex === undefined) return
 			selectedElement = props.list[event.oldIndex]
@@ -143,7 +159,6 @@ function create() {
 			props.list.splice(newIndex, 0, props.list.splice(oldIndex, 1)[0])
 			reload()
 		},
-		revertOnSpill: true,
 		removeOnSpill: false,
 	})
 	setGhost()

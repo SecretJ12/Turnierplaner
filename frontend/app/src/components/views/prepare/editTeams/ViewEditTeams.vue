@@ -1,7 +1,45 @@
 <template>
 	<div class="flex flex-column">
 		<div class="flex justify-content-around">
-			<Button label="Register Player 1"> </Button>
+			<div class="flex flex-row gap-2">
+				<Button label="Register Player 1"> </Button>
+				<div @click="toggleA">
+					<DraggablePanel
+						:list="deletedPlayerA"
+						:put="['playersA']"
+						group="deletedPlayerA"
+						class="flex"
+						:component-data="{}"
+						item-key="id"
+						:tag="TransitionGroup"
+						bin
+					>
+					</DraggablePanel>
+				</div>
+				<OverlayPanel ref="showDeletedPlayerA">
+					<DraggablePanel
+						:list="deletedPlayerA"
+						:put="['deletedPlayerA']"
+						group="deletedPlayerA"
+						class="flex"
+						item-key="id"
+						:tag="TransitionGroup"
+						:componentData="{
+							tag: 'div',
+							name: 'default',
+							type: 'transition',
+						}"
+					>
+						<template #default="{ item }">
+							<div
+								class="border-round select-none bg-primary-400 cursor-pointer inline p-3 text-50"
+							>
+								{{ item.value }}
+							</div>
+						</template>
+					</DraggablePanel>
+				</OverlayPanel>
+			</div>
 			<SplitButton
 				label="Randomize"
 				severity="help"
@@ -16,14 +54,53 @@
 					>
 				</template>
 			</SplitButton>
-			<Button label="Register Player 2" v-if="competition?.playerB.different" />
+			<div class="flex flex-row gap-2">
+				<Button label="Register Player 2" v-if="competition?.playerB.different">
+				</Button>
+				<div @click="toggleB">
+					<DraggablePanel
+						:list="deletedPlayerB"
+						:put="['playersB']"
+						group="deletedPlayerB"
+						class="flex"
+						:component-data="{}"
+						item-key="id"
+						:tag="TransitionGroup"
+						bin
+					>
+					</DraggablePanel>
+				</div>
+				<OverlayPanel ref="showDeletedPlayerB">
+					<DraggablePanel
+						:list="deletedPlayerB"
+						:put="['deletedPlayerB']"
+						group="deletedPlayerB"
+						class="flex"
+						item-key="id"
+						:tag="TransitionGroup"
+						:componentData="{
+							tag: 'div',
+							name: 'default',
+							type: 'transition',
+						}"
+					>
+						<template #default="{ item }">
+							<div
+								class="border-round select-none bg-primary-400 cursor-pointer inline p-3 text-50"
+							>
+								{{ item.value }}
+							</div>
+						</template>
+					</DraggablePanel>
+				</OverlayPanel>
+			</div>
 		</div>
 		<div class="flex flex-row justify-content-around">
 			<Fieldset legend="Team A" class="flex-1">
 				<DraggablePanel
 					id="playerA"
 					:list="playersA"
-					:put="['playersA', 'playersB']"
+					:put="['playersA', 'playersB', 'deletedPlayerA']"
 					item-key="id"
 					:tag="TransitionGroup"
 					:componentData="{
@@ -47,7 +124,13 @@
 			<Fieldset legend="team" class="flex-1">
 				<DraggablePanel
 					:list="teams"
-					:put="['teams', 'playersA', 'playersB']"
+					:put="[
+						'teams',
+						'playersA',
+						'playersB',
+						'deletedPlayerA',
+						'deletedPlayerB',
+					]"
 					item-key="id"
 					:tag="TransitionGroup"
 					:componentData="{
@@ -64,7 +147,7 @@
 						<div style="grid-auto-rows: 1fr">
 							<DraggablePanel
 								:list="outerItem.playerA"
-								:put="['playersA']"
+								:put="['playersA', 'deletedPlayerA']"
 								item-key="id"
 								:tag="TransitionGroup"
 								single
@@ -89,7 +172,7 @@
 							</DraggablePanel>
 							<DraggablePanel
 								:list="outerItem.playerB"
-								:put="['playersB']"
+								:put="['playersB', 'deletedPlayerB']"
 								item-key="id"
 								:tag="TransitionGroup"
 								single
@@ -128,7 +211,7 @@
 				<DraggablePanel
 					id="playerB"
 					:list="playersB"
-					:put="['playersB', 'playersA']"
+					:put="['playersB', 'playersA', 'deletedPlayerB', 'deletedPlayerA']"
 					item-key="id"
 					:tag="TransitionGroup"
 					:componentData="{
@@ -155,7 +238,8 @@
 			</Fieldset>
 		</div>
 		<div class="mt-2 grid grid-nogutter justify-content-between">
-			<div></div>
+			<!--TODO internalization-->
+			<Button label="Reset"></Button>
 			<!-- TODO add @click -->
 			<Button :label="t('general.save')"> </Button>
 			<Button
@@ -193,9 +277,20 @@ const competition = getCompetitionDetails(route, t, toast, {
 
 const isSorting = ref<boolean>(false)
 
+// for restoring the initial state
+const initialTeam = ref<TeamArray[]>([])
+const initialPlayerA = ref<searchedPlayer[]>([])
+const initialPlayerB = ref<searchedPlayer[]>([])
+
 const teams = ref<TeamArray[]>([])
 const playersA = ref<searchedPlayer[]>([])
 const playersB = ref<searchedPlayer[]>([])
+
+const deletedPlayerA = ref<searchedPlayer[]>([])
+const deletedPlayerB = ref<searchedPlayer[]>([])
+
+const showDeletedPlayerA = ref()
+const showDeletedPlayerB = ref()
 
 const duration = 2000
 const playerCount = ref(0)
@@ -370,6 +465,14 @@ function nextPage() {
 		name: "editPlayers",
 		params: { tourId: route.params.tourId, compId: route.params.compId },
 	})
+}
+
+const toggleA = (event) => {
+	showDeletedPlayerA.value.toggle(event)
+}
+
+const toggleB = (event) => {
+	showDeletedPlayerB.value.toggle(event)
 }
 </script>
 
