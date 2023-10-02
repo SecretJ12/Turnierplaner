@@ -17,7 +17,12 @@
 					</DraggablePanel>
 				</div>
 				<OverlayPanel ref="showDeletedPlayerA">
+					<div v-if="deletedPlayerA.length === 0">
+						<!-- TODO internalization-->
+						<p>No deleted players</p>
+					</div>
 					<DraggablePanel
+						v-else
 						:list="deletedPlayerA"
 						:put="['deletedPlayerA', 'playersA']"
 						group="deletedPlayerA"
@@ -71,7 +76,12 @@
 					</DraggablePanel>
 				</div>
 				<OverlayPanel ref="showDeletedPlayerB">
+					<div v-if="deletedPlayerB.length === 0">
+						<!-- TODO internalization-->
+						<p>No deleted players</p>
+					</div>
 					<DraggablePanel
+						v-else
 						:list="deletedPlayerB"
 						:put="['playersB', 'deletedPlayerB']"
 						group="deletedPlayerB"
