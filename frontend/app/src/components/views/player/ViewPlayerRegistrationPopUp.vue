@@ -106,7 +106,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue"
 import axios from "axios"
 import { useI18n } from "vue-i18n"
 import { Sex } from "@/interfaces/competition"
@@ -190,8 +189,4 @@ function dateToJson(d: Date): string {
 defineExpose({ onSubmit })
 </script>
 
-<style scoped>
-#card {
-	width: min(90dvw, 50rem);
-}
-</style>
+<style scoped></style>

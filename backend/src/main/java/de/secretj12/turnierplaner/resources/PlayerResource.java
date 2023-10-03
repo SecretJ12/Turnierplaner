@@ -9,7 +9,6 @@ import de.secretj12.turnierplaner.db.repositories.VerificationCodeRepository;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayer;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayerRegistrationForm;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserSex;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserTeam;
 import io.quarkus.mailer.Mailer;
 import io.quarkus.scheduler.Scheduled;
 import io.smallrye.common.annotation.Blocking;
@@ -51,7 +50,7 @@ public class PlayerResource {
             case MALE -> SexType.MALE;
             case FEMALE -> SexType.FEMALE;
         };
-        if (search.length() == 0) {
+        if (search.isEmpty()) {
             return List.of();
         }
         return playerRepository.filter(search, dbSex, minAge, maxAge).map(jUserPlayer::new).toList();

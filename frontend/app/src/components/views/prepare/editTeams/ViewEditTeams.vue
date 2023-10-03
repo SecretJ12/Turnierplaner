@@ -304,7 +304,6 @@ import DraggablePanel from "@/draggable/DraggablePanel.vue"
 import { getCompetitionDetails } from "@/backend/competition"
 import Button from "primevue/button"
 import { Mode } from "@/interfaces/competition"
-import ViewPlayerRegistration from "@/components/views/player/ViewPlayerRegistration.vue"
 import ViewPlayerRegistrationPopUp from "@/components/views/player/ViewPlayerRegistrationPopUp.vue"
 
 const route = useRoute()
