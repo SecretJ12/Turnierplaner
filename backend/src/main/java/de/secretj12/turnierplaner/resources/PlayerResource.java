@@ -9,6 +9,7 @@ import de.secretj12.turnierplaner.db.repositories.VerificationCodeRepository;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayer;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayerRegistrationForm;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserSex;
+import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserTeam;
 import io.quarkus.mailer.Mailer;
 import io.quarkus.scheduler.Scheduled;
 import io.smallrye.common.annotation.Blocking;
@@ -98,6 +99,38 @@ public class PlayerResource {
         }
 
         return "successfully added";
+    }
+
+
+    @POST
+    @Transactional
+    @Path("/admin/registration")
+    @Blocking
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public jUserPlayer adminPlayerRegistration(jUserPlayerRegistrationForm playerForm) {
+        if (playerRepository.getByName(playerForm.getFirstName(), playerForm.getLastName()) != null)
+            throw new WebApplicationException("A player already exists with this name", Response.Status.CONFLICT);
+
+        // TODO check phone number (only valid phone number)
+        // TODO check fields are not empty!
+        Player newPlayer = new Player();
+        newPlayer.setFirstName(playerForm.getFirstName());
+        newPlayer.setLastName(playerForm.getLastName());
+        newPlayer.setBirthday(playerForm.getBirthday());
+        if (playerForm.getSex() == null) throw new BadRequestException("Sex is null");
+        switch (playerForm.getSex()) {
+            case MALE -> newPlayer.setSex(SexType.MALE);
+            case FEMALE -> newPlayer.setSex(SexType.FEMALE);
+        }
+        newPlayer.setEmail(playerForm.getEmail());
+        newPlayer.setPhone(playerForm.getPhone());
+        newPlayer.setMailVerified(true);
+        // TODO Admin verification
+        newPlayer.setAdminVerified(true);
+        playerRepository.persist(newPlayer);
+
+        return new jUserPlayer(newPlayer);
     }
 
     @GET

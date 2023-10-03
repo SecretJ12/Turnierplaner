@@ -2,7 +2,24 @@
 	<div class="flex flex-column gap-5">
 		<div class="flex justify-content-around">
 			<div class="flex flex-row gap-2">
-				<Button label="Register Player 1"> </Button>
+				<Button label="Register Player 1" @click="registrationDialogA = true" />
+				<Dialog
+					v-model:visible="registrationDialogA"
+					modal
+					maximizable
+					header="SpielerRegistrierung"
+					:style="{ width: '70vw' }"
+				>
+					<ViewPlayerRegistrationPopUp ref="popUpA" @registered="addPlayerA" />
+					<template #footer>
+						<Button
+							:label="t('general.save')"
+							icon="pi pi-check"
+							@click="savePlayer"
+							autofocus
+						/>
+					</template>
+				</Dialog>
 				<div @click="toggleA">
 					<DraggablePanel
 						:list="deletedPlayerA"
@@ -287,6 +304,8 @@ import DraggablePanel from "@/draggable/DraggablePanel.vue"
 import { getCompetitionDetails } from "@/backend/competition"
 import Button from "primevue/button"
 import { Mode } from "@/interfaces/competition"
+import ViewPlayerRegistration from "@/components/views/player/ViewPlayerRegistration.vue"
+import ViewPlayerRegistrationPopUp from "@/components/views/player/ViewPlayerRegistrationPopUp.vue"
 
 const route = useRoute()
 const router = useRouter()
@@ -309,6 +328,12 @@ const deletedPlayerB = ref<searchedPlayer[]>([])
 
 const showDeletedPlayerA = ref()
 const showDeletedPlayerB = ref()
+
+const registrationDialogA = ref<boolean>(false)
+const registrationDialogB = ref<boolean>(false)
+
+const popUpA = ref(null)
+const popUpB = ref(null)
 
 const competition = getCompetitionDetails(route, t, toast, {
 	suc: () => {
@@ -565,6 +590,31 @@ function restore() {
 
 	deletedPlayerA.value = []
 	deletedPlayerB.value = []
+}
+function savePlayer() {
+	popUpA.value?.onSubmit()
+}
+
+function addPlayerA(player) {
+	console.log(player)
+	playersA.value.push({
+		id: player.id,
+		firstName: player.firstName,
+		lastName: player.lastName,
+		value: player.firstName + " " + player.lastName,
+	})
+	registrationDialogA.value = false
+}
+
+function addPlayerB(player) {
+	console.log(player)
+	playersB.value.push({
+		id: player.id,
+		firstName: player.firstName,
+		lastName: player.lastName,
+		value: player.firstName + " " + player.lastName,
+	})
+	registrationDialogA.value = false
 }
 </script>
 
