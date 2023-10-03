@@ -6,6 +6,7 @@
 		class="border-round select-none bg-red-500 font-bold justify-content-center cursor-pointer inline p-3 text-100 w-full"
 	>
 		Delete
+		<!--	TODO BUG make Icon not draggable!!! -->
 		<span class="material-symbols-outlined"> delete </span>
 	</div>
 	<component
