@@ -1,9 +1,9 @@
 <template>
 	<div
-		class="border-round select-none cursor-pointer inline p-3 text-50"
+		class="border-round select-none cursor-pointer pl-3 pr-3 h-3rem inline text-50 flex align-items-center"
 		:class="{ 'bg-yellow-500': secondary, 'bg-primary-400': !secondary }"
 	>
-		{{ props.player.name }}
+		<span>{{ props.player.name }}</span>
 	</div>
 </template>
 
