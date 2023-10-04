@@ -14,3 +14,10 @@ body {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
+
+.ghost {
+	opacity: 50%;
+}
+.swapGhost {
+	display: none !important;
+}
