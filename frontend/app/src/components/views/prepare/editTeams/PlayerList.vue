@@ -1,24 +1,28 @@
 <template>
 	<div class="flex flex-column gap-3">
-		<div class="flex flex-wrap align-items-end justify-content-end gap-3" style="width: 100%">
-			<AddPlayer class="flex-grow-1" :tournament="props.tournament" :competition="props.competition" />
+		<div
+			class="flex flex-wrap align-items-end justify-content-end gap-3"
+			style="width: 100%"
+		>
+			<AddPlayer
+				:competition="props.competition"
+				:tournament="props.tournament"
+				class="flex-grow-1"
+			/>
 			<DeleteBox :group="props.group" />
 		</div>
 
-		<Fieldset
-			style="width: 100%"
-			:legend="competition?.playerB.different ? 'Player 1' : 'Player'"
-		>
+		<Fieldset :legend="props.title" style="width: 100%">
 			<DraggablePanel
 				:list="props.players"
 				:put="[group]"
 				item-key="name"
 				:tag="TransitionGroup"
 				:component-data="{
-							tag: 'div',
-							name: props.animated ? 'playerList' : 'default',
-							type: 'transition',
-						}"
+					tag: 'div',
+					name: props.animated ? 'playerList' : 'default',
+					type: 'transition',
+				}"
 				:group="group"
 				class="flex flex-row flex-wrap gap-2 border-3 min-h-3rem border-round border-dashed"
 				style="box-sizing: content-box"
@@ -32,24 +36,28 @@
 </template>
 
 <script setup lang="ts">
-import { Tournament } from "@/interfaces/tournament";
-import { Competition } from "@/interfaces/competition";
-import AddPlayer from "@/components/views/prepare/editTeams/AddPlayer.vue";
-import DeleteBox from "@/components/views/prepare/editTeams/DeleteBox.vue";
-import { TransitionGroup } from "vue";
-import { signedUpPlayer } from "@/interfaces/player";
-import PlayerCard from "@/components/views/prepare/editTeams/PlayerCard.vue";
-import DraggablePanel from "@/draggable/DraggablePanel.vue";
+import { Tournament } from "@/interfaces/tournament"
+import { Competition } from "@/interfaces/competition"
+import AddPlayer from "@/components/views/prepare/editTeams/AddPlayer.vue"
+import DeleteBox from "@/components/views/prepare/editTeams/DeleteBox.vue"
+import { TransitionGroup } from "vue"
+import { signedUpPlayer } from "@/interfaces/player"
+import PlayerCard from "@/components/views/prepare/editTeams/PlayerCard.vue"
+import DraggablePanel from "@/draggable/DraggablePanel.vue"
 
-const props = withDefaults(defineProps<{
-	tournament: Tournament
-	competition: Competition
-	group: string
-	animated?: boolean
-	players: signedUpPlayer
-}>(), {
-	animated: false
-})
+const props = withDefaults(
+	defineProps<{
+		tournament: Tournament
+		competition: Competition
+		group: string
+		animated?: boolean
+		players: signedUpPlayer[]
+		title: string
+	}>(),
+	{
+		animated: false,
+	},
+)
 </script>
 
 <style scoped>
