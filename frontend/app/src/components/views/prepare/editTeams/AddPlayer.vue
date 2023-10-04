@@ -9,11 +9,11 @@
 				v-model="selectedPlayer"
 				:options="suggestionsPlayer"
 				:loading="isLoading"
-				:auto-filter-focus="true"
-				:filter-placeholder="t('ViewCompetition.searchPlayer')"
+				:autoFilterFocus="true"
+				:filterPlaceholder="t('ViewCompetition.searchPlayer')"
 				:placeholder="t('ViewCompetition.selectPlayer')"
 				option-label="value"
-				data-key="id"
+				dataKey="id"
 				filter
 				@filter="queryPlayer"
 			>
