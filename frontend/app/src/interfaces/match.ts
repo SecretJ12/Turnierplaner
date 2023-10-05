@@ -1,3 +1,5 @@
+import { Player, PlayerServer, playerServerToClient } from "@/interfaces/player"
+
 export interface Game {
 	scoreA: number
 	scoreB: number
@@ -35,15 +37,21 @@ export interface MatchServer {
 
 export interface Team {
 	id: string
-	playerA: {
-		id: string
-		firstName: string
-		lastName: string
-	}
-	playerB?: {
-		id: string
-		firstName: string
-		lastName: string
+	playerA: Player
+	playerB?: Player
+}
+
+export interface TeamServer {
+	id: string
+	playerA: PlayerServer
+	playerB?: PlayerServer
+}
+
+export function teamServerToClient(team: TeamServer): Team {
+	return {
+		id: team.id,
+		playerA: playerServerToClient(team.playerA),
+		playerB: team.playerB ? playerServerToClient(team.playerB) : undefined,
 	}
 }
 

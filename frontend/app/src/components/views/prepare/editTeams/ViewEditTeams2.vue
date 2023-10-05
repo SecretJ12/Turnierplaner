@@ -57,9 +57,9 @@ import { getTournamentDetails } from "@/backend/tournament"
 import { getCompetitionDetails } from "@/backend/competition"
 import PlayerList from "@/components/views/prepare/editTeams/PlayerList.vue"
 import { ref } from "vue"
-import { signedUpPlayer, TeamArray } from "@/interfaces/player"
+import { Player } from "@/interfaces/player"
 import axios from "axios"
-import { Team } from "@/interfaces/match"
+import { Team, TeamServer, teamServerToClient } from "@/interfaces/match"
 
 const route = useRoute()
 const router = useRouter()
@@ -72,16 +72,19 @@ const tournament = getTournamentDetails(
 	toast,
 	{},
 )
-const competition = getCompetitionDetails(route, t, toast, {})
+const competition = getCompetitionDetails(route, t, toast, {
+	suc: () => {
+		update()
+	},
+})
 
 // for restoring the initial state
-const initialTeam = ref<TeamArray[]>([])
-const initialPlayerA = ref<signedUpPlayer[]>([])
-const initialPlayerB = ref<signedUpPlayer[]>([])
-
-const teams = ref<TeamArray[]>([])
-const playersA = ref<signedUpPlayer[]>([])
-const playersB = ref<signedUpPlayer[]>([])
+const initialTeam = ref<Team[]>([])
+const initialPlayerA = ref<Player[]>([])
+const initialPlayerB = ref<Player[]>([])
+const teams = ref<Team[]>([])
+const playersA = ref<Player[]>([])
+const playersB = ref<Player[]>([])
 
 function reset() {
 	// TODO reset players
@@ -94,7 +97,7 @@ function reset() {
 }
 
 function save() {
-	// TODO udpate players
+	// TODO update players
 	toast.add({
 		severity: "success",
 		summary: "Success",
@@ -120,76 +123,20 @@ function update() {
 	initialPlayerB.value = []
 
 	axios
-		.get<Team[]>(
+		.get<TeamServer[]>(
 			`/tournament/${route.params.tourId}/competition/${route.params.compId}/signedUpTeams`,
 		)
 		.then((response) => {
-			response.data.forEach((team) => {
+			response.data.map(teamServerToClient).forEach((team) => {
 				if (team.playerA && team.playerB === null) {
-					playersA.value.push({
-						id: team.playerA.id,
-						firstName: team.playerA.firstName,
-						lastName: team.playerA.lastName,
-						value: team.playerA.firstName + " " + team.playerA.lastName,
-					})
-					initialPlayerA.value.push({
-						id: team.playerA.id,
-						firstName: team.playerA.firstName,
-						lastName: team.playerA.lastName,
-						value: team.playerA.firstName + " " + team.playerA.lastName,
-					})
+					playersA.value.push(team.playerA)
+					initialPlayerA.value.push(team.playerA)
 				} else if (team.playerA === null && team.playerB) {
-					playersB.value.push({
-						id: team.playerB.id,
-						firstName: team.playerB.firstName,
-						lastName: team.playerB.lastName,
-						value: team.playerB.firstName + " " + team.playerB.lastName,
-					})
-					initialPlayerB.value.push({
-						id: team.playerB.id,
-						firstName: team.playerB.firstName,
-						lastName: team.playerB.lastName,
-						value: team.playerB.firstName + " " + team.playerB.lastName,
-					})
+					playersB.value.push(team.playerB)
+					initialPlayerB.value.push(team.playerB)
 				} else if (team.playerA && team.playerB) {
-					teams.value.push({
-						id: team.id,
-						playerA: [
-							{
-								id: team.playerA.id,
-								firstName: team.playerA.firstName,
-								lastName: team.playerA.lastName,
-								value: team.playerA.firstName + " " + team.playerA.lastName,
-							},
-						],
-						playerB: [
-							{
-								id: team.playerB.id,
-								firstName: team.playerB.firstName,
-								lastName: team.playerB.lastName,
-								value: team.playerB.firstName + " " + team.playerB.lastName,
-							},
-						],
-					})
-					initialTeam.value.push({
-						id: team.id,
-						playerA: [
-							{
-								id: team.playerA.id,
-								firstName: team.playerA.firstName,
-								lastName: team.playerA.lastName,
-								value: team.playerA.firstName + " " + team.playerA.lastName,
-							},
-						],
-						playerB: [
-							{
-								id: team.playerB.id,
-								firstName: team.playerB.firstName,
-								lastName: team.playerB.lastName,
-								value: team.playerB.firstName + " " + team.playerB.lastName,
-							},
-						],
-					})
+					teams.value.push(team)
+					initialTeam.value.push(team)
 				}
 			})
 		})

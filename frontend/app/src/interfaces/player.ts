@@ -1,13 +1,29 @@
-export interface Player {
+export interface PlayerServer {
 	id: string
 	firstName: string
 	lastName: string
+}
+
+export interface Player extends PlayerServer {
+	name: string
+}
+
+export function playerServerToClient(player: PlayerServer): Player {
+	return {
+		id: player.id,
+		firstName: player.firstName,
+		lastName: player.lastName,
+		get name() {
+			return `${this.firstName} ${this.lastName}`
+		},
+	}
 }
 
 export interface searchedPlayer extends Player {
 	value: string
 }
 
+// TODO get rid of signedUpPlayer
 export interface signedUpPlayer {
 	firstName: string
 	lastName: string
