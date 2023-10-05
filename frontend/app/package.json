@@ -25,6 +25,7 @@
 		"primevue": "^3.34.0",
 		"sass": "^1.61.0",
 		"sortablejs": "^1.15.0",
+		"uuid": "^9.0.1",
 		"vee-validate": "^4.11.3",
 		"vue": "^3.3.4",
 		"vue-axios": "^3.5.2",
@@ -34,6 +35,7 @@
 	},
 	"devDependencies": {
 		"@types/sortablejs": "^1.15.2",
+		"@types/uuid": "^9.0.4",
 		"@typescript-eslint/eslint-plugin": "^6.4.0",
 		"@typescript-eslint/parser": "^6.4.0",
 		"@vitejs/plugin-vue": "^4.1.0",

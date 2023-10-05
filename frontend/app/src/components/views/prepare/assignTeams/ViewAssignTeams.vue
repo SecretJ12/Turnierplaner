@@ -428,13 +428,6 @@ function nextPage() {
 	transform: scale(0%);
 }
 
-.ghost {
-	opacity: 50%;
-}
-.swapGhost {
-	display: none !important;
-}
-
 .min-h-3rem {
 	min-height: 3rem;
 }

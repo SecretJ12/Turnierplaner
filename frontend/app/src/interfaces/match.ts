@@ -37,21 +37,21 @@ export interface MatchServer {
 
 export interface Team {
 	id: string
-	playerA: Player
-	playerB?: Player
+	playerA: Player | null
+	playerB: Player | null
 }
 
 export interface TeamServer {
 	id: string
-	playerA: PlayerServer
-	playerB?: PlayerServer
-}
+	playerA: PlayerServer | null;
+	playerB: PlayerServer | null
+};
 
 export function teamServerToClient(team: TeamServer): Team {
 	return {
 		id: team.id,
-		playerA: playerServerToClient(team.playerA),
-		playerB: team.playerB ? playerServerToClient(team.playerB) : undefined,
+		playerA: team.playerA ? playerServerToClient(team.playerA) : null,
+		playerB: team.playerB ? playerServerToClient(team.playerB) : null,
 	}
 }
 

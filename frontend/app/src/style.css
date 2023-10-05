@@ -21,3 +21,14 @@ body {
 .swapGhost {
 	display: none !important;
 }
+
+.playerList-enter-active,
+.playerList-leave-active {
+	transition: all 0.5s ease;
+}
+
+.playerList-enter-from,
+.playerList-leave-to {
+	opacity: 0;
+	transform: scale(0%);
+}

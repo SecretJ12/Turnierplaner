@@ -61,17 +61,6 @@ const props = withDefaults(
 </script>
 
 <style scoped>
-.playerList-enter-active,
-.playerList-leave-active {
-	transition: all 0.5s ease;
-}
-
-.playerList-enter-from,
-.playerList-leave-to {
-	opacity: 0;
-	transform: scale(0%);
-}
-
 .min-h-3rem {
 	min-height: 3rem;
 }
