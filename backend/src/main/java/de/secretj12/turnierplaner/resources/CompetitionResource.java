@@ -14,11 +14,14 @@ import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jD
 import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorCompetitionUpdate;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.competition.jUserCompetition;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.group.jUserGroupSystem;
+import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayer;
+import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayerRegistrationForm;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayerSignUpForm;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserTeam;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.knockout.jUserKnockoutSystem;
 import io.quarkus.security.UnauthorizedException;
 import io.quarkus.security.identity.SecurityIdentity;
+import io.smallrye.common.annotation.Blocking;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -267,6 +270,32 @@ public class CompetitionResource {
 
         // TODO notify by mail?
         return "Player registered";
+    }
+
+    @POST
+    @Transactional
+    @Path("/{compName}/signUpRegister/{playerSide}")
+    @Blocking
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public jUserPlayer registerSignUpPlayer(@PathParam("tourName") String tourName, @PathParam(
+            "compName") String compName, @PathParam("playerSide") String playerSide , jUserPlayerRegistrationForm playerForm) {
+        Player newPlayer = players.adminPlayerRegistration(playerForm);
+
+
+        Competition competition = competitions.getByName(tourName, compName);
+
+        Team team = new Team();
+        System.out.printf("playerSide: %s\n", playerSide);
+        if(playerSide.equals("playerA")){
+            team.setPlayerA(newPlayer);
+        }else{
+            team.setPlayerB(newPlayer);
+        }
+        team.setCompetition(competition);
+        teams.persist(team);
+
+        return new jUserPlayer(newPlayer);
     }
 
     private boolean conditionsFailA(Competition comp, Player player) {

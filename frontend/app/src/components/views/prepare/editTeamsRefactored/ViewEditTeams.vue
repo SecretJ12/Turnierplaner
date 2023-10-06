@@ -3,9 +3,10 @@
 		<div class="flex justify-content-around">
 			<div class="flex flex-row gap-2">
 				<AddPlayer
+					v-if="tournament && competition"
 					:competition="competition"
 					:tournament="tournament"
-					v-if="tournament && competition"
+					:player-a="false"
 					@addPlayer="addPlayerA"
 				/>
 				<div class="flex flex-column justify-content-end gap-2">
@@ -29,9 +30,10 @@
 			</SplitButton>
 			<div v-if="competition?.playerB.different" class="flex flex-row gap-2">
 				<AddPlayer
+					v-if="tournament && competition"
 					:competition="competition"
 					:tournament="tournament"
-					v-if="tournament && competition"
+					:player-a="false"
 					@addPlayer="addPlayerB"
 				/>
 				<div class="flex flex-column justify-content-end gap-2">

@@ -11,6 +11,7 @@ import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayerRegistr
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserSex;
 import io.quarkus.mailer.Mailer;
 import io.quarkus.scheduler.Scheduled;
+import io.quarkus.security.identity.SecurityIdentity;
 import io.smallrye.common.annotation.Blocking;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -33,6 +34,8 @@ public class PlayerResource {
     Mailer mailer;
     MailTemplates mailTemplates = new MailTemplates();
 
+    @Inject
+    SecurityIdentity securityIdentity;
 
     @GET
     @Transactional
@@ -101,18 +104,12 @@ public class PlayerResource {
     }
 
 
-    @POST
     @Transactional
-    @Path("/admin/registration")
-    @Blocking
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public jUserPlayer adminPlayerRegistration(jUserPlayerRegistrationForm playerForm) {
+    public Player adminPlayerRegistration(jUserPlayerRegistrationForm playerForm) {
+        if(!securityIdentity.hasRole("director")) throw new ForbiddenException("No permission to create player");
         if (playerRepository.getByName(playerForm.getFirstName(), playerForm.getLastName()) != null)
             throw new WebApplicationException("A player already exists with this name", Response.Status.CONFLICT);
 
-        // TODO check phone number (only valid phone number)
-        // TODO check fields are not empty!
         Player newPlayer = new Player();
         newPlayer.setFirstName(playerForm.getFirstName());
         newPlayer.setLastName(playerForm.getLastName());
@@ -129,7 +126,7 @@ public class PlayerResource {
         newPlayer.setAdminVerified(true);
         playerRepository.persist(newPlayer);
 
-        return new jUserPlayer(newPlayer);
+        return newPlayer;
     }
 
     @GET

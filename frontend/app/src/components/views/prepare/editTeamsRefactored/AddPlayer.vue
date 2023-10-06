@@ -1,7 +1,7 @@
 <template>
 	<div class="flex flex-column gap-2">
 		<ViewConditions
-			:beginGamePhase="props.tournament.game_phase.begin"
+			:begin-game-phase="props.tournament.game_phase.begin"
 			:player="props.competition.playerA"
 		/>
 		<div class="p-inputgroup">
@@ -9,11 +9,11 @@
 				v-model="selectedPlayer"
 				:options="suggestionsPlayer"
 				:loading="isLoading"
-				:autoFilterFocus="true"
-				:filterPlaceholder="t('ViewCompetition.searchPlayer')"
+				:auto-filter-focus="true"
+				:filter-placeholder="t('ViewCompetition.searchPlayer')"
 				:placeholder="t('ViewCompetition.selectPlayer')"
 				option-label="name"
-				dataKey="id"
+				data-key="id"
 				filter
 				@filter="queryPlayer"
 			>
@@ -26,8 +26,8 @@
 			</Dropdown>
 			<SplitButton
 				:label="t('general.signUp')"
-				@click="addPlayer"
 				:model="items"
+				@click="addPlayer"
 			/>
 		</div>
 		<Dialog
@@ -39,14 +39,15 @@
 		>
 			<ViewPlayerRegistrationPopUp
 				ref="submitButton"
+				:player-a="props.playerA"
 				@registered="registerPlayer"
 			/>
 			<template #footer>
 				<Button
 					:label="t('general.save')"
 					icon="pi pi-check"
-					@click="submitButton?.onSubmit()"
 					autofocus
+					@click="submitButton?.onSubmit()"
 				/>
 			</template>
 		</Dialog>
@@ -72,6 +73,7 @@ const toast = useToast()
 const props = defineProps<{
 	tournament: Tournament
 	competition: Competition
+	playerA: boolean
 }>()
 const emit = defineEmits(["addPlayer"])
 
@@ -134,6 +136,7 @@ function queryPlayer(event: DropdownFilterEvent) {
 					name: item.firstName + " " + item.lastName,
 				}
 			})
+			console.log(result)
 		})
 		.catch((error) => {
 			toast.add({

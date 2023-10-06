@@ -114,8 +114,13 @@ import { toTypedSchema } from "@vee-validate/yup"
 import { date, mixed, object, string } from "yup"
 import { useToast } from "primevue/usetoast"
 import { PlayerRegistration, playerServerToClient } from "@/interfaces/player"
+import { useRoute } from "vue-router"
 
 const { t } = useI18n({ inheritLocale: true })
+
+const route = useRoute()
+
+const props = defineProps<{ playerA: boolean }>()
 
 const phoneRegExp =
 	/^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)$/
@@ -152,14 +157,19 @@ const emit = defineEmits(["registered"])
 const onSubmit = handleSubmit((values) => {
 	// TODO move to external files
 	axios
-		.post("/player/admin/registration", {
-			firstName: values.firstName,
-			lastName: values.lastName,
-			sex: values.sex,
-			birthdate: dateToJson(values.birthdate),
-			email: values.email,
-			phone: values.phone,
-		})
+		.post(
+			`/tournament/${route.params.tourId}/competition/${
+				route.params.compId
+			}/signUpRegister/${props.playerA ? "playerA" : "playerB"}}`,
+			{
+				firstName: values.firstName,
+				lastName: values.lastName,
+				sex: values.sex,
+				birthdate: dateToJson(values.birthdate),
+				email: values.email,
+				phone: values.phone,
+			},
+		)
 		.then((player) => {
 			toast.add({
 				severity: "success",
