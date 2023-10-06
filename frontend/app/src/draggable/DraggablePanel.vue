@@ -124,7 +124,6 @@ function create() {
 
 			targetSingle = props.single && props.list.length === 1
 			if (props.wrap) {
-				console.log(event.from.id)
 				if (event.from.id === "top") {
 					props.list.splice(event.newIndex, 0, {
 						// TODO id generation

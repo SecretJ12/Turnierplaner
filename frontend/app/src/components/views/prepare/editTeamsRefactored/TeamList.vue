@@ -36,7 +36,7 @@
 							type: 'transition',
 						}"
 						group="playersA"
-						class="gap-2 align-items-center bg-blue-50 justify-content-center border border-dashed top"
+						class="border-3 border-dashed h-3rem border-top-3 border-round content-box"
 						style="min-width: 150px; min-height: 50px"
 						hook
 						@onRemove="cleanUpTeams"
@@ -57,7 +57,7 @@
 							type: 'transition',
 						}"
 						group="playersB"
-						class="border-3 border-top-none border-dashed h-3rem border-round-bottom content-box"
+						class="border-3 border-top-none border-dashed h-3rem border-bottom-3 border-round content-box"
 						:class="props.different ? 'bottomDifferent' : 'bottomSame'"
 						style="min-width: 150px; min-height: 50px"
 						hook
