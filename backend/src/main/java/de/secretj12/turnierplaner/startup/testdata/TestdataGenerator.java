@@ -201,7 +201,7 @@ public class TestdataGenerator {
         matchRepository.persist(match);
     }
 
-    private Player createPlayer() {
+    private Player createPlayer(AGE_RESTR ageRestr) {
         Player player = new Player();
         player.setFirstName(faker.name().firstName());
         player.setLastName(faker.name().lastName());
@@ -209,14 +209,25 @@ public class TestdataGenerator {
         player.setPhone(faker.phoneNumber().cellPhone());
         player.setMailVerified(true);
         player.setAdminVerified(true);
-        player.setBirthday(LocalDate.now());
+        switch(ageRestr){
+            case NONE -> {
+                player.setBirthday(LocalDate.now().minusYears(random.nextInt(50)));
+            }
+            case U18 -> {
+                player.setBirthday(LocalDate.now().minusYears(random.nextInt(18)));
+            }
+            case O50 -> {
+                player.setBirthday(LocalDate.now().minusYears(random.nextInt(20)+50));
+            }
+
+        }
         return player;
     }
 
     private Team[] createTeams(Competition competition, CompetitionSettings competitionSettings) {
         Team[] teams = new Team[competitionSettings.getTeamNumbers()];
         for (int i = 0; i < competitionSettings.getTeamNumbers(); i++) {
-            Player player = createPlayer();
+            Player player = createPlayer(competitionSettings.getAgeRestr());
             if (competitionSettings.getSex() == Sex.ANY) {
                 player.setSex(SexType.MALE);
             } else {
@@ -229,7 +240,7 @@ public class TestdataGenerator {
             teams[i].setPlayerA(player);
 
             if (competitionSettings.getCompetitionMode() == CompetitionMode.DOUBLES) {
-                Player player2 = createPlayer();
+                Player player2 = createPlayer(competitionSettings.getAgeRestr());
                 if (competitionSettings.getSex() == Sex.ANY || competitionSettings.getSex() == Sex.FEMALE) {
                     player2.setSex(SexType.FEMALE);
                 } else {
