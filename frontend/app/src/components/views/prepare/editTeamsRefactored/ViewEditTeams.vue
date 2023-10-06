@@ -212,7 +212,7 @@ async function randomize() {
 	if (!competition.value) return
 	isSorting.value = true
 	for (const i in teams.value) {
-		if (teams.value[i].playerA.length === 0) {
+		if (teams.value[i].playerA.length === 0 && playersA.value.length !== 0) {
 			const r = Math.floor(Math.random() * playersA.value.length)
 			const element = playersA.value[r]
 			playersA.value = playersA.value.filter((v, i) => i !== r)
@@ -220,17 +220,15 @@ async function randomize() {
 			teams.value[i].playerA.push(element)
 			await sleep(delay.value)
 		}
-		if (competition.value.playerB.different) {
-			if (teams.value[i].playerB.length === 0) {
+		if (teams.value[i].playerB.length === 0 && playersB.value.length !== 0) {
+			if (competition.value.playerB.different) {
 				const r = Math.floor(Math.random() * playersB.value.length)
 				const element = playersB.value[r]
 				playersB.value = playersB.value.filter((v, i) => i !== r)
 				await sleep(delayBetween.value)
 				teams.value[i].playerB.push(element)
 				await sleep(delay.value)
-			}
-		} else {
-			if (teams.value[i].playerB.length === 0) {
+			} else {
 				const r = Math.floor(Math.random() * playersA.value.length)
 				const element = playersA.value[r]
 				playersA.value = playersA.value.filter((v, i) => i !== r)
@@ -241,6 +239,7 @@ async function randomize() {
 		}
 	}
 	isSorting.value = false
+	console.log(teams.value)
 }
 
 async function reset() {
