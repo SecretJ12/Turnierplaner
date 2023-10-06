@@ -12,7 +12,7 @@
 			id="trash"
 			:list="trash"
 			:put="[props.group]"
-			itemKey="id"
+			item-key="id"
 			tag="div"
 			:group="props.group"
 			class="flex flex-row flex-wrap gap-2 border-3 h-3rem border-round border-dashed w-10rem z-1"
@@ -29,7 +29,7 @@
 					id="trash"
 					:list="trash"
 					:put="[props.group]"
-					itemKey="id"
+					item-key="id"
 					tag="div"
 					:group="props.group"
 					class="flex flex-wrap gap-2 max-w-30rem"
@@ -68,8 +68,7 @@ function enter(event: Event) {
 }
 function leave() {
 	setTimeout(() => {
-		if (new Date().getTime() - lastEnter.getTime() > timeout)
-			op.value?.hide()
+		if (new Date().getTime() - lastEnter.getTime() > timeout) op.value?.hide()
 	}, timeout)
 }
 </script>

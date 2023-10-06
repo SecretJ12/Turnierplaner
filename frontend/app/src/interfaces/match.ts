@@ -43,9 +43,9 @@ export interface Team {
 
 export interface TeamServer {
 	id: string
-	playerA: PlayerServer | null;
+	playerA: PlayerServer | null
 	playerB: PlayerServer | null
-};
+}
 
 export function teamServerToClient(team: TeamServer): Team {
 	return {

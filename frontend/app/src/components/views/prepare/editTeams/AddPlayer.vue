@@ -1,7 +1,7 @@
 <template>
 	<div class="flex flex-column gap-2">
 		<ViewConditions
-			:beginGamePhase="props.tournament.game_phase.begin"
+			:begin-game-phase="props.tournament.game_phase.begin"
 			:player="props.competition.playerA"
 		/>
 		<div class="p-inputgroup">
@@ -9,11 +9,11 @@
 				v-model="selectedPlayer"
 				:options="suggestionsPlayer"
 				:loading="isLoading"
-				:autoFilterFocus="true"
-				:filterPlaceholder="t('ViewCompetition.searchPlayer')"
+				:auto-filter-focus="true"
+				:filter-placeholder="t('ViewCompetition.searchPlayer')"
 				:placeholder="t('ViewCompetition.selectPlayer')"
 				option-label="value"
-				dataKey="id"
+				data-key="id"
 				filter
 				@filter="queryPlayer"
 			>
@@ -32,15 +32,15 @@
 </template>
 
 <script setup lang="ts">
-import ViewConditions from "@/components/views/competition/signup/ViewConditions.vue";
-import { useI18n } from "vue-i18n";
-import { DropdownFilterEvent } from "primevue/dropdown";
-import axios from "axios";
-import { Player, searchedPlayer } from "@/interfaces/player";
-import { Competition, Sex } from "@/interfaces/competition";
-import { Tournament } from "@/interfaces/tournament";
-import { ref } from "vue";
-import { useToast } from "primevue/usetoast";
+import ViewConditions from "@/components/views/competition/signup/ViewConditions.vue"
+import { useI18n } from "vue-i18n"
+import { DropdownFilterEvent } from "primevue/dropdown"
+import axios from "axios"
+import { Player, searchedPlayer } from "@/interfaces/player"
+import { Competition, Sex } from "@/interfaces/competition"
+import { Tournament } from "@/interfaces/tournament"
+import { ref } from "vue"
+import { useToast } from "primevue/usetoast"
 
 const { t } = useI18n({ inheritLocale: true })
 const toast = useToast()
@@ -49,7 +49,7 @@ const props = defineProps<{
 	tournament: Tournament
 	competition: Competition
 }>()
-const emit = defineEmits(['addPlayer'])
+const emit = defineEmits(["addPlayer"])
 
 const selectedPlayer = ref<searchedPlayer | null>(null)
 const suggestionsPlayer = ref<searchedPlayer[]>([])
@@ -71,21 +71,21 @@ function queryPlayer(event: DropdownFilterEvent) {
 	axios
 		.get<Player[]>(
 			`/player/find?search=${event.value}` +
-			(props.competition.playerA.sex !== Sex.ANY
-				? `&sex=${props.competition.playerA.sex}`
-				: "") +
-			(props.competition.playerA.hasMinAge &&
-			props.competition.playerA.minAge !== null
-				? `&minAge=${props.competition.playerA.minAge
-					.toISOString()
-					.slice(0, 10)}`
-				: "") +
-			(props.competition.playerA.hasMaxAge &&
-			props.competition.playerA.maxAge !== null
-				? `&minAge=${props.competition.playerA.maxAge
-					.toISOString()
-					.slice(0, 10)}`
-				: ""),
+				(props.competition.playerA.sex !== Sex.ANY
+					? `&sex=${props.competition.playerA.sex}`
+					: "") +
+				(props.competition.playerA.hasMinAge &&
+				props.competition.playerA.minAge !== null
+					? `&minAge=${props.competition.playerA.minAge
+							.toISOString()
+							.slice(0, 10)}`
+					: "") +
+				(props.competition.playerA.hasMaxAge &&
+				props.competition.playerA.maxAge !== null
+					? `&minAge=${props.competition.playerA.maxAge
+							.toISOString()
+							.slice(0, 10)}`
+					: ""),
 		)
 		.then((result) => {
 			// TODO avoid races
@@ -117,10 +117,9 @@ function addPlayer() {
 		emit("addPlayer", {
 			firstName: selectedPlayer.value.firstName,
 			lastName: selectedPlayer.value.lastName,
-			name: `${selectedPlayer.value.firstName} ${selectedPlayer.value.lastName}`
+			name: `${selectedPlayer.value.firstName} ${selectedPlayer.value.lastName}`,
 		})
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
