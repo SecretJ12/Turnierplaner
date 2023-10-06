@@ -25,7 +25,7 @@
 				<div style="grid-auto-rows: 1fr">
 					<DraggablePanel
 						:list="outerItem.playerA"
-						:put="['playersA', 'deletedPlayerA']"
+						:put="different ? ['playersA'] : ['playersA', 'playersB']"
 						item-key="id"
 						:tag="TransitionGroup"
 						single
@@ -66,7 +66,7 @@
 						@onRemove="cleanUpTeams"
 					>
 						<template #default="{ item: innerItem }">
-							<PlayerBox :name="innerItem.name" :secondary="playerBDifferent" />
+							<PlayerBox :name="innerItem.name" :secondary="different" />
 						</template>
 					</DraggablePanel>
 				</div>
@@ -82,7 +82,7 @@ import DraggablePanel from "@/draggable/DraggablePanel.vue"
 import PlayerBox from "@/components/views/prepare/editTeamsRefactored/PlayerBox.vue"
 
 const props = defineProps<{
-	playerBDifferent: boolean | undefined
+	different: boolean | undefined
 	teams: TeamArray[]
 }>()
 

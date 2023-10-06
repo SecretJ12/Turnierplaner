@@ -53,7 +53,7 @@
 			<TeamList
 				v-if="competition?.mode === Mode.DOUBLE"
 				:teams="teams"
-				:player-b-different="competition?.playerB.different"
+				:different="competition?.playerB.different"
 				@cleanUpTeams="cleanUpTeams"
 			/>
 			<PlayerList
