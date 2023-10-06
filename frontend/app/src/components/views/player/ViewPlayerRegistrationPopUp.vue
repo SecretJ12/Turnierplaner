@@ -113,7 +113,7 @@ import { useForm } from "vee-validate"
 import { toTypedSchema } from "@vee-validate/yup"
 import { date, mixed, object, string } from "yup"
 import { useToast } from "primevue/usetoast"
-import { PlayerRegistration } from "@/interfaces/player"
+import { PlayerRegistration, playerServerToClient } from "@/interfaces/player"
 
 const { t } = useI18n({ inheritLocale: true })
 
@@ -164,10 +164,9 @@ const onSubmit = handleSubmit((values) => {
 			toast.add({
 				severity: "success",
 				summary: t("ViewPlayerRegistration.registration_successful"),
-				detail: t("ViewPlayerRegistration.after"),
 				life: 3000,
 			})
-			emit("registered", player.data)
+			emit("registered", playerServerToClient(player.data))
 		})
 		.catch((error) => {
 			console.log(error)
