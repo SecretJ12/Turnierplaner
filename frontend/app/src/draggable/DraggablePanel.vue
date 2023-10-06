@@ -116,7 +116,6 @@ function create() {
 			}
 			if (props.hook) {
 				emit("onRemove")
-				console.log(props.cleanUpHook)
 			}
 			reload()
 		},
@@ -125,7 +124,8 @@ function create() {
 
 			targetSingle = props.single && props.list.length === 1
 			if (props.wrap) {
-				if (event.from.id === "playerA") {
+				console.log(event.from.id)
+				if (event.from.id === "top") {
 					props.list.splice(event.newIndex, 0, {
 						// TODO id generation
 						id: (Math.random() * 900000000).toString(),
