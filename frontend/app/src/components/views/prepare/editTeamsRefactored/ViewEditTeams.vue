@@ -37,7 +37,7 @@
 					@addPlayer="addPlayerB"
 				/>
 				<div class="flex flex-column justify-content-end gap-2">
-					<DeleteBox group="playersB" />
+					<DeleteBox group="playersB" :secondary="true" />
 				</div>
 			</div>
 		</div>
@@ -64,6 +64,7 @@
 				:list="playersB"
 				:put="['playersB']"
 				group="playersB"
+				:secondary="true"
 			/>
 		</div>
 		<div class="mt-2 grid grid-nogutter justify-content-between">
@@ -93,7 +94,7 @@ import { Player, playerServerToClient, TeamArray } from "@/interfaces/player"
 import { getCompetitionDetails } from "@/backend/competition"
 import Button from "primevue/button"
 import { Mode } from "@/interfaces/competition"
-import DeleteBox from "@/components/views/prepare/editTeams/DeleteBox.vue"
+import DeleteBox from "@/components/views/prepare/editTeamsRefactored/DeleteBox.vue"
 import AddPlayer from "@/components/views/prepare/editTeamsRefactored/AddPlayer.vue"
 import { getTournamentDetails } from "@/backend/tournament"
 import PlayerList from "@/components/views/prepare/editTeamsRefactored/PlayerList.vue"

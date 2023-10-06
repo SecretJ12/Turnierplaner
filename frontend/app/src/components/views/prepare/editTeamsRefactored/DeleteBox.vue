@@ -37,7 +37,7 @@
 					dismissable
 				>
 					<template #default="{ item }">
-						<PlayerBox :name="item.name" />
+						<PlayerBox :name="item.name" :secondary="secondary" />
 					</template>
 				</DraggablePanel>
 			</div>
@@ -54,6 +54,7 @@ import PlayerBox from "@/components/views/prepare/editTeamsRefactored/PlayerBox.
 
 const props = defineProps<{
 	group: string
+	secondary?: boolean
 }>()
 
 const trash = ref<Player[]>([])
@@ -63,6 +64,7 @@ const op = ref<OverlayPanel>()
 const timeout = 300
 let lastEnter = new Date()
 function enter(event: Event) {
+	console.log(props.group)
 	lastEnter = new Date()
 	op.value?.show(event)
 }
