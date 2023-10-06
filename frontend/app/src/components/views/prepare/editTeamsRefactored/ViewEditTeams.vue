@@ -323,10 +323,12 @@ function restore() {
 }
 function addPlayerA(player: Player) {
 	playersA.value.push(player)
+	initialPlayerA.value.push(player)
 }
 
 function addPlayerB(player: Player) {
 	playersB.value.push(player)
+	initialPlayerB.value.push(player)
 }
 </script>
 
