@@ -35,7 +35,7 @@
 			modal
 			maximizable
 			header="SpielerRegistrierung"
-			:style="{ width: '70vw' }"
+			:style="{ width: '50vw' }"
 		>
 			<ViewPlayerRegistrationPopUp
 				ref="submitButton"
