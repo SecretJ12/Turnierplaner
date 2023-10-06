@@ -24,6 +24,7 @@
 			<template #default="{ item: outerItem }">
 				<div style="grid-auto-rows: 1fr">
 					<DraggablePanel
+						id="playerA"
 						:list="outerItem.playerA"
 						:put="different ? ['playersA'] : ['playersA', 'playersB']"
 						item-key="id"
@@ -45,6 +46,7 @@
 						</template>
 					</DraggablePanel>
 					<DraggablePanel
+						id="playerB"
 						:list="outerItem.playerB"
 						:put="different ? ['playersB'] : ['playersA', 'playersB']"
 						item-key="id"
