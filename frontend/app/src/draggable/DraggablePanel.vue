@@ -124,7 +124,7 @@ function create() {
 
 			targetSingle = props.single && props.list.length === 1
 			if (props.wrap) {
-				if (event.from.id === "top") {
+				if (event.from.id === "playerA") {
 					props.list.splice(event.newIndex, 0, {
 						// TODO id generation
 						id: (Math.random() * 900000000).toString(),

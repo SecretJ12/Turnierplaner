@@ -1,7 +1,7 @@
 <template>
 	<Fieldset :legend="legend" class="flex-1">
 		<DraggablePanel
-			id="playerA"
+			:id="props.id"
 			:list="list"
 			:put="put"
 			item-key="id"
@@ -11,12 +11,12 @@
 				name: 'default',
 				type: 'transition',
 			}"
-			group="playersA"
+			:group="props.group"
 			class="flex flex-wrap gap-2 border-3 min-h-3rem border-round border-dashed"
 			style="min-height: 4em"
 		>
 			<template #default="{ item }">
-				<PlayerBox :name="item.name" />
+				<PlayerBox :name="item.name" :secondary="secondary" />
 			</template>
 		</DraggablePanel>
 	</Fieldset>
@@ -34,6 +34,7 @@ const props = defineProps<{
 	list: Player[]
 	secondary?: boolean
 	legend: string
+	id: string
 }>()
 </script>
 

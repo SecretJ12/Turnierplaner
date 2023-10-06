@@ -51,6 +51,7 @@
 				"
 				:list="playersA"
 				legend="Team A"
+				id="playerA"
 			/>
 			<TeamList
 				v-if="competition?.mode === Mode.DOUBLE"
@@ -65,6 +66,7 @@
 				:put="['playersB']"
 				group="playersB"
 				:secondary="true"
+				id="playerB"
 			/>
 		</div>
 		<div class="mt-2 grid grid-nogutter justify-content-between">

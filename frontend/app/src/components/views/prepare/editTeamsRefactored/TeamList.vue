@@ -24,7 +24,6 @@
 			<template #default="{ item: outerItem }">
 				<div style="grid-auto-rows: 1fr">
 					<DraggablePanel
-						id="top"
 						:list="outerItem.playerA"
 						:put="different ? ['playersA'] : ['playersA', 'playersB']"
 						item-key="id"
@@ -36,7 +35,7 @@
 							type: 'transition',
 						}"
 						group="playersA"
-						class="border-3 border-dashed h-3rem border-top-3 border-round content-box"
+						class="border-3 top border-dashed h-3rem border-top-3 border-round content-box"
 						style="min-width: 150px; min-height: 50px"
 						hook
 						@onRemove="cleanUpTeams"
@@ -92,7 +91,7 @@ function cleanUpTeams() {
 </script>
 
 <style scoped>
-#top {
+.top {
 	border-left-color: var(--primary-400);
 	border-top-color: var(--primary-400);
 	border-right-color: var(--primary-400);
