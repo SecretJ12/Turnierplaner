@@ -76,7 +76,6 @@
 			<!-- TODO add @click -->
 			<Button :label="t('general.save')" severity="success"> </Button>
 			<Button
-				v-if="route.params.step !== 'scheduleMatches'"
 				label="Next"
 				icon="pi pi-angle-right"
 				icon-pos="right"
