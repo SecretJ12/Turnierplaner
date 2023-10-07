@@ -110,4 +110,8 @@ function cleanUpTeams() {
 	border-bottom-color: var(--yellow-500);
 	border-right-color: var(--yellow-500);
 }
+
+.content-box {
+	box-sizing: content-box;
+}
 </style>
