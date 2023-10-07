@@ -16,7 +16,7 @@
 			style="min-height: 4em"
 		>
 			<template #default="{ item }">
-				<slot :playerName="item.name" />
+				<slot :item="item" />
 			</template>
 		</DraggablePanel>
 	</Fieldset>

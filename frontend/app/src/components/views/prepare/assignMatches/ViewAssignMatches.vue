@@ -1,44 +1,16 @@
 <template>
 	<div class="grid">
+		<DraggableList group="teams" :put="['teams']" :list="teams" legend="Teams">
+			<template v-slot="slotProp">
+				<TeamBox
+					:player-a="slotProp.item.playerA.name"
+					:player-b="slotProp.item.playerB?.name"
+					:different="true"
+				/>
+			</template>
+		</DraggableList>
 		<div class="col-4">
 			<Button class="mb-2"> Shuffle</Button>
-			<DataTable :value="teams" show-gridlines striped-rows>
-				<Column header="Teams" field="id" class="w-6">
-					<template #body="{ index }">
-						<div>
-							<DraggablePanel
-								:list="[teams[index]]"
-								:put="['teams']"
-								item-key="id"
-								:tag="TransitionGroup"
-								:component-data="{
-									tag: 'div',
-									name: 'default',
-									type: 'transition',
-								}"
-								group="teams"
-								single
-								class="flex align-items-center justify-content-center"
-							>
-								<template #default="{ item }">
-									<PlayerCard
-										:player="{
-											name:
-												item.playerA.firstName +
-												item.playerA.lastName +
-												(item.playerB?.firstName
-													? ' // ' +
-													  item.playerB?.firstName +
-													  item.playerB?.lastName
-													: ''),
-										}"
-									/>
-								</template>
-							</DraggablePanel>
-						</div>
-					</template>
-				</Column>
-			</DataTable>
 		</div>
 
 		<!-- TODO some more drag'n'drop stuff -->
@@ -96,11 +68,11 @@ import { useToast } from "primevue/usetoast"
 import ViewKnockoutTree from "@/components/views/competition/knockoutSystem/ViewKnockoutTree.vue"
 import { TourType } from "@/interfaces/competition"
 import { KnockoutMatch } from "@/interfaces/knockoutSystem"
-import { ref, TransitionGroup } from "vue"
+import { ref } from "vue"
 import axios from "axios"
-import DraggablePanel from "@/draggable/DraggablePanel.vue"
-import { Team } from "@/interfaces/match"
-import PlayerCard from "@/components/views/prepare/assignTeams/PlayerCard.vue"
+import { Team, teamServerToClient } from "@/interfaces/match"
+import TeamBox from "@/components/views/prepare/assignMatches/TeamBox.vue"
+import DraggableList from "@/draggable/DraggableList.vue"
 
 const route = useRoute()
 const router = useRouter()
@@ -144,13 +116,15 @@ const knockoutSystem = {
 }
 
 function update() {
+	teams.value = []
 	axios
 		.get<Team[]>(
 			`tournament/${route.params.tourId}/competition/${route.params.compId}/signedUpTeams`,
 		)
 		.then((response) => {
-			teams.value = response.data
-			console.log(teams.value)
+			response.data.forEach((team) => {
+				teams.value.push(teamServerToClient(team))
+			})
 		})
 		.catch((error) => {
 			console.log(error)

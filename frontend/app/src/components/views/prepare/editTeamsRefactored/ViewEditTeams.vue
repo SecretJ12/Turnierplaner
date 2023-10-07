@@ -54,7 +54,7 @@
 				id="playerA"
 			>
 				<template v-slot="slotProp">
-					<PlayerBox :name="slotProp.playerName" />
+					<PlayerBox :name="slotProp.item.name" />
 				</template>
 			</DraggableList>
 			<TeamList
@@ -72,7 +72,7 @@
 				id="playerB"
 			>
 				<template v-slot="slotProp">
-					<PlayerBox :name="slotProp.playerName" :secondary="true" />
+					<PlayerBox :name="slotProp.item.name" :secondary="true" />
 				</template>
 			</DraggableList>
 		</div>
