@@ -42,7 +42,7 @@
 			</div>
 		</div>
 		<div class="flex flex-row justify-content-around">
-			<PlayerList
+			<DraggableList
 				group="playersA"
 				:put="
 					competition?.playerB.different
@@ -52,22 +52,29 @@
 				:list="playersA"
 				legend="Team A"
 				id="playerA"
-			/>
+			>
+				<template v-slot="slotProp">
+					<PlayerBox :name="slotProp.playerName" />
+				</template>
+			</DraggableList>
 			<TeamList
 				v-if="competition?.mode === Mode.DOUBLE"
 				:teams="teams"
 				:different="competition?.playerB.different"
 				@cleanUpTeams="cleanUpTeams"
 			/>
-			<PlayerList
+			<DraggableList
 				v-if="competition?.playerB.different"
 				legend="Team B"
 				:list="playersB"
 				:put="['playersB']"
 				group="playersB"
-				:secondary="true"
 				id="playerB"
-			/>
+			>
+				<template v-slot="slotProp">
+					<PlayerBox :name="slotProp.playerName" :secondary="true" />
+				</template>
+			</DraggableList>
 		</div>
 		<div class="mt-2 grid grid-nogutter justify-content-between">
 			<Button disabled icon="pi pi-angle-left" icon-pos="left" label="Back" />
@@ -99,8 +106,9 @@ import { Mode } from "@/interfaces/competition"
 import DeleteBox from "@/components/views/prepare/editTeamsRefactored/DeleteBox.vue"
 import AddPlayer from "@/components/views/prepare/editTeamsRefactored/AddPlayer.vue"
 import { getTournamentDetails } from "@/backend/tournament"
-import PlayerList from "@/components/views/prepare/editTeamsRefactored/PlayerList.vue"
 import TeamList from "@/components/views/prepare/editTeamsRefactored/TeamList.vue"
+import PlayerBox from "@/components/views/prepare/editTeamsRefactored/PlayerBox.vue"
+import DraggableList from "@/draggable/DraggableList.vue"
 
 const route = useRoute()
 const router = useRouter()
