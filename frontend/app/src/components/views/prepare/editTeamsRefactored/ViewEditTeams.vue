@@ -70,10 +70,11 @@
 			/>
 		</div>
 		<div class="mt-2 grid grid-nogutter justify-content-between">
+			<Button disabled icon="pi pi-angle-left" icon-pos="left" label="Back" />
 			<!--TODO internalization-->
-			<Button label="Reset" @click="restore" />
+			<Button label="Reset" severity="danger" @click="restore" />
 			<!-- TODO add @click -->
-			<Button :label="t('general.save')"> </Button>
+			<Button :label="t('general.save')" severity="success"> </Button>
 			<Button
 				v-if="route.params.step !== 'scheduleMatches'"
 				label="Next"
@@ -239,7 +240,6 @@ async function randomize() {
 		}
 	}
 	isSorting.value = false
-	console.log(teams.value)
 }
 
 async function reset() {
