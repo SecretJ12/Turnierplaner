@@ -17,7 +17,7 @@
 				type: 'transition',
 			}"
 			group="teams"
-			class="flex flex-wrap inline-block gap-2 border-3 border-round border-dashed"
+			class="flex flex-wrap inline-block gap-2 border-3 border-round border-dashed justify-content-around"
 			style="min-height: 4em"
 			wrap
 		>
