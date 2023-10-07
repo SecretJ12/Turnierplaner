@@ -24,15 +24,14 @@
 
 <script setup lang="ts">
 import DraggablePanel from "@/draggable/DraggablePanel.vue"
-import { Player } from "@/interfaces/player"
 import { TransitionGroup } from "vue"
 
 const props = defineProps<{
 	group: string
 	put: string[]
-	list: Player[]
+	list: any[]
 	legend: string
-	id: string
+	id?: string
 }>()
 </script>
 
