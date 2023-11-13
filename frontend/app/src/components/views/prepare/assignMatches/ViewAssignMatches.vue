@@ -71,7 +71,7 @@ import { KnockoutMatch } from "@/interfaces/knockoutSystem"
 import { ref } from "vue"
 import axios from "axios"
 import { Team, teamServerToClient } from "@/interfaces/match"
-import TeamBox from "@/components/views/prepare/assignMatches/TeamBox.vue"
+import TeamBox from "@/components/views/prepare/editTeams/TeamBox.vue"
 import DraggableList from "@/draggable/DraggableList.vue"
 
 const route = useRoute()

@@ -14,14 +14,13 @@
 				}"
 			/>
 			<template v-if="competition.mode === Mode.DOUBLE">
-				<div class="col-4">
+				<TeamList :competition="competition" :teams="teams" class="col-4">
 					<SplitButton
 						v-if="competition?.mode === Mode.DOUBLE"
 						:disabled="isSorting"
 						:model="randomizeItems"
 						class="w-fit"
 						label="Randomize"
-						severity="help"
 						@click="randomize"
 					>
 						<template #icon>
@@ -30,15 +29,15 @@
 							>
 						</template>
 					</SplitButton>
-					<TeamList />
-				</div>
+				</TeamList>
 				<PlayerList
 					:animated="isSorting"
 					:competition="competition"
 					:players="playersB"
 					:tournament="tournament"
 					class="col-4"
-					group="playersA"
+					:secondary="true"
+					group="playersB"
 					title="Players B"
 				/>
 			</template>
@@ -106,7 +105,7 @@ const competition = getCompetitionDetails(route, t, toast, {
 })
 const isSorting = ref(false)
 
-//;;;;; ;for restoring the initial state
+// for restoring the initial state
 const initialTeam = ref<Team[]>([])
 const initialPlayerA = ref<Player[]>([])
 const initialPlayerB = ref<Player[]>([])

@@ -3,20 +3,33 @@
 		<div
 			id="top"
 			class="border-3 border-dashed h-3rem border-round-top content-box"
-		></div>
+		>
+			<PlayerBox v-if="team.playerA" :name="team.playerA.name"> </PlayerBox>
+		</div>
 		<div
 			:class="{
 				bottomSame: !props.different,
 				bottomDifferent: props.different,
 			}"
 			class="border-3 border-top-none border-dashed h-3rem border-round-bottom content-box"
-		></div>
+		>
+			<PlayerBox
+				v-if="team.playerB"
+				:name="team.playerB.name"
+				:secondary="different"
+			>
+			</PlayerBox>
+		</div>
 	</div>
 </template>
 
 <script lang="ts" setup>
+import { Team } from "@/interfaces/match"
+import PlayerBox from "@/components/views/prepare/editTeamsRefactored/PlayerBox.vue"
+
 const props = defineProps<{
 	different: boolean
+	team: Team
 }>()
 </script>
 

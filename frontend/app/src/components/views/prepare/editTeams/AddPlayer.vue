@@ -12,7 +12,7 @@
 				:auto-filter-focus="true"
 				:filter-placeholder="t('ViewCompetition.searchPlayer')"
 				:placeholder="t('ViewCompetition.selectPlayer')"
-				option-label="value"
+				option-label="name"
 				data-key="id"
 				filter
 				@filter="queryPlayer"
@@ -36,7 +36,7 @@ import ViewConditions from "@/components/views/competition/signup/ViewConditions
 import { useI18n } from "vue-i18n"
 import { DropdownFilterEvent } from "primevue/dropdown"
 import axios from "axios"
-import { Player, searchedPlayer } from "@/interfaces/player"
+import { Player, playerServerToClient } from "@/interfaces/player"
 import { Competition, Sex } from "@/interfaces/competition"
 import { Tournament } from "@/interfaces/tournament"
 import { ref } from "vue"
@@ -51,13 +51,13 @@ const props = defineProps<{
 }>()
 const emit = defineEmits(["addPlayer"])
 
-const selectedPlayer = ref<searchedPlayer | null>(null)
-const suggestionsPlayer = ref<searchedPlayer[]>([])
+const selectedPlayer = ref<Player | null>(null)
+const suggestionsPlayer = ref<Player[]>([])
 const isLoading = ref<boolean>(false)
 function queryPlayer(event: DropdownFilterEvent) {
 	isLoading.value = true
 	suggestionsPlayer.value = suggestionsPlayer.value.filter((item) => {
-		return item.value.toLowerCase().includes(event.value.toLowerCase())
+		return item.name.toLowerCase().includes(event.value.toLowerCase())
 	})
 
 	if (
@@ -90,12 +90,7 @@ function queryPlayer(event: DropdownFilterEvent) {
 		.then((result) => {
 			// TODO avoid races
 			suggestionsPlayer.value = result.data.map((item) => {
-				return {
-					id: item.id,
-					firstName: item.firstName,
-					lastName: item.lastName,
-					value: item.firstName + " " + item.lastName,
-				}
+				return playerServerToClient(item)
 			})
 		})
 		.catch((error) => {

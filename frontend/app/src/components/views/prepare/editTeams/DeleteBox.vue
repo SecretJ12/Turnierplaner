@@ -37,7 +37,7 @@
 					dismissable
 				>
 					<template #default="{ item }">
-						<PlayerCard :id="item.name" :player="item" />
+						<PlayerCard :id="item.name" :player="item" :secondary="secondary" />
 					</template>
 				</DraggablePanel>
 			</div>
@@ -54,6 +54,7 @@ import OverlayPanel from "primevue/overlaypanel"
 
 const props = defineProps<{
 	group: string
+	secondary: boolean
 }>()
 
 const trash = ref<signedUpPlayer[]>([])
