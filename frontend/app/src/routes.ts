@@ -7,7 +7,6 @@ import ViewChooseMode from "@/components/views/prepare/ViewSelectType.vue"
 import ViewAssignTeams from "@/components/views/prepare/assignTeams/ViewAssignTeams.vue"
 import ViewAssignMatches from "@/components/views/prepare/assignMatches/ViewAssignMatches.vue"
 import ViewScheduleMatches from "@/components/views/prepare/ViewScheduleMatches.vue"
-import ViewEditTeams from "@/components/views/prepare/editTeamsRefactored/ViewEditTeams.vue"
 import ViewEditTeams2 from "@/components/views/prepare/editTeams/ViewEditTeams2.vue"
 
 export default [
@@ -58,7 +57,7 @@ export default [
 			{
 				path: "editTeams",
 				name: "editTeams",
-				component: ViewEditTeams,
+				component: ViewEditTeams2,
 				meta: { step: 0 },
 			},
 			{

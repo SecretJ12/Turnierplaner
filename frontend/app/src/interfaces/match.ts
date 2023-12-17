@@ -55,6 +55,20 @@ export function teamServerToClient(team: TeamServer): Team {
 	}
 }
 
+export interface TeamArray {
+	id: string
+	playerA: Player[]
+	playerB: Player[]
+}
+
+export function teamArrayServerToClient(team: TeamServer) {
+	return {
+		id: team.id,
+		playerA: team.playerA ? [playerServerToClient(team.playerA)] : [],
+		playerB: team.playerB ? [playerServerToClient(team.playerB)] : [],
+	}
+}
+
 export function matchServerToClient(
 	match: MatchServer,
 	teams: Map<string, Team>,

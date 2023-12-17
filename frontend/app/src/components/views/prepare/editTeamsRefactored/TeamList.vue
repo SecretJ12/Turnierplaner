@@ -19,7 +19,27 @@
 			group="teams"
 			class="flex flex-wrap inline-block gap-2 border-3 border-round border-dashed justify-content-around"
 			style="min-height: 4em"
-			wrap
+			:wrap="
+				(from, el) => {
+					if (from === 'playerA') {
+						return {
+							// TODO id generation
+							id: (Math.random() * 900000000).toString(),
+							// @ts-ignore
+							playerA: [el],
+							playerB: [],
+						}
+					} else {
+						return {
+							// TODO id generation
+							id: (Math.random() * 900000000).toString(),
+							playerA: [],
+							// @ts-ignore
+							playerB: [el],
+						}
+					}
+				}
+			"
 		>
 			<template #default="{ item: outerItem }">
 				<div style="grid-auto-rows: 1fr">

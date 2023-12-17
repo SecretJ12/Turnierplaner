@@ -2,6 +2,7 @@
 	<div class="flex flex-column gap-5">
 		<div v-if="tournament && competition" class="grid">
 			<PlayerList
+				id="playerA"
 				:competition="competition"
 				:players="playersA"
 				:tournament="tournament"
@@ -14,7 +15,12 @@
 				}"
 			/>
 			<template v-if="competition.mode === Mode.DOUBLE">
-				<TeamList :competition="competition" :teams="teams" class="col-4">
+				<TeamList
+					:animated="isSorting"
+					:competition="competition"
+					:teams="teams"
+					class="col-4"
+				>
 					<SplitButton
 						v-if="competition?.mode === Mode.DOUBLE"
 						:disabled="isSorting"
@@ -31,6 +37,7 @@
 					</SplitButton>
 				</TeamList>
 				<PlayerList
+					id="playerB"
 					:animated="isSorting"
 					:competition="competition"
 					:players="playersB"
@@ -82,9 +89,13 @@ import PlayerList from "@/components/views/prepare/editTeams/PlayerList.vue"
 import { computed, ref, Ref } from "vue"
 import { Player } from "@/interfaces/player"
 import axios from "axios"
-import { Team, TeamServer, teamServerToClient } from "@/interfaces/match"
+import {
+	TeamArray,
+	teamArrayServerToClient,
+	TeamServer,
+} from "@/interfaces/match"
 import { Mode } from "@/interfaces/competition"
-import TeamList from "@/components/views/prepare/editTeams/TeamList.vue" // @ts-ignore
+import TeamList from "@/components/views/prepare/editTeams/TeamList.vue"
 import { v4 as uuidv4 } from "uuid"
 
 const route = useRoute()
@@ -106,10 +117,10 @@ const competition = getCompetitionDetails(route, t, toast, {
 const isSorting = ref(false)
 
 // for restoring the initial state
-const initialTeam = ref<Team[]>([])
+const initialTeam = ref<TeamArray[]>([])
 const initialPlayerA = ref<Player[]>([])
 const initialPlayerB = ref<Player[]>([])
-const teams = ref<Team[]>([])
+const teams = ref<TeamArray[]>([])
 const playersA = ref<Player[]>([])
 const playersB = ref<Player[]>([])
 
@@ -124,10 +135,12 @@ const delay = computed(() =>
 )
 const delayBetween = computed(() => delay.value / 2)
 
+// TODO type this function
 function selectRandomElement(players: Ref<any[]>) {
 	const r = Math.floor(Math.random() * players.value.length)
 	const element = players.value[r]
-	players.value = players.value.filter((v, i) => i !== r)
+	players.value.splice(r, 1)
+	//players.value = players.value.filter((v, i) => i !== r)
 	return element
 }
 
@@ -137,22 +150,22 @@ async function randomize() {
 
 	// first fill up all existing teams
 	for (const i in teams.value) {
-		if (!teams.value[i].playerA && playersA.value.length > 0) {
+		if (!teams.value[i].playerA.length && playersA.value.length > 0) {
 			const element = selectRandomElement(playersA)
 			await sleep(delayBetween.value)
-			teams.value[i].playerA = element
+			teams.value[i].playerA.push(element)
 			await sleep(delay.value)
 		}
-		if (!teams.value[i].playerB) {
+		if (!teams.value[i].playerB.length) {
 			if (competition.value.playerB.different && playersB.value.length > 0) {
 				const element = selectRandomElement(playersB)
 				await sleep(delayBetween.value)
-				teams.value[i].playerB = element
+				teams.value[i].playerB.push(element)
 				await sleep(delay.value)
 			} else if (playersA.value.length > 0) {
 				const element = selectRandomElement(playersA)
 				await sleep(delayBetween.value)
-				teams.value[i].playerB = element
+				teams.value[i].playerB.push(element)
 				await sleep(delay.value)
 			}
 		}
@@ -165,8 +178,8 @@ async function randomize() {
 			await sleep(delayBetween.value)
 			teams.value.push({
 				id: uuidv4(),
-				playerA: elementA,
-				playerB: elementB,
+				playerA: [elementA],
+				playerB: [elementB],
 			})
 			await sleep(delay.value)
 		}
@@ -177,8 +190,8 @@ async function randomize() {
 			await sleep(delayBetween.value)
 			teams.value.push({
 				id: uuidv4(),
-				playerA: element1,
-				playerB: element2,
+				playerA: [element1],
+				playerB: [element2],
 			})
 			await sleep(delay.value)
 		}
@@ -191,22 +204,25 @@ async function clearTeams() {
 	if (!competition.value) return
 	isSorting.value = true
 
-	for (const i in teams.value) {
+	while (teams.value.length > 0) {
+		let i = teams.value.length - 1
 		const elementA = teams.value[i].playerA
-		if (elementA) {
-			teams.value[i].playerA = null
+		if (elementA.length) {
+			teams.value[i].playerA = []
 			await sleep(delayBetween.value)
-			playersA.value.push(elementA)
+			playersA.value.push(elementA[0])
 			await sleep(delay.value)
 		}
 		const elementB = teams.value[i].playerB
-		if (elementB) {
-			teams.value[i].playerB = null
+		if (elementB.length) {
+			teams.value[i].playerB = []
 			await sleep(delayBetween.value)
-			if (competition.value.playerB.different) playersB.value.push(elementB)
-			else playersA.value.push(elementB)
+			if (competition.value.playerB.different) playersB.value.push(elementB[0])
+			else playersA.value.push(elementB[0])
 			await sleep(delay.value)
 		}
+		teams.value.splice(i, 1)
+		await sleep(delay.value)
 	}
 	isSorting.value = false
 }
@@ -270,13 +286,13 @@ function update() {
 			`/tournament/${route.params.tourId}/competition/${route.params.compId}/signedUpTeams`,
 		)
 		.then((response) => {
-			response.data.map(teamServerToClient).forEach((team) => {
+			response.data.map(teamArrayServerToClient).forEach((team) => {
 				if (team.playerA && team.playerB === null) {
-					playersA.value.push(team.playerA)
-					initialPlayerA.value.push(team.playerA)
+					playersA.value.push(team.playerA[0])
+					initialPlayerA.value.push(team.playerA[0])
 				} else if (team.playerA === null && team.playerB) {
-					playersB.value.push(team.playerB)
-					initialPlayerB.value.push(team.playerB)
+					playersB.value.push(team.playerB[0])
+					initialPlayerB.value.push(team.playerB[0])
 				} else if (team.playerA && team.playerB) {
 					teams.value.push(team)
 					initialTeam.value.push(team)

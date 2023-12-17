@@ -1,21 +1,5 @@
 <template>
-	<div
-		v-if="props.bin"
-		ref="container"
-		:key="index"
-		class="border-round select-none bg-red-500 font-bold justify-content-center cursor-pointer inline p-3 text-100 w-full"
-	>
-		Delete
-		<!--	TODO BUG make Icon not draggable!!! -->
-		<span class="material-symbols-outlined"> delete </span>
-	</div>
-	<component
-		:is="tag"
-		v-else
-		ref="container"
-		v-bind="componentData"
-		:key="index"
-	>
+	<component :is="tag" :key="index" ref="container" v-bind="componentData">
 		<slot
 			v-for="(item, i) in list"
 			:key="item['itemKey']"
@@ -48,9 +32,7 @@ const props = withDefaults(
 		sort?: boolean
 		ghost?: string
 		single?: boolean
-		wrap?: boolean
-		hook?: boolean
-		bin?: boolean
+		wrap?: ((el: any, id: string) => any) | null
 	}>(),
 	{
 		componentData: {},
@@ -61,9 +43,7 @@ const props = withDefaults(
 		put: true,
 		ghost: "ghost",
 		single: false,
-		wrap: false,
-		hook: false,
-		bin: false,
+		wrap: null,
 	},
 )
 
@@ -114,9 +94,7 @@ function create() {
 			} else {
 				props.list.splice(event.oldIndex, 1)
 			}
-			if (props.hook) {
-				emit("onRemove")
-			}
+			emit("onRemove")
 			reload()
 		},
 		onAdd: (event: Sortable.SortableEvent) => {
@@ -124,23 +102,12 @@ function create() {
 
 			targetSingle = props.single && props.list.length === 1
 			if (props.wrap) {
-				if (event.from.id === "playerA") {
-					props.list.splice(event.newIndex, 0, {
-						// TODO id generation
-						id: (Math.random() * 900000000).toString(),
-						// @ts-ignore
-						playerA: [selectedElement],
-						playerB: [],
-					})
-				} else {
-					props.list.splice(event.newIndex, 0, {
-						// TODO id generation
-						id: (Math.random() * 900000000).toString(),
-						playerA: [],
-						// @ts-ignore
-						playerB: [selectedElement],
-					})
-				}
+				if (selectedElement != null)
+					props.list.splice(
+						event.newIndex,
+						0,
+						props.wrap(selectedElement, event.from.id),
+					)
 			} else if (props.single && props.list.length === 1) {
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
@@ -204,7 +171,7 @@ function reload() {
 <script lang="ts">
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-let selectedElement = null
+let selectedElement: any = null
 let targetSingle = false
 </script>
 

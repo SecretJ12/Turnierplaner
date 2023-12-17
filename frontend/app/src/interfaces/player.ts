@@ -30,12 +30,6 @@ export interface signedUpPlayer {
 	name: string
 }
 
-export interface TeamArray {
-	id: string
-	playerA: Player[]
-	playerB: Player[]
-}
-
 export enum Sex {
 	MALE = "MALE",
 	FEMALE = "FEMALE",

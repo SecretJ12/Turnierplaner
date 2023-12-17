@@ -11,12 +11,13 @@
 						<AddPlayer
 							:competition="props.competition"
 							:tournament="props.tournament"
-							class="flex-grow-1"
+							class="flex-grow-1 w-1"
 						/>
 						<DeleteBox :group="props.group" :secondary="secondary" />
 					</div>
 
 					<DraggablePanel
+						:id="id"
 						:component-data="{
 							tag: 'div',
 							name: props.animated ? 'playerList' : 'default',
@@ -56,6 +57,7 @@ import DraggablePanel from "@/draggable/DraggablePanel.vue"
 
 const props = withDefaults(
 	defineProps<{
+		id: string
 		tournament: Tournament
 		competition: Competition
 		animated?: boolean

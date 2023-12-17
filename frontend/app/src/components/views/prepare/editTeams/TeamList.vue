@@ -5,17 +5,88 @@
 			<template #content>
 				<slot></slot>
 
-				<div
-					class="flex flex-row flex-wrap gap-2 border-3 min-h-3rem border-round border-dashed"
-					style="box-sizing: content-box; width: 100%; margin-top: 20px"
+				<DraggablePanel
+					id="teams"
+					:component-data="{
+						tag: 'div',
+						name: props.animated ? 'playerList' : 'default',
+						type: 'transition',
+					}"
+					:list="teams"
+					:pull="false"
+					:put="['playersA', 'playersB']"
+					:tag="TransitionGroup"
+					:wrap="wrap"
+					class="flex flex-row flex-wrap gap-2 border-3 border-round border-dashed"
+					group="teams"
+					item-key="id"
+					style="
+						box-sizing: content-box;
+						width: calc(100% - 6px);
+						margin-top: 20px;
+						min-height: calc(6rem + 9px);
+					"
 				>
-					<TeamBox
-						v-for="team in teams"
-						:id="team.id"
-						:different="competition.playerB.different"
-						:team="team"
-					/>
-				</div>
+					<template #default="{ item, index }">
+						<TeamBox
+							:id="item.id"
+							:different="competition.playerB.different"
+							:team="item"
+						>
+							<template #playerA>
+								<DraggablePanel
+									id="playerA"
+									:component-data="{
+										tag: 'div',
+										name: props.animated ? 'teamBox' : 'default',
+										type: 'transition',
+									}"
+									:list="item.playerA"
+									:put="['playersA']"
+									:tag="TransitionGroup"
+									group="playersA"
+									itemKey="name"
+									style="width: 100%; height: 100%"
+									single
+									@onRemove="() => memberRemoved(index)"
+								>
+									<template #default="{ item }">
+										<PlayerCard
+											:key="(<signedUpPlayer>item).name"
+											:player="item"
+										/>
+									</template>
+								</DraggablePanel>
+							</template>
+							<template #playerB>
+								<DraggablePanel
+									id="playerB"
+									:component-data="{
+										tag: 'div',
+										name: props.animated ? 'teamBox' : 'default',
+										type: 'transition',
+									}"
+									:list="item.playerB"
+									:put="['playersB']"
+									:tag="TransitionGroup"
+									group="playersB"
+									itemKey="name"
+									style="width: 100%; height: 100%"
+									single
+									@onRemove="() => memberRemoved(index)"
+								>
+									<template #default="{ item }">
+										<PlayerCard
+											:key="(<signedUpPlayer>item).name"
+											:player="item"
+											:secondary="competition.playerB.different"
+										/>
+									</template>
+								</DraggablePanel>
+							</template>
+						</TeamBox>
+					</template>
+				</DraggablePanel>
 			</template>
 		</Card>
 	</div>
@@ -23,13 +94,71 @@
 
 <script lang="ts" setup>
 import TeamBox from "@/components/views/prepare/editTeams/TeamBox.vue"
-import { Team } from "@/interfaces/match"
 import { Competition } from "@/interfaces/competition"
+import { TransitionGroup } from "vue"
+import { v4 as uuidv4 } from "uuid"
+import DraggablePanel from "@/draggable/DraggablePanel.vue"
+import PlayerCard from "@/components/views/prepare/editTeams/PlayerCard.vue"
+import { playerServerToClient, signedUpPlayer } from "@/interfaces/player"
+import { TeamArray } from "@/interfaces/match"
 
 const props = defineProps<{
-	teams: Team[]
+	teams: TeamArray[]
 	competition: Competition
+	animated?: boolean
 }>()
+
+function memberRemoved(i: number) {
+	if (
+		props.teams[i].playerA.length === 0 &&
+		props.teams[i].playerB.length === 0
+	)
+		props.teams.splice(i, 1)
+	if (
+		i + 1 < props.teams.length &&
+		props.teams[i + 1].playerA.length === 0 &&
+		props.teams[i + 1].playerB.length === 0
+	)
+		props.teams.splice(i + 1, 1)
+}
+
+function wrap(el: any, from: string): TeamArray {
+	console.log(from)
+	if (from === "playerA") {
+		return {
+			id: uuidv4(),
+			// @ts-ignore
+			playerA: [el],
+			playerB: [],
+		}
+	}
+	if (from === "playerB") {
+		return {
+			id: uuidv4(),
+			playerA: [],
+			// @ts-ignore
+			playerB: [el],
+		}
+	}
+
+	return {
+		id: uuidv4(),
+		playerA: [
+			playerServerToClient({
+				id: uuidv4(),
+				firstName: "error",
+				lastName: "error",
+			}),
+		],
+		playerB: [
+			playerServerToClient({
+				id: uuidv4(),
+				firstName: "error",
+				lastName: "error",
+			}),
+		],
+	}
+}
 </script>
 
-<style sco;ped></style>
+<style scoped></style>
