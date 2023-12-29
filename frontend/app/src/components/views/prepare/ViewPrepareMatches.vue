@@ -3,9 +3,9 @@
 		<Card class="w-12">
 			<template #header>
 				<TabMenu
-					:activeIndex="activeTab"
+					:active-index="activeTab"
 					:model="competitions || []"
-					@tabChange="tabChange"
+					@tab-change="tabChange"
 				>
 					<template #item="{ item, props }">
 						<div v-bind="props.action" class="cursor-pointer">
@@ -14,7 +14,7 @@
 					</template>
 				</TabMenu>
 				<Steps
-					:activeStep="<number>route.meta.step - 1"
+					:active-step="<number>route.meta.step - 1"
 					:model="stepList"
 					:readonly="true"
 					class="mt-5"
@@ -100,10 +100,6 @@ const stepList = ref([
 		index: 4,
 	},
 ])
-
-function isActive(item: { index: number }) {
-	return item.index === route.meta.step
-}
 </script>
 
 <style scoped>
@@ -122,11 +118,5 @@ function isActive(item: { index: number }) {
 
 ::v-deep(.p-card-body) {
 	padding: 2rem;
-}
-
-.font-green {
-	color: green;
-	background-color: white;
-	font-weight: normal !important;
 }
 </style>

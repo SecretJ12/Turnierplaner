@@ -9,6 +9,7 @@
 				v-model="selectedPlayer"
 				:options="suggestionsPlayer"
 				:loading="isLoading"
+				:disabled="isUpdating"
 				:auto-filter-focus="true"
 				:filter-placeholder="t('ViewCompetition.searchPlayer')"
 				:placeholder="t('ViewCompetition.selectPlayer')"
@@ -24,7 +25,7 @@
 					{{ t("ViewSignUp.noPlayerFound") }}
 				</template>
 			</Dropdown>
-			<Button @click="addPlayer">
+			<Button :disabled="isUpdating" @click="addPlayer">
 				{{ t("general.signUp") }}
 			</Button>
 		</div>
@@ -48,12 +49,14 @@ const toast = useToast()
 const props = defineProps<{
 	tournament: Tournament
 	competition: Competition
+	isUpdating: boolean
 }>()
 const emit = defineEmits(["addPlayer"])
 
 const selectedPlayer = ref<Player | null>(null)
 const suggestionsPlayer = ref<Player[]>([])
 const isLoading = ref<boolean>(false)
+
 function queryPlayer(event: DropdownFilterEvent) {
 	isLoading.value = true
 	suggestionsPlayer.value = suggestionsPlayer.value.filter((item) => {

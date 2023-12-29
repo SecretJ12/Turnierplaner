@@ -5,13 +5,13 @@
 			<template #content>
 				<div class="flex flex-column gap-3">
 					<div
-						class="flex flex-wrap align-items-end justify-content-end gap-3"
-						style="width: 100%"
+						class="flex flex-wrap align-items-end justify-content-end gap-3 w-full"
 					>
 						<AddPlayer
 							:competition="props.competition"
 							:tournament="props.tournament"
 							class="flex-grow-1 w-1"
+							:is-updating="isUpdating"
 							@add-player="addPlayer"
 						/>
 						<DeleteBox :group="props.group" :secondary="secondary" />
@@ -21,7 +21,7 @@
 						:id="id"
 						:component-data="{
 							tag: 'div',
-							name: props.animated || locAnimated ? 'playerList' : 'default',
+							name: props.isUpdating || locAnimated ? 'playerList' : 'default',
 							type: 'transition',
 						}"
 						:group="group"
@@ -62,14 +62,14 @@ const props = withDefaults(
 		id: string
 		tournament: Tournament
 		competition: Competition
-		animated?: boolean
+		isUpdating?: boolean
 		players: signedUpPlayer[]
 		title: string
 		group: string
 		secondary?: boolean
 	}>(),
 	{
-		animated: false,
+		isUpdating: false,
 		secondary: false,
 	},
 )

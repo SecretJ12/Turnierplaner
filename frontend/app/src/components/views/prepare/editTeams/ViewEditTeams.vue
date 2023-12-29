@@ -6,24 +6,29 @@
 				:competition="competition"
 				:players="playersA"
 				:tournament="tournament"
-				:animated="isSorting"
-				group="playersA"
-				title="Players A"
 				:class="{
-					'col-4': competition.mode === Mode.DOUBLE,
+					'col-4':
+						competition.mode === Mode.DOUBLE && competition.playerB.different,
+					'col-6':
+						competition.mode === Mode.DOUBLE && !competition.playerB.different,
 					'col-12': competition.mode === Mode.SINGLE,
 				}"
+				group="playersA"
+				title="Players A"
+				:is-updating="isUpdating"
 			/>
 			<template v-if="competition.mode === Mode.DOUBLE">
 				<TeamList
-					:animated="isSorting"
+					:animated="isUpdating"
 					:competition="competition"
 					:teams="teams"
-					class="col-4"
+					:class="{
+						'col-4': competition.playerB.different,
+						'col-6': !competition.playerB.different,
+					}"
 				>
 					<SplitButton
-						v-if="competition?.mode === Mode.DOUBLE"
-						:disabled="isSorting"
+						:disabled="isUpdating"
 						:model="randomizeItems"
 						class="w-fit"
 						label="Randomize"
@@ -37,8 +42,9 @@
 					</SplitButton>
 				</TeamList>
 				<PlayerList
+					v-if="competition.playerB.different"
 					id="playerB"
-					:animated="isSorting"
+					:is-updating="isUpdating"
 					:competition="competition"
 					:players="playersB"
 					:tournament="tournament"
@@ -114,7 +120,7 @@ const competition = getCompetitionDetails(route, t, toast, {
 		update()
 	},
 })
-const isSorting = ref(false)
+const isUpdating = ref(false)
 
 // for restoring the initial state
 const initialTeam = ref<TeamArray[]>([])
@@ -147,7 +153,7 @@ function selectRandomElement<T>(players: Ref<T[]>) {
 
 async function randomize() {
 	if (!competition.value) return
-	isSorting.value = true
+	isUpdating.value = true
 
 	// first fill up all existing teams
 	for (const i in teams.value) {
@@ -198,12 +204,12 @@ async function randomize() {
 		}
 	}
 
-	isSorting.value = false
+	isUpdating.value = false
 }
 
 async function clearTeams() {
 	if (!competition.value) return
-	isSorting.value = true
+	isUpdating.value = true
 
 	while (teams.value.length > 0) {
 		let i = teams.value.length - 1
@@ -225,7 +231,7 @@ async function clearTeams() {
 		teams.value.splice(i, 1)
 		await sleep(delay.value)
 	}
-	isSorting.value = false
+	isUpdating.value = false
 }
 
 async function reroll() {
@@ -247,7 +253,7 @@ const randomizeItems = [
 ]
 
 async function reset() {
-	isSorting.value = true
+	isUpdating.value = true
 
 	teams.value.splice(0, teams.value.length)
 	playersA.value.splice(0, playersA.value.length)
@@ -260,7 +266,7 @@ async function reset() {
 	initialPlayerA.value.forEach((p) => playersA.value.push(p))
 	initialPlayerB.value.forEach((p) => playersB.value.push(p))
 	await sleep(500)
-	isSorting.value = false
+	isUpdating.value = false
 
 	// TODO reset players
 	toast.add({
@@ -288,29 +294,44 @@ function nextPage() {
 	})
 }
 
-function update() {
+async function update() {
 	teams.value = []
 	playersA.value = []
 	playersB.value = []
+	isUpdating.value = true
 	axios
 		.get<TeamServer[]>(
 			`/tournament/${route.params.tourId}/competition/${route.params.compId}/signedUpTeams`,
 		)
-		.then((response) => {
+		.then(async (response) => {
 			response.data.map(teamArrayServerToClient).forEach((team) => {
-				if (team.playerA && team.playerB === null) {
+				console.log(team)
+				if (team.playerA.length > 0 && team.playerB.length === 0) {
 					playersA.value.push(team.playerA[0])
 					initialPlayerA.value.push(team.playerA[0])
-				} else if (team.playerA === null && team.playerB) {
+				} else if (
+					team.playerA.length === 0 &&
+					team.playerB.length > 0 &&
+					competition.value?.playerB.different
+				) {
 					playersB.value.push(team.playerB[0])
 					initialPlayerB.value.push(team.playerB[0])
-				} else if (team.playerA && team.playerB) {
+				} else if (
+					team.playerA.length === 0 &&
+					team.playerB.length > 0 &&
+					!competition.value?.playerB.different
+				) {
+					playersA.value.push(team.playerB[0])
+					initialPlayerA.value.push(team.playerB[0])
+				} else if (team.playerA.length > 0 && team.playerB.length > 0) {
 					teams.value.push(team)
 					initialTeam.value.push(JSON.parse(JSON.stringify(team)))
 					playerCount.value++
 				}
 				playerCount.value++
 			})
+			await sleep(500)
+			isUpdating.value = false
 		})
 }
 </script>

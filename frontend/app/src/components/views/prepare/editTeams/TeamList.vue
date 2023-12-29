@@ -60,16 +60,20 @@
 							</template>
 							<template #playerB>
 								<DraggablePanel
-									id="playerB"
+									:id="competition.playerB.different ? 'playersB' : 'playersA'"
 									:component-data="{
 										tag: 'div',
 										name: props.animated ? 'teamBox' : 'default',
 										type: 'transition',
 									}"
 									:list="item.playerB"
-									:put="['playersB']"
+									:group="
+										competition.playerB.different ? 'playersB' : 'playersA'
+									"
 									:tag="TransitionGroup"
-									group="playersB"
+									:put="[
+										competition.playerB.different ? 'playersB' : 'playersA',
+									]"
 									item-key="name"
 									style="width: 100%; height: 100%"
 									single
