@@ -2,9 +2,7 @@ import viewTournaments from "@/components/views/tournaments/ViewTournaments.vue"
 import viewCompetitions from "@/components/views/competitions/ViewCompetitions.vue"
 import viewCompetition from "@/components/views/competition/ViewCompetition.vue"
 import viewPrepareMatches from "@/components/views/prepare/ViewPrepareMatches.vue"
-import ViewEditPlayer from "@/components/views/prepare/ViewEditPlayer.vue"
 import ViewChooseMode from "@/components/views/prepare/ViewSelectType.vue"
-import ViewAssignTeams from "@/components/views/prepare/assignTeams/ViewAssignTeams.vue"
 import ViewAssignMatches from "@/components/views/prepare/assignMatches/ViewAssignMatches.vue"
 import ViewScheduleMatches from "@/components/views/prepare/ViewScheduleMatches.vue"
 import ViewEditTeams2 from "@/components/views/prepare/editTeams/ViewEditTeams.vue"
@@ -58,12 +56,6 @@ export default [
 				path: "editTeams",
 				name: "editTeams",
 				component: ViewEditTeams2,
-				meta: { step: 0 },
-			},
-			{
-				path: "editPlayers",
-				name: "editPlayers",
-				component: ViewEditPlayer,
 				meta: { step: 1 },
 			},
 			{
@@ -73,22 +65,16 @@ export default [
 				meta: { step: 2 },
 			},
 			{
-				path: "assignTeams",
-				name: "assignTeams",
-				component: ViewAssignTeams,
-				meta: { step: 3 },
-			},
-			{
 				path: "assignMatches",
 				name: "assignMatches",
 				component: ViewAssignMatches,
-				meta: { step: 4 },
+				meta: { step: 3 },
 			},
 			{
 				path: "scheduleMatches",
 				name: "scheduleMatches",
 				component: ViewScheduleMatches,
-				meta: { step: 5 },
+				meta: { step: 4 },
 			},
 		],
 	},

@@ -26,14 +26,9 @@
 					>
 					<template #item="{ label, index, props }">
 						<div v-bind="props.action">
-							<span
-								v-bind="
-									// @ts-expect-error
-									props.step
-								"
-								class="font-green"
-								>{{ index + 1 }}</span
-							>
+							<span class="font-green" v-bind="props.step">{{
+								index + 1
+							}}</span>
 							<span v-bind="props.label">{{ label }}</span>
 						</div>
 					</template>
@@ -100,32 +95,22 @@ const stepList = ref([
 	{
 		label: "Edit Teams",
 		name: "editTeams",
-		index: 0,
-	},
-	{
-		label: "Edit Players",
-		name: "editPlayers",
 		index: 1,
 	},
 	{
-		label: "Select Type",
+		label: "Select Tye",
 		name: "selectType",
 		index: 2,
 	},
 	{
-		label: "Assign Teams",
-		name: "assignTeams",
-		index: 3,
-	},
-	{
 		label: "Assign Matches",
 		name: "assignMatches",
-		index: 4,
+		index: 3,
 	},
 	{
 		label: "Schedule Matches",
 		name: "scheduleMatches",
-		index: 5,
+		index: 4,
 	},
 ])
 
