@@ -20,7 +20,6 @@
 			@mouseover="enter"
 			@mouseleave="leave"
 		>
-			<template #default="{ item }"></template>
 		</DraggablePanel>
 		<OverlayPanel ref="op">
 			<div @mouseover="enter" @mouseleave="leave">

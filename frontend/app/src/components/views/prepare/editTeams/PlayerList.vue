@@ -12,6 +12,7 @@
 							:competition="props.competition"
 							:tournament="props.tournament"
 							class="flex-grow-1 w-1"
+							@add-player="addPlayer"
 						/>
 						<DeleteBox :group="props.group" :secondary="secondary" />
 					</div>
@@ -20,7 +21,7 @@
 						:id="id"
 						:component-data="{
 							tag: 'div',
-							name: props.animated ? 'playerList' : 'default',
+							name: props.animated || locAnimated ? 'playerList' : 'default',
 							type: 'transition',
 						}"
 						:group="group"
@@ -36,6 +37,7 @@
 								:key="(<signedUpPlayer>item).name"
 								:player="item"
 								:secondary="secondary"
+								@add-player="addPlayer"
 							/>
 						</template>
 					</DraggablePanel>
@@ -50,8 +52,8 @@ import { Tournament } from "@/interfaces/tournament"
 import { Competition } from "@/interfaces/competition"
 import AddPlayer from "@/components/views/prepare/editTeams/AddPlayer.vue"
 import DeleteBox from "@/components/views/prepare/editTeams/DeleteBox.vue"
-import { TransitionGroup } from "vue"
-import { signedUpPlayer } from "@/interfaces/player"
+import { ref, TransitionGroup } from "vue"
+import { Player, signedUpPlayer } from "@/interfaces/player"
 import PlayerCard from "@/components/views/prepare/editTeams/PlayerCard.vue"
 import DraggablePanel from "@/draggable/DraggablePanel.vue"
 
@@ -71,6 +73,15 @@ const props = withDefaults(
 		secondary: false,
 	},
 )
+
+const locAnimated = ref(false)
+
+async function addPlayer(p: Player) {
+	locAnimated.value = true
+	props.players.push(p)
+	await new Promise((resolve) => setTimeout(resolve, 500))
+	locAnimated.value = false
+}
 </script>
 
 <style scoped>

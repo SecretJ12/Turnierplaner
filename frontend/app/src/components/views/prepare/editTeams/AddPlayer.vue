@@ -108,12 +108,7 @@ function queryPlayer(event: DropdownFilterEvent) {
 }
 
 function addPlayer() {
-	if (selectedPlayer.value)
-		emit("addPlayer", {
-			firstName: selectedPlayer.value.firstName,
-			lastName: selectedPlayer.value.lastName,
-			name: `${selectedPlayer.value.firstName} ${selectedPlayer.value.lastName}`,
-		})
+	if (selectedPlayer.value) emit("addPlayer", selectedPlayer.value)
 }
 </script>
 

@@ -29,6 +29,7 @@ import { TransitionGroup } from "vue"
 const props = defineProps<{
 	group: string
 	put: string[]
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	list: any[]
 	legend: string
 	id?: string

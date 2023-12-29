@@ -32,6 +32,7 @@ const props = withDefaults(
 		sort?: boolean
 		ghost?: string
 		single?: boolean
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		wrap?: ((el: any, id: string) => any) | null
 	}>(),
 	{
@@ -171,6 +172,7 @@ function reload() {
 <script lang="ts">
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
+// eslint-disable-next-line
 let selectedElement: any = null
 let targetSingle = false
 </script>

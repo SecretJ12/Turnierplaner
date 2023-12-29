@@ -45,15 +45,15 @@
 									:put="['playersA']"
 									:tag="TransitionGroup"
 									group="playersA"
-									itemKey="name"
+									item-key="name"
 									style="width: 100%; height: 100%"
 									single
-									@onRemove="() => memberRemoved(index)"
+									@on-remove="() => memberRemoved(index)"
 								>
-									<template #default="{ item }">
+									<template #default="{ item: player }">
 										<PlayerCard
-											:key="(<signedUpPlayer>item).name"
-											:player="item"
+											:key="(<signedUpPlayer>player).name"
+											:player="player"
 										/>
 									</template>
 								</DraggablePanel>
@@ -70,15 +70,15 @@
 									:put="['playersB']"
 									:tag="TransitionGroup"
 									group="playersB"
-									itemKey="name"
+									item-key="name"
 									style="width: 100%; height: 100%"
 									single
-									@onRemove="() => memberRemoved(index)"
+									@on-remove="() => memberRemoved(index)"
 								>
-									<template #default="{ item }">
+									<template #default="{ item: player }">
 										<PlayerCard
-											:key="(<signedUpPlayer>item).name"
-											:player="item"
+											:key="(<signedUpPlayer>player).name"
+											:player="player"
 											:secondary="competition.playerB.different"
 										/>
 									</template>
@@ -99,7 +99,11 @@ import { TransitionGroup } from "vue"
 import { v4 as uuidv4 } from "uuid"
 import DraggablePanel from "@/draggable/DraggablePanel.vue"
 import PlayerCard from "@/components/views/prepare/editTeams/PlayerCard.vue"
-import { playerServerToClient, signedUpPlayer } from "@/interfaces/player"
+import {
+	Player,
+	playerServerToClient,
+	signedUpPlayer,
+} from "@/interfaces/player"
 import { TeamArray } from "@/interfaces/match"
 
 const props = defineProps<{
@@ -122,12 +126,11 @@ function memberRemoved(i: number) {
 		props.teams.splice(i + 1, 1)
 }
 
-function wrap(el: any, from: string): TeamArray {
+function wrap(el: Player, from: string): TeamArray {
 	console.log(from)
 	if (from === "playerA") {
 		return {
 			id: uuidv4(),
-			// @ts-ignore
 			playerA: [el],
 			playerB: [],
 		}
@@ -136,7 +139,6 @@ function wrap(el: any, from: string): TeamArray {
 		return {
 			id: uuidv4(),
 			playerA: [],
-			// @ts-ignore
 			playerB: [el],
 		}
 	}

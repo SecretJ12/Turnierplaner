@@ -1,7 +1,7 @@
 <template>
 	<div class="grid">
 		<DraggableList group="teams" :put="['teams']" :list="teams" legend="Teams">
-			<template v-slot="slotProp">
+			<template #default="slotProp">
 				<TeamBox
 					:player-a="slotProp.item.playerA.name"
 					:player-b="slotProp.item.playerB?.name"
@@ -105,7 +105,7 @@ function generateTree(size: number): KnockoutMatch {
 						winner: true,
 						a: generateTree(size - 1),
 						b: generateTree(size - 1),
-				  }
+					}
 				: undefined,
 	}
 }

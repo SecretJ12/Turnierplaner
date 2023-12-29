@@ -120,6 +120,7 @@ const isSorting = ref(false)
 const initialTeam = ref<TeamArray[]>([])
 const initialPlayerA = ref<Player[]>([])
 const initialPlayerB = ref<Player[]>([])
+
 const teams = ref<TeamArray[]>([])
 const playersA = ref<Player[]>([])
 const playersB = ref<Player[]>([])
@@ -136,7 +137,7 @@ const delay = computed(() =>
 const delayBetween = computed(() => delay.value / 2)
 
 // TODO type this function
-function selectRandomElement(players: Ref<any[]>) {
+function selectRandomElement<T>(players: Ref<T[]>) {
 	const r = Math.floor(Math.random() * players.value.length)
 	const element = players.value[r]
 	players.value.splice(r, 1)
@@ -245,12 +246,27 @@ const randomizeItems = [
 	},
 ]
 
-function reset() {
+async function reset() {
+	isSorting.value = true
+
+	teams.value.splice(0, teams.value.length)
+	playersA.value.splice(0, playersA.value.length)
+	playersB.value.splice(0, playersB.value.length)
+	await sleep(1000)
+
+	initialTeam.value.forEach((t) =>
+		teams.value.push(JSON.parse(JSON.stringify(t))),
+	)
+	initialPlayerA.value.forEach((p) => playersA.value.push(p))
+	initialPlayerB.value.forEach((p) => playersB.value.push(p))
+	await sleep(500)
+	isSorting.value = false
+
 	// TODO reset players
 	toast.add({
-		severity: "error",
+		severity: "info",
 		summary: "Reset",
-		detail: "Reseted",
+		detail: "Restored initial configuration",
 		life: 3000,
 	})
 }
@@ -276,11 +292,6 @@ function update() {
 	teams.value = []
 	playersA.value = []
 	playersB.value = []
-
-	initialTeam.value = []
-	initialPlayerA.value = []
-	initialPlayerB.value = []
-
 	axios
 		.get<TeamServer[]>(
 			`/tournament/${route.params.tourId}/competition/${route.params.compId}/signedUpTeams`,
@@ -295,7 +306,7 @@ function update() {
 					initialPlayerB.value.push(team.playerB[0])
 				} else if (team.playerA && team.playerB) {
 					teams.value.push(team)
-					initialTeam.value.push(team)
+					initialTeam.value.push(JSON.parse(JSON.stringify(team)))
 					playerCount.value++
 				}
 				playerCount.value++
