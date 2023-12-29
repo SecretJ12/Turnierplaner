@@ -3,9 +3,9 @@
 		<Card class="w-12">
 			<template #header>
 				<TabMenu
-					:active-index="activeTab"
+					:activeIndex="activeTab"
 					:model="competitions || []"
-					@tab-change="tabChange"
+					@tabChange="tabChange"
 				>
 					<template #item="{ item, props }">
 						<div v-bind="props.action" class="cursor-pointer">
@@ -14,24 +14,11 @@
 					</template>
 				</TabMenu>
 				<Steps
+					:activeStep="<number>route.meta.step - 1"
 					:model="stepList"
 					:readonly="true"
 					class="mt-5"
-					:pt="{
-						menuitem: ({ context }) => ({
-							class: isActive(context.item) && 'p-highlight p-steps-current',
-						}),
-					}"
 				>
-					>
-					<template #item="{ label, index, props }">
-						<div v-bind="props.action">
-							<span class="font-green" v-bind="props.step">{{
-								index + 1
-							}}</span>
-							<span v-bind="props.label">{{ label }}</span>
-						</div>
-					</template>
 				</Steps>
 			</template>
 			<template #content>
@@ -139,5 +126,7 @@ function isActive(item: { index: number }) {
 
 .font-green {
 	color: green;
+	background-color: white;
+	font-weight: normal !important;
 }
 </style>
