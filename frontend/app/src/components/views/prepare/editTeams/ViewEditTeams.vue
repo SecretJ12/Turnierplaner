@@ -283,7 +283,7 @@ function save() {
 
 function nextPage() {
 	router.replace({
-		name: "editPlayers",
+		name: "selectType",
 		params: { tourId: route.params.tourId, compId: route.params.compId },
 	})
 }

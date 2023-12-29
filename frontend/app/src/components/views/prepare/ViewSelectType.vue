@@ -100,14 +100,14 @@ function updateMode(mode: TourType) {
 
 function prevPage() {
 	router.replace({
-		name: "editPlayers",
+		name: "editTeams",
 		params: { tourId: route.params.tourId, compId: route.params.compId },
 	})
 }
 
 function nextPage() {
 	router.replace({
-		name: "assignTeams",
+		name: "assignMatches",
 		params: { tourId: route.params.tourId, compId: route.params.compId },
 	})
 }
