@@ -295,10 +295,11 @@ function nextPage() {
 }
 
 async function update() {
+	isUpdating.value = true
 	teams.value = []
 	playersA.value = []
 	playersB.value = []
-	isUpdating.value = true
+	await sleep(500)
 	axios
 		.get<TeamServer[]>(
 			`/tournament/${route.params.tourId}/competition/${route.params.compId}/signedUpTeams`,
