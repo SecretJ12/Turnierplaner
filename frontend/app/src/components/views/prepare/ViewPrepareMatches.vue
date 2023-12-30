@@ -62,7 +62,7 @@ function updateRoute(compId?: string) {
 
 	// TODO insert correct step for compId
 	let step = route.name
-	if (route.meta.step === undefined || !step) step = "editPlayers"
+	if (route.meta.step === undefined || !step) step = "editTeams"
 
 	router.replace({
 		name: step,
