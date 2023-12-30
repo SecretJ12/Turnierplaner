@@ -361,7 +361,7 @@ function prevPage() {
 function nextPage() {
 	// TODO only if every player was assigned to a team
 	router.replace({
-		name: "selectType",
+		name: "assignMatches",
 		params: { tourId: route.params.tourId, compId: route.params.compId },
 	})
 }
@@ -414,51 +414,4 @@ function processServerTeams(serverTeams: TeamServer[]) {
 </script>
 
 <style scoped>
-.team-enter-active {
-	animation: enter 600ms;
-}
-
-.team-leave-active {
-	animation: leave 400ms;
-}
-
-.playerB-enter-active {
-	animation: enter 800ms;
-}
-
-.playerB-leave-active {
-	animation: leave 200ms;
-}
-
-@keyframes enter {
-	0% {
-		visibility: hidden;
-		width: 0;
-		height: 0;
-		overflow: hidden;
-		transform: translateX(90vw);
-	}
-	66% {
-		visibility: hidden;
-		width: 30%;
-		height: 30%;
-		transform: translateX(90vw);
-	}
-	67% {
-		transform: translateX(90vw);
-	}
-	100% {
-	}
-}
-
-@keyframes leave {
-	0% {
-	}
-	50% {
-		transform: translateX(90vw);
-	}
-	100% {
-		transform: translateX(90vw);
-	}
-}
 </style>

@@ -2,7 +2,6 @@ import viewTournaments from "@/components/views/tournaments/ViewTournaments.vue"
 import viewCompetitions from "@/components/views/competitions/ViewCompetitions.vue"
 import viewCompetition from "@/components/views/competition/ViewCompetition.vue"
 import viewPrepareMatches from "@/components/views/prepare/ViewPrepareMatches.vue"
-import ViewChooseMode from "@/components/views/prepare/ViewSelectType.vue"
 import ViewAssignMatches from "@/components/views/prepare/assignMatches/ViewAssignMatches.vue"
 import ViewScheduleMatches from "@/components/views/prepare/ViewScheduleMatches.vue"
 import ViewEditTeams from "@/components/views/prepare/editTeams/ViewEditTeams.vue"
@@ -60,22 +59,16 @@ export default [
 				meta: { step: 2 },
 			},
 			{
-				path: "selectType",
-				name: "selectType",
-				component: ViewChooseMode,
-				meta: { step: 3 },
-			},
-			{
 				path: "assignMatches",
 				name: "assignMatches",
 				component: ViewAssignMatches,
-				meta: { step: 4 },
+				meta: { step: 3 },
 			},
 			{
 				path: "scheduleMatches",
 				name: "scheduleMatches",
 				component: ViewScheduleMatches,
-				meta: { step: 5 },
+				meta: { step: 4 },
 			},
 		],
 	},

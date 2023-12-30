@@ -96,19 +96,14 @@ const stepList = ref([
 		index: 2,
 	},
 	{
-		label: $t("ViewPrepare.steps.selectType"),
-		name: "selectType",
-		index: 3,
-	},
-	{
 		label: $t("ViewPrepare.steps.assignMatches"),
 		name: "assignMatches",
-		index: 4,
+		index: 3,
 	},
 	{
 		label: $t("ViewPrepare.steps.scheduleMatches"),
 		name: "scheduleMatches",
-		index: 5,
+		index: 4,
 	},
 ])
 </script>

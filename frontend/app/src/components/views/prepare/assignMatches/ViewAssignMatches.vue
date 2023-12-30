@@ -133,7 +133,7 @@ function update() {
 
 function prevPage() {
 	router.replace({
-		name: "selectType",
+		name: "editTeams",
 		params: { tourId: route.params.tourId, compId: route.params.compId },
 	})
 }
