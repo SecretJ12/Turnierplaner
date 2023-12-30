@@ -278,7 +278,7 @@ public class CompetitionResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public List<jUserTeam> updateTeams(@PathParam("tourName") String tourName, @PathParam(
-            "compName") String compName, List<jUserTeam> teams) {
+        "compName") String compName, List<jUserTeam> teams) {
         checkTournamentAccessibility(tourName);
         Competition competition = competitions.getByName(tourName, compName);
         if (competition == null) throw new BadRequestException("Competition doesn't exist");
@@ -319,7 +319,7 @@ public class CompetitionResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public jUserPlayer registerSignUpPlayer(@PathParam("tourName") String tourName, @PathParam(
-            "compName") String compName, @PathParam("playerSide") String playerSide,
+        "compName") String compName, @PathParam("playerSide") String playerSide,
                                             jUserPlayerRegistrationForm playerForm) {
         Player newPlayer = playersResource.adminPlayerRegistration(playerForm);
 
