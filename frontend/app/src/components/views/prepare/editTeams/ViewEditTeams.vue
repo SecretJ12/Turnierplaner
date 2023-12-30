@@ -1,6 +1,10 @@
 <template>
 	<div class="flex flex-column gap-5">
-		<div v-if="tournament && competition" class="grid">
+		<div
+			v-if="tournament && competition"
+			class="grid"
+			style="flex-wrap: nowrap"
+		>
 			<PlayerList
 				id="playerA"
 				:competition="competition"
@@ -13,47 +17,48 @@
 						competition.mode === Mode.DOUBLE && !competition.playerB.different,
 					'col-12': competition.mode === Mode.SINGLE,
 				}"
+				class="transition-duration-200"
 				group="playersA"
 				title="Players A"
 				:is-updating="isUpdating"
 			/>
-			<template v-if="competition.mode === Mode.DOUBLE">
-				<TeamList
-					:animated="isUpdating"
-					:competition="competition"
-					:teams="teams"
-					:class="{
-						'col-4': competition.playerB.different,
-						'col-6': !competition.playerB.different,
-					}"
+			<TeamList
+				v-if="competition.mode === Mode.DOUBLE"
+				:animated="isUpdating"
+				:class="{
+					'col-4': competition.playerB.different,
+					'col-6': !competition.playerB.different,
+				}"
+				:competition="competition"
+				:teams="teams"
+				class="transition-duration-200"
+			>
+				<SplitButton
+					:disabled="isUpdating"
+					:model="randomizeItems"
+					class="w-fit"
+					label="Randomize"
+					@click="randomize"
 				>
-					<SplitButton
-						:disabled="isUpdating"
-						:model="randomizeItems"
-						class="w-fit"
-						label="Randomize"
-						@click="randomize"
-					>
-						<template #icon>
-							<span class="material-icons mb-1" style="font-size: 1.2rem"
-								>casino</span
-							>
-						</template>
-					</SplitButton>
-				</TeamList>
-				<PlayerList
-					v-if="competition.playerB.different"
-					id="playerB"
-					:is-updating="isUpdating"
-					:competition="competition"
-					:players="playersB"
-					:tournament="tournament"
-					class="col-4"
-					:secondary="true"
-					group="playersB"
-					title="Players B"
-				/>
-			</template>
+					<template #icon>
+						<span class="material-icons mb-1" style="font-size: 1.2rem"
+							>casino</span
+						>
+					</template>
+				</SplitButton>
+			</TeamList>
+			<PlayerList
+				v-if="competition.mode === Mode.DOUBLE && competition.playerB.different"
+				id="playerB"
+				:competition="competition"
+				:is-updating="isUpdating"
+				:players="playersB"
+				:secondary="true"
+				:tournament="tournament"
+				class="col-4 overflow-hidden"
+				group="playersB"
+				title="Players B"
+			/>
 		</div>
 		<div v-else class="grid">
 			<div class="col-4">
@@ -299,14 +304,14 @@ async function update() {
 	teams.value = []
 	playersA.value = []
 	playersB.value = []
-	await sleep(500)
+	const anFin = sleep(1000)
 	axios
 		.get<TeamServer[]>(
 			`/tournament/${route.params.tourId}/competition/${route.params.compId}/signedUpTeams`,
 		)
 		.then(async (response) => {
+			await anFin
 			response.data.map(teamArrayServerToClient).forEach((team) => {
-				console.log(team)
 				if (team.playerA.length > 0 && team.playerB.length === 0) {
 					playersA.value.push(team.playerA[0])
 					initialPlayerA.value.push(team.playerA[0])
@@ -337,4 +342,52 @@ async function update() {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.team-enter-active {
+	animation: enter 600ms;
+}
+
+.team-leave-active {
+	animation: leave 400ms;
+}
+
+.playerB-enter-active {
+	animation: enter 800ms;
+}
+
+.playerB-leave-active {
+	animation: leave 200ms;
+}
+
+@keyframes enter {
+	0% {
+		visibility: hidden;
+		width: 0;
+		height: 0;
+		overflow: hidden;
+		transform: translateX(90vw);
+	}
+	66% {
+		visibility: hidden;
+		width: 30%;
+		height: 30%;
+		transform: translateX(90vw);
+	}
+	67% {
+		transform: translateX(90vw);
+	}
+	100% {
+	}
+}
+
+@keyframes leave {
+	0% {
+	}
+	50% {
+		transform: translateX(90vw);
+	}
+	100% {
+		transform: translateX(90vw);
+	}
+}
+</style>
