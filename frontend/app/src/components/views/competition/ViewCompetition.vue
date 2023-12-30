@@ -77,7 +77,8 @@ const competition = getCompetitionDetails(route, t, toast, {})
 
 function settings() {
 	router.push({
-		path: `/tournament/${route.params.tourId}/competition/${route.params.compId}/edit`,
+		name: "Edit competition",
+		params: { tourId: route.params.tourId, compId: route.params.compId },
 	})
 }
 

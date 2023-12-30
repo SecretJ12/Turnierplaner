@@ -5,7 +5,8 @@ import viewPrepareMatches from "@/components/views/prepare/ViewPrepareMatches.vu
 import ViewChooseMode from "@/components/views/prepare/ViewSelectType.vue"
 import ViewAssignMatches from "@/components/views/prepare/assignMatches/ViewAssignMatches.vue"
 import ViewScheduleMatches from "@/components/views/prepare/ViewScheduleMatches.vue"
-import ViewEditTeams2 from "@/components/views/prepare/editTeams/ViewEditTeams.vue"
+import ViewEditTeams from "@/components/views/prepare/editTeams/ViewEditTeams.vue"
+import ViewEditCompetition from "@/components/views/prepare/ViewEditCompetition.vue"
 
 export default [
 	{
@@ -37,50 +38,50 @@ export default [
 			import("@/components/views/competitions/ViewCreateCompetition.vue"),
 	},
 	{
-		path: "/tournament/:tourId/competition/:compId/edit",
-		name: "Edit competition",
-		component: () =>
-			import("@/components/views/competitions/ViewEditCompetition.vue"),
-	},
-	{
 		path: "/tournament/:tourId/competition/:compId",
 		name: "Competition",
 		component: viewCompetition,
 	},
 	{
 		path: "/tournament/:tourId/prepare/:compId?",
-		name: "Prepare matches",
+		name: "Edit competition",
 		component: viewPrepareMatches,
 		children: [
 			{
+				path: "settings",
+				name: "settings",
+				component: ViewEditCompetition,
+				meta: { step: 1 },
+			},
+			{
 				path: "editTeams",
 				name: "editTeams",
-				component: ViewEditTeams2,
-				meta: { step: 1 },
+				component: ViewEditTeams,
+				meta: { step: 2 },
 			},
 			{
 				path: "selectType",
 				name: "selectType",
 				component: ViewChooseMode,
-				meta: { step: 2 },
+				meta: { step: 3 },
 			},
 			{
 				path: "assignMatches",
 				name: "assignMatches",
 				component: ViewAssignMatches,
-				meta: { step: 3 },
+				meta: { step: 4 },
 			},
 			{
 				path: "scheduleMatches",
 				name: "scheduleMatches",
 				component: ViewScheduleMatches,
-				meta: { step: 4 },
+				meta: { step: 5 },
 			},
 		],
 	},
 	{
 		path: "/player/registration",
-		name: "Player Registration",
+		name: "Player registration",
 		component: () =>
 			import("@/components/views/player/ViewPlayerRegistration.vue"),
 	},

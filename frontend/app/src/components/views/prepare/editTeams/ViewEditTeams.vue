@@ -75,9 +75,9 @@
 		<div class="mt-2 grid grid-nogutter justify-content-between">
 			<Button
 				:label="t('general.back')"
-				disabled
 				icon="pi pi-angle-left"
 				icon-pos="left"
+				@click="prevPage"
 			/>
 			<Button
 				:disabled="isUpdating"
@@ -94,7 +94,6 @@
 			<Button
 				v-if="route.params.step !== 'scheduleMatches'"
 				icon="pi pi-angle-right"
-				:disabled="isUpdating"
 				icon-pos="right"
 				:label="t('general.next')"
 				@click="nextPage"
@@ -302,6 +301,7 @@ async function reset() {
 }
 
 function save() {
+	// TODO warning if a step further was already executed
 	isUpdating.value = true
 	const t = teams.value.map(teamArrayClientToServer)
 	playersA.value.forEach((player) =>
@@ -352,7 +352,14 @@ function save() {
 		})
 }
 
+function prevPage() {
+	router.replace({
+		name: "settings",
+		params: { tourId: route.params.tourId, compId: route.params.compId },
+	})
+}
 function nextPage() {
+	// TODO only if every player was assigned to a team
 	router.replace({
 		name: "selectType",
 		params: { tourId: route.params.tourId, compId: route.params.compId },

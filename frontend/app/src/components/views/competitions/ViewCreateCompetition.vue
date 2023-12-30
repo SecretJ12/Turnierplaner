@@ -1,15 +1,30 @@
 <template>
-	<FormCompetition
-		:competition="competition"
-		:submit-text="t('general.create')"
-		:header="t('ViewCreateCompetition.header')"
-		@submit="submit"
-	/>
+	<div class="flex justify-content-center w-full">
+		<Card id="card">
+			<template #title>{{ t("ViewCreateCompetition.header") }}</template>
+			<template #content>
+				<FormCompetition
+					ref="form"
+					:competition="competition"
+					:disabled="false"
+					@submit="submit"
+				/>
+			</template>
+			<template #footer>
+				<div class="justify-content-end flex">
+					<Button
+						:label="t('general.create')"
+						@click="() => form !== null && form.onSubmit()"
+					/>
+				</div>
+			</template>
+		</Card>
+	</div>
 </template>
 
 <script lang="ts" setup>
 import { router } from "@/main"
-import { reactive } from "vue"
+import { reactive, ref } from "vue"
 import { useRoute } from "vue-router"
 import FormCompetition from "@/components/views/competitions/FormCompetition.vue"
 import { useI18n } from "vue-i18n"
@@ -28,6 +43,7 @@ const { t } = useI18n({ inheritLocale: true })
 const toast = useToast()
 
 const route = useRoute()
+const form = ref<InstanceType<typeof FormCompetition> | null>(null)
 
 const competition = reactive<Competition>({
 	name: "",
@@ -55,10 +71,17 @@ const competition = reactive<Competition>({
 function submit(server_data: CompetitionServer) {
 	addCompetition(server_data, <string>route.params.tourId, t, toast, {
 		suc: () => {
-			router.push({ path: "/tournament/" + route.params.tourId })
+			router.push({
+				name: "Competitions",
+				params: { tourId: route.params.tourId },
+			})
 		},
 	})
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+#card {
+	width: min(90dvw, 50rem);
+}
+</style>

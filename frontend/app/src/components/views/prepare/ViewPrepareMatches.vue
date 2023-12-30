@@ -50,7 +50,9 @@ const isLoggedIn = inject("loggedIn", ref(false))
 const competitions = getListCompetitions(route, isLoggedIn, t, toast, {
 	suc: () => updateRoute(),
 	err: () => {
-		router.push("/")
+		router.push({
+			name: "Tournaments",
+		})
 	},
 })
 const activeTab = ref<number>(0)
@@ -66,7 +68,7 @@ function updateRoute(compId?: string) {
 
 	// TODO insert correct step for compId
 	let step = route.name
-	if (route.meta.step === undefined || !step) step = "editTeams"
+	if (route.meta.step === undefined || !step) step = "settings"
 
 	router.replace({
 		name: step,
@@ -84,24 +86,29 @@ function tabChange(event: TabMenuChangeEvent) {
 // TODO internalization
 const stepList = ref([
 	{
+		label: "Einstellungen",
+		name: "settings",
+		index: 1,
+	},
+	{
 		label: $t("ViewPrepare.steps.editTeams"),
 		name: "editTeams",
-		index: 1,
+		index: 2,
 	},
 	{
 		label: $t("ViewPrepare.steps.selectType"),
 		name: "selectType",
-		index: 2,
+		index: 3,
 	},
 	{
 		label: $t("ViewPrepare.steps.assignMatches"),
 		name: "assignMatches",
-		index: 3,
+		index: 4,
 	},
 	{
 		label: $t("ViewPrepare.steps.scheduleMatches"),
 		name: "scheduleMatches",
-		index: 4,
+		index: 5,
 	},
 ])
 </script>

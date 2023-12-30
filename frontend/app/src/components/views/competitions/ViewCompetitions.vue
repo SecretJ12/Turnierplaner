@@ -1,14 +1,6 @@
 <template>
 	<div id="container">
 		<h2>
-			<span
-				v-if="canEdit"
-				id="settings"
-				class="material-icons cursor-pointer"
-				style="font-size: 2rem"
-				@click="settings"
-				>settings</span
-			>
 			{{ route.params.tourId }}
 		</h2>
 		<div id="content">
@@ -19,7 +11,7 @@
 				<item
 					v-for="competition in competitions"
 					v-else
-					:key="competition.id"
+					:key="competition.id === null ? undefined : competition.id"
 					:can-edit="canEdit"
 					:description="competition.description"
 					:name="competition.name"
@@ -82,7 +74,7 @@
 					v-if="openRegistration"
 					id="button"
 					:label="t('general.register') + ' >>'"
-					@click="router.push('/player/registration')"
+					@click="router.push({ name: 'Player registration' })"
 				/>
 			</div>
 		</div>
@@ -112,7 +104,7 @@ const isLoggedIn = inject("loggedIn", ref(false))
 const canEdit = getCanEdit(<string>route.params.tourId, isLoggedIn)
 const competitions = getListCompetitions(route, isLoggedIn, t, toast, {
 	err: () => {
-		router.push("/")
+		router.push({ name: "Tournaments" })
 	},
 })
 
@@ -165,32 +157,31 @@ function formatDate(d: Date) {
 	return d.toLocaleString(t("lang"), options)
 }
 
-function settings() {
-	router.push({ path: "/tournament/" + route.params.tourId + "/edit" })
-}
-
 function selected(competition: string) {
 	router.push({
-		path: `/tournament/${route.params.tourId}/competition/${competition}`,
+		name: "Competition",
+		params: { tourId: route.params.tourId, compId: competition },
 	})
 }
 
 function prepare() {
 	if (competitions.value)
 		router.push({
-			path: `/tournament/${route.params.tourId}/prepare`,
+			name: "Edit competition",
+			params: { tourId: route.params.tourId },
 		})
 }
 
 function settingsItem(competition: string) {
 	router.push({
-		path: `/tournament/${route.params.tourId}/competition/${competition}/edit`,
+		name: "Edit competition",
+		params: { tourId: route.params.tourId, compId: competition },
 	})
 }
-
 function addCompetition() {
 	router.push({
-		path: `/tournament/${route.params.tourId}/createCompetition`,
+		name: "Create competition",
+		params: { tourId: route.params.tourId },
 	})
 }
 </script>

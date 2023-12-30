@@ -39,15 +39,21 @@ const canCreate = getCanCreate(isLoggedIn)
 const tournaments = getListTournaments(isLoggedIn, t, toast)
 
 function selected(tournament: string) {
-	router.push({ path: "/tournament/" + tournament })
+	router.push({
+		name: "Competitions",
+		params: { tourId: tournament },
+	})
 }
 
 function settingsItem(tournament: string) {
-	router.push({ path: "/tournament/" + tournament + "/edit" })
+	router.push({
+		name: "Edit tournament",
+		params: { tourId: tournament },
+	})
 }
 
 function addTournament() {
-	router.push({ path: "/createTournament" })
+	router.push({ name: "Create tournament" })
 }
 </script>
 
