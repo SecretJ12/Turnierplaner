@@ -30,7 +30,7 @@
 
 <script setup lang="ts">
 import { useRoute, useRouter } from "vue-router"
-import { inject, ref } from "vue"
+import { computed, inject, ref } from "vue"
 import { useI18n } from "vue-i18n"
 import { useToast } from "primevue/usetoast"
 import { TabMenuChangeEvent } from "primevue/tabmenu"
@@ -38,6 +38,10 @@ import { getListCompetitions } from "@/backend/competition"
 import Steps from "primevue/steps"
 
 const { t } = useI18n({ inheritLocale: true })
+
+function $t(name: string) {
+	return computed(() => t(name))
+}
 const router = useRouter()
 const route = useRoute()
 const toast = useToast()
@@ -80,22 +84,22 @@ function tabChange(event: TabMenuChangeEvent) {
 // TODO internalization
 const stepList = ref([
 	{
-		label: "Edit Teams",
+		label: $t("ViewPrepare.steps.editTeams"),
 		name: "editTeams",
 		index: 1,
 	},
 	{
-		label: "Select Tye",
+		label: $t("ViewPrepare.steps.selectType"),
 		name: "selectType",
 		index: 2,
 	},
 	{
-		label: "Assign Matches",
+		label: $t("ViewPrepare.steps.assignMatches"),
 		name: "assignMatches",
 		index: 3,
 	},
 	{
-		label: "Schedule Matches",
+		label: $t("ViewPrepare.steps.scheduleMatches"),
 		name: "scheduleMatches",
 		index: 4,
 	},

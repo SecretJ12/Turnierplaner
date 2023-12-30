@@ -15,7 +15,10 @@
 		"success": "Erfolg",
 		"failure": "Fehler",
 		"loading": "Lädt...",
-		"save": "Speichern"
+		"save": "Speichern",
+		"reset": "Zurücksetzen",
+		"back": "Zurück",
+		"next": "Weiter"
 	},
 	"ViewPlayerRegistration": {
 		"headline": "Spielerregistrierung",
@@ -161,7 +164,9 @@
 		"no_result": "Keinen Spieler gefunden",
 		"already_exists": "Der Spieler ist bereits für das Turnier registriert",
 		"register_success": "Der Spieler wurde erfolgreich registriert",
-		"register_failed": "Fehler beim Hinzufügen des Spielers"
+		"register_failed": "Fehler beim Hinzufügen des Spielers",
+		"over": "Ü",
+		"under": "U"
 	},
 	"ViewKnockout": {
 		"finale": "Finale",
@@ -172,13 +177,18 @@
 	},
 	"ViewPrepare": {
 		"steps": {
-			"editPlayers": "Spieler bearbeiten",
-			"chooseMode": "Spielmodus auswählen",
-			"assignTeams": "Teams auslosen",
+			"editTeams": "Teams auslosen",
+			"selectType": "Modus wählen",
 			"assignMatches": "Spiele auslosen",
 			"scheduleMatches": "Zeiteinteilung",
 			"previous": "Zurück",
 			"next": "Weiter"
+		},
+		"editTeams": {
+			"deleteBox": "Löschen",
+			"randomize": "Auslosen",
+			"reset": "Zurücksetzen",
+			"reroll": "Neu auslosen"
 		}
 	},
 	"validation": {

@@ -50,16 +50,15 @@ function generateAboveTag() {
 	if (props.player.minAge === null) return ""
 	const dif =
 		props.beginGamePhase.getFullYear() - props.player.minAge.getFullYear()
-	return `Ü${dif}`
+	return `${t("Player.over")}${dif}`
 }
 
 function generateUnderTag() {
 	if (props.player.maxAge === null) return ""
 	const dif =
 		props.beginGamePhase.getFullYear() - props.player.maxAge.getFullYear()
-	return `U${dif - 1}`
+	return `${t("Player.under")}${dif - 1}`
 }
-
 const dateOptions: Intl.DateTimeFormatOptions = {
 	year: "numeric",
 	month: "numeric",

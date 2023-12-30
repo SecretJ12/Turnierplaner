@@ -6,7 +6,9 @@
 			@mouseover="enter"
 			@mouseleave="leave"
 		>
-			<span class="text-red-500">Drop to delete</span>
+			<span class="text-red-500">{{
+				t("ViewPrepare.editTeams.deleteBox")
+			}}</span>
 		</div>
 		<DraggablePanel
 			id="trash"
@@ -50,6 +52,9 @@ import { ref } from "vue"
 import { signedUpPlayer } from "@/interfaces/player"
 import PlayerCard from "@/components/views/prepare/editTeams/PlayerCard.vue"
 import OverlayPanel from "primevue/overlaypanel"
+import { useI18n } from "vue-i18n"
+
+const { t } = useI18n({ inheritLocale: true })
 
 const props = defineProps<{
 	group: string
@@ -62,10 +67,12 @@ const op = ref<OverlayPanel>()
 
 const timeout = 300
 let lastEnter = new Date()
+
 function enter(event: Event) {
 	lastEnter = new Date()
 	op.value?.show(event)
 }
+
 function leave() {
 	setTimeout(() => {
 		if (new Date().getTime() - lastEnter.getTime() > timeout) op.value?.hide()

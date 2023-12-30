@@ -15,7 +15,10 @@
 		"success": "Success!",
 		"failure": "Failure!",
 		"loading": "Loading...",
-		"save": "Save"
+		"save": "Save",
+		"reset": "Reset",
+		"back": "Back",
+		"next": "Next"
 	},
 	"ViewPlayerRegistration": {
 		"headline": "Player Registration",
@@ -164,7 +167,9 @@
 		"no_result": "No player found",
 		"already_exists": "Player is already registered",
 		"register_success": "Successful registered",
-		"register_failed": "Registration failed"
+		"register_failed": "Registration failed",
+		"over": "O",
+		"under": "U"
 	},
 	"ViewKnockout": {
 		"finale": "Finale",
@@ -175,13 +180,18 @@
 	},
 	"ViewPrepare": {
 		"steps": {
-			"editPlayers": "Edit players",
-			"chooseMode": "Assign teams",
-			"assignTeams": "Assign teams",
+			"editTeams": "Edit teams",
+			"selectType": "Choose mode",
 			"assignMatches": "Assign matches",
 			"scheduleMatches": "Schedule matches",
 			"previous": "Previous",
 			"next": "Next"
+		},
+		"editTeams": {
+			"deleteBox": "Drop to delete",
+			"randomize": "Randomize",
+			"reset": "Reset",
+			"reroll": "Reroll"
 		}
 	},
 	"validation": {

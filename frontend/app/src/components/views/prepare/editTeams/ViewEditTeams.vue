@@ -37,7 +37,7 @@
 					:disabled="isUpdating"
 					:model="randomizeItems"
 					class="w-fit"
-					label="Randomize"
+					:label="t('ViewPrepare.editTeams.randomize')"
 					@click="randomize"
 				>
 					<template #icon>
@@ -73,16 +73,20 @@
 		</div>
 
 		<div class="mt-2 grid grid-nogutter justify-content-between">
-			<Button disabled icon="pi pi-angle-left" icon-pos="left" label="Back" />
-			<!--TODO internalization-->
-			<Button label="Reset" severity="danger" @click="reset" />
+			<Button
+				:label="t('general.back')"
+				disabled
+				icon="pi pi-angle-left"
+				icon-pos="left"
+			/>
+			<Button :label="t('general.reset')" severity="danger" @click="reset" />
 			<!-- TODO add @click -->
 			<Button :label="t('general.save')" severity="success" @click="save" />
 			<Button
 				v-if="route.params.step !== 'scheduleMatches'"
 				icon="pi pi-angle-right"
 				icon-pos="right"
-				label="Next"
+				:label="t('general.next')"
 				@click="nextPage"
 			/>
 		</div>
@@ -113,6 +117,10 @@ const route = useRoute()
 const router = useRouter()
 const toast = useToast()
 const { t } = useI18n({ inheritLocale: true })
+
+function $t(name: string) {
+	return computed(() => t(name))
+}
 
 const tournament = getTournamentDetails(
 	<string>route.params.tourId,
@@ -244,18 +252,18 @@ async function reroll() {
 	await randomize()
 }
 
-const randomizeItems = [
+const randomizeItems = ref([
 	{
-		label: "Reroll",
+		label: $t("ViewPrepare.editTeams.reroll"),
 		icon: "pi pi-refresh",
 		command: reroll,
 	},
 	{
-		label: "Reset",
+		label: $t("ViewPrepare.editTeams.reset"),
 		icon: "pi pi-times",
 		command: clearTeams,
 	},
-]
+])
 
 async function reset() {
 	isUpdating.value = true
