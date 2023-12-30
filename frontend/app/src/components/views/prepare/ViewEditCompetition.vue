@@ -3,7 +3,7 @@
 		<Card id="card">
 			<template #content>
 				<FormCompetition
-					v-if="competition === null"
+					v-if="competition === null || reload"
 					:competition="CompetitionDefault"
 					:disabled="true"
 					@submit="submit"
@@ -59,7 +59,17 @@ const toast = useToast()
 const route = useRoute()
 const form = ref<InstanceType<typeof FormCompetition> | null>(null)
 
+function sleep(milliseconds: number) {
+	return new Promise((resolve) => setTimeout(resolve, milliseconds))
+}
+
+const reload = ref(false)
 const competition = getCompetitionDetails(route, t, toast, {
+	suc: async () => {
+		reload.value = true
+		await sleep(100)
+		reload.value = false
+	},
 	err: () => {
 		router.back()
 	},
