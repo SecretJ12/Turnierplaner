@@ -69,6 +69,16 @@ export function teamArrayServerToClient(team: TeamServer) {
 	}
 }
 
+export function teamArrayClientToServer(team: TeamArray) {
+	return {
+		id: team.id,
+		playerA:
+			team.playerA.length > 0 ? playerServerToClient(team.playerA[0]) : null,
+		playerB:
+			team.playerB.length > 0 ? playerServerToClient(team.playerB[0]) : null,
+	}
+}
+
 export function matchServerToClient(
 	match: MatchServer,
 	teams: Map<string, Team>,

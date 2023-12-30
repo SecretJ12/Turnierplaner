@@ -209,7 +209,7 @@ public class TestdataGenerator {
         player.setPhone(faker.phoneNumber().cellPhone());
         player.setMailVerified(true);
         player.setAdminVerified(true);
-        switch(ageRestr){
+        switch (ageRestr) {
             case NONE -> {
                 player.setBirthday(LocalDate.now().minusYears(random.nextInt(50)));
             }
@@ -217,7 +217,7 @@ public class TestdataGenerator {
                 player.setBirthday(LocalDate.now().minusYears(random.nextInt(18)));
             }
             case O50 -> {
-                player.setBirthday(LocalDate.now().minusYears(random.nextInt(20)+50));
+                player.setBirthday(LocalDate.now().minusYears(random.nextInt(20) + 50));
             }
 
         }

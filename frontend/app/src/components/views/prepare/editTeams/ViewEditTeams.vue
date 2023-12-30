@@ -79,12 +79,22 @@
 				icon="pi pi-angle-left"
 				icon-pos="left"
 			/>
-			<Button :label="t('general.reset')" severity="danger" @click="reset" />
-			<!-- TODO add @click -->
-			<Button :label="t('general.save')" severity="success" @click="save" />
+			<Button
+				:disabled="isUpdating"
+				:label="t('general.reset')"
+				severity="danger"
+				@click="reset"
+			/>
+			<Button
+				:disabled="isUpdating"
+				:label="t('general.save')"
+				severity="success"
+				@click="save"
+			/>
 			<Button
 				v-if="route.params.step !== 'scheduleMatches'"
 				icon="pi pi-angle-right"
+				:disabled="isUpdating"
 				icon-pos="right"
 				:label="t('general.next')"
 				@click="nextPage"
@@ -106,6 +116,7 @@ import { Player } from "@/interfaces/player"
 import axios from "axios"
 import {
 	TeamArray,
+	teamArrayClientToServer,
 	teamArrayServerToClient,
 	TeamServer,
 } from "@/interfaces/match"
@@ -291,13 +302,54 @@ async function reset() {
 }
 
 function save() {
-	// TODO update players
-	toast.add({
-		severity: "success",
-		summary: "Success",
-		detail: "Players updated",
-		life: 3000,
-	})
+	isUpdating.value = true
+	const t = teams.value.map(teamArrayClientToServer)
+	playersA.value.forEach((player) =>
+		t.push({
+			id: uuidv4(),
+			playerA: player,
+			playerB: null,
+		}),
+	)
+	playersB.value.forEach((player) =>
+		t.push({
+			id: uuidv4(),
+			playerA: null,
+			playerB: player,
+		}),
+	)
+	teams.value = []
+	playersA.value = []
+	playersB.value = []
+	const anFin = sleep(1000)
+
+	axios
+		.post<TeamServer[]>(
+			`/tournament/${route.params.tourId}/competition/${route.params.compId}/updateTeams`,
+			t,
+		)
+		.then(async (response) => {
+			await anFin
+			processServerTeams(response.data)
+			await sleep(500)
+			isUpdating.value = false
+
+			toast.add({
+				severity: "success",
+				summary: "Success",
+				detail: "Players updated",
+				life: 3000,
+			})
+		})
+		.catch((error) => {
+			console.log(error)
+			toast.add({
+				severity: "error",
+				summary: "Error",
+				detail: "Players could not be updated",
+				life: 3000,
+			})
+		})
 }
 
 function nextPage() {
@@ -319,34 +371,38 @@ async function update() {
 		)
 		.then(async (response) => {
 			await anFin
-			response.data.map(teamArrayServerToClient).forEach((team) => {
-				if (team.playerA.length > 0 && team.playerB.length === 0) {
-					playersA.value.push(team.playerA[0])
-					initialPlayerA.value.push(team.playerA[0])
-				} else if (
-					team.playerA.length === 0 &&
-					team.playerB.length > 0 &&
-					competition.value?.playerB.different
-				) {
-					playersB.value.push(team.playerB[0])
-					initialPlayerB.value.push(team.playerB[0])
-				} else if (
-					team.playerA.length === 0 &&
-					team.playerB.length > 0 &&
-					!competition.value?.playerB.different
-				) {
-					playersA.value.push(team.playerB[0])
-					initialPlayerA.value.push(team.playerB[0])
-				} else if (team.playerA.length > 0 && team.playerB.length > 0) {
-					teams.value.push(team)
-					initialTeam.value.push(JSON.parse(JSON.stringify(team)))
-					playerCount.value++
-				}
-				playerCount.value++
-			})
+			processServerTeams(response.data)
 			await sleep(500)
 			isUpdating.value = false
 		})
+}
+
+function processServerTeams(serverTeams: TeamServer[]) {
+	serverTeams.map(teamArrayServerToClient).forEach((team) => {
+		if (team.playerA.length > 0 && team.playerB.length === 0) {
+			playersA.value.push(team.playerA[0])
+			initialPlayerA.value.push(team.playerA[0])
+		} else if (
+			team.playerA.length === 0 &&
+			team.playerB.length > 0 &&
+			competition.value?.playerB.different
+		) {
+			playersB.value.push(team.playerB[0])
+			initialPlayerB.value.push(team.playerB[0])
+		} else if (
+			team.playerA.length === 0 &&
+			team.playerB.length > 0 &&
+			!competition.value?.playerB.different
+		) {
+			playersA.value.push(team.playerB[0])
+			initialPlayerA.value.push(team.playerB[0])
+		} else if (team.playerA.length > 0 && team.playerB.length > 0) {
+			teams.value.push(team)
+			initialTeam.value.push(JSON.parse(JSON.stringify(team)))
+			playerCount.value++
+		}
+		playerCount.value++
+	})
 }
 </script>
 

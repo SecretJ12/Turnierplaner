@@ -106,7 +106,7 @@ public class PlayerResource {
 
     @Transactional
     public Player adminPlayerRegistration(jUserPlayerRegistrationForm playerForm) {
-        if(!securityIdentity.hasRole("director")) throw new ForbiddenException("No permission to create player");
+        if (!securityIdentity.hasRole("director")) throw new ForbiddenException("No permission to create player");
         if (playerRepository.getByName(playerForm.getFirstName(), playerForm.getLastName()) != null)
             throw new WebApplicationException("A player already exists with this name", Response.Status.CONFLICT);
 

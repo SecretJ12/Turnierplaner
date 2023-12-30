@@ -6,10 +6,7 @@ import de.secretj12.turnierplaner.db.entities.SexType;
 import de.secretj12.turnierplaner.db.entities.Tournament;
 import de.secretj12.turnierplaner.db.entities.competition.*;
 import de.secretj12.turnierplaner.db.entities.groups.Group;
-import de.secretj12.turnierplaner.db.repositories.CompetitionRepository;
-import de.secretj12.turnierplaner.db.repositories.MatchRepository;
-import de.secretj12.turnierplaner.db.repositories.TeamRepository;
-import de.secretj12.turnierplaner.db.repositories.TournamentRepository;
+import de.secretj12.turnierplaner.db.repositories.*;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorCompetitionAdd;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorCompetitionUpdate;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.competition.jUserCompetition;
@@ -36,7 +33,9 @@ import java.util.List;
 public class CompetitionResource {
 
     @Inject
-    PlayerResource players;
+    PlayerResource playersResource;
+    @Inject
+    PlayerRepository players;
     @Inject
     CompetitionRepository competitions;
     @Inject
@@ -62,7 +61,7 @@ public class CompetitionResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public List<jDirectorCompetitionUpdate> getPrepareCompetitions(@PathParam("tourName") String tourName) {
-        if(securityIdentity.hasRole("director"))
+        if (securityIdentity.hasRole("director"))
             return competitions.listByName(tourName).stream().map(jDirectorCompetitionUpdate::new).toList();
         throw new UnauthorizedException("Not authorized");
     }
@@ -180,7 +179,7 @@ public class CompetitionResource {
             if (reg.getPlayerA() == null) throw new BadRequestException("Player A is null");
             if (reg.getPlayerB() != null) throw new BadRequestException("Player B is not null");
 
-            Player playerA = players.playerRepository.getByName(reg.getPlayerA().getFirstName(), reg.getPlayerA().getLastName());
+            Player playerA = players.getByName(reg.getPlayerA().getFirstName(), reg.getPlayerA().getLastName());
             if (playerA == null) throw new BadRequestException("Player A does not exist");
 
             if (conditionsFailA(competition, playerA))
@@ -206,7 +205,7 @@ public class CompetitionResource {
                     throw new BadRequestException("Player A and player B are not null");
 
                 if (reg.getPlayerA() != null) {
-                    Player playerA = players.playerRepository.getByName(reg.getPlayerA().getFirstName(), reg.getPlayerA().getLastName());
+                    Player playerA = players.getByName(reg.getPlayerA().getFirstName(), reg.getPlayerA().getLastName());
                     if (playerA == null) throw new BadRequestException("Player A doesn't exist");
 
                     if (conditionsFailA(competition, playerA))
@@ -222,7 +221,7 @@ public class CompetitionResource {
                     teams.persist(team);
                 }
                 if (reg.getPlayerB() != null) {
-                    Player playerB = players.playerRepository.getByName(reg.getPlayerB().getFirstName(), reg.getPlayerB().getLastName());
+                    Player playerB = players.getByName(reg.getPlayerB().getFirstName(), reg.getPlayerB().getLastName());
                     if (playerB == null) throw new BadRequestException("Player B does not exist");
 
                     if (conditionsFailB(competition, playerB))
@@ -244,9 +243,9 @@ public class CompetitionResource {
                 if (reg.getPlayerA() == null) throw new BadRequestException("Player A is null");
                 if (reg.getPlayerB() == null) throw new BadRequestException("Player B is null");
 
-                Player playerA = players.playerRepository.getByName(reg.getPlayerA().getFirstName(), reg.getPlayerA().getLastName());
+                Player playerA = players.getByName(reg.getPlayerA().getFirstName(), reg.getPlayerA().getLastName());
                 if (playerA == null) throw new BadRequestException("Player A does not exist");
-                Player playerB = players.playerRepository.getByName(reg.getPlayerB().getFirstName(), reg.getPlayerB().getLastName());
+                Player playerB = players.getByName(reg.getPlayerB().getFirstName(), reg.getPlayerB().getLastName());
                 if (playerB == null) throw new BadRequestException("Player B does not exist");
 
                 if (conditionsFailA(competition, playerA))
@@ -274,22 +273,63 @@ public class CompetitionResource {
 
     @POST
     @Transactional
+    @RolesAllowed("director")
+    @Path("/{compName}/updateTeams")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<jUserTeam> updateTeams(@PathParam("tourName") String tourName, @PathParam(
+            "compName") String compName, List<jUserTeam> teams) {
+        checkTournamentAccessibility(tourName);
+        Competition competition = competitions.getByName(tourName, compName);
+        if (competition == null) throw new BadRequestException("Competition doesn't exist");
+
+        List<Team> curTeams = competition.getTeams();
+
+        teams.forEach(team -> {
+            Player playerA = team.getPlayerA() == null ? null : players.getByName(team.getPlayerA().getFirstName(), team.getPlayerA().getLastName());
+            Player playerB = team.getPlayerB() == null ? null : players.getByName(team.getPlayerB().getFirstName(), team.getPlayerB().getLastName());
+
+            var cTeamOp = curTeams.stream().filter(cT -> cT.getId().equals(team.getId())).findAny();
+            if (cTeamOp.isEmpty()) {
+                Team t = new Team();
+                t.setPlayerA(playerA);
+                t.setPlayerB(playerB);
+                this.teams.persist(t);
+            } else {
+                var cTeam = cTeamOp.get();
+                cTeam.setPlayerA(playerA);
+                cTeam.setPlayerB(playerB);
+                this.teams.persist(cTeam);
+            }
+        });
+        curTeams.forEach(cTeam -> {
+            var teamOp = teams.stream().filter(cT -> cT.getId().equals(cTeam.getId())).findAny();
+            if (teamOp.isEmpty()) {
+                this.teams.delete(cTeam);
+            }
+        });
+
+        return competition.getTeams().stream().map(jUserTeam::new).toList();
+    }
+
+    @POST
+    @Transactional
     @Path("/{compName}/signUpRegister/{playerSide}")
     @Blocking
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public jUserPlayer registerSignUpPlayer(@PathParam("tourName") String tourName, @PathParam(
-            "compName") String compName, @PathParam("playerSide") String playerSide , jUserPlayerRegistrationForm playerForm) {
-        Player newPlayer = players.adminPlayerRegistration(playerForm);
-
+            "compName") String compName, @PathParam("playerSide") String playerSide,
+                                            jUserPlayerRegistrationForm playerForm) {
+        Player newPlayer = playersResource.adminPlayerRegistration(playerForm);
 
         Competition competition = competitions.getByName(tourName, compName);
 
         Team team = new Team();
         System.out.printf("playerSide: %s\n", playerSide);
-        if(playerSide.equals("playerA")){
+        if (playerSide.equals("playerA")) {
             team.setPlayerA(newPlayer);
-        }else{
+        } else {
             team.setPlayerB(newPlayer);
         }
         team.setCompetition(competition);

@@ -18,6 +18,9 @@ public class jUserTeam {
             playerB = new jUserPlayer(team.getPlayerB());
     }
 
+    public jUserTeam() {
+    }
+
     public UUID getId() {
         return id;
     }
