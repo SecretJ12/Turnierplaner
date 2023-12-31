@@ -86,7 +86,7 @@ function tabChange(event: TabMenuChangeEvent) {
 // TODO internalization
 const stepList = ref([
 	{
-		label: "Einstellungen",
+		label: $t("ViewPrepare.steps.settings"),
 		name: "settings",
 		index: 1,
 	},

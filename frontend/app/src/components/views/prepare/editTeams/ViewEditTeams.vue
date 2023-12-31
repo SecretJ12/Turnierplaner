@@ -288,16 +288,16 @@ async function reset() {
 	)
 	initialPlayerA.value.forEach((p) => playersA.value.push(p))
 	initialPlayerB.value.forEach((p) => playersB.value.push(p))
-	await sleep(500)
-	isUpdating.value = false
 
-	// TODO reset players
 	toast.add({
 		severity: "info",
 		summary: "Reset",
 		detail: "Restored initial configuration",
 		life: 3000,
 	})
+
+	await sleep(500)
+	isUpdating.value = false
 }
 
 function save() {
@@ -321,6 +321,9 @@ function save() {
 	teams.value = []
 	playersA.value = []
 	playersB.value = []
+	initialTeam.value = []
+	initialPlayerA.value = []
+	initialPlayerB.value = []
 	const anFin = sleep(1000)
 
 	axios
@@ -331,8 +334,6 @@ function save() {
 		.then(async (response) => {
 			await anFin
 			processServerTeams(response.data)
-			await sleep(500)
-			isUpdating.value = false
 
 			toast.add({
 				severity: "success",
@@ -340,6 +341,8 @@ function save() {
 				detail: "Players updated",
 				life: 3000,
 			})
+			await sleep(500)
+			isUpdating.value = false
 		})
 		.catch((error) => {
 			console.log(error)
@@ -371,6 +374,9 @@ async function update() {
 	teams.value = []
 	playersA.value = []
 	playersB.value = []
+	initialTeam.value = []
+	initialPlayerA.value = []
+	initialPlayerB.value = []
 	const anFin = sleep(1000)
 	axios
 		.get<TeamServer[]>(
@@ -413,5 +419,4 @@ function processServerTeams(serverTeams: TeamServer[]) {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

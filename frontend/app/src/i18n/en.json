@@ -180,8 +180,8 @@
 	},
 	"ViewPrepare": {
 		"steps": {
+			"settings": "Einstellungen",
 			"editTeams": "Edit teams",
-			"selectType": "Choose mode",
 			"assignMatches": "Assign matches",
 			"scheduleMatches": "Schedule matches",
 			"previous": "Previous",

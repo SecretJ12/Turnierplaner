@@ -177,8 +177,8 @@
 	},
 	"ViewPrepare": {
 		"steps": {
+			"settings": "Einstellungen",
 			"editTeams": "Teams auslosen",
-			"selectType": "Modus wählen",
 			"assignMatches": "Spiele auslosen",
 			"scheduleMatches": "Zeiteinteilung",
 			"previous": "Zurück",

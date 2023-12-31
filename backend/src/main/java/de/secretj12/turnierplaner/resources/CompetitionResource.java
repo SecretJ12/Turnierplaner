@@ -272,13 +272,19 @@ public class CompetitionResource {
     }
 
     @POST
-    @Transactional
     @RolesAllowed("director")
     @Path("/{compName}/updateTeams")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public List<jUserTeam> updateTeams(@PathParam("tourName") String tourName, @PathParam(
         "compName") String compName, List<jUserTeam> teams) {
+        updateTeamsHelper(tourName, compName, teams);
+
+        return competitions.getByName(tourName, compName).getTeams().stream().map(jUserTeam::new).toList();
+    }
+
+    @Transactional
+    protected void updateTeamsHelper(String tourName, String compName, List<jUserTeam> teams) {
         checkTournamentAccessibility(tourName);
         Competition competition = competitions.getByName(tourName, compName);
         if (competition == null) throw new BadRequestException("Competition doesn't exist");
@@ -308,8 +314,6 @@ public class CompetitionResource {
                 this.teams.delete(cTeam);
             }
         });
-
-        return competition.getTeams().stream().map(jUserTeam::new).toList();
     }
 
     @POST
