@@ -12,7 +12,7 @@
 				type: 'transition',
 			}"
 			:group="props.group"
-			class="flex flex-wrap gap-2 border-3 min-h-3rem border-round border-dashed justify-content-around"
+			class="flex flex-wrap gap-2 border-3 min-h-3rem border-round border-dashed justify-content-start"
 			style="min-height: 4em"
 		>
 			<template #default="{ item }">
@@ -22,7 +22,7 @@
 	</Fieldset>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" generic="T">
 import DraggablePanel from "@/draggable/DraggablePanel.vue"
 import { TransitionGroup } from "vue"
 
@@ -30,7 +30,7 @@ const props = defineProps<{
 	group: string
 	put: string[]
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	list: any[]
+	list: T[]
 	legend: string
 	id?: string
 }>()

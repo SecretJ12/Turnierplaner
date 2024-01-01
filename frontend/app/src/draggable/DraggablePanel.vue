@@ -2,14 +2,14 @@
 	<component :is="tag" :key="index" ref="container" v-bind="componentData">
 		<slot
 			v-for="(item, i) in list"
-			:key="item['itemKey']"
+			:key="(<any>item)['itemKey']"
 			:item="item"
 			:index="i"
 		/>
 	</component>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" generic="T">
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import Sortable from "sortablejs"
@@ -18,7 +18,7 @@ import { ref, watch } from "vue"
 const props = withDefaults(
 	defineProps<{
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		list: any[]
+		list: T[]
 		itemKey: string
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		tag: any
@@ -33,7 +33,7 @@ const props = withDefaults(
 		ghost?: string
 		single?: boolean
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		wrap?: ((el: any, id: string) => any) | null
+		wrap?: ((el: any, id: string) => T) | null
 	}>(),
 	{
 		componentData: {},
@@ -173,7 +173,7 @@ function reload() {
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 // eslint-disable-next-line
-let selectedElement: any = null
+let selectedElement: T = null
 let targetSingle = false
 </script>
 
