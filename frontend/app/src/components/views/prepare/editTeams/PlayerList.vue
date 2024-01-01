@@ -54,7 +54,7 @@ import AddPlayer from "@/components/views/prepare/editTeams/AddPlayer.vue"
 import DeleteBox from "@/components/views/prepare/editTeams/DeleteBox.vue"
 import { ref, TransitionGroup } from "vue"
 import { Player, signedUpPlayer } from "@/interfaces/player"
-import PlayerCard from "@/components/views/prepare/editTeams/PlayerCard.vue"
+import PlayerCard from "@/components/views/prepare/components/PlayerCard.vue"
 import DraggablePanel from "@/draggable/DraggablePanel.vue"
 
 const props = withDefaults(

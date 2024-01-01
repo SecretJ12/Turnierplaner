@@ -1,5 +1,5 @@
 <template>
-	<div class="w-10rem">
+	<div>
 		<div
 			id="top"
 			class="border-3 border-dashed h-3rem border-round-top content-box"
