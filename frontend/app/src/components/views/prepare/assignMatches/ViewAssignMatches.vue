@@ -1,16 +1,28 @@
 <template>
 	<div class="grid">
 		<DraggableList group="teams" :put="['teams']" :list="teams" legend="Teams">
-			<template #default="slotProp">
+			<template #default="{ item }">
+				<template v-if="!item.playerA">Error</template>
 				<TeamBox
-					:player-a="slotProp.item.playerA.name"
-					:player-b="slotProp.item.playerB?.name"
-					:different="true"
-				/>
+					v-else-if="item.playerB"
+					:id="item.id"
+					:different="competition?.playerB.different || false"
+				>
+					<template #playerA>
+						<PlayerCard :player="item.playerA" />
+					</template>
+					<template #playerB>
+						<PlayerCard
+							:player="item.playerB"
+							:secondary="competition?.playerB.different || false"
+						/>
+					</template>
+				</TeamBox>
+				<PlayerCard v-else :player="item.playerA" />
 			</template>
 		</DraggableList>
 		<div class="col-4">
-			<Button class="mb-2"> Shuffle</Button>
+			<Button class="mb-2">Shuffle</Button>
 		</div>
 
 		<!-- TODO some more drag'n'drop stuff -->
@@ -49,7 +61,7 @@
 
 	<div class="grid grid-nogutter justify-content-between mt-4">
 		<Button label="Back" icon="pi pi-angle-left" @click="prevPage" />
-		<Button :label="t('general.save')"> </Button>
+		<Button :label="t('general.save')"></Button>
 		<Button
 			v-if="route.params.step !== 'scheduleMatches'"
 			label="Next"
@@ -73,6 +85,7 @@ import axios from "axios"
 import { Team, teamServerToClient } from "@/interfaces/match"
 import TeamBox from "@/components/views/prepare/editTeams/TeamBox.vue"
 import DraggableList from "@/draggable/DraggableList.vue"
+import PlayerCard from "@/components/views/prepare/editTeams/PlayerCard.vue"
 
 const route = useRoute()
 const router = useRouter()

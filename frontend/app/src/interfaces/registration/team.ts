@@ -1,23 +1,12 @@
+import { Player, signedUpPlayer } from "@/interfaces/player"
+
+// TODO unify with team from match
 export interface Team {
-	playerA?: {
-		firstName: string
-		lastName: string
-	}
-	playerB?: {
-		firstName: string
-		lastName: string
-	}
+	playerA?: Player
+	playerB?: Player
 }
 
 export interface signedUpTeam {
-	playerA: {
-		firstName: string
-		lastName: string
-		name: string
-	}
-	playerB: {
-		firstName: string
-		lastName: string
-		name: string
-	}
+	playerA: signedUpPlayer
+	playerB?: signedUpPlayer
 }

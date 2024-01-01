@@ -12,8 +12,10 @@
 </template>
 
 <script setup lang="ts">
+import { Player } from "@/interfaces/player"
+
 const props = withDefaults(
-	defineProps<{ player: { name: string }; secondary?: boolean }>(),
+	defineProps<{ player: Player; secondary?: boolean }>(),
 	{
 		secondary: false,
 	},

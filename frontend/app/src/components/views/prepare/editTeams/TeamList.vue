@@ -28,11 +28,7 @@
 					"
 				>
 					<template #default="{ item, index }">
-						<TeamBox
-							:id="item.id"
-							:different="competition.playerB.different"
-							:team="item"
-						>
+						<TeamBox :id="item.id" :different="competition.playerB.different">
 							<template #playerA>
 								<DraggablePanel
 									id="playerA"

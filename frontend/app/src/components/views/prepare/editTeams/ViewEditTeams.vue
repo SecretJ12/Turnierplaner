@@ -369,6 +369,7 @@ function nextPage() {
 	})
 }
 
+let firstUpdate = true
 async function update() {
 	isUpdating.value = true
 	teams.value = []
@@ -377,7 +378,8 @@ async function update() {
 	initialTeam.value = []
 	initialPlayerA.value = []
 	initialPlayerB.value = []
-	const anFin = sleep(1000)
+	const anFin = sleep(firstUpdate ? 0 : 1000)
+	firstUpdate = false
 	axios
 		.get<TeamServer[]>(
 			`/tournament/${route.params.tourId}/competition/${route.params.compId}/signedUpTeams`,
