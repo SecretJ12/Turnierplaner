@@ -17,14 +17,13 @@
 					:put="['playersA', 'playersB']"
 					:tag="TransitionGroup"
 					:wrap="wrap"
-					class="flex flex-row flex-wrap gap-2 border-3 border-round border-dashed"
+					class="flex flex-row flex-wrap gap-2 border-3 border-round border-dashed min-team-height"
 					group="teams"
 					item-key="id"
 					style="
 						box-sizing: content-box;
 						width: calc(100% - 6px);
 						margin-top: 20px;
-						min-height: calc(6rem + 9px);
 					"
 				>
 					<template #default="{ item, index }">

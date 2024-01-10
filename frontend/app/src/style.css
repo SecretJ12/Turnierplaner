@@ -41,3 +41,11 @@ body {
 	opacity: 0;
 	transform: scale(0%);
 }
+
+.min-player-height {
+	min-height: 3rem;
+}
+
+.min-team-height {
+	min-height: calc(6rem + 9px);
+}

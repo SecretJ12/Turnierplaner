@@ -111,7 +111,7 @@ const stepList = ref([
 <style scoped>
 #button {
 	width: 100%;
-	margin: 10px;
+	margin: -10px 10px 10px 10px;
 	display: flex;
 	flex-wrap: wrap;
 	flex-direction: row;

@@ -28,7 +28,7 @@
 						:list="props.players"
 						:put="[group]"
 						:tag="TransitionGroup"
-						class="flex flex-row flex-wrap gap-2 border-3 min-h-3rem border-round border-dashed"
+						class="flex flex-row flex-wrap gap-2 border-3 min-player-height border-round border-dashed"
 						item-key="name"
 						style="box-sizing: content-box; width: calc(100% - 6px)"
 					>
@@ -84,8 +84,4 @@ async function addPlayer(p: Player) {
 }
 </script>
 
-<style scoped>
-.min-h-3rem {
-	min-height: 3rem;
-}
-</style>
+<style scoped></style>

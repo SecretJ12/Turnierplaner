@@ -165,7 +165,6 @@ const delay = computed(() =>
 )
 const delayBetween = computed(() => delay.value / 2)
 
-// TODO type this function
 function selectRandomElement<T>(players: Ref<T[]>) {
 	const r = Math.floor(Math.random() * players.value.length)
 	const element = players.value[r]
