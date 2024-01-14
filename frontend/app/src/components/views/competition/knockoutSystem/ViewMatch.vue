@@ -8,16 +8,16 @@
 		<tr :class="{ winner: props.match.finished && !props.match.winner }">
 			<td class="name">
 				{{
-					props.match.teamA === null
-						? ""
-						: `${props.match.teamA.playerA.lastName}, ${props.match.teamA.playerA.firstName}`
+					props.match.teamA?.playerA
+						? `${props.match.teamA.playerA.lastName}, ${props.match.teamA.playerA.firstName}`
+						: ""
 				}}
 				<template v-if="props.mode === Mode.DOUBLE">
 					<br />
 					{{
-						props.match.teamA === null
-							? ""
-							: `${props.match.teamA.playerB.lastName}, ${props.match.teamA.playerB.firstName}`
+						props.match.teamA?.playerB
+							? `${props.match.teamA.playerB.lastName}, ${props.match.teamA.playerB.firstName}`
+							: ""
 					}}
 				</template>
 			</td>
@@ -31,16 +31,16 @@
 		<tr :class="{ winner: props.match.finished && props.match.winner }">
 			<td class="name">
 				{{
-					props.match.teamB === null
-						? ""
-						: `${props.match.teamB.playerA.lastName}, ${props.match.teamB.playerA.firstName}`
+					props.match.teamB?.playerA
+						? `${props.match.teamB.playerA.lastName}, ${props.match.teamB.playerA.firstName}`
+						: ""
 				}}
 				<template v-if="props.mode === Mode.DOUBLE">
 					<br />
 					{{
-						props.match.teamB === null
-							? ""
-							: `${props.match.teamB.playerB.lastName}, ${props.match.teamB.playerB.firstName}`
+						props.match.teamB?.playerB
+							? `${props.match.teamB.playerB.lastName}, ${props.match.teamB.playerB.firstName}`
+							: ""
 					}}
 				</template>
 			</td>
@@ -59,7 +59,7 @@
 			dateDoubles: props.mode === Mode.DOUBLE,
 		}"
 	>
-		{{ props.match.begin.toLocaleString(t("lang"), dateOptions) }}
+		{{ props.match.begin?.toLocaleString(t("lang"), dateOptions) || "" }}
 	</div>
 </template>
 

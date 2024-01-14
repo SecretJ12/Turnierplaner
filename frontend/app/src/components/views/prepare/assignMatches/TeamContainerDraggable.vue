@@ -2,7 +2,7 @@
 	<DraggablePanel
 		:list="teams"
 		:put="true"
-		itemKey="id"
+		item-key="id"
 		:tag="TransitionGroup"
 		:component-data="{
 			tag: 'div',

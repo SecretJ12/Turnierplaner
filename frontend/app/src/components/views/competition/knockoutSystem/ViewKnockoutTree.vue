@@ -74,6 +74,7 @@ import { KnockoutMatch } from "@/interfaces/knockoutSystem"
 import { useI18n } from "vue-i18n"
 import ViewMatchV3 from "@/components/views/competition/knockoutSystem/ViewMatch.vue"
 import { Mode } from "@/interfaces/competition"
+import { computed } from "vue"
 
 const { t } = useI18n({ inheritLocale: true })
 
@@ -83,19 +84,19 @@ const props = defineProps<{
 	mode: Mode
 }>()
 
-const maxDepth = calcMaxDepth(props.match)
-const teamsCount = Math.pow(2, maxDepth)
-const height = tableHeight()
+const maxDepth = computed(() => calcMaxDepth(props.match))
+const teamsCount = computed(() => Math.pow(2, maxDepth.value))
+const height = computed(() => tableHeight())
 
 function getMatch(indexR: number, indexC: number): KnockoutMatch {
 	// detect semifinal
-	if (indexC === maxDepth - 1 && indexR > height / 2) {
+	if (indexC === maxDepth.value - 1 && indexR > height.value / 2) {
 		return props.thirdPlace
 	}
 
 	let curMatch = props.match
-	let curHeight = height
-	for (let i = 0; i < maxDepth - indexC - 1; i++) {
+	let curHeight = height.value
+	for (let i = 0; i < maxDepth.value - indexC - 1; i++) {
 		curHeight /= 2
 		if (curMatch.prevMatch === undefined)
 			throw new Error("prevMatch is undefined")
@@ -110,8 +111,8 @@ function getMatch(indexR: number, indexC: number): KnockoutMatch {
 }
 
 function tableHeight(): number {
-	if (teamsCount === 3 || teamsCount === 4) return 17
-	return 2 * teamsCount + 2 * (teamsCount / 2 - 1) + 1
+	if (teamsCount.value === 3 || teamsCount.value === 4) return 17
+	return 2 * teamsCount.value + 2 * (teamsCount.value / 2 - 1) + 1
 }
 
 function roundTitle(round: number, totalRounds: number): string {
@@ -122,7 +123,7 @@ function roundTitle(round: number, totalRounds: number): string {
 }
 
 function matchColumnCellType(indexR: number, indexC: number): cellType {
-	if (teamsCount === 3 || teamsCount === 4) {
+	if (teamsCount.value === 3 || teamsCount.value === 4) {
 		if (indexC === 0) {
 			if (indexR === 0) return cellType.match
 			else if (indexR < 5) return cellType.empty
@@ -157,7 +158,7 @@ function matchColumnCellType(indexR: number, indexC: number): cellType {
 	if (mod === 0) return cellType.match
 	else if (mod < 5) return cellType.empty
 	else {
-		if (indexC < maxDepth - 1) return cellType.emptyCell
+		if (indexC < maxDepth.value - 1) return cellType.emptyCell
 		else {
 			if (mod === 5) return cellType.emptyCell
 			else if (mod === 6) return cellType.thirdPlace
@@ -169,7 +170,7 @@ function matchColumnCellType(indexR: number, indexC: number): cellType {
 }
 
 function interColumnCellType(indexR: number, indexC: number): interCellType {
-	if (teamsCount === 3 || teamsCount === 4) {
+	if (teamsCount.value === 3 || teamsCount.value === 4) {
 		if (indexR < 2) return interCellType.blank
 		else if (indexR === 2) return interCellType.topRight
 		else if (indexR < 13) return interCellType.right
@@ -193,7 +194,7 @@ function interColumnCellType(indexR: number, indexC: number): interCellType {
 }
 
 function isBottomInterCell(indexR: number, indexC: number): boolean {
-	if (teamsCount === 3 || teamsCount === 4) {
+	if (teamsCount.value === 3 || teamsCount.value === 4) {
 		return indexR === 7
 	}
 

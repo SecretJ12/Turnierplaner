@@ -28,7 +28,7 @@ const props = defineProps<{
 const route = useRoute()
 const knockoutSystem = ref<KnockoutSystem | null>(null)
 
-await axios
+axios
 	.get<KnockoutSystemServer>(
 		`tournament/${route.params.tourId}/competition/${route.params.compId}/knockoutMatches`,
 	)

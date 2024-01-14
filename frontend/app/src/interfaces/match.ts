@@ -12,9 +12,9 @@ export interface Set {
 }
 
 export interface Match {
-	court: string
-	begin: Date
-	end: Date
+	court: string | null
+	begin: Date | null
+	end: Date | null
 	finished: boolean
 	winner: boolean | null
 	teamA: Team | null
