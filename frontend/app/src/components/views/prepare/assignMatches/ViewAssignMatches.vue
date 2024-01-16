@@ -1,8 +1,11 @@
 <template>
-	{{ competition?.tourType }}
 	<div class="flex flex-column gap-1">
-		<Groups v-if="competition?.tourType === TourType.GROUPS" />
-		<Knockout v-if="competition?.tourType === TourType.KNOCKOUT" />
+		<div v-if="competition" class="flex flex-row overflow-hidden" style="flex-wrap: nowrap">
+			<Transition>
+				<Groups v-if="competition.tourType === TourType.GROUPS" class="w-full flex-shrink-0" />
+				<Knockout v-else class="w-full flex-shrink-0" />
+			</Transition>
+		</div>
 
 		<div class="grid grid-nogutter justify-content-between mt-4">
 			<Button label="Back" icon="pi pi-angle-left" @click="prevPage" />
@@ -53,4 +56,19 @@ function nextPage() {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.v-enter-active,
+.v-leave-active {
+	transition: opacity 0.2s ease;
+	width: 100%;
+}
+
+.v-enter-active {
+	transition-delay: 0.2s;
+}
+
+.v-enter-from,
+.v-leave-to {
+	opacity: 0;
+}
+</style>

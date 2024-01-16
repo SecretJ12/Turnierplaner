@@ -81,15 +81,17 @@
 			</Card>
 		</div>
 		<div class="col-6">
-			<Card>
+			<Card class="w-full">
 				<template #title>Tournament tree</template>
 				<template #content>
-					<ViewKnockoutTree
-						v-if="competition"
-						:mode="competition.mode"
-						:match="finale"
-						:third-place="thirdPlace"
-					/>
+					<ScrollPanel style="width: 100%; height: 500px">
+						<ViewKnockoutTree
+							v-if="competition"
+							:mode="competition.mode"
+							:match="finale"
+							:third-place="thirdPlace"
+						/>
+					</ScrollPanel>
 				</template>
 			</Card>
 		</div>
@@ -198,7 +200,7 @@ async function update() {
 	animated.value = true
 	teams.value = []
 	sortedTeams.value = []
-	const anFin = sleep(firstUpdate ? 0 : 1000)
+	const anFin = sleep(firstUpdate ? 0 : 500)
 	firstUpdate = false
 	axios
 		.get<Team[]>(
