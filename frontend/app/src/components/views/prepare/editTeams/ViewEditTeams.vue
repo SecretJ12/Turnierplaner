@@ -380,9 +380,9 @@ async function update() {
 	const anFin = sleep(firstUpdate ? 0 : 1000)
 	firstUpdate = false
 	axios
-		.get<TeamServer[]>(
-			`/tournament/${route.params.tourId}/competition/${route.params.compId}/signedUpTeams`,
-		)
+		.get<
+			TeamServer[]
+		>(`/tournament/${route.params.tourId}/competition/${route.params.compId}/signedUpTeams`)
 		.then(async (response) => {
 			await anFin
 			processServerTeams(response.data)
