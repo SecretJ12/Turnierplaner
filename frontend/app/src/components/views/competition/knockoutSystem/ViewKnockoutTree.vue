@@ -1,6 +1,8 @@
 <template>
 	<div>
-		<table :class="props.mode === Mode.SINGLE ? 'tableSingles' : 'tableDoubles'">
+		<table
+			:class="props.mode === Mode.SINGLE ? 'tableSingles' : 'tableDoubles'"
+		>
 			<tr>
 				<template v-for="index in rangeArr(maxDepth)" :key="index">
 					<th>
@@ -22,12 +24,14 @@
 						<ViewMatchV3 :match="getMatch(indexR, indexC)" :mode="props.mode" />
 					</td>
 					<td
-						v-else-if="matchColumnCellType(indexR, indexC) === cellType.emptyCell"
+						v-else-if="
+							matchColumnCellType(indexR, indexC) === cellType.emptyCell
+						"
 					></td>
 					<td
 						v-else-if="
-						matchColumnCellType(indexR, indexC) === cellType.thirdPlace
-					"
+							matchColumnCellType(indexR, indexC) === cellType.thirdPlace
+						"
 						class="fixHeight"
 					>
 						{{ t("ViewKnockout.thirdPlace") }}
@@ -36,26 +40,27 @@
 					<template v-if="indexC < maxDepth - 1">
 						<td
 							v-if="
-							interColumnCellType(indexR, indexC) === interCellType.topRight
-						"
+								interColumnCellType(indexR, indexC) === interCellType.topRight
+							"
 							class="topRightInterCell interCell"
 						></td>
 						<td
 							v-else-if="
-							interColumnCellType(indexR, indexC) === interCellType.bottomRight
-						"
+								interColumnCellType(indexR, indexC) ===
+								interCellType.bottomRight
+							"
 							class="bottomRightInterCell interCell"
 						></td>
 						<td
 							v-else-if="
-							interColumnCellType(indexR, indexC) === interCellType.right
-						"
+								interColumnCellType(indexR, indexC) === interCellType.right
+							"
 							class="rightInterCell interCell"
 						></td>
 						<td
 							v-else-if="
-							interColumnCellType(indexR, indexC) === interCellType.blank
-						"
+								interColumnCellType(indexR, indexC) === interCellType.blank
+							"
 							class="interCell"
 						></td>
 

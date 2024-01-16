@@ -1,8 +1,15 @@
 <template>
 	<div class="flex flex-column gap-1">
-		<div v-if="competition" class="flex flex-row overflow-hidden" style="flex-wrap: nowrap">
+		<div
+			v-if="competition"
+			class="flex flex-row overflow-hidden"
+			style="flex-wrap: nowrap"
+		>
 			<Transition>
-				<Groups v-if="competition.tourType === TourType.GROUPS" class="w-full flex-shrink-0" />
+				<Groups
+					v-if="competition.tourType === TourType.GROUPS"
+					class="w-full flex-shrink-0"
+				/>
 				<Knockout v-else class="w-full flex-shrink-0" />
 			</Transition>
 		</div>
