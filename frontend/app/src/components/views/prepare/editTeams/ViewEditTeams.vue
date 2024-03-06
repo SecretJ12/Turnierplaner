@@ -377,7 +377,7 @@ async function update() {
 	initialTeam.value = []
 	initialPlayerA.value = []
 	initialPlayerB.value = []
-	const anFin = sleep(firstUpdate ? 0 : 1000)
+	const anFin = sleep(firstUpdate ? 0 : 300)
 	firstUpdate = false
 	axios
 		.get<
@@ -386,7 +386,7 @@ async function update() {
 		.then(async (response) => {
 			await anFin
 			processServerTeams(response.data)
-			await sleep(500)
+			await sleep(300)
 			isUpdating.value = false
 		})
 }

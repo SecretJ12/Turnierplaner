@@ -234,7 +234,7 @@ async function update() {
 	animated.value = true
 	disabled.value = true
 	teams.value = []
-	const anFin = sleep(firstUpdate ? 0 : 1000)
+	const anFin = sleep(firstUpdate ? 0 : 400)
 	firstUpdate = false
 	axios
 		.get<Team[]>(
@@ -246,7 +246,7 @@ async function update() {
 				teams.value.push(teamServerToClient(team))
 				teamCount.value++
 			})
-			await sleep(500)
+			await sleep(400)
 			animated.value = false
 			disabled.value = false
 		})
