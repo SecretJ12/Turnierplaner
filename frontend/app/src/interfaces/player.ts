@@ -19,6 +19,14 @@ export function playerServerToClient(player: PlayerServer): Player {
 	}
 }
 
+export function playerClientToServer(player: Player): PlayerServer {
+	return {
+		id: player.id,
+		firstName: player.firstName,
+		lastName: player.lastName
+	}
+}
+
 export interface searchedPlayer extends Player {
 	value: string
 }

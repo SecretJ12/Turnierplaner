@@ -254,6 +254,12 @@ async function update() {
 			console.log(error)
 		})
 }
+
+function save() {
+	console.log("save")
+}
+
+defineExpose({save})
 </script>
 
 <style scoped></style>

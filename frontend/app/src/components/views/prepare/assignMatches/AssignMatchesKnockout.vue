@@ -86,10 +86,10 @@
 				<template #content>
 					<ScrollPanel style="width: 100%; height: 500px">
 						<ViewKnockoutTree
-							v-if="competition"
+							v-if="competition && finale && thirdPlace"
 							:mode="competition.mode"
 							:match="finale"
-							:third-place="thirdPlace"
+							:thirdPlace="thirdPlace"
 						/>
 					</ScrollPanel>
 				</template>
@@ -105,13 +105,18 @@ import { useI18n } from "vue-i18n"
 import { computed, Ref, ref, TransitionGroup } from "vue"
 import { getCompetitionDetails } from "@/backend/competition"
 import TeamContainerDraggable from "@/components/views/prepare/assignMatches/TeamContainerDraggable.vue"
-import { Team, teamServerToClient } from "@/interfaces/match"
+import { Team, teamClientToServer, teamServerToClient } from "@/interfaces/match"
 import axios from "axios"
-import { Mode } from "@/interfaces/competition"
+import { InitKnockoutServer, Mode, Progress } from "@/interfaces/competition"
 import TeamBox from "@/components/views/prepare/components/TeamBox.vue"
 import DraggablePanel from "@/draggable/DraggablePanel.vue"
 import PlayerCard from "@/components/views/prepare/components/PlayerCard.vue"
-import { KnockoutMatch } from "@/interfaces/knockoutSystem"
+import {
+	KnockoutMatch,
+	KnockoutSystem,
+	KnockoutSystemServer,
+	knockoutSystemServerToClient
+} from "@/interfaces/knockoutSystem"
 import ViewKnockoutTree from "@/components/views/competition/knockoutSystem/ViewKnockoutTree.vue"
 
 const route = useRoute()
@@ -195,6 +200,7 @@ async function reset() {
 }
 
 let firstUpdate = true
+const curKnockoutSystem = ref<KnockoutSystem | null>(null)
 
 async function update() {
 	animated.value = true
@@ -219,6 +225,17 @@ async function update() {
 		.catch((error) => {
 			console.log(error)
 		})
+
+	if (competition.value?.cProgress === Progress.GAMES || competition.value?.cProgress === Progress.SCHEDULING) {
+		axios
+			.get<KnockoutSystemServer>(
+				`tournament/${route.params.tourId}/competition/${route.params.compId}/knockoutMatches`,
+			)
+			.then((response) => {
+				curKnockoutSystem.value = knockoutSystemServerToClient(response.data)
+			})
+			.catch(() => {})
+	}
 }
 
 function split(size: number, teams: Team[]): Team[][] {
@@ -227,7 +244,7 @@ function split(size: number, teams: Team[]): Team[][] {
 	}
 
 	const count = 2 ** (size + 1)
-	const first = split(size - 1, teams.slice(0, count/2))
+	const first = split(size - 1, teams.slice(0, count / 2))
 	const second = split(size - 1, teams.slice(count / 2, count).toReversed())
 	return [
 		first[0].concat(second[0].toReversed()),
@@ -268,16 +285,67 @@ function generateTree(
 const size = computed(() =>
 	Math.max(0, Math.ceil(Math.log2(teamCount.value)) - 1),
 )
-const finale = computed(() =>
-	generateTree(
+const finale = computed(() => {
+	if (
+		competition.value?.cProgress === Progress.GAMES ||
+		competition.value?.cProgress === Progress.SCHEDULING
+	) {
+		return curKnockoutSystem.value?.finale
+	}
+
+	return generateTree(
 		size.value,
 		sortedTeams.value.concat(
 			new Array(2 ** (size.value + 1) - sortedTeams.value.length).fill(null),
 		),
-	),
-)
+	)
+})
 
-const thirdPlace = computed(() => generateTree(0, []))
+const thirdPlace = computed(() => {
+	if (
+		competition.value?.cProgress === Progress.GAMES ||
+		competition.value?.cProgress === Progress.SCHEDULING
+	) {
+		return curKnockoutSystem.value?.finale
+	}
+
+	return generateTree(0, [])
+})
+
+function save() {
+	console.log("save")
+	console.log(sortedTeams.value)
+
+	const req: InitKnockoutServer = {
+		teams: sortedTeams.value.map((t) => teamClientToServer(t)),
+	}
+
+	axios
+		.post<boolean>(
+			`/tournament/${route.params.tourId}/competition/${route.params.compId}/initKnockout`,
+			req,
+		)
+		.then(() => {
+			toast.add({
+				severity: "success",
+				summary: "Gspeichert",
+				detail: "Ois subba",
+				life: 3000,
+				closable: false,
+			})
+		})
+		.catch(() => {
+			toast.add({
+				severity: "error",
+				summary: "Gfailed",
+				detail: "Ned so guad",
+				life: 3000,
+				closable: false,
+			})
+		})
+}
+
+defineExpose({ save })
 </script>
 
 <style scoped></style>

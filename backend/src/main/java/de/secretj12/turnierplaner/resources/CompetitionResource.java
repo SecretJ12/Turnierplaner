@@ -338,7 +338,6 @@ public class CompetitionResource {
         Competition competition = competitions.getByName(tourName, compName);
 
         Team team = new Team();
-        System.out.printf("playerSide: %s\n", playerSide);
         if (playerSide.equals("playerA")) {
             team.setPlayerA(newPlayer);
         } else {
@@ -405,10 +404,14 @@ public class CompetitionResource {
     }
 
     @POST
+    @Transactional
     @Path("/{compName}/initKnockout")
     @Produces(MediaType.TEXT_PLAIN)
     public boolean initializeMatchesKnockout(@PathParam("tourName") String tourName, @PathParam("compName") String compName, jDirectorInitKnockout init) {
         checkTournamentAccessibility(tourName);
+
+        System.out.println(tourName);
+        System.out.println(compName);
 
         List<Team> teamOrder = new ArrayList<>(init.getTeams().stream().map(t -> teams.getById(t.getId())).toList());
         if (teamOrder.stream().anyMatch(Objects::isNull))
@@ -416,7 +419,10 @@ public class CompetitionResource {
 
         int size = (int) Math.max(0, Math.ceil((Math.log(teamOrder.size())/Math.log(2)) - 1));
 
-        teamOrder.add((int) (Math.pow(2, size+1)-teamOrder.size()), null);
+        int numAdd = (int) (Math.pow(2, size+1)-teamOrder.size());
+        for (int i = 0; i < numAdd; i++) {
+            teamOrder.add(null);
+        }
 
         Competition competition = competitions.getByName(tourName, compName);
 
@@ -428,9 +434,9 @@ public class CompetitionResource {
     }
 
     private Match generateTree(Competition competition, int size, List<Team> teams) {
-        return generateTree(competition, size, teams, false);
+        return generateTree(competition, true, size, teams, false);
     }
-    private Match generateTree(Competition competition, int size, List<Team> teams, boolean reversed) {
+    private Match generateTree(Competition competition, boolean finale, int size, List<Team> teams, boolean reversed) {
         var splits = split(size, teams);
 
         Match match = new Match();
@@ -442,13 +448,26 @@ public class CompetitionResource {
         matches.persist(match);
 
         if (size > 0) {
-            Match matchA = generateTree(competition, size-1, reversed ? splits.y : splits.x);
-            Match matchB = generateTree(competition, size-1, reversed ? splits.x : splits.y, true);
+            Match matchA = generateTree(competition, false, size-1, reversed ? splits.y : splits.x, false);
+            Match matchB = generateTree(competition, false, size-1, reversed ? splits.x : splits.y, true);
 
             NextMatch nMatch = new NextMatch();
             nMatch.setPreviousA(matchA);
             nMatch.setPreviousB(matchB);
             nMatch.setNextMatch(match);
+
+            if (finale) {
+                Match thirdPlace = new Match();
+                thirdPlace.setCompetition(competition);
+                matches.persist(thirdPlace);
+
+                NextMatch nextMatchThird = new NextMatch();
+                nextMatchThird.setPreviousA(matchA);
+                nextMatchThird.setPreviousB(matchB);
+                nextMatchThird.setNextMatch(thirdPlace);
+                nextMatchThird.setWinner(false);
+                nextMatches.persist(nextMatchThird);
+            }
 
             nextMatches.persist(nMatch);
         }
@@ -461,7 +480,11 @@ public class CompetitionResource {
             throw new InternalServerErrorException("Wrong size of teams list");
         }
         if (size == 0) {
-            return new Pair<>(List.of(teams.get(0)), List.of(teams.get(1)));
+            List<Team> a = new ArrayList<>();
+            a.add(teams.get(0));
+            List<Team> b = new ArrayList<>();
+            b.add(teams.get(1));
+            return new Pair<>(a, b);
         }
 
         int count = (int) Math.pow(2, size+1);

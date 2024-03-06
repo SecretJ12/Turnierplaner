@@ -119,7 +119,7 @@ import {
 	teamArrayServerToClient,
 	TeamServer,
 } from "@/interfaces/match"
-import { Mode } from "@/interfaces/competition"
+import { Mode, Progress } from "@/interfaces/competition"
 import TeamList from "@/components/views/prepare/editTeams/TeamList.vue"
 import { v4 as uuidv4 } from "uuid"
 
@@ -301,6 +301,17 @@ async function reset() {
 
 function save() {
 	// TODO warning if a step further was already executed
+	if (competition.value?.cProgress !== Progress.TEAMS) {
+		toast.add({
+			severity: "error",
+			summary: "Matches already assigned",
+			detail: "Editing teams afterwards not yet implemented",
+			life: 3000,
+			closable: false,
+		})
+		return
+	}
+
 	isUpdating.value = true
 	const t = teams.value.map(teamArrayClientToServer)
 	playersA.value.forEach((player) =>

@@ -1,3 +1,5 @@
+import { TeamServer } from "@/interfaces/match"
+
 export enum Sex {
 	MALE = "MALE",
 	FEMALE = "FEMALE",
@@ -19,6 +21,12 @@ export enum SignUp {
 	TOGETHER = "TOGETHER",
 }
 
+export enum Progress {
+	TEAMS = "TEAMS",
+	GAMES = "GAMES",
+	SCHEDULING = "SCHEDULING",
+}
+
 export interface Competition {
 	id?: null | string
 	name: string
@@ -27,7 +35,8 @@ export interface Competition {
 	mode: Mode
 	signUp: SignUp
 	playerA: settingsPlayer
-	playerB: settingsPlayerB
+	playerB: settingsPlayerB,
+	cProgress: Progress
 }
 
 export const CompetitionDefault: Competition = {
@@ -52,6 +61,7 @@ export const CompetitionDefault: Competition = {
 		hasMaxAge: false,
 		maxAge: null,
 	},
+	cProgress: Progress.TEAMS
 }
 
 export interface CompetitionServer {
@@ -75,7 +85,8 @@ export interface CompetitionServer {
 		minAge: string | null
 		hasMaxAge: boolean
 		maxAge: string | null
-	}
+	},
+	cProgress?: Progress.TEAMS
 }
 
 export interface settingsPlayer {
@@ -134,7 +145,7 @@ export function competitionFormToServer(
 			minAge: form.playerB_minAge ? dateToJson(form.playerB_minAge) : null,
 			hasMaxAge: form.playerB_hasMaxAge,
 			maxAge: form.playerA_maxAge ? dateToJson(form.playerA_maxAge) : null,
-		},
+		}
 	}
 }
 
@@ -207,6 +218,7 @@ export function competitionServerToClient(
 				? new Date(competition.playerB.maxAge)
 				: null,
 		},
+		cProgress: competition.cProgress || Progress.TEAMS
 	}
 }
 
@@ -214,4 +226,8 @@ function dateToJson(d: Date): string {
 	return `${d.getFullYear()}-${d.getMonth() < 9 ? "0" : ""}${
 		d.getMonth() + 1
 	}-${d.getDate() < 10 ? "0" : ""}${d.getDate()}`
+}
+
+export interface InitKnockoutServer {
+	teams: TeamServer[]
 }

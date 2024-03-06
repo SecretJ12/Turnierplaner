@@ -7,16 +7,22 @@
 		>
 			<Transition>
 				<Groups
+					ref="groupsRef"
 					v-if="competition.tourType === TourType.GROUPS"
 					class="w-full flex-shrink-0"
 				/>
-				<Knockout v-else class="w-full flex-shrink-0" />
+				<Knockout ref="knockoutRef" v-else class="w-full flex-shrink-0" />
 			</Transition>
 		</div>
 
 		<div class="grid grid-nogutter justify-content-between mt-4">
 			<Button label="Back" icon="pi pi-angle-left" @click="prevPage" />
-			<Button :label="t('general.save')" severity="success"></Button>
+			<!-- Rename to something like create -->
+			<Button
+				:label="t('general.save')"
+				severity="success"
+				@click="save"
+			></Button>
 			<Button
 				v-if="route.params.step !== 'scheduleMatches'"
 				label="Next"
@@ -33,14 +39,20 @@ import { useRoute, useRouter } from "vue-router"
 import { useI18n } from "vue-i18n"
 import { getCompetitionDetails } from "@/backend/competition"
 import { useToast } from "primevue/usetoast"
-import { TourType } from "@/interfaces/competition"
+import { Progress, TourType } from "@/interfaces/competition"
 import Groups from "@/components/views/prepare/assignMatches/AssignMatchesGroups.vue"
+import AssignMatchesGroups from "@/components/views/prepare/assignMatches/AssignMatchesGroups.vue"
 import Knockout from "@/components/views/prepare/assignMatches/AssignMatchesKnockout.vue"
+import AssignMatchesKnockout from "@/components/views/prepare/assignMatches/AssignMatchesKnockout.vue"
+import { ref } from "vue"
 
 const route = useRoute()
 const router = useRouter()
 const toast = useToast()
 const { t } = useI18n({ inheritLocale: true })
+
+const knockoutRef = ref<InstanceType<typeof AssignMatchesKnockout> | null>(null)
+const groupsRef = ref<InstanceType<typeof AssignMatchesGroups> | null>(null)
 
 const competition = getCompetitionDetails(route, t, toast, {
 	suc: () => {
@@ -60,6 +72,27 @@ function nextPage() {
 		name: "scheduleMatches",
 		params: { tourId: route.params.tourId, compId: route.params.compId },
 	})
+}
+
+function save() {
+	if (competition.value?.cProgress !== Progress.TEAMS) {
+		toast.add({
+			severity: "error",
+			summary: "Matches already assigned",
+			detail: "Reassigning not yet implemented",
+			life: 3000,
+			closable: false,
+		})
+		return
+	}
+
+	if (competition.value?.tourType === TourType.GROUPS) {
+		if (groupsRef.value === null) return
+		groupsRef.value.save()
+	} else {
+		if (knockoutRef.value === null) return
+		knockoutRef.value.save()
+	}
 }
 </script>
 
