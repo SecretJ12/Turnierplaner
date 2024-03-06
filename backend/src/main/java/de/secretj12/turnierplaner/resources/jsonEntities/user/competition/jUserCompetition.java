@@ -1,6 +1,7 @@
 package de.secretj12.turnierplaner.resources.jsonEntities.user.competition;
 
 import de.secretj12.turnierplaner.db.entities.competition.Competition;
+import de.secretj12.turnierplaner.db.entities.competition.CreationProgress;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorMode;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorSignUp;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorValidSex;
@@ -14,6 +15,7 @@ public class jUserCompetition {
     private jDirectorSignUp signUp;
     private jUserConfigPlayerA playerA;
     private jUserConfigPlayerB playerB;
+    private CreationProgress cProgress;
 
     public jUserCompetition() {
     }
@@ -24,24 +26,24 @@ public class jUserCompetition {
 
         this.name = competition.getName();
         this.description = competition.getDescription();
-        switch (competition.getType()) {
-            case GROUPS -> this.type = jUserCompetitionType.GROUPS;
-            case KNOCKOUT -> this.type = jUserCompetitionType.KNOCKOUT;
-        }
-        switch (competition.getMode()) {
-            case SINGLES -> this.mode = jDirectorMode.SINGLE;
-            case DOUBLES -> this.mode = jDirectorMode.DOUBLE;
-        }
-        switch (competition.getSignup()) {
-            case INDIVIDUAL -> this.signUp = jDirectorSignUp.INDIVIDUAL;
-            case TOGETHER -> this.signUp = jDirectorSignUp.TOGETHER;
-        }
+        this.type = switch (competition.getType()) {
+            case GROUPS -> jUserCompetitionType.GROUPS;
+            case KNOCKOUT -> jUserCompetitionType.KNOCKOUT;
+        };
+        this.mode = switch (competition.getMode()) {
+            case SINGLES -> jDirectorMode.SINGLE;
+            case DOUBLES -> jDirectorMode.DOUBLE;
+        };
+        this.signUp = switch (competition.getSignup()) {
+            case INDIVIDUAL -> jDirectorSignUp.INDIVIDUAL;
+            case TOGETHER -> jDirectorSignUp.TOGETHER;
+        };
         this.playerA = new jUserConfigPlayerA();
-        switch (competition.getPlayerASex()) {
-            case MALE -> this.playerA.setSex(jDirectorValidSex.MALE);
-            case FEMALE -> this.playerA.setSex(jDirectorValidSex.FEMALE);
-            case ANY -> this.playerA.setSex(jDirectorValidSex.ANY);
-        }
+        this.playerA.setSex(switch (competition.getPlayerASex()) {
+            case MALE -> jDirectorValidSex.MALE;
+            case FEMALE -> jDirectorValidSex.FEMALE;
+            case ANY -> jDirectorValidSex.ANY;
+        });
         this.playerA.setHasMinAge(competition.playerAhasMinAge());
         this.playerA.setMinAge(competition.getPlayerAminAge());
         this.playerA.setHasMaxAge(competition.playerAhasMaxAge());
@@ -57,6 +59,8 @@ public class jUserCompetition {
         this.playerB.setMinAge(competition.getPlayerBminAge());
         this.playerB.setHasMaxAge(competition.playerBhasMaxAge());
         this.playerB.setMaxAge(competition.getPlayerBmaxAge());
+
+        this.cProgress = competition.getcProgress();
     }
 
     public String getName() {
@@ -113,5 +117,13 @@ public class jUserCompetition {
 
     public void setPlayerB(jUserConfigPlayerB playerB) {
         this.playerB = playerB;
+    }
+
+    public CreationProgress getcProgress() {
+        return cProgress;
+    }
+
+    public void setcProgress(CreationProgress cProgress) {
+        this.cProgress = cProgress;
     }
 }

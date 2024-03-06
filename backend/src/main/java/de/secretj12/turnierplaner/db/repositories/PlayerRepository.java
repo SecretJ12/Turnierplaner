@@ -2,11 +2,13 @@ package de.secretj12.turnierplaner.db.repositories;
 
 import de.secretj12.turnierplaner.db.entities.Player;
 import de.secretj12.turnierplaner.db.entities.SexType;
+import de.secretj12.turnierplaner.db.entities.competition.Competition;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import io.quarkus.panache.common.Parameters;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import java.time.LocalDate;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 @ApplicationScoped
@@ -19,4 +21,5 @@ public class PlayerRepository implements PanacheRepository<Player> {
     public Stream<Player> filter(String search, SexType sex, LocalDate minAge, LocalDate maxAge) {
         return find("#filter", Parameters.with("search", search).and("sex", sex).and("ignoreSex", sex == null).and("minAge", minAge).and("ignoreMinAge", minAge == null).and("maxAge", maxAge).and("ignoreMaxAge", maxAge == null)).page(0, 10).stream();
     }
+
 }

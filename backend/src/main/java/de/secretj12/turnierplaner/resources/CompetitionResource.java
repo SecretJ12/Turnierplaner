@@ -6,9 +6,11 @@ import de.secretj12.turnierplaner.db.entities.SexType;
 import de.secretj12.turnierplaner.db.entities.Tournament;
 import de.secretj12.turnierplaner.db.entities.competition.*;
 import de.secretj12.turnierplaner.db.entities.groups.Group;
+import de.secretj12.turnierplaner.db.entities.knockout.NextMatch;
 import de.secretj12.turnierplaner.db.repositories.*;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorCompetitionAdd;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorCompetitionUpdate;
+import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorInitKnockout;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.competition.jUserCompetition;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.group.jUserGroupSystem;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayer;
@@ -27,10 +29,13 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Path("/tournament/{tourName}/competition")
 public class CompetitionResource {
+    // TODO always check for current progress
 
     @Inject
     PlayerResource playersResource;
@@ -44,6 +49,8 @@ public class CompetitionResource {
     SecurityIdentity securityIdentity;
     @Inject
     MatchRepository matches;
+    @Inject
+    NextMatchRepository nextMatches;
     @Inject
     TeamRepository teams;
 
@@ -112,6 +119,7 @@ public class CompetitionResource {
 
         Competition dbCompetition = new Competition();
         competition.toDB(dbCompetition);
+        dbCompetition.setcProgress(CreationProgress.PLAYER);
         dbCompetition.setTournament(tournament);
         competitions.persist(dbCompetition);
         return "successfully added";
@@ -377,7 +385,7 @@ public class CompetitionResource {
         Competition competition = competitions.getByName(tourName, compName);
         if (competition == null) throw new NotFoundException("Competition as not found");
         if (competition.getType() != CompetitionType.GROUPS)
-            throw new WebApplicationException("Competition does not have type groups", Response.Status.METHOD_NOT_ALLOWED);
+            throw new NotAllowedException("Competition does not have type groups");
 
         List<Group> groups = competition.getGroups();
         if (groups == null) throw new NotFoundException("Found no groups");
@@ -395,4 +403,78 @@ public class CompetitionResource {
         if (!securityIdentity.hasRole("director") && !tournament.isVisible())
             throw new UnauthorizedException("Cannot access tournament");
     }
+
+    @POST
+    @Path("/{compName}/initKnockout")
+    @Produces(MediaType.TEXT_PLAIN)
+    public boolean initializeMatchesKnockout(@PathParam("tourName") String tourName, @PathParam("compName") String compName, jDirectorInitKnockout init) {
+        checkTournamentAccessibility(tourName);
+
+        List<Team> teamOrder = new ArrayList<>(init.getTeams().stream().map(t -> teams.getById(t.getId())).toList());
+        if (teamOrder.stream().anyMatch(Objects::isNull))
+            throw new NotFoundException("Player not found");
+
+        int size = (int) Math.max(0, Math.ceil((Math.log(teamOrder.size())/Math.log(2)) - 1));
+
+        teamOrder.add((int) (Math.pow(2, size+1)-teamOrder.size()), null);
+
+        Competition competition = competitions.getByName(tourName, compName);
+
+        generateTree(competition, size, teamOrder);
+
+        competition.setcProgress(CreationProgress.GAMES);
+        competitions.persist(competition);
+        return true;
+    }
+
+    private Match generateTree(Competition competition, int size, List<Team> teams) {
+        return generateTree(competition, size, teams, false);
+    }
+    private Match generateTree(Competition competition, int size, List<Team> teams, boolean reversed) {
+        var splits = split(size, teams);
+
+        Match match = new Match();
+        if (size == 0) {
+            match.setTeamA(teams.get(reversed ? 1 : 0));
+            match.setTeamB(teams.get(reversed ? 0 : 1));
+        }
+        match.setCompetition(competition);
+        matches.persist(match);
+
+        if (size > 0) {
+            Match matchA = generateTree(competition, size-1, reversed ? splits.y : splits.x);
+            Match matchB = generateTree(competition, size-1, reversed ? splits.x : splits.y, true);
+
+            NextMatch nMatch = new NextMatch();
+            nMatch.setPreviousA(matchA);
+            nMatch.setPreviousB(matchB);
+            nMatch.setNextMatch(match);
+
+            nextMatches.persist(nMatch);
+        }
+
+        return match;
+    }
+
+    private Pair<List<Team>, List<Team>> split(int size, List<Team> teams) {
+        if (teams.size() < 2) {
+            throw new InternalServerErrorException("Wrong size of teams list");
+        }
+        if (size == 0) {
+            return new Pair<>(List.of(teams.get(0)), List.of(teams.get(1)));
+        }
+
+        int count = (int) Math.pow(2, size+1);
+        var fst = split(size-1, teams.subList(0, count/2));
+        var snd = split(size-1, teams.subList(count/2, count).reversed());
+
+        fst.x.addAll(snd.x.reversed());
+        fst.y.addAll(snd.y.reversed());
+
+        return new Pair<>(fst.x, fst.y);
+    }
+
+    public record Pair<X, Y>(X x, Y y) {
+    }
+
 }

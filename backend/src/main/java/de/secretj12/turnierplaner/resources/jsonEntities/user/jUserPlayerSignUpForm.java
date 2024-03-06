@@ -2,10 +2,10 @@ package de.secretj12.turnierplaner.resources.jsonEntities.user;
 
 public class jUserPlayerSignUpForm {
 
-    private Player playerA;
-    private Player playerB;
+    private jPlayer playerA;
+    private jPlayer playerB;
 
-    public static class Player {
+    public static class jPlayer {
         private String firstName;
         private String lastName;
 
@@ -26,19 +26,19 @@ public class jUserPlayerSignUpForm {
         }
     }
 
-    public Player getPlayerA() {
+    public jPlayer getPlayerA() {
         return playerA;
     }
 
-    public void setPlayerA(Player playerA) {
+    public void setPlayerA(jPlayer playerA) {
         this.playerA = playerA;
     }
 
-    public Player getPlayerB() {
+    public jPlayer getPlayerB() {
         return playerB;
     }
 
-    public void setPlayerB(Player playerB) {
+    public void setPlayerB(jPlayer playerB) {
         this.playerB = playerB;
     }
 }

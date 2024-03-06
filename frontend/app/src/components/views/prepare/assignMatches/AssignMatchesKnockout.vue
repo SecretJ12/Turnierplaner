@@ -227,7 +227,7 @@ function split(size: number, teams: Team[]): Team[][] {
 	}
 
 	const count = 2 ** (size + 1)
-	const first = split(size - 1, teams.slice(0, count))
+	const first = split(size - 1, teams.slice(0, count/2))
 	const second = split(size - 1, teams.slice(count / 2, count).toReversed())
 	return [
 		first[0].concat(second[0].toReversed()),

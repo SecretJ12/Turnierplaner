@@ -63,6 +63,8 @@ public class Competition {
     private boolean playerBhasMaxAge;
     @Column(name = "playerB_max_age")
     private LocalDate playerBmaxAge;
+    @Column(name = "creation_progess")
+    private CreationProgress cProgress;
 
     @OneToMany(mappedBy = "competition")
     private List<Team> teams;
@@ -239,5 +241,13 @@ public class Competition {
 
     public void setPlayerBmaxAge(LocalDate playerBmaxAge) {
         this.playerBmaxAge = playerBmaxAge;
+    }
+
+    public CreationProgress getcProgress() {
+        return cProgress;
+    }
+
+    public void setcProgress(CreationProgress cProgress) {
+        this.cProgress = cProgress;
     }
 }
