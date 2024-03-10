@@ -6,11 +6,11 @@ import de.secretj12.turnierplaner.db.entities.SexType;
 import de.secretj12.turnierplaner.db.entities.Tournament;
 import de.secretj12.turnierplaner.db.entities.competition.*;
 import de.secretj12.turnierplaner.db.entities.groups.Group;
-import de.secretj12.turnierplaner.db.entities.knockout.NextMatch;
 import de.secretj12.turnierplaner.db.repositories.*;
+import de.secretj12.turnierplaner.modifier.KnockoutTools;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorCompetitionAdd;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorCompetitionUpdate;
-import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorInitKnockout;
+import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorKnockoutOrder;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.competition.jUserCompetition;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.group.jUserGroupSystem;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayer;
@@ -50,9 +50,10 @@ public class CompetitionResource {
     @Inject
     MatchRepository matches;
     @Inject
-    NextMatchRepository nextMatches;
-    @Inject
     TeamRepository teams;
+
+    @Inject
+    KnockoutTools knockoutTools;
 
     @GET
     @Path("/list")
@@ -78,7 +79,7 @@ public class CompetitionResource {
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
     public jUserCompetition getCompetition(@PathParam("tourName") String tourName, @PathParam(
-        "compName") String compName) {
+            "compName") String compName) {
         checkTournamentAccessibility(tourName);
 
         if (securityIdentity.hasRole("director"))
@@ -149,7 +150,7 @@ public class CompetitionResource {
     @Path("/{compName}/signedUpTeams")
     @Produces(MediaType.APPLICATION_JSON)
     public List<jUserTeam> getSignedUpPlayers(@PathParam("tourName") String tourName, @PathParam(
-        "compName") String compName) {
+            "compName") String compName) {
         checkTournamentAccessibility(tourName);
 
         Competition competition = competitions.getByName(tourName, compName);
@@ -167,7 +168,7 @@ public class CompetitionResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     public String signUpPlayer(@PathParam("tourName") String tourName, @PathParam(
-        "compName") String compName, jUserPlayerSignUpForm reg) {
+            "compName") String compName, jUserPlayerSignUpForm reg) {
         // TODO better checks if team or members of it are already registered in team
         // TODO check if both layers are the same
         // TODO check if players match conditions
@@ -285,7 +286,7 @@ public class CompetitionResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public List<jUserTeam> updateTeams(@PathParam("tourName") String tourName, @PathParam(
-        "compName") String compName, List<jUserTeam> teams) {
+            "compName") String compName, List<jUserTeam> teams) {
         updateTeamsHelper(tourName, compName, teams);
 
         return competitions.getByName(tourName, compName).getTeams().stream().map(jUserTeam::new).toList();
@@ -331,7 +332,7 @@ public class CompetitionResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public jUserPlayer registerSignUpPlayer(@PathParam("tourName") String tourName, @PathParam(
-        "compName") String compName, @PathParam("playerSide") String playerSide,
+            "compName") String compName, @PathParam("playerSide") String playerSide,
                                             jUserPlayerRegistrationForm playerForm) {
         Player newPlayer = playersResource.adminPlayerRegistration(playerForm);
 
@@ -361,7 +362,7 @@ public class CompetitionResource {
     @Path("/{compName}/knockoutMatches")
     @Produces(MediaType.APPLICATION_JSON)
     public jUserKnockoutSystem getKnockoutMatches(@PathParam("tourName") String tourName, @PathParam(
-        "compName") String compName) {
+            "compName") String compName) {
         checkTournamentAccessibility(tourName);
 
         Competition competition = competitions.getByName(tourName, compName);
@@ -378,7 +379,7 @@ public class CompetitionResource {
     @Path("/{compName}/groupMatches")
     @Produces(MediaType.APPLICATION_JSON)
     public jUserGroupSystem getGroupMatches(@PathParam("tourName") String tourName, @PathParam(
-        "compName") String compName) {
+            "compName") String compName) {
         checkTournamentAccessibility(tourName);
 
         Competition competition = competitions.getByName(tourName, compName);
@@ -407,97 +408,39 @@ public class CompetitionResource {
     @Transactional
     @Path("/{compName}/initKnockout")
     @Produces(MediaType.TEXT_PLAIN)
-    public boolean initializeMatchesKnockout(@PathParam("tourName") String tourName, @PathParam("compName") String compName, jDirectorInitKnockout init) {
+    public boolean initializeMatchesKnockout(@PathParam("tourName") String tourName,
+                                             @PathParam("compName") String compName, jDirectorKnockoutOrder init) {
         checkTournamentAccessibility(tourName);
-
-        System.out.println(tourName);
-        System.out.println(compName);
 
         List<Team> teamOrder = new ArrayList<>(init.getTeams().stream().map(t -> teams.getById(t.getId())).toList());
         if (teamOrder.stream().anyMatch(Objects::isNull))
             throw new NotFoundException("Player not found");
 
-        int size = (int) Math.max(0, Math.ceil((Math.log(teamOrder.size())/Math.log(2)) - 1));
+        int size = (int) Math.max(0, Math.ceil((Math.log(teamOrder.size()) / Math.log(2)) - 1));
 
-        int numAdd = (int) (Math.pow(2, size+1)-teamOrder.size());
+        int numAdd = (int) (Math.pow(2, size + 1) - teamOrder.size());
         for (int i = 0; i < numAdd; i++) {
             teamOrder.add(null);
         }
 
         Competition competition = competitions.getByName(tourName, compName);
 
-        generateTree(competition, size, teamOrder);
+        knockoutTools.generateKnockoutTree(competition, size, teamOrder);
 
         competition.setcProgress(CreationProgress.GAMES);
         competitions.persist(competition);
         return true;
     }
 
-    private Match generateTree(Competition competition, int size, List<Team> teams) {
-        return generateTree(competition, true, size, teams, false);
+    @GET
+    @Transactional
+    @Path("/{compName}/knockoutOrder")
+    @Produces(MediaType.APPLICATION_JSON)
+    public jDirectorKnockoutOrder knockoutOrder(@PathParam("tourName") String tourName,
+                                                @PathParam("compName") String compName) {
+        checkTournamentAccessibility(tourName);
+
+        Competition competition = competitions.getByName(tourName, compName);
+        return new jDirectorKnockoutOrder(knockoutTools.knockoutOrder(competition));
     }
-    private Match generateTree(Competition competition, boolean finale, int size, List<Team> teams, boolean reversed) {
-        var splits = split(size, teams);
-
-        Match match = new Match();
-        if (size == 0) {
-            match.setTeamA(teams.get(reversed ? 1 : 0));
-            match.setTeamB(teams.get(reversed ? 0 : 1));
-        }
-        match.setCompetition(competition);
-        matches.persist(match);
-
-        if (size > 0) {
-            Match matchA = generateTree(competition, false, size-1, reversed ? splits.y : splits.x, false);
-            Match matchB = generateTree(competition, false, size-1, reversed ? splits.x : splits.y, true);
-
-            NextMatch nMatch = new NextMatch();
-            nMatch.setPreviousA(matchA);
-            nMatch.setPreviousB(matchB);
-            nMatch.setNextMatch(match);
-
-            if (finale) {
-                Match thirdPlace = new Match();
-                thirdPlace.setCompetition(competition);
-                matches.persist(thirdPlace);
-
-                NextMatch nextMatchThird = new NextMatch();
-                nextMatchThird.setPreviousA(matchA);
-                nextMatchThird.setPreviousB(matchB);
-                nextMatchThird.setNextMatch(thirdPlace);
-                nextMatchThird.setWinner(false);
-                nextMatches.persist(nextMatchThird);
-            }
-
-            nextMatches.persist(nMatch);
-        }
-
-        return match;
-    }
-
-    private Pair<List<Team>, List<Team>> split(int size, List<Team> teams) {
-        if (teams.size() < 2) {
-            throw new InternalServerErrorException("Wrong size of teams list");
-        }
-        if (size == 0) {
-            List<Team> a = new ArrayList<>();
-            a.add(teams.get(0));
-            List<Team> b = new ArrayList<>();
-            b.add(teams.get(1));
-            return new Pair<>(a, b);
-        }
-
-        int count = (int) Math.pow(2, size+1);
-        var fst = split(size-1, teams.subList(0, count/2));
-        var snd = split(size-1, teams.subList(count/2, count).reversed());
-
-        fst.x.addAll(snd.x.reversed());
-        fst.y.addAll(snd.y.reversed());
-
-        return new Pair<>(fst.x, fst.y);
-    }
-
-    public record Pair<X, Y>(X x, Y y) {
-    }
-
 }

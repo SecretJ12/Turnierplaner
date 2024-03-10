@@ -228,6 +228,6 @@ function dateToJson(d: Date): string {
 	}-${d.getDate() < 10 ? "0" : ""}${d.getDate()}`
 }
 
-export interface InitKnockoutServer {
+export interface KnockoutOrder {
 	teams: TeamServer[]
 }

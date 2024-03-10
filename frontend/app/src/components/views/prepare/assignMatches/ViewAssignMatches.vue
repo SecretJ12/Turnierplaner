@@ -75,7 +75,7 @@ function nextPage() {
 }
 
 function save() {
-	if (competition.value?.cProgress !== Progress.TEAMS) {
+	/* if (competition.value?.cProgress !== Progress.TEAMS) {
 		toast.add({
 			severity: "error",
 			summary: "Matches already assigned",
@@ -84,7 +84,7 @@ function save() {
 			closable: false,
 		})
 		return
-	}
+	} */
 
 	if (competition.value?.tourType === TourType.GROUPS) {
 		if (groupsRef.value === null) return

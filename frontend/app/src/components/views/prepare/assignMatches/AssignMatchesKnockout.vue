@@ -105,18 +105,17 @@ import { useI18n } from "vue-i18n"
 import { computed, Ref, ref, TransitionGroup } from "vue"
 import { getCompetitionDetails } from "@/backend/competition"
 import TeamContainerDraggable from "@/components/views/prepare/assignMatches/TeamContainerDraggable.vue"
-import { Team, teamClientToServer, teamServerToClient } from "@/interfaces/match"
+import {
+	Team,
+	teamClientToServer,
+	teamServerToClient,
+} from "@/interfaces/match"
 import axios from "axios"
-import { InitKnockoutServer, Mode, Progress } from "@/interfaces/competition"
+import { KnockoutOrder, Mode, Progress } from "@/interfaces/competition"
 import TeamBox from "@/components/views/prepare/components/TeamBox.vue"
 import DraggablePanel from "@/draggable/DraggablePanel.vue"
 import PlayerCard from "@/components/views/prepare/components/PlayerCard.vue"
-import {
-	KnockoutMatch,
-	KnockoutSystem,
-	KnockoutSystemServer,
-	knockoutSystemServerToClient
-} from "@/interfaces/knockoutSystem"
+import { KnockoutMatch } from "@/interfaces/knockoutSystem"
 import ViewKnockoutTree from "@/components/views/competition/knockoutSystem/ViewKnockoutTree.vue"
 
 const route = useRoute()
@@ -200,7 +199,6 @@ async function reset() {
 }
 
 let firstUpdate = true
-const curKnockoutSystem = ref<KnockoutSystem | null>(null)
 
 async function update() {
 	animated.value = true
@@ -219,6 +217,7 @@ async function update() {
 				teams.value.push(teamServerToClient(team))
 				teamCount.value++
 			})
+			adjustUnsorted()
 			await sleep(500)
 			animated.value = false
 		})
@@ -226,16 +225,29 @@ async function update() {
 			console.log(error)
 		})
 
-	if (competition.value?.cProgress === Progress.GAMES || competition.value?.cProgress === Progress.SCHEDULING) {
+	if (
+		competition.value?.cProgress === Progress.GAMES ||
+		competition.value?.cProgress === Progress.SCHEDULING
+	) {
 		axios
-			.get<KnockoutSystemServer>(
-				`tournament/${route.params.tourId}/competition/${route.params.compId}/knockoutMatches`,
+			.get<KnockoutOrder>(
+				`tournament/${route.params.tourId}/competition/${route.params.compId}/knockoutOrder`,
 			)
-			.then((response) => {
-				curKnockoutSystem.value = knockoutSystemServerToClient(response.data)
+			.then(async (response) => {
+				await anFin
+				sortedTeams.value = response.data.teams.map((t) =>
+					teamServerToClient(t),
+				)
+				adjustUnsorted()
 			})
 			.catch(() => {})
 	}
+}
+
+function adjustUnsorted() {
+	teams.value = teams.value.filter(
+		(e) => sortedTeams.value.filter((t) => (t.id = e.id)).length === 0,
+	)
 }
 
 function split(size: number, teams: Team[]): Team[][] {
@@ -285,38 +297,19 @@ function generateTree(
 const size = computed(() =>
 	Math.max(0, Math.ceil(Math.log2(teamCount.value)) - 1),
 )
-const finale = computed(() => {
-	if (
-		competition.value?.cProgress === Progress.GAMES ||
-		competition.value?.cProgress === Progress.SCHEDULING
-	) {
-		return curKnockoutSystem.value?.finale
-	}
-
-	return generateTree(
+const finale = computed(() =>
+	generateTree(
 		size.value,
 		sortedTeams.value.concat(
 			new Array(2 ** (size.value + 1) - sortedTeams.value.length).fill(null),
 		),
-	)
-})
+	),
+)
 
-const thirdPlace = computed(() => {
-	if (
-		competition.value?.cProgress === Progress.GAMES ||
-		competition.value?.cProgress === Progress.SCHEDULING
-	) {
-		return curKnockoutSystem.value?.finale
-	}
-
-	return generateTree(0, [])
-})
+const thirdPlace = computed(() => generateTree(0, []))
 
 function save() {
-	console.log("save")
-	console.log(sortedTeams.value)
-
-	const req: InitKnockoutServer = {
+	const req: KnockoutOrder = {
 		teams: sortedTeams.value.map((t) => teamClientToServer(t)),
 	}
 

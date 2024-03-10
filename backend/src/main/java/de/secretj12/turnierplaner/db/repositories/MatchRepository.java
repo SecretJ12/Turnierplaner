@@ -12,16 +12,20 @@ import jakarta.enterprise.context.ApplicationScoped;
 public class MatchRepository implements PanacheRepository<Match> {
 
     public Match getFinal(Competition competition) {
-        PanacheQuery<Match> result = find("#findHead", Parameters.with("compId", competition.getId()).and("finale", true));
+        PanacheQuery<Match> result = find("#findHead", Parameters.with("comp", competition).and("finale", true));
         if (result.count() != 1)
             return null;
         return result.firstResultOptional().orElse(null);
     }
 
     public Match getThirdPlace(Competition competition) {
-        PanacheQuery<Match> result = find("#findHead", Parameters.with("compId", competition.getId()).and("finale", false));
+        PanacheQuery<Match> result = find("#findHead", Parameters.with("comp", competition).and("finale", false));
         if (result.count() != 1)
             return null;
         return result.firstResultOptional().orElse(null);
+    }
+
+    public void deleteByComp(Competition competition) {
+        delete("#deleteByComp", Parameters.with("comp", competition));
     }
 }

@@ -1,8 +1,9 @@
 package de.secretj12.turnierplaner.db.entities.knockout;
 
 import de.secretj12.turnierplaner.db.entities.Match;
-
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.UUID;
 
