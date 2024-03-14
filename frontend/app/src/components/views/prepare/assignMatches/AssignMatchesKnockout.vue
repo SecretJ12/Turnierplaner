@@ -89,7 +89,7 @@
 							v-if="competition && finale && thirdPlace"
 							:mode="competition.mode"
 							:match="finale"
-							:thirdPlace="thirdPlace"
+							:third-place="thirdPlace"
 						/>
 					</ScrollPanel>
 				</template>

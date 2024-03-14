@@ -71,7 +71,7 @@ function updateRoute(compId?: string) {
 	if (route.meta.step === undefined || !step) {
 		switch (competitions.value[activeTab.value].cProgress) {
 			case Progress.TEAMS:
-				step = "editTeams";
+				step = "editTeams"
 				break
 			case Progress.GAMES:
 				step = "scheduleMatches"

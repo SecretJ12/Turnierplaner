@@ -7,11 +7,11 @@
 		>
 			<Transition>
 				<Groups
-					ref="groupsRef"
 					v-if="competition.tourType === TourType.GROUPS"
+					ref="groupsRef"
 					class="w-full flex-shrink-0"
 				/>
-				<Knockout ref="knockoutRef" v-else class="w-full flex-shrink-0" />
+				<Knockout v-else ref="knockoutRef" class="w-full flex-shrink-0" />
 			</Transition>
 		</div>
 
@@ -39,7 +39,7 @@ import { useRoute, useRouter } from "vue-router"
 import { useI18n } from "vue-i18n"
 import { getCompetitionDetails } from "@/backend/competition"
 import { useToast } from "primevue/usetoast"
-import { Progress, TourType } from "@/interfaces/competition"
+import { TourType } from "@/interfaces/competition"
 import Groups from "@/components/views/prepare/assignMatches/AssignMatchesGroups.vue"
 import AssignMatchesGroups from "@/components/views/prepare/assignMatches/AssignMatchesGroups.vue"
 import Knockout from "@/components/views/prepare/assignMatches/AssignMatchesKnockout.vue"

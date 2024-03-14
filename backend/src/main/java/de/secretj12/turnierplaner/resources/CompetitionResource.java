@@ -79,7 +79,7 @@ public class CompetitionResource {
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
     public jUserCompetition getCompetition(@PathParam("tourName") String tourName, @PathParam(
-            "compName") String compName) {
+        "compName") String compName) {
         checkTournamentAccessibility(tourName);
 
         if (securityIdentity.hasRole("director"))
@@ -150,7 +150,7 @@ public class CompetitionResource {
     @Path("/{compName}/signedUpTeams")
     @Produces(MediaType.APPLICATION_JSON)
     public List<jUserTeam> getSignedUpPlayers(@PathParam("tourName") String tourName, @PathParam(
-            "compName") String compName) {
+        "compName") String compName) {
         checkTournamentAccessibility(tourName);
 
         Competition competition = competitions.getByName(tourName, compName);
@@ -168,7 +168,7 @@ public class CompetitionResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     public String signUpPlayer(@PathParam("tourName") String tourName, @PathParam(
-            "compName") String compName, jUserPlayerSignUpForm reg) {
+        "compName") String compName, jUserPlayerSignUpForm reg) {
         // TODO better checks if team or members of it are already registered in team
         // TODO check if both layers are the same
         // TODO check if players match conditions
@@ -286,7 +286,7 @@ public class CompetitionResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public List<jUserTeam> updateTeams(@PathParam("tourName") String tourName, @PathParam(
-            "compName") String compName, List<jUserTeam> teams) {
+        "compName") String compName, List<jUserTeam> teams) {
         updateTeamsHelper(tourName, compName, teams);
 
         return competitions.getByName(tourName, compName).getTeams().stream().map(jUserTeam::new).toList();
@@ -332,7 +332,7 @@ public class CompetitionResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public jUserPlayer registerSignUpPlayer(@PathParam("tourName") String tourName, @PathParam(
-            "compName") String compName, @PathParam("playerSide") String playerSide,
+        "compName") String compName, @PathParam("playerSide") String playerSide,
                                             jUserPlayerRegistrationForm playerForm) {
         Player newPlayer = playersResource.adminPlayerRegistration(playerForm);
 
@@ -362,7 +362,7 @@ public class CompetitionResource {
     @Path("/{compName}/knockoutMatches")
     @Produces(MediaType.APPLICATION_JSON)
     public jUserKnockoutSystem getKnockoutMatches(@PathParam("tourName") String tourName, @PathParam(
-            "compName") String compName) {
+        "compName") String compName) {
         checkTournamentAccessibility(tourName);
 
         Competition competition = competitions.getByName(tourName, compName);
@@ -379,7 +379,7 @@ public class CompetitionResource {
     @Path("/{compName}/groupMatches")
     @Produces(MediaType.APPLICATION_JSON)
     public jUserGroupSystem getGroupMatches(@PathParam("tourName") String tourName, @PathParam(
-            "compName") String compName) {
+        "compName") String compName) {
         checkTournamentAccessibility(tourName);
 
         Competition competition = competitions.getByName(tourName, compName);

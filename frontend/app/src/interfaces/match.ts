@@ -1,4 +1,9 @@
-import { Player, playerClientToServer, PlayerServer, playerServerToClient } from "@/interfaces/player"
+import {
+	Player,
+	playerClientToServer,
+	PlayerServer,
+	playerServerToClient,
+} from "@/interfaces/player"
 
 export interface Game {
 	scoreA: number

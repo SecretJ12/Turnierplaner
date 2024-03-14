@@ -259,7 +259,7 @@ function save() {
 	console.log("save")
 }
 
-defineExpose({save})
+defineExpose({ save })
 </script>
 
 <style scoped></style>

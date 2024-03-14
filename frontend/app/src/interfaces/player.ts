@@ -23,7 +23,7 @@ export function playerClientToServer(player: Player): PlayerServer {
 	return {
 		id: player.id,
 		firstName: player.firstName,
-		lastName: player.lastName
+		lastName: player.lastName,
 	}
 }
 
