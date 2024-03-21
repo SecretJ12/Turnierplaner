@@ -148,7 +148,7 @@ public class PlayerResource {
     @Scheduled(every = "30m", identity = "clear-verification-code")
     void clear() {
         // TODO also delete player? otherwise not verified player, but no new one can be created because of duplicate
-        verificationCodeRepository.delete("FROM VerificationCode v WHERE v.expiration_date < NOW()");
+        verificationCodeRepository.delete("FROM VerificationCode v WHERE v.expiration_date < current_timestamp()");
     }
 
 }
