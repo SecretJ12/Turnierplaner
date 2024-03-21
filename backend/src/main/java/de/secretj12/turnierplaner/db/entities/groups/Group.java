@@ -4,6 +4,8 @@ import de.secretj12.turnierplaner.db.entities.competition.Competition;
 import de.secretj12.turnierplaner.db.entities.Match;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,6 +18,7 @@ public class Group {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     private UUID id;
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @OneToMany(mappedBy = "group", fetch = FetchType.EAGER)
     private List<MatchOfGroup> matchesOfGroup;
     @Column(name = "index")
