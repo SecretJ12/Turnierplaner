@@ -246,7 +246,7 @@ async function update() {
 
 function adjustUnsorted() {
 	teams.value = teams.value.filter(
-		(e) => sortedTeams.value.filter((t) => (t.id = e.id)).length === 0,
+		(e) => !sortedTeams.value.some((t) => t.id === e.id),
 	)
 }
 

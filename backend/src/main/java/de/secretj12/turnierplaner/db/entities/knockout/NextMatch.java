@@ -15,7 +15,8 @@ public class NextMatch {
     private UUID id;
 
     @MapsId
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "next_match", referencedColumnName = "id", nullable = false)
     private Match nextMatch;
 

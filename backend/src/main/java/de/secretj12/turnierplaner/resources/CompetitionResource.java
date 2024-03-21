@@ -416,14 +416,13 @@ public class CompetitionResource {
         if (teamOrder.stream().anyMatch(Objects::isNull))
             throw new NotFoundException("Player not found");
 
-        int size = (int) Math.max(0, Math.ceil((Math.log(teamOrder.size()) / Math.log(2)) - 1));
+        Competition competition = competitions.getByName(tourName, compName);
+        int size = (int) Math.max(0, Math.ceil((Math.log(competition.getTeams().size()) / Math.log(2)) - 1));
 
         int numAdd = (int) (Math.pow(2, size + 1) - teamOrder.size());
         for (int i = 0; i < numAdd; i++) {
             teamOrder.add(null);
         }
-
-        Competition competition = competitions.getByName(tourName, compName);
 
         knockoutTools.generateKnockoutTree(competition, size, teamOrder);
 

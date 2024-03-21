@@ -6,8 +6,11 @@ import de.secretj12.turnierplaner.db.entities.groups.FinalOfGroup;
 import de.secretj12.turnierplaner.db.entities.groups.MatchOfGroup;
 import de.secretj12.turnierplaner.db.entities.knockout.NextMatch;
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -56,8 +59,17 @@ public class Match {
     @JoinColumn(name = "team_b")
     private Team teamB;
 
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @OneToOne(mappedBy = "nextMatch", fetch = FetchType.LAZY)
     private NextMatch dependentOn;
+
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(mappedBy = "previousA", fetch = FetchType.LAZY)
+    private Collection<NextMatch> previousOfA;
+
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(mappedBy = "previousB", fetch = FetchType.LAZY)
+    private Collection<NextMatch> previousOfB;
 
     @OneToOne(mappedBy = "nextMatch")
     private FinalOfGroup finalOfGroup;

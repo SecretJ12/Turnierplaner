@@ -12,6 +12,7 @@ import jakarta.ws.rs.InternalServerErrorException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @ApplicationScoped
 public class KnockoutTools {
@@ -89,8 +90,8 @@ public class KnockoutTools {
         if (size == 0) {
             match.setTeamA(teams.get(reversed ? 1 : 0));
             match.setTeamB(teams.get(reversed ? 0 : 1));
+            matches.persist(match);
         }
-        matches.persist(match);
 
         if (size > 0) {
             updateTree(size - 1, reversed ? splits.y : splits.x, false, match.getDependentOn().getPreviousA());
@@ -101,7 +102,7 @@ public class KnockoutTools {
     public List<Team> knockoutOrder(Competition competition) {
         Match finale = matches.getFinal(competition);
 
-        return knockoutOrder(finale, false);
+        return knockoutOrder(finale, false).stream().filter(Objects::nonNull).toList();
     }
 
     private List<Team> knockoutOrder(Match match, boolean reversed) {
@@ -148,6 +149,7 @@ public class KnockoutTools {
 
     private List<Team> merge(List<Team> teamsA, List<Team> teamsB) {
         if (teamsA.size() == 1 && teamsB.size() == 1) {
+            teamsA = new ArrayList<>(teamsA);
             teamsA.add(teamsB.getFirst());
             return teamsA;
         }
