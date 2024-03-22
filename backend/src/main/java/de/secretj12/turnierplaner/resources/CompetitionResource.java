@@ -31,8 +31,10 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Path("/tournament/{tourName}/competition")
@@ -453,18 +455,24 @@ public class CompetitionResource {
     @Produces(MediaType.TEXT_PLAIN)
     public boolean initializeMatchesGroups(@PathParam("tourName") String tourName,
                                            @PathParam("compName") String compName, jDirectorGroupsDivision division) {
+        if (division.getGroups().stream().anyMatch(g -> g.size() <= 1)) {
+            throw new BadRequestException("At least 2 groups per team needed");
+        }
+
         checkTournamentAccessibility(tourName);
 
         // @formatter:off
-        List<List<Team>> groups = division.getGroups().stream()
+        List<Set<Team>> groups = division.getGroups().stream()
             .map(group -> group.stream()
                 .map(t -> teams.getById(t.getId()))
-                .collect(Collectors.toList()))
+                .collect(Collectors.toCollection(HashSet::new)))
             .collect(Collectors.toList());
         // @formatter:on
 
         if (groups.stream().anyMatch(group -> group.stream().anyMatch(Objects::isNull)))
             throw new NotFoundException("Player not found");
+
+        checkGroupsCount(groups.size());
 
         Competition competition = competitions.getByName(tourName, compName);
 
@@ -473,6 +481,16 @@ public class CompetitionResource {
         competition.setcProgress(CreationProgress.GAMES);
         competitions.persist(competition);
         return true;
+    }
+
+    private void checkGroupsCount(int count) {
+        int i = 1;
+        while (i <= 1024) {
+            if (i == count)
+                return;
+            i *= 2;
+        }
+        throw new BadRequestException("Invalid group count");
     }
 
     @GET
@@ -485,6 +503,6 @@ public class CompetitionResource {
 
         Competition competition = competitions.getByName(tourName, compName);
         List<Group> groups = competition.getGroups();
-        return new jDirectorGroupsDivision(groups.stream().map(g -> groupTools.teamOfGroup(g)).toList());
+        return new jDirectorGroupsDivision(groups.stream().map(g -> groupTools.teamsOfGroup(g)).toList());
     }
 }

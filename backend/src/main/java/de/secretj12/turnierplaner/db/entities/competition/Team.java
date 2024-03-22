@@ -4,6 +4,7 @@ import de.secretj12.turnierplaner.db.entities.Player;
 
 import jakarta.persistence.*;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -64,5 +65,18 @@ public class Team {
 
     public void setPlayerB(Player playerB) {
         this.playerB = playerB;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Team team = (Team) o;
+        return Objects.equals(id, team.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

@@ -285,6 +285,17 @@ function adjustUnsorted() {
 }
 
 function save() {
+	if (groups.value.some((g) => g.length <= 1)) {
+		toast.add({
+			severity: "error",
+			summary: "Groups not full",
+			detail: "You need at least 2 teams per group",
+			life: 3000,
+			closable: false,
+		})
+		return
+	}
+
 	const req: GroupsDivision = {
 		groups: groups.value.map((group) =>
 			group.map((t) => teamClientToServer(t)),

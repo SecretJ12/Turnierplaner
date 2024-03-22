@@ -28,4 +28,9 @@ public class MatchRepository implements PanacheRepository<Match> {
     public void deleteByComp(Competition competition) {
         delete("#deleteByComp", Parameters.with("comp", competition));
     }
+
+    public void delete(Match m) {
+        // normal delete by object sadly does not work :(
+        delete("DELETE FROM Match m WHERE m = :match", Parameters.with("match", m));
+    }
 }

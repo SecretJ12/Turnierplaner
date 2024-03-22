@@ -5,8 +5,10 @@ import de.secretj12.turnierplaner.db.entities.Tournament;
 import de.secretj12.turnierplaner.db.entities.groups.Group;
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 // TODO add attributes to set something like a plan published bit -> implement everywhere
 @Entity
@@ -124,7 +126,7 @@ public class Competition {
     }
 
     public List<Group> getGroups() {
-        return groups;
+        return groups.stream().sorted(Comparator.comparingLong(Group::getIndex)).collect(Collectors.toList());
     }
 
     public void setGroups(List<Group> groups) {
