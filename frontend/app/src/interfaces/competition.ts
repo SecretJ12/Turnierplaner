@@ -231,3 +231,7 @@ function dateToJson(d: Date): string {
 export interface KnockoutOrder {
 	teams: TeamServer[]
 }
+
+export interface GroupsDivision {
+	groups: TeamServer[][]
+}

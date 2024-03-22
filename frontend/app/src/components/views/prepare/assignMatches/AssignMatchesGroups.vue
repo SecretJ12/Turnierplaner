@@ -92,9 +92,13 @@ import { useToast } from "primevue/usetoast"
 import { KnockoutMatch } from "@/interfaces/knockoutSystem"
 import { computed, Ref, ref } from "vue"
 import axios from "axios"
-import { Team, teamServerToClient } from "@/interfaces/match"
+import {
+	Team,
+	teamClientToServer,
+	teamServerToClient,
+} from "@/interfaces/match"
 import TeamContainerDraggable from "@/components/views/prepare/assignMatches/TeamContainerDraggable.vue"
-import { TourType } from "@/interfaces/competition"
+import { GroupsDivision, Progress, TourType } from "@/interfaces/competition"
 import ViewKnockoutTree from "@/components/views/competition/knockoutSystem/ViewKnockoutTree.vue"
 import { getCompetitionDetails } from "@/backend/competition"
 
@@ -246,6 +250,7 @@ async function update() {
 				teams.value.push(teamServerToClient(team))
 				teamCount.value++
 			})
+			adjustUnsorted()
 			await sleep(400)
 			animated.value = false
 			disabled.value = false
@@ -253,10 +258,62 @@ async function update() {
 		.catch((error) => {
 			console.log(error)
 		})
+
+	if (
+		competition.value?.cProgress === Progress.GAMES ||
+		competition.value?.cProgress === Progress.SCHEDULING
+	) {
+		axios
+			.get<GroupsDivision>(
+				`tournament/${route.params.tourId}/competition/${route.params.compId}/groupsDivision`,
+			)
+			.then(async (response) => {
+				await anFin
+				groups.value = response.data.groups.map((group) =>
+					group.map((team) => teamServerToClient(team)),
+				)
+				adjustUnsorted()
+			})
+			.catch(() => {})
+	}
+}
+
+function adjustUnsorted() {
+	teams.value = teams.value.filter(
+		(t) => !groups.value.some((group) => group.some((st) => st.id === t.id)),
+	)
 }
 
 function save() {
-	console.log("save")
+	const req: GroupsDivision = {
+		groups: groups.value.map((group) =>
+			group.map((t) => teamClientToServer(t)),
+		),
+	}
+
+	axios
+		.post<boolean>(
+			`/tournament/${route.params.tourId}/competition/${route.params.compId}/initGroups`,
+			req,
+		)
+		.then(() => {
+			toast.add({
+				severity: "success",
+				summary: "Gspeichert",
+				detail: "Ois subba",
+				life: 3000,
+				closable: false,
+			})
+		})
+		.catch(() => {
+			toast.add({
+				severity: "error",
+				summary: "Gfailed",
+				detail: "Ned so guad",
+				life: 3000,
+				closable: false,
+			})
+		})
 }
 
 defineExpose({ save })

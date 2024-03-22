@@ -8,6 +8,14 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "teams")
+@NamedQueries({
+               @NamedQuery(name = "findTeams",
+                           query = """
+                               FROM Team t
+                               JOIN Match m ON (t = m.teamA OR t = m.teamB)
+                               JOIN MatchOfGroup mog ON m = mog.match
+                               JOIN Group g ON mog.group = g
+                               WHERE g = :group""")})
 public class Team {
 
     @Id

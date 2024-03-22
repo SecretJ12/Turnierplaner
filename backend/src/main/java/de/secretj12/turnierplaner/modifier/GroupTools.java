@@ -8,6 +8,7 @@ import de.secretj12.turnierplaner.db.entities.groups.MatchOfGroup;
 import de.secretj12.turnierplaner.db.repositories.GroupRepository;
 import de.secretj12.turnierplaner.db.repositories.MatchOfGroupRepository;
 import de.secretj12.turnierplaner.db.repositories.MatchRepository;
+import de.secretj12.turnierplaner.db.repositories.TeamRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -22,6 +23,8 @@ public class GroupTools {
     GroupRepository groupsRepository;
     @Inject
     MatchOfGroupRepository matchOfGroupRepository;
+    @Inject
+    TeamRepository teamRepository;
 
     public void generateGroupMatches(Competition competition, List<List<Team>> nGroups) {
         // TODO check for deletion of existing matches
@@ -31,7 +34,7 @@ public class GroupTools {
             groupsRepository.persist(g);
 
             for (int i = 0; i < group.size(); i++) {
-                for (int j = i + 1; i < group.size(); j++) {
+                for (int j = i + 1; j < group.size(); j++) {
                     Match m = new Match();
                     m.setCompetition(competition);
                     m.setTeamA(group.get(i));
@@ -45,5 +48,9 @@ public class GroupTools {
                 }
             }
         }
+    }
+
+    public List<Team> teamOfGroup(Group group) {
+        return teamRepository.teamsOfGroup(group);
     }
 }

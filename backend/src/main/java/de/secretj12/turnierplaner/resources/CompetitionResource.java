@@ -474,4 +474,17 @@ public class CompetitionResource {
         competitions.persist(competition);
         return true;
     }
+
+    @GET
+    @Transactional
+    @Path("/{compName}/groupsDivision")
+    @Produces(MediaType.APPLICATION_JSON)
+    public jDirectorGroupsDivision groupsDivision(@PathParam("tourName") String tourName,
+                                                  @PathParam("compName") String compName) {
+        checkTournamentAccessibility(tourName);
+
+        Competition competition = competitions.getByName(tourName, compName);
+        List<Group> groups = competition.getGroups();
+        return new jDirectorGroupsDivision(groups.stream().map(g -> groupTools.teamOfGroup(g)).toList());
+    }
 }
