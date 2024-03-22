@@ -1,5 +1,5 @@
 export interface PlayerServer {
-	id: string
+	id?: string
 	firstName: string
 	lastName: string
 }
@@ -25,17 +25,6 @@ export function playerClientToServer(player: Player): PlayerServer {
 		firstName: player.firstName,
 		lastName: player.lastName,
 	}
-}
-
-export interface searchedPlayer extends Player {
-	value: string
-}
-
-// TODO get rid of signedUpPlayer
-export interface signedUpPlayer {
-	firstName: string
-	lastName: string
-	name: string
 }
 
 export enum Sex {

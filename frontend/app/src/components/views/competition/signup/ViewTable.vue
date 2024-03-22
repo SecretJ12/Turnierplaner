@@ -176,11 +176,11 @@ import axios from "axios"
 import { inject, ref, watch } from "vue"
 import { useRoute } from "vue-router"
 import { Competition, Mode, SignUp } from "@/interfaces/competition"
-import { signedUpTeam, Team } from "@/interfaces/registration/team"
 import { useI18n } from "vue-i18n"
-import { signedUpPlayer } from "@/interfaces/player"
+import { Player, playerServerToClient } from "@/interfaces/player"
 import { useToast } from "primevue/usetoast"
 import { getCanEdit } from "@/backend/security"
+import { Team, teamServerToClient } from "@/interfaces/match"
 
 const { t } = useI18n({ inheritLocale: true })
 const toast = useToast()
@@ -194,9 +194,9 @@ const route = useRoute()
 
 const isLoggedIn = inject("loggedIn", ref(false))
 const canEdit = getCanEdit(<string>route.params.tourId, isLoggedIn)
-const teams = ref<signedUpTeam[]>([])
-const playersA = ref<signedUpPlayer[]>([])
-const playersB = ref<signedUpPlayer[]>([])
+const teams = ref<Team[]>([])
+const playersA = ref<Player[]>([])
+const playersB = ref<Player[]>([])
 
 watch(() => props.update, updateTeams)
 watch(route, updateTeams)
@@ -223,12 +223,8 @@ function updateTeams() {
 					.filter((team) => team.playerA !== null)
 					.map((team) => {
 						const player = team.playerA
-						if (player === undefined) throw new Error("Player A is null")
-						return {
-							firstName: player.firstName,
-							lastName: player.lastName,
-							name: player.firstName + " " + player.lastName,
-						}
+						if (player === null) throw new Error("Player A is null")
+						return playerServerToClient(player)
 					})
 			} else if (
 				props.competition.mode === Mode.DOUBLE &&
@@ -239,23 +235,15 @@ function updateTeams() {
 					.filter((team) => team.playerA !== null)
 					.map((team) => {
 						let player = team.playerA
-						if (player === undefined) throw new Error("Player A is null")
-						return {
-							firstName: player.firstName,
-							lastName: player.lastName,
-							name: player.firstName + " " + player.lastName,
-						}
+						if (player === null) throw new Error("Player A is null")
+						return playerServerToClient(player)
 					})
 				playersB.value = response.data
 					.filter((team) => team.playerB !== null)
 					.map((team) => {
 						let player = team.playerB
-						if (player === undefined) throw new Error("Player B is null")
-						return {
-							firstName: player.firstName,
-							lastName: player.lastName,
-							name: player.firstName + " " + player.lastName,
-						}
+						if (player === null) throw new Error("Player B is null")
+						return playerServerToClient(player)
 					})
 			} else if (
 				props.competition.mode === Mode.DOUBLE &&
@@ -264,24 +252,12 @@ function updateTeams() {
 				teams.value = response.data.map((team) => {
 					if (team.playerA === undefined) throw new Error("Player A is null")
 					if (team.playerB === undefined) throw new Error("Player B is null")
-					return {
-						playerA: {
-							firstName: team.playerA.firstName,
-							lastName: team.playerA.lastName,
-							name: team.playerA.firstName + " " + team.playerA.lastName,
-						},
-						playerB: {
-							firstName: team.playerB.firstName,
-							lastName: team.playerB.lastName,
-							name: team.playerB.firstName + " " + team.playerB.lastName,
-						},
-					}
+					return teamServerToClient(team)
 				})
 			} else {
-				// TODO internalization
 				toast.add({
 					severity: "error",
-					summary: "invalid mode",
+					summary: t("ViewSignUp.invalidMode"),
 					life: 3000,
 				})
 			}
@@ -299,13 +275,12 @@ function updateTeams() {
 		})
 }
 
-function deletePlayer(player: signedUpPlayer) {
-	// TODO delete and internalization
+function deletePlayer(player: Player) {
 	console.log(player)
+	// TODO implement
 	toast.add({
 		severity: "success",
-		summary: "Deleted player",
-		detail: "player delete",
+		summary: t("ViewSignUp.playerDeleted"),
 		life: 3000,
 	})
 }

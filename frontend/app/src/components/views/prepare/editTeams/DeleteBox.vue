@@ -49,7 +49,7 @@
 <script setup lang="ts">
 import DraggablePanel from "@/draggable/DraggablePanel.vue"
 import { ref } from "vue"
-import { signedUpPlayer } from "@/interfaces/player"
+import { Player } from "@/interfaces/player"
 import PlayerCard from "@/components/views/prepare/components/PlayerCard.vue"
 import OverlayPanel from "primevue/overlaypanel"
 import { useI18n } from "vue-i18n"
@@ -61,7 +61,7 @@ const props = defineProps<{
 	secondary: boolean
 }>()
 
-const trash = ref<signedUpPlayer[]>([])
+const trash = ref<Player[]>([])
 
 const op = ref<OverlayPanel>()
 

@@ -15,7 +15,7 @@
 					:auto-filter-focus="true"
 					:filter-placeholder="t('ViewCompetition.searchPlayer')"
 					:placeholder="t('ViewCompetition.selectPlayer')"
-					option-label="value"
+					option-label="name"
 					data-key="id"
 					filter
 					@filter="queryPlayerA"
@@ -60,7 +60,7 @@
 						:filter-placeholder="t('ViewCompetition.searchPlayer')"
 						:placeholder="t('ViewCompetition.selectPlayer')"
 						:loading="loadingA"
-						option-label="value"
+						option-label="name"
 						data-key="id"
 						filter
 						@filter="queryPlayerA"
@@ -82,7 +82,7 @@
 						:filter-placeholder="t('ViewCompetition.searchPlayer')"
 						:placeholder="t('ViewCompetition.selectPlayer')"
 						:loading="loadingB"
-						option-label="value"
+						option-label="name"
 						data-key="id"
 						filter
 						@filter="queryPlayerB"
@@ -117,7 +117,7 @@
 					:filter-placeholder="t('ViewCompetition.searchPlayer')"
 					:placeholder="t('ViewCompetition.selectPlayer')"
 					:loading="loadingA"
-					option-label="value"
+					option-label="name"
 					data-key="id"
 					filter
 					@filter="queryPlayerA"
@@ -151,7 +151,7 @@
 					:filter-placeholder="t('ViewCompetition.selectPlayer')"
 					:placeholder="t('ViewCompetition.selectPlayer')"
 					:loading="loadingA"
-					option-label="value"
+					option-label="name"
 					data-key="id"
 					filter
 					@filter="queryPlayerA"
@@ -181,7 +181,7 @@
 					:filter-placeholder="t('ViewCompetition.selectPlayer')"
 					:placeholder="t('ViewCompetition.selectPlayer')"
 					:loading="loadingB"
-					option-label="value"
+					option-label="name"
 					data-key="id"
 					filter
 					@filter="queryPlayerB"
@@ -207,11 +207,11 @@ import axios from "axios"
 import ViewConditions from "@/components/views/competition/signup/ViewConditions.vue"
 import { useRoute } from "vue-router"
 import { Competition, Mode, Sex, SignUp } from "@/interfaces/competition"
-import { Player, searchedPlayer } from "@/interfaces/player"
+import { Player, playerClientToServer, playerServerToClient } from "@/interfaces/player"
 import { useI18n } from "vue-i18n"
-import { Team } from "@/interfaces/registration/team"
 import { DropdownFilterEvent } from "primevue/dropdown"
 import { useToast } from "primevue/usetoast"
+import { TeamServer } from "@/interfaces/match"
 
 const { t } = useI18n({ inheritLocale: true })
 const toast = useToast()
@@ -224,17 +224,17 @@ const props = defineProps<{
 	competition: Competition
 }>()
 
-const selectedPlayerA = ref<searchedPlayer | null>(null)
-const suggestionsPlayerA = ref<searchedPlayer[]>([])
+const selectedPlayerA = ref<Player | null>(null)
+const suggestionsPlayerA = ref<Player[]>([])
 const loadingA = ref<boolean>(false)
-const selectedPlayerB = ref<searchedPlayer | null>(null)
-const suggestionsPlayerB = ref<searchedPlayer[]>([])
+const selectedPlayerB = ref<Player | null>(null)
+const suggestionsPlayerB = ref<Player[]>([])
 const loadingB = ref<boolean>(false)
 
 function queryPlayerA(event: DropdownFilterEvent) {
 	loadingA.value = true
 	suggestionsPlayerA.value = suggestionsPlayerA.value.filter((item) => {
-		return item.value.toLowerCase().includes(event.value.toLowerCase())
+		return item.name.toLowerCase().includes(event.value.toLowerCase())
 	})
 
 	if (
@@ -267,12 +267,7 @@ function queryPlayerA(event: DropdownFilterEvent) {
 		.then((result) => {
 			// TODO avoid races
 			suggestionsPlayerA.value = result.data.map((item) => {
-				return {
-					id: item.id,
-					firstName: item.firstName,
-					lastName: item.lastName,
-					value: item.firstName + " " + item.lastName,
-				}
+				return playerServerToClient(item)
 			})
 		})
 		.catch((error) => {
@@ -292,7 +287,7 @@ function queryPlayerA(event: DropdownFilterEvent) {
 function queryPlayerB(event: DropdownFilterEvent) {
 	loadingB.value = true
 	suggestionsPlayerB.value = suggestionsPlayerB.value.filter((item) => {
-		return item.value.toLowerCase().includes(event.value.toLowerCase())
+		return item.name.toLowerCase().includes(event.value.toLowerCase())
 	})
 
 	if (
@@ -325,12 +320,7 @@ function queryPlayerB(event: DropdownFilterEvent) {
 		.then((result) => {
 			// TODO avoid races
 			suggestionsPlayerB.value = result.data.map((item) => {
-				return {
-					id: item.id,
-					firstName: item.firstName,
-					lastName: item.lastName,
-					value: item.firstName + " " + item.lastName,
-				}
+				return playerServerToClient(item)
 			})
 		})
 		.catch((error) => {
@@ -348,7 +338,10 @@ function queryPlayerB(event: DropdownFilterEvent) {
 }
 
 function signUpPlayer(playerA: boolean) {
-	const form: Team = {}
+	const form: TeamServer = {
+		playerA: null,
+		playerB: null
+	}
 	if (playerA) {
 		if (!selectedPlayerA.value) {
 			toast.add({
@@ -359,10 +352,7 @@ function signUpPlayer(playerA: boolean) {
 			})
 			return
 		}
-		form["playerA"] = {
-			firstName: selectedPlayerA.value.firstName,
-			lastName: selectedPlayerA.value.lastName,
-		}
+		form.playerA = playerClientToServer(selectedPlayerA.value)
 	} else {
 		if (!selectedPlayerB.value) {
 			toast.add({
@@ -373,10 +363,7 @@ function signUpPlayer(playerA: boolean) {
 			})
 			return
 		}
-		form["playerB"] = {
-			firstName: selectedPlayerB.value.firstName,
-			lastName: selectedPlayerB.value.lastName,
-		}
+		form.playerB = playerClientToServer(selectedPlayerB.value)
 	}
 
 	axios
@@ -436,14 +423,8 @@ function signUpDoubleTog() {
 		return
 	}
 	const form = {
-		playerA: {
-			firstName: selectedPlayerA.value.firstName,
-			lastName: selectedPlayerA.value.lastName,
-		},
-		playerB: {
-			firstName: selectedPlayerB.value.firstName,
-			lastName: selectedPlayerB.value.lastName,
-		},
+		playerA: playerClientToServer(selectedPlayerA.value),
+		playerB: playerClientToServer(selectedPlayerB.value)
 	}
 
 	axios

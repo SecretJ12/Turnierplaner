@@ -127,8 +127,10 @@
 	"ViewSignUp": {
 		"atLeastOneLetter": "Please type at least one letter",
 		"noPlayerSelected": "No player selected",
-		"selectPlayerFirst": "Please select a player firrst",
-		"noPlayerFound": "No player found"
+		"selectPlayerFirst": "Please select a player first",
+		"noPlayerFound": "No player found",
+		"invalidMode": "Invalid mode",
+		"playerDeleted": "Player deleted"
 	},
 	"ViewCreateCompetition": {
 		"header": "Create competition",

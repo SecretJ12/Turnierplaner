@@ -34,7 +34,7 @@
 					>
 						<template #default="{ item }">
 							<PlayerCard
-								:key="(<signedUpPlayer>item).name"
+								:key="(<Player>item).name"
 								:player="item"
 								:secondary="secondary"
 								@add-player="addPlayer"
@@ -53,7 +53,7 @@ import { Competition } from "@/interfaces/competition"
 import AddPlayer from "@/components/views/prepare/editTeams/AddPlayer.vue"
 import DeleteBox from "@/components/views/prepare/editTeams/DeleteBox.vue"
 import { ref, TransitionGroup } from "vue"
-import { Player, signedUpPlayer } from "@/interfaces/player"
+import { Player } from "@/interfaces/player"
 import PlayerCard from "@/components/views/prepare/components/PlayerCard.vue"
 import DraggablePanel from "@/draggable/DraggablePanel.vue"
 
@@ -63,7 +63,7 @@ const props = withDefaults(
 		tournament: Tournament
 		competition: Competition
 		isUpdating?: boolean
-		players: signedUpPlayer[]
+		players: Player[]
 		title: string
 		group: string
 		secondary?: boolean

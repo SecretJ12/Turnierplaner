@@ -125,7 +125,9 @@
 		"atLeastOneLetter": "Bitte tippe mindestens einen Buchstaben ein",
 		"noPlayerSelected": "Keinen Spieler ausgewählt",
 		"selectPlayerFirst": "Bitte wähle zuerst einen Spieler aus",
-		"noPlayerFound": "Keinen Spieler gefunden"
+		"noPlayerFound": "Keinen Spieler gefunden",
+		"invalidMode": "Ungültiger Modus",
+		"playerDeleted": "Spieler gelöscht"
 	},
 	"ViewCreateCompetition": {
 		"header": "Neue Konkurrenz",

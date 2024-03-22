@@ -36,18 +36,18 @@ export interface MatchServer {
 	winner: boolean | null
 	teamA: string | null
 	teamB: string | null
-	// TOOD add result
+	// TODO add result
 	sets: Array<Set>
 }
 
 export interface Team {
-	id: string
+	id?: string
 	playerA: Player | null
 	playerB: Player | null
 }
 
 export interface TeamServer {
-	id: string
+	id?: string
 	playerA: PlayerServer | null
 	playerB: PlayerServer | null
 }

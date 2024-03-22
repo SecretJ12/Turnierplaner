@@ -47,7 +47,7 @@
 								>
 									<template #default="{ item: player }">
 										<PlayerCard
-											:key="(<signedUpPlayer>player).name"
+											:key="(<Player>player).name"
 											:player="player"
 										/>
 									</template>
@@ -76,7 +76,7 @@
 								>
 									<template #default="{ item: player }">
 										<PlayerCard
-											:key="(<signedUpPlayer>player).name"
+											:key="(<Player>player).name"
 											:player="player"
 											:secondary="competition.playerB.different"
 										/>
@@ -101,7 +101,6 @@ import PlayerCard from "@/components/views/prepare/components/PlayerCard.vue"
 import {
 	Player,
 	playerServerToClient,
-	signedUpPlayer,
 } from "@/interfaces/player"
 import { TeamArray } from "@/interfaces/match"
 

@@ -319,6 +319,7 @@ function save() {
 			req,
 		)
 		.then(() => {
+			// TODO internalize toast
 			toast.add({
 				severity: "success",
 				summary: "Gspeichert",
@@ -328,6 +329,7 @@ function save() {
 			})
 		})
 		.catch(() => {
+			// TODO internalize toast
 			toast.add({
 				severity: "error",
 				summary: "Gfailed",

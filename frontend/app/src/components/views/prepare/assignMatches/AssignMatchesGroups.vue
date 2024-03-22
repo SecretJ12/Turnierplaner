@@ -284,6 +284,7 @@ function adjustUnsorted() {
 
 function save() {
 	if (groups.value.some((g) => g.length <= 1)) {
+		// TODO internalize toast
 		toast.add({
 			severity: "error",
 			summary: "Groups not full",
@@ -306,6 +307,7 @@ function save() {
 			req,
 		)
 		.then(() => {
+			// TODO internalize toast
 			toast.add({
 				severity: "success",
 				summary: "Gspeichert",
@@ -315,6 +317,7 @@ function save() {
 			})
 		})
 		.catch(() => {
+			// TODO internalize toast
 			toast.add({
 				severity: "error",
 				summary: "Gfailed",
