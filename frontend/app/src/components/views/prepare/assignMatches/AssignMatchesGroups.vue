@@ -2,7 +2,6 @@
 	<div class="grid">
 		<div class="col-4 flex flex-column gap-3">
 			<Card>
-				<!-- TODO i18n -->
 				<template #title>
 					<div class="flex flex-row justify-content-between">
 						<div>Teams</div>
@@ -34,7 +33,7 @@
 		<div class="col-8 flex flex-column gap-3">
 			<template v-if="competition?.tourType === TourType.GROUPS">
 				<Card v-for="(group, i) in groups" :key="i">
-					<template #title>Group {{ i + 1 }}</template>
+					<template #title>{{ t('ViewPrepare.assignMatches.Group') }} {{ i + 1 }}</template>
 					<template #content>
 						<TeamContainerDraggable
 							v-if="competition"
@@ -46,6 +45,7 @@
 				</Card>
 				<div class="flex flex-row gap-2">
 					<Button
+						:label="t('ViewPrepare.assignMatches.remove')"
 						:disabled="noGroups <= 2 || disabled"
 						severity="danger"
 						@click="
@@ -54,10 +54,9 @@
 								adjustSize(noGroups)
 							}
 						"
-					>
-						Remove
-					</Button>
+					></Button>
 					<Button
+						:label="t('ViewPrepare.assignMatches.add')"
 						:disabled="noGroups >= 64 || disabled"
 						severity="success"
 						@click="
@@ -66,8 +65,7 @@
 								adjustSize(noGroups)
 							}
 						"
-						>Add
-					</Button>
+						></Button>
 				</div>
 			</template>
 			<template v-else>

@@ -189,6 +189,11 @@
 			"randomize": "Auslosen",
 			"reset": "Zurücksetzen",
 			"reroll": "Neu auslosen"
+		},
+		"assignMatches": {
+			"Group": "Gruppe",
+			"add": "Hinzufügen",
+			"remove": "Entfernen"
 		}
 	},
 	"validation": {

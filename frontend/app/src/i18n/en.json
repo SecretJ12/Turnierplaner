@@ -192,6 +192,11 @@
 			"randomize": "Randomize",
 			"reset": "Reset",
 			"reroll": "Reroll"
+		},
+		"assignMatches": {
+			"Group": "Group",
+			"add": "Add",
+			"remove": "Remove"
 		}
 	},
 	"validation": {

@@ -16,8 +16,7 @@
 		</div>
 
 		<div class="grid grid-nogutter justify-content-between mt-4">
-			<Button label="Back" icon="pi pi-angle-left" @click="prevPage" />
-			<!-- Rename to something like create -->
+			<Button :label="t('general.back')" icon="pi pi-angle-left" @click="prevPage" />
 			<Button
 				:label="t('general.save')"
 				severity="success"
@@ -25,7 +24,7 @@
 			></Button>
 			<Button
 				v-if="route.params.step !== 'scheduleMatches'"
-				label="Next"
+				:label="t('general.next')"
 				icon="pi pi-angle-right"
 				icon-pos="right"
 				@click="nextPage"
@@ -75,17 +74,6 @@ function nextPage() {
 }
 
 function save() {
-	/* if (competition.value?.cProgress !== Progress.TEAMS) {
-		toast.add({
-			severity: "error",
-			summary: "Matches already assigned",
-			detail: "Reassigning not yet implemented",
-			life: 3000,
-			closable: false,
-		})
-		return
-	} */
-
 	if (competition.value?.tourType === TourType.GROUPS) {
 		if (groupsRef.value === null) return
 		groupsRef.value.save()
