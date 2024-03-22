@@ -19,16 +19,16 @@ import java.util.UUID;
 @NamedQueries({
                @NamedQuery(name = "findHead",
                            query = """
-                                   FROM Match m WHERE m.competition = :comp
-                                   AND NOT EXISTS (FROM NextMatch n WHERE n.previousA = m OR n.previousB = m)
-                                   AND (EXISTS (FROM NextMatch n WHERE m = n.nextMatch AND n.winner = :finale)
-                                      OR EXISTS (FROM FinalOfGroup f WHERE m = f.nextMatch AND
-                                          (f.pos = 1 AND :finale = true
-                                            OR f.pos = 2 AND :finale = false)))
-                                   AND NOT EXISTS (FROM MatchOfGroup mog WHERE mog.match = m)"""),
+                               FROM Match m WHERE m.competition = :comp
+                               AND NOT EXISTS (FROM NextMatch n WHERE n.previousA = m OR n.previousB = m)
+                               AND (EXISTS (FROM NextMatch n WHERE m = n.nextMatch AND n.winner = :finale)
+                                  OR EXISTS (FROM FinalOfGroup f WHERE m = f.nextMatch AND
+                                      (f.pos = 1 AND :finale = true
+                                        OR f.pos = 2 AND :finale = false)))
+                               AND NOT EXISTS (FROM MatchOfGroup mog WHERE mog.match = m)"""),
                @NamedQuery(name = "deleteByComp",
                            query = """
-                                   DELETE FROM Match m WHERE m.competition = :comp""")})
+                               DELETE FROM Match m WHERE m.competition = :comp""")})
 public class Match {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

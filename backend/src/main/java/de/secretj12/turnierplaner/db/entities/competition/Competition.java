@@ -13,10 +13,10 @@ import java.util.UUID;
 @Table(name = "competitions")
 @NamedQueries({
                @NamedQuery(name = "compByName", query = """
-                       SELECT c FROM Competition c LEFT JOIN Tournament t ON c.tournament = t
-                       WHERE t.name = ?1 AND c.name = ?2"""),
+                   SELECT c FROM Competition c LEFT JOIN Tournament t ON c.tournament = t
+                   WHERE t.name = ?1 AND c.name = ?2"""),
                @NamedQuery(name = "listByName", query = """
-                       SELECT c FROM Competition c LEFT JOIN Tournament t ON c.tournament = t WHERE t.name=  ?1""")})
+                   SELECT c FROM Competition c LEFT JOIN Tournament t ON c.tournament = t WHERE t.name=  ?1""")})
 public class Competition {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
