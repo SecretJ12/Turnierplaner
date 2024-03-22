@@ -22,7 +22,6 @@ import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserTeam;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.knockout.jUserKnockoutSystem;
 import io.quarkus.security.UnauthorizedException;
 import io.quarkus.security.identity.SecurityIdentity;
-import io.smallrye.common.annotation.Blocking;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -334,7 +333,6 @@ public class CompetitionResource {
     @POST
     @Transactional
     @Path("/{compName}/signUpRegister/{playerSide}")
-    @Blocking
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public jUserPlayer registerSignUpPlayer(@PathParam("tourName") String tourName,
@@ -413,6 +411,7 @@ public class CompetitionResource {
 
     @POST
     @Transactional
+    @RolesAllowed("director")
     @Path("/{compName}/initKnockout")
     @Produces(MediaType.TEXT_PLAIN)
     public boolean initializeMatchesKnockout(@PathParam("tourName") String tourName,
@@ -439,6 +438,7 @@ public class CompetitionResource {
 
     @GET
     @Transactional
+    @RolesAllowed("director")
     @Path("/{compName}/knockoutOrder")
     @Produces(MediaType.APPLICATION_JSON)
     public jDirectorKnockoutOrder knockoutOrder(@PathParam("tourName") String tourName,
@@ -451,13 +451,13 @@ public class CompetitionResource {
 
     @POST
     @Transactional
+    @RolesAllowed("director")
     @Path("/{compName}/initGroups")
     @Produces(MediaType.TEXT_PLAIN)
     public boolean initializeMatchesGroups(@PathParam("tourName") String tourName,
                                            @PathParam("compName") String compName, jDirectorGroupsDivision division) {
-        if (division.getGroups().stream().anyMatch(g -> g.size() <= 1)) {
+        if (division.getGroups().stream().anyMatch(g -> g.size() <= 1))
             throw new BadRequestException("At least 2 groups per team needed");
-        }
 
         checkTournamentAccessibility(tourName);
 
@@ -495,6 +495,7 @@ public class CompetitionResource {
 
     @GET
     @Transactional
+    @RolesAllowed("director")
     @Path("/{compName}/groupsDivision")
     @Produces(MediaType.APPLICATION_JSON)
     public jDirectorGroupsDivision groupsDivision(@PathParam("tourName") String tourName,
