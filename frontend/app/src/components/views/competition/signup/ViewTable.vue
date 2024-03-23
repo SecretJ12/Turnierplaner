@@ -1,5 +1,4 @@
 <template>
-	<!-- TODO add loading indicator -->
 	<!-- SINGLE -->
 	<DataTable
 		v-if="props.competition.mode === Mode.SINGLE"

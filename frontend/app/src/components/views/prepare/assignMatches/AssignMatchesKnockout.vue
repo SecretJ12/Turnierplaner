@@ -5,7 +5,7 @@
 				<!-- TODO i18n -->
 				<template #title>
 					<div class="flex flex-row justify-content-between">
-						<div>Teams</div>
+						<div>{{ t("ViewPrepare.assignMatches.teams") }}</div>
 						<SplitButton
 							:model="randomizeItems"
 							class="w-fit"
@@ -32,7 +32,7 @@
 		</div>
 		<div class="col-2">
 			<Card>
-				<template #title>Sorted teams</template>
+				<template #title>{{ t("ViewPrepare.assignMatches.ranking") }}</template>
 				<template #content>
 					<DraggablePanel
 						:list="sortedTeams"
@@ -82,7 +82,7 @@
 		</div>
 		<div class="col-6">
 			<Card class="w-full">
-				<template #title>Tournament tree</template>
+				<template #title>{{ t("general.tournament_tree") }}</template>
 				<template #content>
 					<ScrollPanel style="width: 100%; height: 500px">
 						<ViewKnockoutTree
@@ -315,21 +315,19 @@ function save() {
 			req,
 		)
 		.then(() => {
-			// TODO internalize toast
 			toast.add({
 				severity: "success",
-				summary: "Gspeichert",
-				detail: "Ois subba",
+				summary: t("general.success"),
+				detail: t("general.saved"),
 				life: 3000,
 				closable: false,
 			})
 		})
 		.catch(() => {
-			// TODO internalize toast
 			toast.add({
 				severity: "error",
-				summary: "Gfailed",
-				detail: "Ned so guad",
+				summary: t("general.failure"),
+				detail: t("general.save_failed"),
 				life: 3000,
 				closable: false,
 			})

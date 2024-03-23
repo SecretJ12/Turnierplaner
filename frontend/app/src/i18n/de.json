@@ -18,7 +18,10 @@
 		"save": "Speichern",
 		"reset": "Zurücksetzen",
 		"back": "Zurück",
-		"next": "Weiter"
+		"next": "Weiter",
+		"saved": "Konkurrenz wurde gespeichert",
+		"save_failed": "Während dem Speichern ist etwas schiefgelaufen",
+		"tournament_tree": "Turnierbaum"
 	},
 	"ViewPlayerRegistration": {
 		"headline": "Spielerregistrierung",
@@ -195,7 +198,11 @@
 		"assignMatches": {
 			"Group": "Gruppe",
 			"add": "Hinzufügen",
-			"remove": "Entfernen"
+			"remove": "Entfernen",
+			"emptyGroupSum": "Ungültige Gruppe(n)",
+			"emptyGroupDet": "Jede Gruppe benötigt mindestens 2 Teams",
+			"teams": "Teams",
+			"ranking": "Rangliste"
 		}
 	},
 	"validation": {

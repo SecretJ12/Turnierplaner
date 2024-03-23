@@ -282,11 +282,10 @@ function adjustUnsorted() {
 
 function save() {
 	if (groups.value.some((g) => g.length <= 1)) {
-		// TODO internalize toast
 		toast.add({
 			severity: "error",
-			summary: "Groups not full",
-			detail: "You need at least 2 teams per group",
+			summary: t("ViewPrepare.assignMatches.emptyGroupSum"),
+			detail: t("ViewPrepare.assignMatches.emptyGroupDet"),
 			life: 3000,
 			closable: false,
 		})
@@ -305,21 +304,19 @@ function save() {
 			req,
 		)
 		.then(() => {
-			// TODO internalize toast
 			toast.add({
 				severity: "success",
-				summary: "Gspeichert",
-				detail: "Ois subba",
+				summary: t("general.success"),
+				detail: t("general.saved"),
 				life: 3000,
 				closable: false,
 			})
 		})
 		.catch(() => {
-			// TODO internalize toast
 			toast.add({
 				severity: "error",
-				summary: "Gfailed",
-				detail: "Ned so guad",
+				summary: t("general.failure"),
+				detail: t("general.save_failed"),
 				life: 3000,
 				closable: false,
 			})
