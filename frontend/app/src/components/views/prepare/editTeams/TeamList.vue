@@ -46,10 +46,7 @@
 									@on-remove="() => memberRemoved(index)"
 								>
 									<template #default="{ item: player }">
-										<PlayerCard
-											:key="(<Player>player).name"
-											:player="player"
-										/>
+										<PlayerCard :key="(<Player>player).name" :player="player" />
 									</template>
 								</DraggablePanel>
 							</template>
@@ -98,11 +95,8 @@ import { TransitionGroup } from "vue"
 import { v4 as uuidv4 } from "uuid"
 import DraggablePanel from "@/draggable/DraggablePanel.vue"
 import PlayerCard from "@/components/views/prepare/components/PlayerCard.vue"
-import {
-	Player,
-	playerServerToClient,
-} from "@/interfaces/player"
-import { TeamArray } from "@/interfaces/match"
+import { Player, playerServerToClient } from "@/interfaces/player"
+import { TeamArray } from "@/interfaces/team"
 
 const props = defineProps<{
 	teams: TeamArray[]

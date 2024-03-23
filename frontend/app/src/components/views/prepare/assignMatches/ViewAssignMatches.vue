@@ -16,7 +16,11 @@
 		</div>
 
 		<div class="grid grid-nogutter justify-content-between mt-4">
-			<Button :label="t('general.back')" icon="pi pi-angle-left" @click="prevPage" />
+			<Button
+				:label="t('general.back')"
+				icon="pi pi-angle-left"
+				@click="prevPage"
+			/>
 			<Button
 				:label="t('general.save')"
 				severity="success"

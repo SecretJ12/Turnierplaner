@@ -118,7 +118,7 @@ import {
 	teamArrayClientToServer,
 	teamArrayServerToClient,
 	TeamServer,
-} from "@/interfaces/match"
+} from "@/interfaces/team"
 import { Mode, Progress } from "@/interfaces/competition"
 import TeamList from "@/components/views/prepare/editTeams/TeamList.vue"
 import { v4 as uuidv4 } from "uuid"

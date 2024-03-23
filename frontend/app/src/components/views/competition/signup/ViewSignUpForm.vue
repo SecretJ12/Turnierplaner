@@ -207,11 +207,15 @@ import axios from "axios"
 import ViewConditions from "@/components/views/competition/signup/ViewConditions.vue"
 import { useRoute } from "vue-router"
 import { Competition, Mode, Sex, SignUp } from "@/interfaces/competition"
-import { Player, playerClientToServer, playerServerToClient } from "@/interfaces/player"
+import {
+	Player,
+	playerClientToServer,
+	playerServerToClient,
+} from "@/interfaces/player"
 import { useI18n } from "vue-i18n"
 import { DropdownFilterEvent } from "primevue/dropdown"
 import { useToast } from "primevue/usetoast"
-import { TeamServer } from "@/interfaces/match"
+import { TeamServer } from "@/interfaces/team"
 
 const { t } = useI18n({ inheritLocale: true })
 const toast = useToast()
@@ -340,7 +344,7 @@ function queryPlayerB(event: DropdownFilterEvent) {
 function signUpPlayer(playerA: boolean) {
 	const form: TeamServer = {
 		playerA: null,
-		playerB: null
+		playerB: null,
 	}
 	if (playerA) {
 		if (!selectedPlayerA.value) {
@@ -424,7 +428,7 @@ function signUpDoubleTog() {
 	}
 	const form = {
 		playerA: playerClientToServer(selectedPlayerA.value),
-		playerB: playerClientToServer(selectedPlayerB.value)
+		playerB: playerClientToServer(selectedPlayerB.value),
 	}
 
 	axios

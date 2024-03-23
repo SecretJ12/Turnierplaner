@@ -105,11 +105,7 @@ import { useI18n } from "vue-i18n"
 import { computed, Ref, ref, TransitionGroup } from "vue"
 import { getCompetitionDetails } from "@/backend/competition"
 import TeamContainerDraggable from "@/components/views/prepare/assignMatches/TeamContainerDraggable.vue"
-import {
-	Team,
-	teamClientToServer,
-	teamServerToClient,
-} from "@/interfaces/match"
+import { Team, teamClientToServer, teamServerToClient } from "@/interfaces/team"
 import axios from "axios"
 import { KnockoutOrder, Mode, Progress } from "@/interfaces/competition"
 import TeamBox from "@/components/views/prepare/components/TeamBox.vue"

@@ -1,4 +1,4 @@
-import { TeamServer } from "@/interfaces/match"
+import { TeamServer } from "@/interfaces/team"
 
 export enum Sex {
 	MALE = "MALE",

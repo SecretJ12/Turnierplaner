@@ -180,7 +180,7 @@ import { useI18n } from "vue-i18n"
 import { Player, playerServerToClient } from "@/interfaces/player"
 import { useToast } from "primevue/usetoast"
 import { getCanEdit } from "@/backend/security"
-import { Team, teamServerToClient } from "@/interfaces/match"
+import { Team, teamServerToClient } from "@/interfaces/team"
 
 const { t } = useI18n({ inheritLocale: true })
 const toast = useToast()

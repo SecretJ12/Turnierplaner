@@ -1,9 +1,5 @@
-import {
-	Match,
-	MatchServer,
-	matchServerToClient,
-	Team,
-} from "@/interfaces/match"
+import { Match, MatchServer, matchServerToClient } from "@/interfaces/match"
+import { Team } from "@/interfaces/team"
 
 export interface KnockoutSystem {
 	teams: Team[]
@@ -36,6 +32,10 @@ export function knockoutSystemServerToClient(
 ): KnockoutSystem {
 	const teams = new Map<string, Team>()
 	knockoutSystem.teams.forEach((team) => {
+		if (!team.id) {
+			console.error("Team without id:", team)
+			return
+		}
 		teams.set(team.id, team)
 	})
 	return {

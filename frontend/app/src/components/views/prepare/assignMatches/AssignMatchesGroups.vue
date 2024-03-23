@@ -33,7 +33,9 @@
 		<div class="col-8 flex flex-column gap-3">
 			<template v-if="competition?.tourType === TourType.GROUPS">
 				<Card v-for="(group, i) in groups" :key="i">
-					<template #title>{{ t('ViewPrepare.assignMatches.Group') }} {{ i + 1 }}</template>
+					<template #title
+						>{{ t("ViewPrepare.assignMatches.Group") }} {{ i + 1 }}</template
+					>
 					<template #content>
 						<TeamContainerDraggable
 							v-if="competition"
@@ -65,7 +67,7 @@
 								adjustSize(noGroups)
 							}
 						"
-						></Button>
+					></Button>
 				</div>
 			</template>
 			<template v-else>
@@ -90,11 +92,7 @@ import { useToast } from "primevue/usetoast"
 import { KnockoutMatch } from "@/interfaces/knockoutSystem"
 import { computed, Ref, ref } from "vue"
 import axios from "axios"
-import {
-	Team,
-	teamClientToServer,
-	teamServerToClient,
-} from "@/interfaces/match"
+import { Team, teamClientToServer, teamServerToClient } from "@/interfaces/team"
 import TeamContainerDraggable from "@/components/views/prepare/assignMatches/TeamContainerDraggable.vue"
 import { GroupsDivision, Progress, TourType } from "@/interfaces/competition"
 import ViewKnockoutTree from "@/components/views/competition/knockoutSystem/ViewKnockoutTree.vue"
