@@ -30,10 +30,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Path("/tournament/{tourName}/competition")
@@ -418,16 +415,12 @@ public class CompetitionResource {
                                              @PathParam("compName") String compName, jDirectorKnockoutOrder init) {
         checkTournamentAccessibility(tourName);
 
-        List<Team> teamOrder = init.getTeams().stream().map(t -> teams.getById(t.getId())).collect(Collectors.toList());
-        if (teamOrder.stream().anyMatch(Objects::isNull)) throw new NotFoundException("Player not found");
-
         Competition competition = competitions.getByName(tourName, compName);
         int size = (int) Math.max(0, Math.ceil((Math.log(competition.getTeams().size()) / Math.log(2)) - 1));
+        int teamsCount = (int) Math.pow(2, size + 1);
 
-        int numAdd = (int) (Math.pow(2, size + 1) - teamOrder.size());
-        for (int i = 0; i < numAdd; i++) {
-            teamOrder.add(null);
-        }
+        Team[] teamOrder = init.getTeams().stream().map(t -> teams.getById(t.getId())).toArray((i) -> new Team[teamsCount]);
+        if (Arrays.stream(teamOrder).anyMatch(Objects::isNull)) throw new NotFoundException("Player not found");
 
         knockoutTools.generateKnockoutTree(competition, size, teamOrder);
 
@@ -446,7 +439,8 @@ public class CompetitionResource {
         checkTournamentAccessibility(tourName);
 
         Competition competition = competitions.getByName(tourName, compName);
-        return new jDirectorKnockoutOrder(knockoutTools.knockoutOrder(competition));
+        List<Team> teams = Arrays.stream(knockoutTools.knockoutOrder(competition)).filter(Objects::nonNull).toList();
+        return new jDirectorKnockoutOrder(teams);
     }
 
     @POST
