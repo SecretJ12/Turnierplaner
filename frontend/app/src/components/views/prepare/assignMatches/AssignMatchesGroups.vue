@@ -234,6 +234,7 @@ async function update() {
 	animated.value = true
 	disabled.value = true
 	teams.value = []
+	groups.value = [[], []]
 	const anFin = sleep(firstUpdate ? 0 : 400)
 	firstUpdate = false
 	axios
