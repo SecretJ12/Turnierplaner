@@ -470,7 +470,7 @@ public class CompetitionResource {
 
         Competition competition = competitions.getByName(tourName, compName);
 
-        groupTools.generateGroupMatches(competition, groups);
+        groupTools.generateMatches(competition, groups);
 
         competition.setcProgress(CreationProgress.GAMES);
         competitions.persist(competition);

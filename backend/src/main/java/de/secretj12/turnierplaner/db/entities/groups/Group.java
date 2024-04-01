@@ -29,6 +29,13 @@ public class Group {
     @JoinColumns(@JoinColumn(name = "competition_id"))
     private Competition competition;
 
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(mappedBy = "groupA")
+    private Set<FinalOfGroup> finalOfGroupA;
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(mappedBy = "groupB")
+    private Set<FinalOfGroup> finalOfGroupB;
+
     public UUID getId() {
         return id;
     }

@@ -28,7 +28,12 @@ import java.util.UUID;
                                AND NOT EXISTS (FROM MatchOfGroup mog WHERE mog.match = m)"""),
                @NamedQuery(name = "deleteByComp",
                            query = """
-                               DELETE FROM Match m WHERE m.competition = :comp""")})
+                               DELETE FROM Match m WHERE m.competition = :comp"""),
+               @NamedQuery(name = "nonGroupMatches",
+                           query = """
+                               FROM Match m WHERE m.competition = :comp
+                               AND NOT EXISTS (FROM MatchOfGroup mog WHERE mog.match = m)
+                               """)})
 public class Match {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -71,9 +76,11 @@ public class Match {
     @OneToMany(mappedBy = "previousB", fetch = FetchType.LAZY)
     private Collection<NextMatch> previousOfB;
 
-    @OneToOne(mappedBy = "nextMatch")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToOne(mappedBy = "nextMatch", fetch = FetchType.LAZY)
     private FinalOfGroup finalOfGroup;
 
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @OneToOne(mappedBy = "match", fetch = FetchType.LAZY)
     private MatchOfGroup group;
 

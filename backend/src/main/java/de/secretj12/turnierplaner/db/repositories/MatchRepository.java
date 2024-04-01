@@ -8,6 +8,8 @@ import io.quarkus.panache.common.Parameters;
 
 import jakarta.enterprise.context.ApplicationScoped;
 
+import java.util.List;
+
 @ApplicationScoped
 public class MatchRepository implements PanacheRepository<Match> {
 
@@ -32,5 +34,9 @@ public class MatchRepository implements PanacheRepository<Match> {
     public void delete(Match m) {
         // normal delete by object sadly does not work :(
         delete("DELETE FROM Match m WHERE m = :match", Parameters.with("match", m));
+    }
+
+    public List<Match> nonGroupMatches(Competition competition) {
+        return find("#nonGroupMatches", Parameters.with("comp", competition)).list();
     }
 }
