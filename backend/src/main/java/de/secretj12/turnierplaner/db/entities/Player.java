@@ -13,19 +13,19 @@ import java.util.UUID;
 @NamedQueries(
     @NamedQuery(name = "filter",
                 query = """
-                        SELECT p FROM Player p
-                        WHERE p.mailVerified = true
-                        AND (p.sex = :sex OR :ignoreSex = true)
-                        AND (p.birthday <= :minAge OR :ignoreMinAge = true)
-                        AND (p.birthday >= :maxAge OR :ignoreMaxAge = true)
-                        AND (lower(p.firstName) like CONCAT('%', lower(:search), '%')
-                        OR lower(p.lastName) = CONCAT('%', lower(:search), '%')
-                        OR lower(CONCAT(p.firstName, ' ', p.lastName)) like CONCAT('%', lower(:search), '%'))
-                        ORDER BY CASE
-                            WHEN lower(p.firstName) like CONCAT(lower(:search), '%') THEN 0
-                            WHEN lower(p.lastName) like CONCAT(lower(:search), '%') THEN 1
-                            ELSE 2
-                        END, p.firstName, p.lastName"""
+                    SELECT p FROM Player p
+                    WHERE p.mailVerified = true
+                    AND (p.sex = :sex OR :ignoreSex = true)
+                    AND (p.birthday <= :minAge OR :ignoreMinAge = true)
+                    AND (p.birthday >= :maxAge OR :ignoreMaxAge = true)
+                    AND (lower(p.firstName) like CONCAT('%', lower(:search), '%')
+                    OR lower(p.lastName) = CONCAT('%', lower(:search), '%')
+                    OR lower(CONCAT(p.firstName, ' ', p.lastName)) like CONCAT('%', lower(:search), '%'))
+                    ORDER BY CASE
+                        WHEN lower(p.firstName) like CONCAT(lower(:search), '%') THEN 0
+                        WHEN lower(p.lastName) like CONCAT(lower(:search), '%') THEN 1
+                        ELSE 2
+                    END, p.firstName, p.lastName"""
     )
 )
 public class Player {

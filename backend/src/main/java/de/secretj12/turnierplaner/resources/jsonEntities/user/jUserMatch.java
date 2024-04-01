@@ -21,7 +21,7 @@ public class jUserMatch {
     private List<jUserSet> sets;
 
     public jUserMatch(Match match) {
-        this.court = match.getCourt().getName();
+        this.court = match.getCourt() != null ? match.getCourt().getName() : null;
         this.begin = match.getBegin();
         this.end = match.getEnd();
 

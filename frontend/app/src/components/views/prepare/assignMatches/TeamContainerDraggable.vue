@@ -44,7 +44,7 @@
 <script setup lang="ts">
 import { TransitionGroup } from "vue"
 import { Competition, Mode } from "@/interfaces/competition"
-import { Team } from "@/interfaces/match"
+import { Team } from "@/interfaces/team"
 import PlayerCard from "@/components/views/prepare/components/PlayerCard.vue"
 import TeamBox from "@/components/views/prepare/components/TeamBox.vue"
 import DraggablePanel from "@/draggable/DraggablePanel.vue"

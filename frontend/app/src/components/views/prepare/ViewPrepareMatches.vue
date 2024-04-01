@@ -36,6 +36,7 @@ import { useToast } from "primevue/usetoast"
 import { TabMenuChangeEvent } from "primevue/tabmenu"
 import { getListCompetitions } from "@/backend/competition"
 import Steps from "primevue/steps"
+import { Progress } from "@/interfaces/competition"
 
 const { t } = useI18n({ inheritLocale: true })
 
@@ -66,9 +67,23 @@ function updateRoute(compId?: string) {
 
 	activeTab.value = competitions.value.findIndex((c) => c.name === compId)
 
-	// TODO insert correct step for compId
 	let step = route.name
-	if (route.meta.step === undefined || !step) step = "settings"
+	if (route.meta.step === undefined || !step) {
+		switch (competitions.value[activeTab.value].cProgress) {
+			case Progress.TEAMS:
+				step = "editTeams"
+				break
+			case Progress.GAMES:
+				step = "scheduleMatches"
+				break
+			case Progress.SCHEDULING:
+				step = "scheduleMatches"
+				break
+			default:
+				step = "settings"
+		}
+		step = "editTeams"
+	}
 
 	router.replace({
 		name: step,

@@ -24,7 +24,7 @@ body {
 
 .playerList-enter-active,
 .playerList-leave-active {
-	transition: all 0.5s ease;
+	transition: all 0.2s ease;
 }
 
 .playerList-enter-from,
@@ -34,7 +34,7 @@ body {
 }
 
 .teamBox-leave-active {
-	transition: all 0.5s ease;
+	transition: all 0.2s ease;
 }
 
 .teamBox-leave-to {

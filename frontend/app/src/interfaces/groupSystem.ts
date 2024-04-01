@@ -1,9 +1,5 @@
-import {
-	Match,
-	MatchServer,
-	matchServerToClient,
-	Team,
-} from "@/interfaces/match"
+import { Match, MatchServer, matchServerToClient } from "@/interfaces/match"
+import { Team } from "@/interfaces/team"
 
 export interface GroupSystem {
 	teams: Team[]
@@ -58,6 +54,10 @@ export function groupSystemServerToClient(
 ): GroupSystem {
 	const teams = new Map<string, Team>()
 	groupSystem.teams.forEach((team) => {
+		if (!team.id) {
+			console.error("Team without id:", team)
+			return
+		}
 		teams.set(team.id, team)
 	})
 

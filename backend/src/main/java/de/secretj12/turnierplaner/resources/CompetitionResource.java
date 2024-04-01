@@ -7,8 +7,12 @@ import de.secretj12.turnierplaner.db.entities.Tournament;
 import de.secretj12.turnierplaner.db.entities.competition.*;
 import de.secretj12.turnierplaner.db.entities.groups.Group;
 import de.secretj12.turnierplaner.db.repositories.*;
+import de.secretj12.turnierplaner.modifier.GroupTools;
+import de.secretj12.turnierplaner.modifier.KnockoutTools;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorCompetitionAdd;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorCompetitionUpdate;
+import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorGroupsDivision;
+import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorKnockoutOrder;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.competition.jUserCompetition;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.group.jUserGroupSystem;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayer;
@@ -18,7 +22,6 @@ import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserTeam;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.knockout.jUserKnockoutSystem;
 import io.quarkus.security.UnauthorizedException;
 import io.quarkus.security.identity.SecurityIdentity;
-import io.smallrye.common.annotation.Blocking;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -27,10 +30,12 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Path("/tournament/{tourName}/competition")
 public class CompetitionResource {
+    // TODO always check for current progress
 
     @Inject
     PlayerResource playersResource;
@@ -46,6 +51,11 @@ public class CompetitionResource {
     MatchRepository matches;
     @Inject
     TeamRepository teams;
+
+    @Inject
+    KnockoutTools knockoutTools;
+    @Inject
+    GroupTools groupTools;
 
     @GET
     @Path("/list")
@@ -70,8 +80,8 @@ public class CompetitionResource {
     @Path("/{compName}/details")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public jUserCompetition getCompetition(@PathParam("tourName") String tourName, @PathParam(
-        "compName") String compName) {
+    public jUserCompetition getCompetition(@PathParam("tourName") String tourName,
+                                           @PathParam("compName") String compName) {
         checkTournamentAccessibility(tourName);
 
         if (securityIdentity.hasRole("director"))
@@ -112,6 +122,7 @@ public class CompetitionResource {
 
         Competition dbCompetition = new Competition();
         competition.toDB(dbCompetition);
+        dbCompetition.setcProgress(CreationProgress.PLAYER);
         dbCompetition.setTournament(tournament);
         competitions.persist(dbCompetition);
         return "successfully added";
@@ -140,8 +151,8 @@ public class CompetitionResource {
     @GET
     @Path("/{compName}/signedUpTeams")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<jUserTeam> getSignedUpPlayers(@PathParam("tourName") String tourName, @PathParam(
-        "compName") String compName) {
+    public List<jUserTeam> getSignedUpPlayers(@PathParam("tourName") String tourName,
+                                              @PathParam("compName") String compName) {
         checkTournamentAccessibility(tourName);
 
         Competition competition = competitions.getByName(tourName, compName);
@@ -158,8 +169,8 @@ public class CompetitionResource {
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public String signUpPlayer(@PathParam("tourName") String tourName, @PathParam(
-        "compName") String compName, jUserPlayerSignUpForm reg) {
+    public String signUpPlayer(@PathParam("tourName") String tourName, @PathParam("compName") String compName,
+                               jUserPlayerSignUpForm reg) {
         // TODO better checks if team or members of it are already registered in team
         // TODO check if both layers are the same
         // TODO check if players match conditions
@@ -169,7 +180,7 @@ public class CompetitionResource {
         if (competition == null) throw new BadRequestException("Competition doesn't exist");
 
         if (!securityIdentity.hasRole("director") && // or registration phase
-                (competition.getTournament().getBeginRegistration().isAfter(LocalDateTime.now()) || competition.getTournament().getEndRegistration().isBefore(LocalDateTime.now())))
+            (competition.getTournament().getBeginRegistration().isAfter(LocalDateTime.now()) || competition.getTournament().getEndRegistration().isBefore(LocalDateTime.now())))
             throw new NotAuthorizedException("Registration phase is not active");
 
         if (competition.getMode() == CompetitionMode.SINGLES || (competition.getSignup() == CompetitionSignUp.INDIVIDUAL && !competition.isPlayerBdifferent())) {
@@ -179,7 +190,7 @@ public class CompetitionResource {
             if (reg.getPlayerA() == null) throw new BadRequestException("Player A is null");
             if (reg.getPlayerB() != null) throw new BadRequestException("Player B is not null");
 
-            Player playerA = players.getByName(reg.getPlayerA().getFirstName(), reg.getPlayerA().getLastName());
+            Player playerA = players.getById(reg.getPlayerA().getId());
             if (playerA == null) throw new BadRequestException("Player A does not exist");
 
             if (conditionsFailA(competition, playerA))
@@ -205,7 +216,7 @@ public class CompetitionResource {
                     throw new BadRequestException("Player A and player B are not null");
 
                 if (reg.getPlayerA() != null) {
-                    Player playerA = players.getByName(reg.getPlayerA().getFirstName(), reg.getPlayerA().getLastName());
+                    Player playerA = players.getById(reg.getPlayerA().getId());
                     if (playerA == null) throw new BadRequestException("Player A doesn't exist");
 
                     if (conditionsFailA(competition, playerA))
@@ -221,7 +232,7 @@ public class CompetitionResource {
                     teams.persist(team);
                 }
                 if (reg.getPlayerB() != null) {
-                    Player playerB = players.getByName(reg.getPlayerB().getFirstName(), reg.getPlayerB().getLastName());
+                    Player playerB = players.getById(reg.getPlayerB().getId());
                     if (playerB == null) throw new BadRequestException("Player B does not exist");
 
                     if (conditionsFailB(competition, playerB))
@@ -243,9 +254,9 @@ public class CompetitionResource {
                 if (reg.getPlayerA() == null) throw new BadRequestException("Player A is null");
                 if (reg.getPlayerB() == null) throw new BadRequestException("Player B is null");
 
-                Player playerA = players.getByName(reg.getPlayerA().getFirstName(), reg.getPlayerA().getLastName());
+                Player playerA = players.getById(reg.getPlayerA().getId());
                 if (playerA == null) throw new BadRequestException("Player A does not exist");
-                Player playerB = players.getByName(reg.getPlayerB().getFirstName(), reg.getPlayerB().getLastName());
+                Player playerB = players.getById(reg.getPlayerB().getId());
                 if (playerB == null) throw new BadRequestException("Player B does not exist");
 
                 if (conditionsFailA(competition, playerA))
@@ -276,8 +287,8 @@ public class CompetitionResource {
     @Path("/{compName}/updateTeams")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public List<jUserTeam> updateTeams(@PathParam("tourName") String tourName, @PathParam(
-        "compName") String compName, List<jUserTeam> teams) {
+    public List<jUserTeam> updateTeams(@PathParam("tourName") String tourName, @PathParam("compName") String compName,
+                                       List<jUserTeam> teams) {
         updateTeamsHelper(tourName, compName, teams);
 
         return competitions.getByName(tourName, compName).getTeams().stream().map(jUserTeam::new).toList();
@@ -292,8 +303,8 @@ public class CompetitionResource {
         List<Team> curTeams = competition.getTeams();
 
         teams.forEach(team -> {
-            Player playerA = team.getPlayerA() == null ? null : players.getByName(team.getPlayerA().getFirstName(), team.getPlayerA().getLastName());
-            Player playerB = team.getPlayerB() == null ? null : players.getByName(team.getPlayerB().getFirstName(), team.getPlayerB().getLastName());
+            Player playerA = team.getPlayerA() == null ? null : players.getById(team.getPlayerA().getId());
+            Player playerB = team.getPlayerB() == null ? null : players.getById(team.getPlayerB().getId());
 
             var cTeamOp = curTeams.stream().filter(cT -> cT.getId().equals(team.getId())).findAny();
             if (cTeamOp.isEmpty()) {
@@ -319,18 +330,17 @@ public class CompetitionResource {
     @POST
     @Transactional
     @Path("/{compName}/signUpRegister/{playerSide}")
-    @Blocking
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public jUserPlayer registerSignUpPlayer(@PathParam("tourName") String tourName, @PathParam(
-        "compName") String compName, @PathParam("playerSide") String playerSide,
+    public jUserPlayer registerSignUpPlayer(@PathParam("tourName") String tourName,
+                                            @PathParam("compName") String compName,
+                                            @PathParam("playerSide") String playerSide,
                                             jUserPlayerRegistrationForm playerForm) {
         Player newPlayer = playersResource.adminPlayerRegistration(playerForm);
 
         Competition competition = competitions.getByName(tourName, compName);
 
         Team team = new Team();
-        System.out.printf("playerSide: %s\n", playerSide);
         if (playerSide.equals("playerA")) {
             team.setPlayerA(newPlayer);
         } else {
@@ -353,8 +363,8 @@ public class CompetitionResource {
     @GET
     @Path("/{compName}/knockoutMatches")
     @Produces(MediaType.APPLICATION_JSON)
-    public jUserKnockoutSystem getKnockoutMatches(@PathParam("tourName") String tourName, @PathParam(
-        "compName") String compName) {
+    public jUserKnockoutSystem getKnockoutMatches(@PathParam("tourName") String tourName,
+                                                  @PathParam("compName") String compName) {
         checkTournamentAccessibility(tourName);
 
         Competition competition = competitions.getByName(tourName, compName);
@@ -370,14 +380,14 @@ public class CompetitionResource {
     @GET
     @Path("/{compName}/groupMatches")
     @Produces(MediaType.APPLICATION_JSON)
-    public jUserGroupSystem getGroupMatches(@PathParam("tourName") String tourName, @PathParam(
-        "compName") String compName) {
+    public jUserGroupSystem getGroupMatches(@PathParam("tourName") String tourName,
+                                            @PathParam("compName") String compName) {
         checkTournamentAccessibility(tourName);
 
         Competition competition = competitions.getByName(tourName, compName);
         if (competition == null) throw new NotFoundException("Competition as not found");
         if (competition.getType() != CompetitionType.GROUPS)
-            throw new WebApplicationException("Competition does not have type groups", Response.Status.METHOD_NOT_ALLOWED);
+            throw new NotAllowedException("Competition does not have type groups");
 
         List<Group> groups = competition.getGroups();
         if (groups == null) throw new NotFoundException("Found no groups");
@@ -394,5 +404,100 @@ public class CompetitionResource {
         if (tournament == null) throw new NotFoundException("Tournament could not be found");
         if (!securityIdentity.hasRole("director") && !tournament.isVisible())
             throw new UnauthorizedException("Cannot access tournament");
+    }
+
+    @POST
+    @Transactional
+    @RolesAllowed("director")
+    @Path("/{compName}/initKnockout")
+    @Produces(MediaType.TEXT_PLAIN)
+    public boolean initializeMatchesKnockout(@PathParam("tourName") String tourName,
+                                             @PathParam("compName") String compName, jDirectorKnockoutOrder init) {
+        checkTournamentAccessibility(tourName);
+
+        Competition competition = competitions.getByName(tourName, compName);
+        int size = (int) Math.max(0, Math.ceil((Math.log(competition.getTeams().size()) / Math.log(2)) - 1));
+        int teamsCount = (int) Math.pow(2, size + 1);
+
+        Team[] teamOrder = init.getTeams().stream().map(t -> teams.getById(t.getId())).toArray((i) -> new Team[teamsCount]);
+        if (Arrays.stream(teamOrder).anyMatch(Objects::isNull)) throw new NotFoundException("Player not found");
+
+        knockoutTools.generateKnockoutTree(competition, size, teamOrder);
+
+        competition.setcProgress(CreationProgress.GAMES);
+        competitions.persist(competition);
+        return true;
+    }
+
+    @GET
+    @Transactional
+    @RolesAllowed("director")
+    @Path("/{compName}/knockoutOrder")
+    @Produces(MediaType.APPLICATION_JSON)
+    public jDirectorKnockoutOrder knockoutOrder(@PathParam("tourName") String tourName,
+                                                @PathParam("compName") String compName) {
+        checkTournamentAccessibility(tourName);
+
+        Competition competition = competitions.getByName(tourName, compName);
+        List<Team> teams = Arrays.stream(knockoutTools.knockoutOrder(competition)).filter(Objects::nonNull).toList();
+        return new jDirectorKnockoutOrder(teams);
+    }
+
+    @POST
+    @Transactional
+    @RolesAllowed("director")
+    @Path("/{compName}/initGroups")
+    @Produces(MediaType.TEXT_PLAIN)
+    public boolean initializeMatchesGroups(@PathParam("tourName") String tourName,
+                                           @PathParam("compName") String compName, jDirectorGroupsDivision division) {
+        if (division.getGroups().stream().anyMatch(g -> g.size() <= 1))
+            throw new BadRequestException("At least 2 groups per team needed");
+
+        checkTournamentAccessibility(tourName);
+
+        // @formatter:off
+        List<Set<Team>> groups = division.getGroups().stream()
+            .map(group -> group.stream()
+                .map(t -> teams.getById(t.getId()))
+                .collect(Collectors.toCollection(HashSet::new)))
+            .collect(Collectors.toList());
+        // @formatter:on
+
+        if (groups.stream().anyMatch(group -> group.stream().anyMatch(Objects::isNull)))
+            throw new NotFoundException("Player not found");
+
+        checkGroupsCount(groups.size());
+
+        Competition competition = competitions.getByName(tourName, compName);
+
+        groupTools.generateMatches(competition, groups);
+
+        competition.setcProgress(CreationProgress.GAMES);
+        competitions.persist(competition);
+        return true;
+    }
+
+    private void checkGroupsCount(int count) {
+        int i = 1;
+        while (i <= 1024) {
+            if (i == count)
+                return;
+            i *= 2;
+        }
+        throw new BadRequestException("Invalid group count");
+    }
+
+    @GET
+    @Transactional
+    @RolesAllowed("director")
+    @Path("/{compName}/groupsDivision")
+    @Produces(MediaType.APPLICATION_JSON)
+    public jDirectorGroupsDivision groupsDivision(@PathParam("tourName") String tourName,
+                                                  @PathParam("compName") String compName) {
+        checkTournamentAccessibility(tourName);
+
+        Competition competition = competitions.getByName(tourName, compName);
+        List<Group> groups = competition.getGroups();
+        return new jDirectorGroupsDivision(groups.stream().map(g -> groupTools.teamsOfGroup(g)).toList());
     }
 }

@@ -1,3 +1,5 @@
+import { TeamServer } from "@/interfaces/team"
+
 export enum Sex {
 	MALE = "MALE",
 	FEMALE = "FEMALE",
@@ -19,6 +21,12 @@ export enum SignUp {
 	TOGETHER = "TOGETHER",
 }
 
+export enum Progress {
+	TEAMS = "TEAMS",
+	GAMES = "GAMES",
+	SCHEDULING = "SCHEDULING",
+}
+
 export interface Competition {
 	id?: null | string
 	name: string
@@ -28,6 +36,7 @@ export interface Competition {
 	signUp: SignUp
 	playerA: settingsPlayer
 	playerB: settingsPlayerB
+	cProgress: Progress
 }
 
 export const CompetitionDefault: Competition = {
@@ -52,6 +61,7 @@ export const CompetitionDefault: Competition = {
 		hasMaxAge: false,
 		maxAge: null,
 	},
+	cProgress: Progress.TEAMS,
 }
 
 export interface CompetitionServer {
@@ -76,6 +86,7 @@ export interface CompetitionServer {
 		hasMaxAge: boolean
 		maxAge: string | null
 	}
+	cProgress?: Progress.TEAMS
 }
 
 export interface settingsPlayer {
@@ -207,6 +218,7 @@ export function competitionServerToClient(
 				? new Date(competition.playerB.maxAge)
 				: null,
 		},
+		cProgress: competition.cProgress || Progress.TEAMS,
 	}
 }
 
@@ -214,4 +226,12 @@ function dateToJson(d: Date): string {
 	return `${d.getFullYear()}-${d.getMonth() < 9 ? "0" : ""}${
 		d.getMonth() + 1
 	}-${d.getDate() < 10 ? "0" : ""}${d.getDate()}`
+}
+
+export interface KnockoutOrder {
+	teams: TeamServer[]
+}
+
+export interface GroupsDivision {
+	groups: TeamServer[][]
 }

@@ -4,10 +4,19 @@ import de.secretj12.turnierplaner.db.entities.Player;
 
 import jakarta.persistence.*;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
 @Table(name = "teams")
+@NamedQueries({
+               @NamedQuery(name = "findTeams",
+                           query = """
+                               FROM Team t
+                               JOIN Match m ON (t = m.teamA OR t = m.teamB)
+                               JOIN MatchOfGroup mog ON m = mog.match
+                               JOIN Group g ON mog.group = g
+                               WHERE g = :group""")})
 public class Team {
 
     @Id
@@ -56,5 +65,18 @@ public class Team {
 
     public void setPlayerB(Player playerB) {
         this.playerB = playerB;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Team team = (Team) o;
+        return Objects.equals(id, team.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

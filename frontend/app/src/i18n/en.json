@@ -18,7 +18,10 @@
 		"save": "Save",
 		"reset": "Reset",
 		"back": "Back",
-		"next": "Next"
+		"next": "Next",
+		"saved": "Changes saved",
+		"save_failed": "Something went wrong while saving",
+		"tournament_tree": "Tournament tree"
 	},
 	"ViewPlayerRegistration": {
 		"headline": "Player Registration",
@@ -127,8 +130,10 @@
 	"ViewSignUp": {
 		"atLeastOneLetter": "Please type at least one letter",
 		"noPlayerSelected": "No player selected",
-		"selectPlayerFirst": "Please select a player firrst",
-		"noPlayerFound": "No player found"
+		"selectPlayerFirst": "Please select a player first",
+		"noPlayerFound": "No player found",
+		"invalidMode": "Invalid mode",
+		"playerDeleted": "Player deleted"
 	},
 	"ViewCreateCompetition": {
 		"header": "Create competition",
@@ -138,7 +143,6 @@
 	},
 	"ViewEditCompetition": {
 		"header": "Edit competition",
-		"saved": "Changes saved",
 		"saving_failed": "Something went wrong while saving",
 		"loadingDetailsFailed": "Couldn't load competition details",
 		"competitionUpdated": "Competition updated",
@@ -192,6 +196,15 @@
 			"randomize": "Randomize",
 			"reset": "Reset",
 			"reroll": "Reroll"
+		},
+		"assignMatches": {
+			"Group": "Group",
+			"add": "Add",
+			"remove": "Remove",
+			"emptyGroupSum": "Invalid group(s)",
+			"emptyGroupDet": "Every group needs at least 2 teams",
+			"teams": "Teams",
+			"ranking": "Ranking"
 		}
 	},
 	"validation": {

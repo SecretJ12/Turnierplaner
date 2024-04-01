@@ -61,7 +61,8 @@ import { Group } from "@/interfaces/groupSystem"
 import { ref } from "vue"
 import { useI18n } from "vue-i18n"
 import ViewMatch from "@/components/views/competition/groupSystem/ViewMatch.vue"
-import { Match, Team } from "@/interfaces/match"
+import { Match } from "@/interfaces/match"
+import { Team } from "@/interfaces/team"
 
 const { t } = useI18n({ inheritLocale: true })
 

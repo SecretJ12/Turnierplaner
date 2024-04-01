@@ -2,7 +2,6 @@
 	<div class="grid">
 		<div class="col-4 flex flex-column gap-3">
 			<Card>
-				<!-- TODO i18n -->
 				<template #title>
 					<div class="flex flex-row justify-content-between">
 						<div>Teams</div>
@@ -34,7 +33,9 @@
 		<div class="col-8 flex flex-column gap-3">
 			<template v-if="competition?.tourType === TourType.GROUPS">
 				<Card v-for="(group, i) in groups" :key="i">
-					<template #title>Group {{ i + 1 }}</template>
+					<template #title
+						>{{ t("ViewPrepare.assignMatches.Group") }} {{ i + 1 }}</template
+					>
 					<template #content>
 						<TeamContainerDraggable
 							v-if="competition"
@@ -46,6 +47,7 @@
 				</Card>
 				<div class="flex flex-row gap-2">
 					<Button
+						:label="t('ViewPrepare.assignMatches.remove')"
 						:disabled="noGroups <= 2 || disabled"
 						severity="danger"
 						@click="
@@ -54,10 +56,9 @@
 								adjustSize(noGroups)
 							}
 						"
-					>
-						Remove
-					</Button>
+					></Button>
 					<Button
+						:label="t('ViewPrepare.assignMatches.add')"
 						:disabled="noGroups >= 64 || disabled"
 						severity="success"
 						@click="
@@ -66,8 +67,7 @@
 								adjustSize(noGroups)
 							}
 						"
-						>Add
-					</Button>
+					></Button>
 				</div>
 			</template>
 			<template v-else>
@@ -92,9 +92,9 @@ import { useToast } from "primevue/usetoast"
 import { KnockoutMatch } from "@/interfaces/knockoutSystem"
 import { computed, Ref, ref } from "vue"
 import axios from "axios"
-import { Team, teamServerToClient } from "@/interfaces/match"
+import { Team, teamClientToServer, teamServerToClient } from "@/interfaces/team"
 import TeamContainerDraggable from "@/components/views/prepare/assignMatches/TeamContainerDraggable.vue"
-import { TourType } from "@/interfaces/competition"
+import { GroupsDivision, Progress, TourType } from "@/interfaces/competition"
 import ViewKnockoutTree from "@/components/views/competition/knockoutSystem/ViewKnockoutTree.vue"
 import { getCompetitionDetails } from "@/backend/competition"
 
@@ -234,7 +234,8 @@ async function update() {
 	animated.value = true
 	disabled.value = true
 	teams.value = []
-	const anFin = sleep(firstUpdate ? 0 : 1000)
+	groups.value = [[], []]
+	const anFin = sleep(firstUpdate ? 0 : 400)
 	firstUpdate = false
 	axios
 		.get<Team[]>(
@@ -246,14 +247,84 @@ async function update() {
 				teams.value.push(teamServerToClient(team))
 				teamCount.value++
 			})
-			await sleep(500)
+			adjustUnsorted()
+			await sleep(400)
 			animated.value = false
 			disabled.value = false
 		})
 		.catch((error) => {
 			console.log(error)
 		})
+
+	if (
+		competition.value?.cProgress === Progress.GAMES ||
+		competition.value?.cProgress === Progress.SCHEDULING
+	) {
+		axios
+			.get<GroupsDivision>(
+				`tournament/${route.params.tourId}/competition/${route.params.compId}/groupsDivision`,
+			)
+			.then(async (response) => {
+				await anFin
+				groups.value = response.data.groups.map((group) =>
+					group.map((team) => teamServerToClient(team)),
+				)
+				adjustUnsorted()
+			})
+			.catch(() => {})
+	}
 }
+
+function adjustUnsorted() {
+	teams.value = teams.value.filter(
+		(t) => !groups.value.some((group) => group.some((st) => st.id === t.id)),
+	)
+}
+
+function save() {
+	if (groups.value.some((g) => g.length <= 1)) {
+		toast.add({
+			severity: "error",
+			summary: t("ViewPrepare.assignMatches.emptyGroupSum"),
+			detail: t("ViewPrepare.assignMatches.emptyGroupDet"),
+			life: 3000,
+			closable: false,
+		})
+		return
+	}
+
+	const req: GroupsDivision = {
+		groups: groups.value.map((group) =>
+			group.map((t) => teamClientToServer(t)),
+		),
+	}
+
+	axios
+		.post<boolean>(
+			`/tournament/${route.params.tourId}/competition/${route.params.compId}/initGroups`,
+			req,
+		)
+		.then(() => {
+			toast.add({
+				severity: "success",
+				summary: t("general.success"),
+				detail: t("general.saved"),
+				life: 3000,
+				closable: false,
+			})
+		})
+		.catch(() => {
+			toast.add({
+				severity: "error",
+				summary: t("general.failure"),
+				detail: t("general.save_failed"),
+				life: 3000,
+				closable: false,
+			})
+		})
+}
+
+defineExpose({ save })
 </script>
 
 <style scoped></style>

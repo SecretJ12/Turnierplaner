@@ -99,14 +99,14 @@ public class TestPlayerResource {
     @Test
     public void registerPlayerConflict() {
         given().contentType(ContentType.JSON).body("""
-                {
-                    "firstName": "first",
-                    "lastName": "last",
-                    "sex": "MALE",
-                    "birthday": "2022-03-10",
-                    "email": "ab@example.org",
-                    "phone": "+034759834"
-                }""").post("/player/registration").then().assertThat().statusCode(Response.Status.CONFLICT.getStatusCode());
+            {
+                "firstName": "first",
+                "lastName": "last",
+                "sex": "MALE",
+                "birthday": "2022-03-10",
+                "email": "ab@example.org",
+                "phone": "+034759834"
+            }""").post("/player/registration").then().assertThat().statusCode(Response.Status.CONFLICT.getStatusCode());
     }
 
     @Test
@@ -114,14 +114,14 @@ public class TestPlayerResource {
         String recipient = "ab@example.org";
         String tel = "+034759834";
         given().contentType(ContentType.JSON).body(String.format("""
-                {
-                    "firstName": "firstName",
-                    "lastName": "lastName",
-                    "sex": "MALE",
-                    "birthday": "1977-03-10",
-                    "email": "%s",
-                    "phone": "%s"
-                }""", recipient, tel)).post("/player/registration").then().assertThat().statusCode(Response.Status.OK.getStatusCode());
+            {
+                "firstName": "firstName",
+                "lastName": "lastName",
+                "sex": "MALE",
+                "birthday": "1977-03-10",
+                "email": "%s",
+                "phone": "%s"
+            }""", recipient, tel)).post("/player/registration").then().assertThat().statusCode(Response.Status.OK.getStatusCode());
 
         Panache.getTransactionManager().begin();
         assertNotNull(players.getByName("firstName", "lastName"));
@@ -130,8 +130,8 @@ public class TestPlayerResource {
         assertEquals(tel, players.getByName("firstName", "lastName").getPhone());
 
         assertEquals(1, mailbox.getTotalMessagesSent());
-        assertDoesNotThrow(() -> mailbox.getMailMessagesSentTo(recipient).get(0).getHtml());
-        String text = mailbox.getMailMessagesSentTo("ab@example.org").get(0).getHtml();
+        assertDoesNotThrow(() -> mailbox.getMailMessagesSentTo(recipient).getFirst().getHtml());
+        String text = mailbox.getMailMessagesSentTo("ab@example.org").getFirst().getHtml();
         assertTrue(text.contains("Please verify"));
         String code = text.split("code=")[1].split("#")[0];
         VerificationCode verificationCode = verificationCodes.findByUUID(UUID.fromString(code));
@@ -150,14 +150,14 @@ public class TestPlayerResource {
         String recipient = "ab@example.org";
         String tel = "+034759834";
         given().contentType(ContentType.JSON).body(String.format("""
-                {
-                    "firstName": "firstName",
-                    "lastName": "lastName",
-                    "sex": "FEMALE",
-                    "birthday": "1977-03-10",
-                    "email": "%s",
-                    "phone": "%s"
-                }""", recipient, tel)).post("/player/registration").then().assertThat().statusCode(Response.Status.OK.getStatusCode());
+            {
+                "firstName": "firstName",
+                "lastName": "lastName",
+                "sex": "FEMALE",
+                "birthday": "1977-03-10",
+                "email": "%s",
+                "phone": "%s"
+            }""", recipient, tel)).post("/player/registration").then().assertThat().statusCode(Response.Status.OK.getStatusCode());
     }
 
     @Test
@@ -165,12 +165,12 @@ public class TestPlayerResource {
         String recipient = "ab@example.org";
         String tel = "+034759834";
         given().contentType(ContentType.JSON).body(String.format("""
-                {
-                    "firstName": "firstName",
-                    "lastName": "lastName",
-                    "birthday": "1977-03-10",
-                    "email": "%s",
-                    "phone": "%s"
-                }""", recipient, tel)).post("/player/registration").then().assertThat().statusCode(Response.Status.BAD_REQUEST.getStatusCode());
+            {
+                "firstName": "firstName",
+                "lastName": "lastName",
+                "birthday": "1977-03-10",
+                "email": "%s",
+                "phone": "%s"
+            }""", recipient, tel)).post("/player/registration").then().assertThat().statusCode(Response.Status.BAD_REQUEST.getStatusCode());
     }
 }

@@ -203,22 +203,17 @@ public class TestdataGenerator {
 
     private Player createPlayer(AGE_RESTR ageRestr) {
         Player player = new Player();
-        player.setFirstName(faker.name().firstName());
-        player.setLastName(faker.name().lastName());
+        String name = faker.harryPotter().character();
+        player.setFirstName(name.split(" ")[0]);
+        player.setLastName(name.contains(" ") ? name.split(" ", 2)[1] : "");
         player.setEmail(player.getFirstName() + "." + player.getLastName() + "@gmail.com");
         player.setPhone(faker.phoneNumber().cellPhone());
         player.setMailVerified(true);
         player.setAdminVerified(true);
         switch (ageRestr) {
-            case NONE -> {
-                player.setBirthday(LocalDate.now().minusYears(random.nextInt(50)));
-            }
-            case U18 -> {
-                player.setBirthday(LocalDate.now().minusYears(random.nextInt(18)));
-            }
-            case O50 -> {
-                player.setBirthday(LocalDate.now().minusYears(random.nextInt(20) + 50));
-            }
+            case NONE -> player.setBirthday(LocalDate.now().minusYears(random.nextInt(50)));
+            case U18 -> player.setBirthday(LocalDate.now().minusYears(random.nextInt(18)));
+            case O50 -> player.setBirthday(LocalDate.now().minusYears(random.nextInt(20) + 50));
 
         }
         return player;

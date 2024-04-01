@@ -18,7 +18,10 @@
 		"save": "Speichern",
 		"reset": "Zurücksetzen",
 		"back": "Zurück",
-		"next": "Weiter"
+		"next": "Weiter",
+		"saved": "Konkurrenz wurde gespeichert",
+		"save_failed": "Während dem Speichern ist etwas schiefgelaufen",
+		"tournament_tree": "Turnierbaum"
 	},
 	"ViewPlayerRegistration": {
 		"headline": "Spielerregistrierung",
@@ -125,7 +128,9 @@
 		"atLeastOneLetter": "Bitte tippe mindestens einen Buchstaben ein",
 		"noPlayerSelected": "Keinen Spieler ausgewählt",
 		"selectPlayerFirst": "Bitte wähle zuerst einen Spieler aus",
-		"noPlayerFound": "Keinen Spieler gefunden"
+		"noPlayerFound": "Keinen Spieler gefunden",
+		"invalidMode": "Ungültiger Modus",
+		"playerDeleted": "Spieler gelöscht"
 	},
 	"ViewCreateCompetition": {
 		"header": "Neue Konkurrenz",
@@ -189,6 +194,15 @@
 			"randomize": "Auslosen",
 			"reset": "Zurücksetzen",
 			"reroll": "Neu auslosen"
+		},
+		"assignMatches": {
+			"Group": "Gruppe",
+			"add": "Hinzufügen",
+			"remove": "Entfernen",
+			"emptyGroupSum": "Ungültige Gruppe(n)",
+			"emptyGroupDet": "Jede Gruppe benötigt mindestens 2 Teams",
+			"teams": "Teams",
+			"ranking": "Rangliste"
 		}
 	},
 	"validation": {

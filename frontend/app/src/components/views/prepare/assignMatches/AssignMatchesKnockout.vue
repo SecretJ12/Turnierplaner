@@ -5,7 +5,7 @@
 				<!-- TODO i18n -->
 				<template #title>
 					<div class="flex flex-row justify-content-between">
-						<div>Teams</div>
+						<div>{{ t("ViewPrepare.assignMatches.teams") }}</div>
 						<SplitButton
 							:model="randomizeItems"
 							class="w-fit"
@@ -32,7 +32,7 @@
 		</div>
 		<div class="col-2">
 			<Card>
-				<template #title>Sorted teams</template>
+				<template #title>{{ t("ViewPrepare.assignMatches.ranking") }}</template>
 				<template #content>
 					<DraggablePanel
 						:list="sortedTeams"
@@ -82,11 +82,11 @@
 		</div>
 		<div class="col-6">
 			<Card class="w-full">
-				<template #title>Tournament tree</template>
+				<template #title>{{ t("general.tournament_tree") }}</template>
 				<template #content>
 					<ScrollPanel style="width: 100%; height: 500px">
 						<ViewKnockoutTree
-							v-if="competition"
+							v-if="competition && finale && thirdPlace"
 							:mode="competition.mode"
 							:match="finale"
 							:third-place="thirdPlace"
@@ -105,9 +105,9 @@ import { useI18n } from "vue-i18n"
 import { computed, Ref, ref, TransitionGroup } from "vue"
 import { getCompetitionDetails } from "@/backend/competition"
 import TeamContainerDraggable from "@/components/views/prepare/assignMatches/TeamContainerDraggable.vue"
-import { Team, teamServerToClient } from "@/interfaces/match"
+import { Team, teamClientToServer, teamServerToClient } from "@/interfaces/team"
 import axios from "axios"
-import { Mode } from "@/interfaces/competition"
+import { KnockoutOrder, Mode, Progress } from "@/interfaces/competition"
 import TeamBox from "@/components/views/prepare/components/TeamBox.vue"
 import DraggablePanel from "@/draggable/DraggablePanel.vue"
 import PlayerCard from "@/components/views/prepare/components/PlayerCard.vue"
@@ -213,12 +213,37 @@ async function update() {
 				teams.value.push(teamServerToClient(team))
 				teamCount.value++
 			})
+			adjustUnsorted()
 			await sleep(500)
 			animated.value = false
 		})
 		.catch((error) => {
 			console.log(error)
 		})
+
+	if (
+		competition.value?.cProgress === Progress.GAMES ||
+		competition.value?.cProgress === Progress.SCHEDULING
+	) {
+		axios
+			.get<KnockoutOrder>(
+				`tournament/${route.params.tourId}/competition/${route.params.compId}/knockoutOrder`,
+			)
+			.then(async (response) => {
+				await anFin
+				sortedTeams.value = response.data.teams.map((t) =>
+					teamServerToClient(t),
+				)
+				adjustUnsorted()
+			})
+			.catch(() => {})
+	}
+}
+
+function adjustUnsorted() {
+	teams.value = teams.value.filter(
+		(e) => !sortedTeams.value.some((t) => t.id === e.id),
+	)
 }
 
 function split(size: number, teams: Team[]): Team[][] {
@@ -227,7 +252,7 @@ function split(size: number, teams: Team[]): Team[][] {
 	}
 
 	const count = 2 ** (size + 1)
-	const first = split(size - 1, teams.slice(0, count))
+	const first = split(size - 1, teams.slice(0, count / 2))
 	const second = split(size - 1, teams.slice(count / 2, count).toReversed())
 	return [
 		first[0].concat(second[0].toReversed()),
@@ -278,6 +303,38 @@ const finale = computed(() =>
 )
 
 const thirdPlace = computed(() => generateTree(0, []))
+
+function save() {
+	const req: KnockoutOrder = {
+		teams: sortedTeams.value.map((t) => teamClientToServer(t)),
+	}
+
+	axios
+		.post<boolean>(
+			`/tournament/${route.params.tourId}/competition/${route.params.compId}/initKnockout`,
+			req,
+		)
+		.then(() => {
+			toast.add({
+				severity: "success",
+				summary: t("general.success"),
+				detail: t("general.saved"),
+				life: 3000,
+				closable: false,
+			})
+		})
+		.catch(() => {
+			toast.add({
+				severity: "error",
+				summary: t("general.failure"),
+				detail: t("general.save_failed"),
+				life: 3000,
+				closable: false,
+			})
+		})
+}
+
+defineExpose({ save })
 </script>
 
 <style scoped></style>

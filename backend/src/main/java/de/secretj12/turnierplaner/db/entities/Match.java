@@ -6,23 +6,34 @@ import de.secretj12.turnierplaner.db.entities.groups.FinalOfGroup;
 import de.secretj12.turnierplaner.db.entities.groups.MatchOfGroup;
 import de.secretj12.turnierplaner.db.entities.knockout.NextMatch;
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Table(name = "matches")
-@NamedQueries(
-    @NamedQuery(name = "findHead",
-                query = """
-                        FROM Match m WHERE m.competition.id = :compId
-                        AND NOT EXISTS (FROM NextMatch n WHERE n.previousA = m OR n.previousB = m)
-                        AND (EXISTS (FROM NextMatch n WHERE m = n.nextMatch AND n.winner = :finale)
-                           OR EXISTS (FROM FinalOfGroup f WHERE m = f.nextMatch AND
-                               (f.pos = 1 AND :finale = true
-                                 OR f.pos = 2 AND :finale = false)))
-                        AND NOT EXISTS (FROM MatchOfGroup mog WHERE mog.match = m)"""))
+@NamedQueries({
+               @NamedQuery(name = "findHead",
+                           query = """
+                               FROM Match m WHERE m.competition = :comp
+                               AND NOT EXISTS (FROM NextMatch n WHERE n.previousA = m OR n.previousB = m)
+                               AND (EXISTS (FROM NextMatch n WHERE m = n.nextMatch AND n.winner = :finale)
+                                  OR EXISTS (FROM FinalOfGroup f WHERE m = f.nextMatch AND
+                                      (f.pos = 1 AND :finale = true
+                                        OR f.pos = 2 AND :finale = false)))
+                               AND NOT EXISTS (FROM MatchOfGroup mog WHERE mog.match = m)"""),
+               @NamedQuery(name = "deleteByComp",
+                           query = """
+                               DELETE FROM Match m WHERE m.competition = :comp"""),
+               @NamedQuery(name = "nonGroupMatches",
+                           query = """
+                               FROM Match m WHERE m.competition = :comp
+                               AND NOT EXISTS (FROM MatchOfGroup mog WHERE mog.match = m)
+                               """)})
 public class Match {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -53,16 +64,27 @@ public class Match {
     @JoinColumn(name = "team_b")
     private Team teamB;
 
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @OneToOne(mappedBy = "nextMatch", fetch = FetchType.LAZY)
     private NextMatch dependentOn;
 
-    @OneToOne(mappedBy = "nextMatch")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(mappedBy = "previousA", fetch = FetchType.LAZY)
+    private Collection<NextMatch> previousOfA;
+
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(mappedBy = "previousB", fetch = FetchType.LAZY)
+    private Collection<NextMatch> previousOfB;
+
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToOne(mappedBy = "nextMatch", fetch = FetchType.LAZY)
     private FinalOfGroup finalOfGroup;
 
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @OneToOne(mappedBy = "match", fetch = FetchType.LAZY)
     private MatchOfGroup group;
 
-    @OneToMany(mappedBy = "key.match", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "key.match", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Set> sets;
 
     public UUID getId() {
