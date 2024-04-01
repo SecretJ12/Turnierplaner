@@ -10,6 +10,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
+// TODO remove in first release version
 @Path("/template")
 public class Example {
 
