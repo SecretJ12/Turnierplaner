@@ -115,7 +115,8 @@ public class TestPlayerResource {
     @Test
     public void listPlayerMaxAge() {
         given()
-            .param("search", "M").param("maxAge", "2023-04-03").get("/player/find")
+            .param("search", "M").param("maxAge", "2023-04-03")
+            .get("/player/find")
             .then().assertThat()
             .statusCode(Response.Status.OK.getStatusCode())
             .body("size()", equalTo(10));
@@ -124,7 +125,8 @@ public class TestPlayerResource {
     @Test
     public void listPlayerMinAge() {
         given()
-            .param("search", "M").param("minAge", "2023-04-03").get("/player/find")
+            .param("search", "M").param("minAge", "2023-04-03")
+            .get("/player/find")
             .then().assertThat()
             .statusCode(Response.Status.OK.getStatusCode())
             .body("size()", equalTo(8));
@@ -135,14 +137,14 @@ public class TestPlayerResource {
         given()
             .contentType(ContentType.JSON)
             .body("""
-            {
-                "firstName": "first",
-                "lastName": "last",
-                "sex": "MALE",
-                "birthday": "2022-03-10",
-                "email": "ab@example.org",
-                "phone": "+034759834"
-            }""")
+                {
+                    "firstName": "first",
+                    "lastName": "last",
+                    "sex": "MALE",
+                    "birthday": "2022-03-10",
+                    "email": "ab@example.org",
+                    "phone": "+034759834"
+                }""")
             .post("/player/registration")
             .then().assertThat()
             .statusCode(Response.Status.CONFLICT.getStatusCode());
@@ -155,14 +157,14 @@ public class TestPlayerResource {
         given()
             .contentType(ContentType.JSON)
             .body(String.format("""
-            {
-                "firstName": "firstName",
-                "lastName": "lastName",
-                "sex": "MALE",
-                "birthday": "1977-03-10",
-                "email": "%s",
-                "phone": "%s"
-            }""", recipient, tel))
+                {
+                    "firstName": "firstName",
+                    "lastName": "lastName",
+                    "sex": "MALE",
+                    "birthday": "1977-03-10",
+                    "email": "%s",
+                    "phone": "%s"
+                }""", recipient, tel))
             .post("/player/registration")
             .then().assertThat()
             .statusCode(Response.Status.OK.getStatusCode());
@@ -199,14 +201,14 @@ public class TestPlayerResource {
         given()
             .contentType(ContentType.JSON)
             .body(String.format("""
-            {
-                "firstName": "firstName",
-                "lastName": "lastName",
-                "sex": "FEMALE",
-                "birthday": "1977-03-10",
-                "email": "%s",
-                "phone": "%s"
-            }""", recipient, tel))
+                {
+                    "firstName": "firstName",
+                    "lastName": "lastName",
+                    "sex": "FEMALE",
+                    "birthday": "1977-03-10",
+                    "email": "%s",
+                    "phone": "%s"
+                }""", recipient, tel))
             .post("/player/registration")
             .then().assertThat()
             .statusCode(Response.Status.OK.getStatusCode());
@@ -219,13 +221,13 @@ public class TestPlayerResource {
         given()
             .contentType(ContentType.JSON)
             .body(String.format("""
-            {
-                "firstName": "firstName",
-                "lastName": "lastName",
-                "birthday": "1977-03-10",
-                "email": "%s",
-                "phone": "%s"
-            }""", recipient, tel))
+                {
+                    "firstName": "firstName",
+                    "lastName": "lastName",
+                    "birthday": "1977-03-10",
+                    "email": "%s",
+                    "phone": "%s"
+                }""", recipient, tel))
             .post("/player/registration")
             .then().assertThat()
             .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
