@@ -16,11 +16,13 @@ public class jUserGroupMatchAfterMatch extends jUserMatch {
             if (match.getDependentOn().getPreviousA().getFinalOfGroup() != null)
                 this.previousA = new jUserGroupMatchAfterGroup(match.getDependentOn().getPreviousA());
             else
-                this.previousA = new jUserGroupMatchAfterMatch(match.getDependentOn().getPreviousA(), match.getDependentOn().isWinner());
+                this.previousA = new jUserGroupMatchAfterMatch(match.getDependentOn().getPreviousA(), match
+                    .getDependentOn().isWinner());
             if (match.getFinalOfGroup() != null)
                 this.previousB = new jUserGroupMatchAfterGroup(match.getDependentOn().getPreviousB());
             else
-                this.previousB = new jUserGroupMatchAfterMatch(match.getDependentOn().getPreviousB(), match.getDependentOn().isWinner());
+                this.previousB = new jUserGroupMatchAfterMatch(match.getDependentOn().getPreviousB(), match
+                    .getDependentOn().isWinner());
         }
     }
 

@@ -31,9 +31,16 @@ public class TournamentResource {
     @Produces(MediaType.APPLICATION_JSON)
     public List<jUserTournament> getAllTournaments() {
         if (securityIdentity.hasRole("director"))
-            return tournaments.listAll().stream().map(jDirectorTournamentAdd::new).sorted(Comparator.comparing(jUserTournament::getBeginGamePhase)).map(t -> (jUserTournament) t).toList();
+            return tournaments.streamAll()
+                .map(jDirectorTournamentAdd::new)
+                .sorted(Comparator.comparing(jUserTournament::getBeginGamePhase))
+                .map(t -> (jUserTournament) t).toList();
         else
-            return tournaments.listAllVisible().stream().map(jUserTournament::new).sorted(Comparator.comparing(jUserTournament::getBeginGamePhase)).toList();
+            return tournaments.listAllVisible()
+                .stream()
+                .map(jUserTournament::new)
+                .sorted(Comparator.comparing(jUserTournament::getBeginGamePhase))
+                .toList();
     }
 
     @GET
