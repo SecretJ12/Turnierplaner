@@ -102,7 +102,7 @@ public class TournamentResource {
 
         Tournament dbTournament = tournaments.getById(tournament.getId());
         if (dbTournament == null)
-            throw new BadRequestException("Tournament with this id does not exist");
+            throw new NotFoundException("Tournament with this id does not exist");
         checkDates(tournament);
 
         tournaments.getById(tournament.getId());
