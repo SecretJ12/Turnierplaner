@@ -15,7 +15,9 @@ public class jDirectorGroupsDivision {
     }
 
     public jDirectorGroupsDivision(List<Set<Team>> groups) {
-        this.groups = groups.stream().map(group -> group.stream().map(jUserTeam::new).collect(Collectors.toSet())).toList();
+        this.groups = groups.stream()
+            .map(group -> group.stream().map(jUserTeam::new).collect(Collectors.toSet()))
+            .toList();
     }
 
     public List<Set<jUserTeam>> getGroups() {

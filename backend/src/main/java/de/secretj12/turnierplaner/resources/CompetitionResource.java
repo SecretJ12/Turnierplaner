@@ -158,7 +158,9 @@ public class CompetitionResource {
         Competition competition = competitions.getByName(tourName, compName);
         if (competition == null) throw new NotFoundException("Competition was not found");
 
-        if (!securityIdentity.hasRole("director") && (competition.getTournament().getBeginRegistration().isAfter(LocalDateTime.now()) || competition.getTournament().getBeginGamePhase().isBefore(LocalDateTime.now())))
+        if (!securityIdentity.hasRole("director")
+            && (competition.getTournament().getBeginRegistration().isAfter(LocalDateTime.now())
+                || competition.getTournament().getBeginGamePhase().isBefore(LocalDateTime.now())))
             throw new NotAuthorizedException("Registration phase is not active");
 
         return competition.getTeams().stream().map(jUserTeam::new).toList();
@@ -180,10 +182,13 @@ public class CompetitionResource {
         if (competition == null) throw new BadRequestException("Competition doesn't exist");
 
         if (!securityIdentity.hasRole("director") && // or registration phase
-            (competition.getTournament().getBeginRegistration().isAfter(LocalDateTime.now()) || competition.getTournament().getEndRegistration().isBefore(LocalDateTime.now())))
+            (competition.getTournament().getBeginRegistration().isAfter(LocalDateTime.now())
+                || competition.getTournament().getEndRegistration().isBefore(LocalDateTime.now())))
             throw new NotAuthorizedException("Registration phase is not active");
 
-        if (competition.getMode() == CompetitionMode.SINGLES || (competition.getSignup() == CompetitionSignUp.INDIVIDUAL && !competition.isPlayerBdifferent())) {
+        if (competition.getMode() == CompetitionMode.SINGLES
+            || (competition.getSignup() == CompetitionSignUp.INDIVIDUAL
+                && !competition.isPlayerBdifferent())) {
             // single mode or double with individual registration but same constraints
             // -> every registration as player A and player B is null
 
@@ -197,7 +202,10 @@ public class CompetitionResource {
                 throw new BadRequestException("Player A does not meed the conditions");
 
             List<Team> regTeams = competition.getTeams();
-            if (regTeams != null && regTeams.stream().anyMatch(t -> (t.getPlayerA() != null && t.getPlayerA().getId().equals(playerA.getId())) || (t.getPlayerB() != null && t.getPlayerB().getId().equals(playerA.getId()))))
+            if (regTeams != null
+                && regTeams.stream()
+                    .anyMatch(t -> (t.getPlayerA() != null && t.getPlayerA().getId().equals(playerA.getId()))
+                        || (t.getPlayerB() != null && t.getPlayerB().getId().equals(playerA.getId()))))
                 throw new WebApplicationException("Player already registered", Response.Status.CONFLICT);
 
             Team team = new Team();
@@ -223,7 +231,10 @@ public class CompetitionResource {
                         throw new BadRequestException("Player A is does not meet the conditions");
 
                     List<Team> regTeams = competition.getTeams();
-                    if (regTeams != null && regTeams.stream().anyMatch(t -> (t.getPlayerA() != null && t.getPlayerA().getId().equals(playerA.getId())) || (t.getPlayerB() != null && t.getPlayerB().getId().equals(playerA.getId()))))
+                    if (regTeams != null
+                        && regTeams.stream().anyMatch(t -> (t.getPlayerA() != null && t.getPlayerA().getId().equals(
+                            playerA.getId()))
+                            || (t.getPlayerB() != null && t.getPlayerB().getId().equals(playerA.getId()))))
                         throw new WebApplicationException("Player already registered", Response.Status.CONFLICT);
 
                     Team team = new Team();
@@ -239,7 +250,10 @@ public class CompetitionResource {
                         throw new BadRequestException("Player B is does not meet the conditions");
 
                     List<Team> regTeams = competition.getTeams();
-                    if (regTeams != null && regTeams.stream().anyMatch(t -> (t.getPlayerA() != null && t.getPlayerA().getId().equals(playerB.getId())) || (t.getPlayerB() != null && t.getPlayerB().getId().equals(playerB.getId()))))
+                    if (regTeams != null
+                        && regTeams.stream().anyMatch(t -> (t.getPlayerA() != null
+                            && t.getPlayerA().getId().equals(playerB.getId()))
+                            || (t.getPlayerB() != null && t.getPlayerB().getId().equals(playerB.getId()))))
                         throw new WebApplicationException("Player already registered", Response.Status.CONFLICT);
 
                     Team team = new Team();
@@ -265,9 +279,14 @@ public class CompetitionResource {
                     throw new BadRequestException("Player B is does not meet the conditions");
 
                 List<Team> regTeams = competition.getTeams();
-                if (regTeams != null && regTeams.stream().anyMatch(t -> (t.getPlayerA() != null && t.getPlayerA().getId().equals(playerA.getId())) || (t.getPlayerB() != null && t.getPlayerB().getId().equals(playerA.getId()))))
+                if (regTeams != null
+                    && regTeams.stream().anyMatch(t -> (t.getPlayerA() != null
+                        && t.getPlayerA().getId().equals(playerA.getId()))
+                        || (t.getPlayerB() != null && t.getPlayerB().getId().equals(playerA.getId()))))
                     throw new WebApplicationException("Player already registered", Response.Status.CONFLICT);
-                if (regTeams != null && regTeams.stream().anyMatch(t -> (t.getPlayerA() != null && t.getPlayerA().getId().equals(playerB.getId())) || (t.getPlayerB() != null && t.getPlayerB().getId().equals(playerB.getId()))))
+                if (regTeams != null && regTeams.stream().anyMatch(t -> (t.getPlayerA() != null
+                    && t.getPlayerA().getId().equals(playerB.getId()))
+                    || (t.getPlayerB() != null && t.getPlayerB().getId().equals(playerB.getId()))))
                     throw new WebApplicationException("Player already registered", Response.Status.CONFLICT);
 
                 Team team = new Team();
@@ -353,11 +372,17 @@ public class CompetitionResource {
     }
 
     private boolean conditionsFailA(Competition comp, Player player) {
-        return (comp.getPlayerASex() == Sex.FEMALE && player.getSex() == SexType.MALE) || (comp.getPlayerASex() == Sex.MALE && player.getSex() == SexType.FEMALE) || (comp.playerAhasMinAge() && comp.getPlayerAminAge().isBefore(player.getBirthday())) || (comp.playerAhasMaxAge() && comp.getPlayerAminAge().isAfter(player.getBirthday()));
+        return (comp.getPlayerASex() == Sex.FEMALE && player.getSex() == SexType.MALE)
+            || (comp.getPlayerASex() == Sex.MALE && player.getSex() == SexType.FEMALE)
+            || (comp.playerAhasMinAge() && comp.getPlayerAminAge().isBefore(player.getBirthday()))
+            || (comp.playerAhasMaxAge() && comp.getPlayerAminAge().isAfter(player.getBirthday()));
     }
 
     private boolean conditionsFailB(Competition comp, Player player) {
-        return (comp.getPlayerBSex() == Sex.FEMALE && player.getSex() == SexType.MALE) || (comp.getPlayerBSex() == Sex.MALE && player.getSex() == SexType.FEMALE) || (comp.playerBhasMinAge() && comp.getPlayerBminAge().isBefore(player.getBirthday())) || (comp.playerBhasMaxAge() && comp.getPlayerBminAge().isAfter(player.getBirthday()));
+        return (comp.getPlayerBSex() == Sex.FEMALE && player.getSex() == SexType.MALE)
+            || (comp.getPlayerBSex() == Sex.MALE && player.getSex() == SexType.FEMALE)
+            || (comp.playerBhasMinAge() && comp.getPlayerBminAge().isBefore(player.getBirthday()))
+            || (comp.playerBhasMaxAge() && comp.getPlayerBminAge().isAfter(player.getBirthday()));
     }
 
     @GET
@@ -419,7 +444,9 @@ public class CompetitionResource {
         int size = (int) Math.max(0, Math.ceil((Math.log(competition.getTeams().size()) / Math.log(2)) - 1));
         int teamsCount = (int) Math.pow(2, size + 1);
 
-        Team[] teamOrder = init.getTeams().stream().map(t -> teams.getById(t.getId())).toArray((i) -> new Team[teamsCount]);
+        Team[] teamOrder = init.getTeams().stream()
+            .map(t -> teams.getById(t.getId()))
+            .toArray((i) -> new Team[teamsCount]);
         if (Arrays.stream(teamOrder).anyMatch(Objects::isNull)) throw new NotFoundException("Player not found");
 
         knockoutTools.generateKnockoutTree(competition, size, teamOrder);

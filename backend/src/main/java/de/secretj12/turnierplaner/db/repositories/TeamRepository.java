@@ -19,6 +19,7 @@ public class TeamRepository implements PanacheRepository<Team> {
     }
 
     public Set<Team> teamsOfGroup(Group group) {
-        return find("#findTeams", Parameters.with("group", group)).stream().collect(Collectors.toCollection(HashSet::new));
+        return find("#findTeams", Parameters.with("group", group)).stream().collect(Collectors.toCollection(
+            HashSet::new));
     }
 }

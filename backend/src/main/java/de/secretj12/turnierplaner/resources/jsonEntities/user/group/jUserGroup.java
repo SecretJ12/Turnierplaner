@@ -16,7 +16,11 @@ public class jUserGroup {
 
     public jUserGroup(Group group) {
         this.index = group.getIndex();
-        this.teams = group.getMatches().stream().flatMap(match -> Stream.of(match.getTeamA(), match.getTeamB())).distinct().map(Team::getId).toList();
+        this.teams = group.getMatches().stream()
+            .flatMap(match -> Stream.of(match.getTeamA(), match.getTeamB()))
+            .map(Team::getId)
+            .distinct()
+            .toList();
         this.matches = group.getMatches().stream().map(jUserMatch::new).toList();
     }
 

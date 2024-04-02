@@ -56,7 +56,9 @@ public class GroupTools {
             }
 
             // delete all matches with no longer existing users
-            group.getMatches().stream().filter(m -> !nGroup.contains(m.getTeamA()) || !nGroup.contains(m.getTeamB())).forEach(matchRepository::delete);
+            group.getMatches().stream()
+                .filter(m -> !nGroup.contains(m.getTeamA()) || !nGroup.contains(m.getTeamB()))
+                .forEach(matchRepository::delete);
 
             // create the match
             List<Team> nGroupList = new ArrayList<>(nGroup);
@@ -106,7 +108,9 @@ public class GroupTools {
             finaleOfGroups(competition, groups.get(0), groups.get(1), 2);
         } else { // knockout tree needed
             if (prevGroupsSize == 2) // delete third place match
-                nonGroupMatches.stream().filter(m -> m.getFinalOfGroup() != null && m.getFinalOfGroup().getPos() == 2).forEach(matchRepository::delete); // should only find one
+                nonGroupMatches.stream()
+                    .filter(m -> m.getFinalOfGroup() != null && m.getFinalOfGroup().getPos() == 2)
+                    .forEach(matchRepository::delete); // should only find one
 
             List<Match> matches = new ArrayList<>();
             for (int i = 0; i < groups.size() / 2; i++)

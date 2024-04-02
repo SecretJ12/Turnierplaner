@@ -16,7 +16,12 @@ public class jUserGroupSystem {
     private jUserMatch thirdPlace;
 
     public jUserGroupSystem(List<Group> groups, Match finale, Match thirdPlace) {
-        this.teams = groups.stream().flatMap(group -> group.getMatches().stream().flatMap(match -> Stream.of(match.getTeamA(), match.getTeamB()))).distinct().map(jUserTeam::new).toList();
+        this.teams = groups.stream()
+            .flatMap(group -> group.getMatches().stream()
+                .flatMap(match -> Stream.of(match.getTeamA(), match.getTeamB())))
+            .distinct()
+            .map(jUserTeam::new)
+            .toList();
         this.groups = groups.stream().map(jUserGroup::new).toList();
 
         if (finale.getFinalOfGroup() != null)

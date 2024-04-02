@@ -64,6 +64,7 @@ public class TestdataGenerator {
         }
 
         List<CompetitionSettings> compSetting = new ArrayList<>();
+        // @formatter:off
         compSetting.add(new CompetitionSettings("Single Groups", CompetitionType.GROUPS, CompetitionMode.SINGLES, Sex.MALE, 8, false, AGE_RESTR.NONE, false, 2));
         compSetting.add(new CompetitionSettings("Single U18", CompetitionType.GROUPS, CompetitionMode.SINGLES, Sex.MALE, 8, false, AGE_RESTR.U18, false, 2));
         compSetting.add(new CompetitionSettings("Single Knockout", CompetitionType.KNOCKOUT, CompetitionMode.SINGLES, Sex.MALE, 16, false, AGE_RESTR.NONE, false, 2));
@@ -71,13 +72,16 @@ public class TestdataGenerator {
         compSetting.add(new CompetitionSettings("Double random", CompetitionType.KNOCKOUT, CompetitionMode.DOUBLES, Sex.ANY, 32, true, AGE_RESTR.NONE, false, 2));
         compSetting.add(new CompetitionSettings("Double O50", CompetitionType.KNOCKOUT, CompetitionMode.DOUBLES, Sex.ANY, 8, false, AGE_RESTR.O50, true, 2));
         compSetting.add(new CompetitionSettings("Double Mixed", CompetitionType.KNOCKOUT, CompetitionMode.DOUBLES, Sex.ANY, 4, true, AGE_RESTR.O50, true, 2));
+        // @formatter:on
 
-        createTournament(TDate.BEFORE_REGISTRATION, "Clubmeisterschaft 2026", "Anmeldung ausstehend", true, compSetting);
+        createTournament(TDate.BEFORE_REGISTRATION, "Clubmeisterschaft 2026", "Anmeldung ausstehend", true,
+            compSetting);
         createTournament(TDate.REGISTRATION_OPEN, "Clubmeisterschaft 2025", "Anmeldung offen", true, compSetting);
         createTournament(TDate.BEFORE_GAMEPHASE, "Clubmeisterschaft 2024", "Anmeldung vorbei", true, compSetting);
         createTournament(TDate.GAMEPHASE_OPEN, "Clubmeisterschaft 2023", "Spielphase offen", true, compSetting);
         createTournament(TDate.AFTER_GAMEPHASE, "Clubmeisterschaft 2022", "Spielphase vorbei", true, compSetting);
-        createTournament(TDate.BEFORE_REGISTRATION, "Clubmeisterschaft 2027", "Noch in der Planung", false, compSetting);
+        createTournament(TDate.BEFORE_REGISTRATION, "Clubmeisterschaft 2027", "Noch in der Planung", false,
+            compSetting);
     }
 
     private void createTournament(TDate tDate, String name, String description, boolean visible,
@@ -130,7 +134,8 @@ public class TestdataGenerator {
         ArrayList<Set> setArrayList = new ArrayList<>();
         int numberOfSets = 2;
         int winDif = 0;
-        List<Tuple2<Integer, Integer>> possibleResults = List.of(Tuple2.of(6, 0), Tuple2.of(6, 1), Tuple2.of(6, 2), Tuple2.of(6, 3), Tuple2.of(6, 4), Tuple2.of(6, 5), Tuple2.of(7, 5), Tuple2.of(7, 6));
+        List<Tuple2<Integer, Integer>> possibleResults = List.of(Tuple2.of(6, 0), Tuple2.of(6, 1), Tuple2.of(6, 2),
+            Tuple2.of(6, 3), Tuple2.of(6, 4), Tuple2.of(6, 5), Tuple2.of(7, 5), Tuple2.of(7, 6));
         for (int i = 0; i < numberOfSets; i++) {
             Set.SetKey setKey = new Set.SetKey();
             setKey.setMatch(match);
@@ -259,8 +264,10 @@ public class TestdataGenerator {
             groups[k].setIndex(k + 1);
             groups[k].setCompetition(competition);
             groupRepository.persist(groups[k]);
-            for (int i = k * compSettings.getNumberOfGroups() / compSettings.getNumberOfGroups(); i < compSettings.getTeamNumbers() / compSettings.getNumberOfGroups() * (k + 1); i++) {
-                for (int j = i + 1; j < compSettings.getTeamNumbers() / compSettings.getNumberOfGroups() * (k + 1); j++) {
+            for (int i = k * compSettings.getNumberOfGroups() / compSettings.getNumberOfGroups(); i < compSettings
+                .getTeamNumbers() / compSettings.getNumberOfGroups() * (k + 1); i++) {
+                for (int j = i + 1; j < compSettings.getTeamNumbers() / compSettings
+                    .getNumberOfGroups() * (k + 1); j++) {
                     Match match = createMatch(courts[i * j % 4], competition);
                     match.setTeamA(groupTeams[i]);
                     match.setTeamB(groupTeams[j]);
@@ -488,8 +495,7 @@ public class TestdataGenerator {
             switch (tDate) {
                 case BEFORE_REGISTRATION -> {
                 }
-                case REGISTRATION_OPEN, BEFORE_GAMEPHASE ->
-                    createTeams(competition, compSetting);
+                case REGISTRATION_OPEN, BEFORE_GAMEPHASE -> createTeams(competition, compSetting);
                 case GAMEPHASE_OPEN, AFTER_GAMEPHASE -> {
                     if (compSetting.getCompetitionType() == CompetitionType.KNOCKOUT) {
                         addTeamsAndMatchesToKnockout(competition, compSetting, tDate == TDate.AFTER_GAMEPHASE);
