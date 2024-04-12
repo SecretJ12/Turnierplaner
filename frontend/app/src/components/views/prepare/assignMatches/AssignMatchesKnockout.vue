@@ -85,11 +85,12 @@
 				<template #title>{{ t("general.tournament_tree") }}</template>
 				<template #content>
 					<ScrollPanel style="width: 100%; height: 500px">
-						<ViewKnockoutTree
+						<ViewKnockoutTreeDraggable
 							v-if="competition && finale && thirdPlace"
 							:mode="competition.mode"
 							:match="finale"
 							:third-place="thirdPlace"
+							:competition="competition"
 						/>
 					</ScrollPanel>
 				</template>
@@ -112,7 +113,7 @@ import DraggablePanel from "@/draggable/DraggablePanel.vue"
 import PlayerCard from "@/components/views/prepare/components/PlayerCard.vue"
 import { KnockoutMatch } from "@/interfaces/knockoutSystem"
 import ViewKnockoutTree from "@/components/views/competition/knockoutSystem/ViewKnockoutTree.vue"
-import { getCompetitionDetails } from "@/backend/competition"
+import ViewKnockoutTreeDraggable from "@/components/views/prepare/assignMatches/ViewKnockoutTreeDraggable.vue"
 
 const route = useRoute()
 const toast = useToast()
