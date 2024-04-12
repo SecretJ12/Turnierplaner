@@ -16,6 +16,7 @@
 			'min-team-height': competition?.mode === Mode.DOUBLE,
 		}"
 		style="box-sizing: content-box"
+		:single="props.single"
 	>
 		<template #default="{ item }">
 			<PlayerCard
@@ -53,6 +54,10 @@ const props = defineProps<{
 	teams: Team[]
 	competition: Competition
 	animated: boolean
+	single: {
+		type: boolean
+		default: false
+	}
 }>()
 </script>
 
