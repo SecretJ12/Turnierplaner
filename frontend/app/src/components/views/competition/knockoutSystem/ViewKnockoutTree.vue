@@ -21,7 +21,17 @@
 						rowspan="5"
 						class="matchCol"
 					>
-						<ViewMatchV3 :match="getMatch(indexR, indexC)" :mode="props.mode" />
+						<ViewMatchView
+							:match="getMatch(indexR, indexC)"
+							:mode="props.mode"
+							:teamA="getMatch(indexR, indexC).teamA"
+							:teamB="getMatch(indexR, indexC).teamB"
+							:sets="getMatch(indexR, indexC).sets"
+							:finished="getMatch(indexR, indexC).finished"
+							:winner="getMatch(indexR, indexC).winner"
+							:single="props.mode === Mode.SINGLE"
+						>
+						</ViewMatchView>
 					</td>
 					<td
 						v-else-if="
@@ -79,7 +89,7 @@
 <script setup lang="ts">
 import { KnockoutMatch } from "@/interfaces/knockoutSystem"
 import { useI18n } from "vue-i18n"
-import ViewMatchV3 from "@/components/views/competition/knockoutSystem/ViewMatch.vue"
+import ViewMatch from "@/components/views/competition/knockoutSystem/ViewMatch.vue"
 import { Mode } from "@/interfaces/competition"
 import { computed } from "vue"
 
