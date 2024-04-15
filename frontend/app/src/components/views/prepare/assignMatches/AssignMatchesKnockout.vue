@@ -26,6 +26,7 @@
 						:animated="animated"
 						:teams="teams"
 						:competition="competition"
+						:single="true"
 					/>
 				</template>
 			</Card>
