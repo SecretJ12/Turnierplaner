@@ -100,7 +100,7 @@ import ViewMatchV3 from "@/components/views/competition/knockoutSystem/ViewMatch
 import { Competition, Mode } from "@/interfaces/competition"
 import { computed, ref } from "vue"
 import TeamContainerDraggable from "@/components/views/prepare/assignMatches/TeamContainerDraggable.vue"
-import { Team } from "@/interfaces/match"
+import { Team } from "@/interfaces/team"
 
 const { t } = useI18n({ inheritLocale: true })
 

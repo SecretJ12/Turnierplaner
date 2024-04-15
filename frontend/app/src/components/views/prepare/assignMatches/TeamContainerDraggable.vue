@@ -54,10 +54,7 @@ const props = defineProps<{
 	teams: Team[]
 	competition: Competition
 	animated: boolean
-	single: {
-		type: boolean
-		default: false
-	}
+	single: boolean
 }>()
 </script>
 
