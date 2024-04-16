@@ -43,9 +43,9 @@ body {
 }
 
 .min-player-height {
-	min-height: 3rem;
+	min-height: 2.5rem;
 }
 
 .min-team-height {
-	min-height: calc(6rem + 9px);
+	min-height: calc(5rem);
 }

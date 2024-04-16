@@ -1,7 +1,5 @@
 <template>
 	<ViewMatch
-		:teamA="props.teamA"
-		:teamB="props.teamB"
 		:sets="props.sets"
 		:finished="props.finished"
 		:winner="props.winner"
@@ -83,15 +81,15 @@ const dateOptions: Intl.DateTimeFormatOptions = {
 <style scoped>
 #date {
 	text-align: right;
-	padding-right: 20px;
+	padding-right: 1rem;
 	font-style: italic;
 }
 
 .dateSingles {
-	height: 20px;
+	height: 1rem;
 }
 
 .dateDoubles {
-	height: 28px;
+	height: 1rem;
 }
 </style>
