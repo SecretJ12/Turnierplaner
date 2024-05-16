@@ -16,31 +16,13 @@
 						/>
 						<DeleteBox :group="props.group" :secondary="secondary" />
 					</div>
-
-					<DraggablePanel
-						:id="id"
-						:component-data="{
-							tag: 'div',
-							name: props.isUpdating || locAnimated ? 'playerList' : 'default',
-							type: 'transition',
-						}"
-						:group="group"
-						:list="props.players"
-						:put="[group]"
-						:tag="TransitionGroup"
-						class="flex flex-row flex-wrap gap-2 border-3 min-player-height border-round border-dashed"
-						item-key="name"
-						style="box-sizing: content-box; width: calc(100% - 6px)"
-					>
-						<template #default="{ item }">
-							<PlayerCard
-								:key="(<Player>item).name"
-								:player="item"
-								:secondary="secondary"
-								@add-player="addPlayer"
-							/>
-						</template>
-					</DraggablePanel>
+					<PlayerContainerDraggable
+						:id="props.id"
+						:players="props.players"
+						:group="props.group"
+						:secondary="props.secondary"
+						:is-updating="locAnimated"
+					/>
 				</div>
 			</template>
 		</Card>
@@ -56,6 +38,7 @@ import { ref, TransitionGroup } from "vue"
 import { Player } from "@/interfaces/player"
 import PlayerCard from "@/components/views/prepare/components/PlayerCard.vue"
 import DraggablePanel from "@/draggable/DraggablePanel.vue"
+import PlayerContainerDraggable from "@/components/views/prepare/components/PlayerContainerDraggable.vue"
 
 const props = withDefaults(
 	defineProps<{
@@ -78,6 +61,7 @@ const locAnimated = ref(false)
 
 async function addPlayer(p: Player) {
 	locAnimated.value = true
+	//TODO don't add duplicates
 	props.players.push(p)
 	await new Promise((resolve) => setTimeout(resolve, 500))
 	locAnimated.value = false
