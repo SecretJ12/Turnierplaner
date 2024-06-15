@@ -8,15 +8,15 @@
 		<template #teamA-name>
 			<td class="name">
 				{{
-					props.teamA?.playerA
-						? `${props.teamA.playerA.lastName}, ${props.teamA.playerA.firstName}`
+					props.teamA.length === 1
+						? `${props.teamA[0].playerA?.lastName}, ${props.teamA[0].playerA?.firstName}`
 						: ""
 				}}
 				<template v-if="!props.single">
 					<br />
 					{{
-						props.teamA?.playerB
-							? `${props.teamA.playerB.lastName}, ${props.teamA.playerB.firstName}`
+						props.teamA.length === 1
+							? `${props.teamA[0].playerB?.lastName}, ${props.teamA[0].playerB?.firstName}`
 							: ""
 					}}
 				</template>
@@ -26,15 +26,15 @@
 		<template #teamB-name>
 			<td class="name">
 				{{
-					props.teamB?.playerA
-						? `${props.teamB.playerA.lastName}, ${props.teamB.playerA.firstName}`
+					props.teamB.length === 1
+						? `${props.teamB[0].playerA?.lastName}, ${props.teamB[0].playerA?.firstName}`
 						: ""
 				}}
 				<template v-if="!props.single">
 					<br />
 					{{
-						props.teamB?.playerB
-							? `${props.teamB.playerB.lastName}, ${props.teamB.playerB.firstName}`
+						props.teamB.length === 1
+							? `${props.teamB[0].playerB?.lastName}, ${props.teamB[0].playerB?.firstName}`
 							: ""
 					}}
 				</template>
@@ -65,8 +65,8 @@ const { t } = useI18n({ inheritLocale: true })
 const props = defineProps<{
 	match: KnockoutMatch
 	mode: Mode
-	teamA: Team | null
-	teamB: Team | null
+	teamA: Team[]
+	teamB: Team[]
 	sets: Array<Set> | null
 	single: boolean
 	finished: boolean
