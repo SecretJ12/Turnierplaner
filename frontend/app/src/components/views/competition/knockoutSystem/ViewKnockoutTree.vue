@@ -89,9 +89,9 @@
 <script setup lang="ts">
 import { KnockoutMatch } from "@/interfaces/knockoutSystem"
 import { useI18n } from "vue-i18n"
-import ViewMatch from "@/components/views/competition/knockoutSystem/ViewMatch.vue"
 import { Mode } from "@/interfaces/competition"
 import { computed } from "vue"
+import ViewMatchView from "@/components/views/competition/knockoutSystem/ViewMatchView.vue"
 
 const { t } = useI18n({ inheritLocale: true })
 
