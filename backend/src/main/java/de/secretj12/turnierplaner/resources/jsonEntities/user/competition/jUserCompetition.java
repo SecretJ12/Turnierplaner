@@ -43,6 +43,7 @@ public class jUserCompetition {
             case MALE -> jDirectorValidSex.MALE;
             case FEMALE -> jDirectorValidSex.FEMALE;
             case ANY -> jDirectorValidSex.ANY;
+            case null -> null;
         });
         this.playerA.setHasMinAge(competition.playerAhasMinAge());
         this.playerA.setMinAge(competition.getPlayerAminAge());
@@ -50,11 +51,12 @@ public class jUserCompetition {
         this.playerA.setMaxAge(competition.getPlayerAmaxAge());
         this.playerB = new jUserConfigPlayerB();
         this.playerB.setDifferent(competition.isPlayerBdifferent());
-        switch (competition.getPlayerBSex()) {
-            case MALE -> this.playerB.setSex(jDirectorValidSex.MALE);
-            case FEMALE -> this.playerB.setSex(jDirectorValidSex.FEMALE);
-            case ANY -> this.playerB.setSex(jDirectorValidSex.ANY);
-        }
+        this.playerB.setSex(switch (competition.getPlayerBSex()) {
+            case MALE -> jDirectorValidSex.MALE;
+            case FEMALE -> jDirectorValidSex.FEMALE;
+            case ANY -> jDirectorValidSex.ANY;
+            case null -> null;
+        });
         this.playerB.setHasMinAge(competition.playerBhasMinAge());
         this.playerB.setMinAge(competition.getPlayerBminAge());
         this.playerB.setHasMaxAge(competition.playerBhasMaxAge());
