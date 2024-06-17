@@ -4,6 +4,7 @@ import de.secretj12.turnierplaner.db.entities.Match;
 import de.secretj12.turnierplaner.db.entities.Tournament;
 import de.secretj12.turnierplaner.db.entities.groups.Group;
 import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
@@ -14,35 +15,35 @@ import java.util.stream.Collectors;
 @Entity
 @Table(name = "competitions")
 @NamedQueries({
-               @NamedQuery(name = "compByName", query = """
-                   SELECT c FROM Competition c LEFT JOIN Tournament t ON c.tournament = t
-                   WHERE t.name = ?1 AND c.name = ?2"""),
-               @NamedQuery(name = "listByName", query = """
-                   SELECT c FROM Competition c LEFT JOIN Tournament t ON c.tournament = t WHERE t.name=  ?1""")})
+    @NamedQuery(name = "compByName", query = """
+        SELECT c FROM Competition c LEFT JOIN Tournament t ON c.tournament = t
+        WHERE t.name = ?1 AND c.name = ?2"""),
+    @NamedQuery(name = "listByName", query = """
+        SELECT c FROM Competition c LEFT JOIN Tournament t ON c.tournament = t WHERE t.name=  ?1""")})
 public class Competition {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     private UUID id;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "tournament_id")
+    @JoinColumn(name = "tournament_id", nullable = false)
     private Tournament tournament;
 
-    @Column(name = "description")
+    @Column(name = "description", nullable = false)
     private String description;
-    @Column(name = "type")
+    @Column(name = "type", nullable = false)
     private CompetitionType type;
 
-    @Column(name = "mode")
+    @Column(name = "mode", nullable = false)
     private CompetitionMode mode;
-    @Column(name = "signup")
+    @Column(name = "signup", nullable = false)
     private CompetitionSignUp signup;
 
-    @Column(name = "playerA_sex")
+    @Column(name = "playerA_sex", nullable = false)
     private Sex playerASex;
     @Column(name = "playerA_has_min_age")
     private boolean playerAhasMinAge;
@@ -65,7 +66,7 @@ public class Competition {
     private boolean playerBhasMaxAge;
     @Column(name = "playerB_max_age")
     private LocalDate playerBmaxAge;
-    @Column(name = "creation_progess")
+    @Column(name = "creation_progess", nullable = false)
     private CreationProgress cProgress;
 
     @OneToMany(mappedBy = "competition")

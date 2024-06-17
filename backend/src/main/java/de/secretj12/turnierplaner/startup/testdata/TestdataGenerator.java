@@ -491,6 +491,11 @@ public class TestdataGenerator {
             }
 
             competition.setType(compSetting.getCompetitionType());
+            switch (tDate) {
+                case BEFORE_REGISTRATION ->
+                    competition.setcProgress(CreationProgress.PLAYER);
+                case REGISTRATION_OPEN, BEFORE_GAMEPHASE, GAMEPHASE_OPEN, AFTER_GAMEPHASE -> competition.setcProgress(CreationProgress.SCHEDULING);
+            }
             competitions.persist(competition);
             switch (tDate) {
                 case BEFORE_REGISTRATION -> {
