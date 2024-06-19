@@ -1,9 +1,7 @@
 <template>
 	<div>
 		<table
-			:class="
-				props.competition.mode === Mode.SINGLE ? 'tableSingles' : 'tableDoubles'
-			"
+			:class="props.mode === Mode.SINGLE ? 'tableSingles' : 'tableDoubles'"
 		>
 			<tr>
 				<template v-for="index in rangeArr(maxDepth)" :key="index">
@@ -26,19 +24,31 @@
 						rowspan="5"
 						class="matchCol"
 					>
-						<TeamContainerDraggable
-							:teams="[]"
-							:animated="animated"
+						<ViewMatchEdit
+							:teamA="props.assignedTeams[indexR / 6][0]"
+							:teamB="props.assignedTeams[indexR / 6][1]"
+							:single="props.mode === Mode.SINGLE"
 							:competition="props.competition"
-							:single="true"
-						></TeamContainerDraggable>
+						>
+						</ViewMatchEdit>
+						{{ indexR }} {{ indexC }}
 					</td>
 					<td
 						v-else-if="matchColumnCellType(indexR, indexC) === cellType.match"
 						rowspan="5"
 						class="matchCol"
 					>
-						<ViewMatchV3 :match="getMatch(indexR, indexC)" :mode="props.mode" />
+						<ViewMatchViewArray
+							:teamA="props.assignedTeams[Math.floor((indexR - 3) / 6)][0]"
+							:teamB="props.assignedTeams[Math.floor((indexR - 3) / 6)][1]"
+							:mode="props.mode"
+							:single="props.mode === Mode.SINGLE"
+							:sets="null"
+							:winner="false"
+							:finished="true"
+						>
+						</ViewMatchViewArray>
+						{{ indexR }} {{ indexC }}
 					</td>
 					<td
 						v-else-if="
@@ -96,52 +106,30 @@
 <script setup lang="ts">
 import { KnockoutMatch } from "@/interfaces/knockoutSystem"
 import { useI18n } from "vue-i18n"
-import ViewMatchV3 from "@/components/views/competition/knockoutSystem/ViewMatch.vue"
+import ViewMatchEdit from "@/components/views/competition/knockoutSystem/ViewMatchEdit.vue"
+import ViewMatchViewArray from "@/components/views/competition/knockoutSystem/ViewMatchViewArray.vue"
 import { Competition, Mode } from "@/interfaces/competition"
-import { computed, ref } from "vue"
-import TeamContainerDraggable from "@/components/views/prepare/assignMatches/TeamContainerDraggable.vue"
+import { computed } from "vue"
 import { Team } from "@/interfaces/team"
 
 const { t } = useI18n({ inheritLocale: true })
 
 const props = defineProps<{
-	match: KnockoutMatch
+	depth: number
+	// match: KnockoutMatch
 	thirdPlace: KnockoutMatch
 	mode: Mode
 	competition: Competition
+	assignedTeams: Team[][][]
 }>()
 
-const maxDepth = computed(() => calcMaxDepth(props.match))
+const maxDepth = computed(() => props.depth)
 const teamsCount = computed(() => Math.pow(2, maxDepth.value))
 const height = computed(() => tableHeight())
 
-const teams = ref<Team[]>([])
-const animated = ref<boolean>(false)
-
-function getMatch(indexR: number, indexC: number): KnockoutMatch {
-	// detect semifinal
-	if (indexC === maxDepth.value - 1 && indexR > height.value / 2) {
-		return props.thirdPlace
-	}
-
-	let curMatch = props.match
-	let curHeight = height.value
-	for (let i = 0; i < maxDepth.value - indexC - 1; i++) {
-		curHeight /= 2
-		if (curMatch.prevMatch === undefined)
-			throw new Error("prevMatch is undefined")
-		if (indexR < curHeight) {
-			curMatch = curMatch.prevMatch.a
-		} else {
-			curMatch = curMatch.prevMatch.b
-			indexR -= curHeight
-		}
-	}
-	return curMatch
-}
+console.log("maxDepth", maxDepth.value)
 
 function tableHeight(): number {
-	if (teamsCount.value === 3 || teamsCount.value === 4) return 17
 	return 2 * teamsCount.value + 2 * (teamsCount.value / 2 - 1) + 1
 }
 
@@ -153,21 +141,21 @@ function roundTitle(round: number, totalRounds: number): string {
 }
 
 function matchColumnCellType(indexR: number, indexC: number): cellType {
-	if (teamsCount.value === 3 || teamsCount.value === 4) {
-		if (indexC === 0) {
-			if (indexR === 0) return cellType.match
-			else if (indexR < 5) return cellType.empty
-			else if (indexR < 12) return cellType.emptyCell
-			else if (indexR === 12) return cellType.match
-			else return cellType.empty
-		} else {
-			if (indexR === 6) return cellType.match
-			else if (indexR < 11) return cellType.empty
-			else if (indexR === 11) return cellType.thirdPlace
-			else if (indexR === 12) return cellType.match
-			else return cellType.empty
-		}
-	}
+	// if (teamsCount.value === 3 || teamsCount.value === 4) {
+	// 	if (indexC === 0) {
+	// 		if (indexR === 0) return cellType.match
+	// 		else if (indexR < 5) return cellType.empty
+	// 		else if (indexR < 12) return cellType.emptyCell
+	// 		else if (indexR === 12) return cellType.match
+	// 		else return cellType.empty
+	// 	} else {
+	// 		if (indexR === 3) return cellType.match
+	// 		else if (indexR < 11) return cellType.empty
+	// 		else if (indexR === 11) return cellType.thirdPlace
+	// 		else if (indexR === 12) return cellType.match
+	// 		else return cellType.empty
+	// 	}
+	// }
 
 	if (indexC === 0) {
 		const mod = indexR % 6
@@ -200,13 +188,13 @@ function matchColumnCellType(indexR: number, indexC: number): cellType {
 }
 
 function interColumnCellType(indexR: number, indexC: number): interCellType {
-	if (teamsCount.value === 3 || teamsCount.value === 4) {
-		if (indexR < 2) return interCellType.blank
-		else if (indexR === 2) return interCellType.topRight
-		else if (indexR < 13) return interCellType.right
-		else if (indexR === 13) return interCellType.bottomRight
-		else return interCellType.blank
-	}
+	// if (teamsCount.value === 3 || teamsCount.value === 4) {
+	// 	if (indexR < 2) return interCellType.blank
+	// 	else if (indexR === 2) return interCellType.topRight
+	// 	else if (indexR < 13) return interCellType.right
+	// 	else if (indexR === 13) return interCellType.bottomRight
+	// 	else return interCellType.blank
+	// }
 
 	const countMatchesLeftTop = Math.pow(2, indexC)
 	const heightLeftTop = 4 * countMatchesLeftTop + 2 * (countMatchesLeftTop - 1)
@@ -224,9 +212,9 @@ function interColumnCellType(indexR: number, indexC: number): interCellType {
 }
 
 function isBottomInterCell(indexR: number, indexC: number): boolean {
-	if (teamsCount.value === 3 || teamsCount.value === 4) {
-		return indexR === 7
-	}
+	// if (teamsCount.value === 3 || teamsCount.value === 4) {
+	// 	return indexR === 7
+	// }
 
 	const countMatchesLeftTop = Math.pow(2, indexC)
 	const heightLeftTop =
