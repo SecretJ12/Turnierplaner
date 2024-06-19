@@ -112,19 +112,33 @@ function selectRandomElement<T>(players: Ref<T[]>) {
 	const r = Math.floor(Math.random() * players.value.length)
 	const element = players.value[r]
 	players.value.splice(r, 1)
-	players.value = players.value.filter((v, i) => i !== r)
 	return element
 }
 
 async function randomize() {
 	animated.value = true
+	let knockOutListIndex = 0
 	while (teams.value.length) {
+		console.log("teams", teams.value)
 		const element = selectRandomElement(teams)
-		const element2 = selectRandomElement(teams)
+		console.log("after", teams.value)
 		await sleep(delayBetween.value)
-		assignedTeams.value.push([[element], [element2]])
+		while (
+			assignedTeams.value[knockOutListIndex][0].length === 1 &&
+			assignedTeams.value[knockOutListIndex][1].length === 1
+		) {
+			knockOutListIndex++
+		}
+		if (assignedTeams.value[knockOutListIndex][0].length === 0) {
+			assignedTeams.value[knockOutListIndex][0].push(element)
+		} else {
+			assignedTeams.value[knockOutListIndex][1].push(element)
+			knockOutListIndex++
+		}
+		console.log("assignedTeams", assignedTeams.value)
 		await sleep(delay.value)
 	}
+	console.log("assignedTeams", assignedTeams.value)
 	animated.value = false
 }
 
