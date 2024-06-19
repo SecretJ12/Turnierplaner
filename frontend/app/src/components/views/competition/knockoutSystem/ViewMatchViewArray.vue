@@ -47,23 +47,17 @@
 			dateSingles: props.single,
 			dateDoubles: !props.single,
 		}"
-	>
-		{{ props.match.begin?.toLocaleString(t("lang"), dateOptions) || "" }}
-	</div>
+	></div>
 </template>
 
 <script setup lang="ts">
 import ViewMatch from "@/components/views/competition/knockoutSystem/ViewMatch.vue"
-import { KnockoutMatch } from "@/interfaces/knockoutSystem"
 import { Mode } from "@/interfaces/competition"
 import { Team } from "@/interfaces/team"
 import { Set } from "@/interfaces/match"
 import { useI18n } from "vue-i18n"
 
-const { t } = useI18n({ inheritLocale: true })
-
 const props = defineProps<{
-	match: KnockoutMatch
 	mode: Mode
 	teamA: Team[]
 	teamB: Team[]
@@ -72,14 +66,6 @@ const props = defineProps<{
 	finished: boolean
 	winner: boolean | null
 }>()
-
-const dateOptions: Intl.DateTimeFormatOptions = {
-	year: "2-digit",
-	month: "numeric",
-	day: "numeric",
-	hour: "numeric",
-	minute: "numeric",
-}
 </script>
 
 <style scoped>

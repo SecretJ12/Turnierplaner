@@ -10,8 +10,6 @@
 				:teams="teamA"
 				:animated="false"
 				:competition="competition"
-				@onAdd="emit('onAdd', index, 0)"
-				@onRemove="emit('onRemove', index, 0)"
 			>
 			</TeamTableElementDraggable>
 		</template>
@@ -35,16 +33,9 @@
 
 <script setup lang="ts">
 import ViewMatch from "@/components/views/competition/knockoutSystem/ViewMatch.vue"
-import { KnockoutMatch } from "@/interfaces/knockoutSystem"
-import { Competition, Mode } from "@/interfaces/competition"
+import { Competition } from "@/interfaces/competition"
 import { Team } from "@/interfaces/team"
-import { useI18n } from "vue-i18n"
-import { TransitionGroup } from "vue"
-import DraggablePanel from "@/draggable/DraggablePanel.vue"
-import TeamContainerDraggable from "@/components/views/prepare/components/TeamContainerDraggable.vue"
 import TeamTableElementDraggable from "@/components/views/prepare/components/TeamTableElementDraggable.vue"
-
-const { t } = useI18n({ inheritLocale: true })
 
 const props = defineProps<{
 	teamA: Team[]
@@ -52,8 +43,6 @@ const props = defineProps<{
 	single: boolean
 	competition: Competition
 }>()
-
-const emit = defineEmits(["onAdd", "onRemove"])
 </script>
 
 <style scoped>
