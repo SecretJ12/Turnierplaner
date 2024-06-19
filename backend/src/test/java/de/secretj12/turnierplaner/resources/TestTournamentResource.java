@@ -66,8 +66,8 @@ public class TestTournamentResource {
             .statusCode(200)
             .contentType(MediaType.APPLICATION_JSON)
             .body("$.size()", is(1),
-                  "[0].name", is("Clubmeisterschaft"),
-                  "[0].visible", nullValue());
+                "[0].name", is("Clubmeisterschaft"),
+                "[0].visible", nullValue());
     }
 
     @Test
@@ -78,8 +78,8 @@ public class TestTournamentResource {
             .then()
             .assertThat()
             .body("$.size()", is(2),
-                  "name", everyItem(startsWith("Clubmeisterschaft")),
-                  "visible", everyItem(anything()));
+                "name", everyItem(startsWith("Clubmeisterschaft")),
+                "visible", everyItem(anything()));
     }
 
     @Test
@@ -109,7 +109,7 @@ public class TestTournamentResource {
             .then().assertThat()
             .statusCode(Response.Status.OK.getStatusCode())
             .body("name", is("Clubmeisterschaft"),
-                  "visible", nullValue());
+                "visible", nullValue());
     }
 
     @Test
@@ -120,7 +120,7 @@ public class TestTournamentResource {
             .then().assertThat()
             .statusCode(Response.Status.OK.getStatusCode())
             .body("name", is("Clubmeisterschaft"),
-                  "visible", anything());
+                "visible", anything());
     }
 
     @Test
@@ -145,16 +145,16 @@ public class TestTournamentResource {
         given()
             .contentType(ContentType.JSON)
             .body("""
-                      {
-                          "name": "Clubmeisterschaft 2024",
-                          "visible": "true",
-                          "description": "Anmeldephase offen",
-                          "beginRegistration": "2024-04-01T23:15:30.000Z",
-                          "endRegistration": "2024-04-02T23:15:30.000Z",
-                          "beginGamePhase": "2024-04-03T23:15:30.000Z",
-                          "endGamePhase": "2024-04-04T23:15:30.000Z"
-                      }
-                      """)
+                {
+                    "name": "Clubmeisterschaft 2024",
+                    "visible": "true",
+                    "description": "Anmeldephase offen",
+                    "beginRegistration": "2024-04-01T23:15:30.000Z",
+                    "endRegistration": "2024-04-02T23:15:30.000Z",
+                    "beginGamePhase": "2024-04-03T23:15:30.000Z",
+                    "endGamePhase": "2024-04-04T23:15:30.000Z"
+                }
+                """)
             .post("/tournament/add")
             .then().assertThat()
             .statusCode(Response.Status.UNAUTHORIZED.getStatusCode());
@@ -166,16 +166,16 @@ public class TestTournamentResource {
         given()
             .contentType(ContentType.JSON)
             .body("""
-                      {
-                          "name": "Clubmeisterschaft 2024",
-                          "visible": "true",
-                          "description": "Anmeldephase offen",
-                          "beginRegistration": "2024-04-01T23:15:30.000Z",
-                          "endRegistration": "2024-04-02T23:15:30.000Z",
-                          "beginGamePhase": "2024-04-03T23:15:30.000Z",
-                          "endGamePhase": "2024-04-04T23:15:30.000Z"
-                      }
-                      """)
+                {
+                    "name": "Clubmeisterschaft 2024",
+                    "visible": "true",
+                    "description": "Anmeldephase offen",
+                    "beginRegistration": "2024-04-01T23:15:30.000Z",
+                    "endRegistration": "2024-04-02T23:15:30.000Z",
+                    "beginGamePhase": "2024-04-03T23:15:30.000Z",
+                    "endGamePhase": "2024-04-04T23:15:30.000Z"
+                }
+                """)
             .post("/tournament/add")
             .then().assertThat()
             .statusCode(Response.Status.OK.getStatusCode());
@@ -192,15 +192,15 @@ public class TestTournamentResource {
         given()
             .contentType(ContentType.JSON)
             .body("""
-                      {
-                          "visible": "true",
-                          "description": "Anmeldephase offen",
-                          "beginRegistration": "2024-04-01T23:15:30.000Z",
-                          "endRegistration": "2024-04-02T23:15:30.000Z",
-                          "beginGamePhase": "2024-04-03T23:15:30.000Z",
-                          "endGamePhase": "2024-04-04T23:15:30.000Z"
-                      }
-                      """)
+                {
+                    "visible": "true",
+                    "description": "Anmeldephase offen",
+                    "beginRegistration": "2024-04-01T23:15:30.000Z",
+                    "endRegistration": "2024-04-02T23:15:30.000Z",
+                    "beginGamePhase": "2024-04-03T23:15:30.000Z",
+                    "endGamePhase": "2024-04-04T23:15:30.000Z"
+                }
+                """)
             .post("/tournament/add")
             .then().assertThat()
             .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
@@ -212,16 +212,16 @@ public class TestTournamentResource {
         given()
             .contentType(ContentType.JSON)
             .body("""
-                      {
-                          "name": "Clubmeisterschaft",
-                          "visible": "true",
-                          "description": "Anmeldephase offen",
-                          "beginRegistration": "2024-04-01T23:15:30.000Z",
-                          "endRegistration": "2024-04-02T23:15:30.000Z",
-                          "beginGamePhase": "2024-04-03T23:15:30.000Z",
-                          "endGamePhase": "2024-04-04T23:15:30.000Z"
-                      }
-                      """)
+                {
+                    "name": "Clubmeisterschaft",
+                    "visible": "true",
+                    "description": "Anmeldephase offen",
+                    "beginRegistration": "2024-04-01T23:15:30.000Z",
+                    "endRegistration": "2024-04-02T23:15:30.000Z",
+                    "beginGamePhase": "2024-04-03T23:15:30.000Z",
+                    "endGamePhase": "2024-04-04T23:15:30.000Z"
+                }
+                """)
             .post("/tournament/add")
             .then().assertThat()
             .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
@@ -233,16 +233,16 @@ public class TestTournamentResource {
         given()
             .contentType(ContentType.JSON)
             .body("""
-                      {
-                          "name": "Clubmeisterschaft 2024",
-                          "visible": "true",
-                          "description": "Anmeldephase offen",
-                          "beginRegistration": "2024-04-01T23:15:30.000Z",
-                          "endRegistration": "2024-03-31T23:15:30.000Z",
-                          "beginGamePhase": "2024-04-03T23:15:30.000Z",
-                          "endGamePhase": "2024-04-04T23:15:30.000Z"
-                      }
-                      """)
+                {
+                    "name": "Clubmeisterschaft 2024",
+                    "visible": "true",
+                    "description": "Anmeldephase offen",
+                    "beginRegistration": "2024-04-01T23:15:30.000Z",
+                    "endRegistration": "2024-03-31T23:15:30.000Z",
+                    "beginGamePhase": "2024-04-03T23:15:30.000Z",
+                    "endGamePhase": "2024-04-04T23:15:30.000Z"
+                }
+                """)
             .post("/tournament/add")
             .then().assertThat()
             .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
@@ -250,16 +250,16 @@ public class TestTournamentResource {
         given()
             .contentType(ContentType.JSON)
             .body("""
-                      {
-                          "name": "Clubmeisterschaft 2024",
-                          "visible": "true",
-                          "description": "Anmeldephase offen",
-                          "beginRegistration": "2024-04-01T23:15:30.000Z",
-                          "endRegistration": "2024-04-03T23:30:30.000Z",
-                          "beginGamePhase": "2024-04-03T23:15:30.000Z",
-                          "endGamePhase": "2024-04-04T23:15:30.000Z"
-                      }
-                      """)
+                {
+                    "name": "Clubmeisterschaft 2024",
+                    "visible": "true",
+                    "description": "Anmeldephase offen",
+                    "beginRegistration": "2024-04-01T23:15:30.000Z",
+                    "endRegistration": "2024-04-03T23:30:30.000Z",
+                    "beginGamePhase": "2024-04-03T23:15:30.000Z",
+                    "endGamePhase": "2024-04-04T23:15:30.000Z"
+                }
+                """)
             .post("/tournament/add")
             .then().assertThat()
             .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
@@ -268,16 +268,16 @@ public class TestTournamentResource {
         given()
             .contentType(ContentType.JSON)
             .body("""
-                      {
-                          "name": "Clubmeisterschaft 2024",
-                          "visible": "true",
-                          "description": "Anmeldephase offen",
-                          "beginRegistration": "2024-04-01T23:15:30.000Z",
-                          "endRegistration": "2024-04-02T23:15:30.000Z",
-                          "beginGamePhase": "2024-04-05T23:15:30.000Z",
-                          "endGamePhase": "2024-04-04T23:15:30.000Z"
-                      }
-                      """)
+                {
+                    "name": "Clubmeisterschaft 2024",
+                    "visible": "true",
+                    "description": "Anmeldephase offen",
+                    "beginRegistration": "2024-04-01T23:15:30.000Z",
+                    "endRegistration": "2024-04-02T23:15:30.000Z",
+                    "beginGamePhase": "2024-04-05T23:15:30.000Z",
+                    "endGamePhase": "2024-04-04T23:15:30.000Z"
+                }
+                """)
             .post("/tournament/add")
             .then().assertThat()
             .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
@@ -296,17 +296,17 @@ public class TestTournamentResource {
         given()
             .contentType(ContentType.JSON)
             .body("""
-                      {
-                          "id": "%s",
-                          "name": "Clubmeisterschaft 2024",
-                          "visible": "true",
-                          "description": "Anmeldephase offen",
-                          "beginRegistration": "2024-04-01T23:15:30.000Z",
-                          "endRegistration": "2024-04-02T23:15:30.000Z",
-                          "beginGamePhase": "2024-04-03T23:15:30.000Z",
-                          "endGamePhase": "2024-04-04T23:15:30.000Z"
-                      }
-                      """.formatted(id))
+                {
+                    "id": "%s",
+                    "name": "Clubmeisterschaft 2024",
+                    "visible": "true",
+                    "description": "Anmeldephase offen",
+                    "beginRegistration": "2024-04-01T23:15:30.000Z",
+                    "endRegistration": "2024-04-02T23:15:30.000Z",
+                    "beginGamePhase": "2024-04-03T23:15:30.000Z",
+                    "endGamePhase": "2024-04-04T23:15:30.000Z"
+                }
+                """.formatted(id))
             .post("/tournament/update")
             .then().assertThat()
             .statusCode(Response.Status.OK.getStatusCode());
@@ -330,17 +330,17 @@ public class TestTournamentResource {
         given()
             .contentType(ContentType.JSON)
             .body("""
-                      {
-                          "id": "%s",
-                          "name": "Clubmeisterschaft2",
-                          "visible": "true",
-                          "description": "Anmeldephase offen",
-                          "beginRegistration": "2024-04-01T23:15:30.000Z",
-                          "endRegistration": "2024-04-02T23:15:30.000Z",
-                          "beginGamePhase": "2024-04-03T23:15:30.000Z",
-                          "endGamePhase": "2024-04-04T23:15:30.000Z"
-                      }
-                      """.formatted(id))
+                {
+                    "id": "%s",
+                    "name": "Clubmeisterschaft2",
+                    "visible": "true",
+                    "description": "Anmeldephase offen",
+                    "beginRegistration": "2024-04-01T23:15:30.000Z",
+                    "endRegistration": "2024-04-02T23:15:30.000Z",
+                    "beginGamePhase": "2024-04-03T23:15:30.000Z",
+                    "endGamePhase": "2024-04-04T23:15:30.000Z"
+                }
+                """.formatted(id))
             .post("/tournament/update")
             .then().assertThat()
             .statusCode(Response.Status.CONFLICT.getStatusCode());
@@ -352,17 +352,17 @@ public class TestTournamentResource {
         given()
             .contentType(ContentType.JSON)
             .body("""
-                      {
-                          "id": "e2db734e-164f-4024-b57f-646fa0282a60",
-                          "name": "Clubmeisterschaft 2024",
-                          "visible": "true",
-                          "description": "Anmeldephase offen",
-                          "beginRegistration": "2024-04-01T23:15:30.000Z",
-                          "endRegistration": "2024-04-02T23:15:30.000Z",
-                          "beginGamePhase": "2024-04-03T23:15:30.000Z",
-                          "endGamePhase": "2024-04-04T23:15:30.000Z"
-                      }
-                      """)
+                {
+                    "id": "e2db734e-164f-4024-b57f-646fa0282a60",
+                    "name": "Clubmeisterschaft 2024",
+                    "visible": "true",
+                    "description": "Anmeldephase offen",
+                    "beginRegistration": "2024-04-01T23:15:30.000Z",
+                    "endRegistration": "2024-04-02T23:15:30.000Z",
+                    "beginGamePhase": "2024-04-03T23:15:30.000Z",
+                    "endGamePhase": "2024-04-04T23:15:30.000Z"
+                }
+                """)
             .post("/tournament/update")
             .then().assertThat()
             .statusCode(Response.Status.NOT_FOUND.getStatusCode());

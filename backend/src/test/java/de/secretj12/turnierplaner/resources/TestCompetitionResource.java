@@ -149,7 +149,7 @@ public class TestCompetitionResource {
             .statusCode(200)
             .contentType(MediaType.APPLICATION_JSON)
             .body("$.size()", is(1),
-                  "[0].name", is("Herren"));
+                "[0].name", is("Herren"));
     }
 
     @Test
@@ -172,7 +172,7 @@ public class TestCompetitionResource {
             .statusCode(200)
             .contentType(MediaType.APPLICATION_JSON)
             .body("$.size()", is(1),
-                  "[0].name", is("Damen"));
+                "[0].name", is("Damen"));
     }
 
     @Test
@@ -194,8 +194,8 @@ public class TestCompetitionResource {
             .statusCode(200)
             .contentType(MediaType.APPLICATION_JSON)
             .body("$.size()", is(1),
-                  "[0].name", is("Herren"),
-                  "[0].id", is(competitions.getByName("Clubmeisterschaft 2021", "Herren").getId().toString()));
+                "[0].name", is("Herren"),
+                "[0].id", is(competitions.getByName("Clubmeisterschaft 2021", "Herren").getId().toString()));
     }
 
     @Test
@@ -208,7 +208,7 @@ public class TestCompetitionResource {
             .statusCode(200)
             .contentType(MediaType.APPLICATION_JSON)
             .body("name", is("Herren"),
-                  "id", notNullValue());
+                "id", notNullValue());
     }
 
     @Test
@@ -220,7 +220,7 @@ public class TestCompetitionResource {
             .statusCode(200)
             .contentType(MediaType.APPLICATION_JSON)
             .body("name", is("Herren"),
-                  "id", nullValue());
+                "id", nullValue());
     }
 
     @Test
@@ -247,25 +247,25 @@ public class TestCompetitionResource {
         given()
             .contentType(ContentType.JSON)
             .body("""
-                      {
-                          "name": "Damen",
-                          "description": "Für alle Damen",
-                          "type": "KNOCKOUT",
-                          "mode": "SINGLE",
-                          "signUp": "INDIVIDUAL",
-                          "playerA": {
-                            "sex": "FEMALE",
-                            "hasMinAge": false,
-                            "hasMaxAge": false
-                          },
-                          "playerB": {
-                            "different": false,
-                            "sex": "ANY",
-                            "hasMinAge": false,
-                            "hasMaxAge": false
-                          }
-                      }
-                      """)
+                {
+                    "name": "Damen",
+                    "description": "Für alle Damen",
+                    "type": "KNOCKOUT",
+                    "mode": "SINGLE",
+                    "signUp": "INDIVIDUAL",
+                    "playerA": {
+                      "sex": "FEMALE",
+                      "hasMinAge": false,
+                      "hasMaxAge": false
+                    },
+                    "playerB": {
+                      "different": false,
+                      "sex": "ANY",
+                      "hasMinAge": false,
+                      "hasMaxAge": false
+                    }
+                }
+                """)
             .post("/tournament/Clubmeisterschaft 2021/competition/add")
             .then().assertThat()
             .statusCode(Response.Status.UNAUTHORIZED.getStatusCode());
@@ -277,25 +277,25 @@ public class TestCompetitionResource {
         given()
             .contentType(ContentType.JSON)
             .body("""
-                      {
-                          "name": "Damen",
-                          "description": "Für alle Damen",
-                          "type": "KNOCKOUT",
-                          "mode": "SINGLE",
-                          "signUp": "INDIVIDUAL",
-                          "playerA": {
-                            "sex": "FEMALE",
-                            "hasMinAge": false,
-                            "hasMaxAge": false
-                          },
-                          "playerB": {
-                            "different": false,
-                            "sex": "ANY",
-                            "hasMinAge": false,
-                            "hasMaxAge": false
-                          }
-                      }
-                      """)
+                {
+                    "name": "Damen",
+                    "description": "Für alle Damen",
+                    "type": "KNOCKOUT",
+                    "mode": "SINGLE",
+                    "signUp": "INDIVIDUAL",
+                    "playerA": {
+                      "sex": "FEMALE",
+                      "hasMinAge": false,
+                      "hasMaxAge": false
+                    },
+                    "playerB": {
+                      "different": false,
+                      "sex": "ANY",
+                      "hasMinAge": false,
+                      "hasMaxAge": false
+                    }
+                }
+                """)
             .post("/tournament/Clubmeisterschaft 2021/competition/add")
             .then().assertThat()
             .statusCode(200);
@@ -307,24 +307,24 @@ public class TestCompetitionResource {
         given()
             .contentType(ContentType.JSON)
             .body("""
-                      {
-                          "description": "Für alle Damen",
-                          "type": "KNOCKOUT",
-                          "mode": "SINGLE",
-                          "signUp": "INDIVIDUAL",
-                          "playerA": {
-                            "sex": "FEMALE",
-                            "hasMinAge": false,
-                            "hasMaxAge": false
-                          },
-                          "playerB": {
-                            "different": false,
-                            "sex": "ANY",
-                            "hasMinAge": false,
-                            "hasMaxAge": false
-                          }
-                      }
-                      """)
+                {
+                    "description": "Für alle Damen",
+                    "type": "KNOCKOUT",
+                    "mode": "SINGLE",
+                    "signUp": "INDIVIDUAL",
+                    "playerA": {
+                      "sex": "FEMALE",
+                      "hasMinAge": false,
+                      "hasMaxAge": false
+                    },
+                    "playerB": {
+                      "different": false,
+                      "sex": "ANY",
+                      "hasMinAge": false,
+                      "hasMaxAge": false
+                    }
+                }
+                """)
             .post("/tournament/Clubmeisterschaft 2021/competition/add")
             .then().assertThat()
             .statusCode(400);
@@ -336,25 +336,25 @@ public class TestCompetitionResource {
         given()
             .contentType(ContentType.JSON)
             .body("""
-                      {
-                          "name": "Herren",
-                          "description": "Für alle Damen",
-                          "type": "KNOCKOUT",
-                          "mode": "SINGLE",
-                          "signUp": "INDIVIDUAL",
-                          "playerA": {
-                            "sex": "FEMALE",
-                            "hasMinAge": false,
-                            "hasMaxAge": false
-                          },
-                          "playerB": {
-                            "different": false,
-                            "sex": "ANY",
-                            "hasMinAge": false,
-                            "hasMaxAge": false
-                          }
-                      }
-                      """)
+                {
+                    "name": "Herren",
+                    "description": "Für alle Damen",
+                    "type": "KNOCKOUT",
+                    "mode": "SINGLE",
+                    "signUp": "INDIVIDUAL",
+                    "playerA": {
+                      "sex": "FEMALE",
+                      "hasMinAge": false,
+                      "hasMaxAge": false
+                    },
+                    "playerB": {
+                      "different": false,
+                      "sex": "ANY",
+                      "hasMinAge": false,
+                      "hasMaxAge": false
+                    }
+                }
+                """)
             .post("/tournament/Clubmeisterschaft 2021/competition/add")
             .then().assertThat()
             .statusCode(400);
@@ -366,100 +366,100 @@ public class TestCompetitionResource {
         given()
             .contentType(ContentType.JSON)
             .body("""
-                      {
-                          "name": "Damen",
-                          "description": "Für alle Damen",
-                          "type": "KNOCKOUT",
-                          "mode": "SINGLE",
-                          "signUp": "INDIVIDUAL",
-                          "playerA": {
-                            "sex": "FEMALE",
-                            "hasMinAge": true,
-                            "hasMaxAge": false
-                          },
-                          "playerB": {
-                            "different": false,
-                            "sex": "ANY",
-                            "hasMinAge": false,
-                            "hasMaxAge": false
-                          }
-                      }
-                      """)
+                {
+                    "name": "Damen",
+                    "description": "Für alle Damen",
+                    "type": "KNOCKOUT",
+                    "mode": "SINGLE",
+                    "signUp": "INDIVIDUAL",
+                    "playerA": {
+                      "sex": "FEMALE",
+                      "hasMinAge": true,
+                      "hasMaxAge": false
+                    },
+                    "playerB": {
+                      "different": false,
+                      "sex": "ANY",
+                      "hasMinAge": false,
+                      "hasMaxAge": false
+                    }
+                }
+                """)
             .post("/tournament/Clubmeisterschaft 2021/competition/add")
             .then().assertThat()
             .statusCode(400);
         given()
             .contentType(ContentType.JSON)
             .body("""
-                      {
-                          "name": "Damen",
-                          "description": "Für alle Damen",
-                          "type": "KNOCKOUT",
-                          "mode": "SINGLE",
-                          "signUp": "INDIVIDUAL",
-                          "playerA": {
-                            "sex": "FEMALE",
-                            "hasMinAge": false,
-                            "hasMaxAge": true
-                          },
-                          "playerB": {
-                            "different": false,
-                            "sex": "ANY",
-                            "hasMinAge": false,
-                            "hasMaxAge": false
-                          }
-                      }
-                      """)
+                {
+                    "name": "Damen",
+                    "description": "Für alle Damen",
+                    "type": "KNOCKOUT",
+                    "mode": "SINGLE",
+                    "signUp": "INDIVIDUAL",
+                    "playerA": {
+                      "sex": "FEMALE",
+                      "hasMinAge": false,
+                      "hasMaxAge": true
+                    },
+                    "playerB": {
+                      "different": false,
+                      "sex": "ANY",
+                      "hasMinAge": false,
+                      "hasMaxAge": false
+                    }
+                }
+                """)
             .post("/tournament/Clubmeisterschaft 2021/competition/add")
             .then().assertThat()
             .statusCode(400);
         given()
             .contentType(ContentType.JSON)
             .body("""
-                      {
-                          "name": "Damen",
-                          "description": "Für alle Damen",
-                          "type": "KNOCKOUT",
-                          "mode": "SINGLE",
-                          "signUp": "INDIVIDUAL",
-                          "playerA": {
-                            "sex": "FEMALE",
-                            "hasMinAge": false,
-                            "hasMaxAge": false
-                          },
-                          "playerB": {
-                            "different": false,
-                            "sex": "ANY",
-                            "hasMinAge": true,
-                            "hasMaxAge": false
-                          }
-                      }
-                      """)
+                {
+                    "name": "Damen",
+                    "description": "Für alle Damen",
+                    "type": "KNOCKOUT",
+                    "mode": "SINGLE",
+                    "signUp": "INDIVIDUAL",
+                    "playerA": {
+                      "sex": "FEMALE",
+                      "hasMinAge": false,
+                      "hasMaxAge": false
+                    },
+                    "playerB": {
+                      "different": false,
+                      "sex": "ANY",
+                      "hasMinAge": true,
+                      "hasMaxAge": false
+                    }
+                }
+                """)
             .post("/tournament/Clubmeisterschaft 2021/competition/add")
             .then().assertThat()
             .statusCode(400);
         given()
             .contentType(ContentType.JSON)
             .body("""
-                      {
-                          "name": "Damen",
-                          "description": "Für alle Damen",
-                          "type": "KNOCKOUT",
-                          "mode": "SINGLE",
-                          "signUp": "INDIVIDUAL",
-                          "playerA": {
-                            "sex": "FEMALE",
-                            "hasMinAge": false,
-                            "hasMaxAge": false
-                          },
-                          "playerB": {
-                            "different": false,
-                            "sex": "ANY",
-                            "hasMinAge": false,
-                            "hasMaxAge": true
-                          }
-                      }
-                      """)
+                {
+                    "name": "Damen",
+                    "description": "Für alle Damen",
+                    "type": "KNOCKOUT",
+                    "mode": "SINGLE",
+                    "signUp": "INDIVIDUAL",
+                    "playerA": {
+                      "sex": "FEMALE",
+                      "hasMinAge": false,
+                      "hasMaxAge": false
+                    },
+                    "playerB": {
+                      "different": false,
+                      "sex": "ANY",
+                      "hasMinAge": false,
+                      "hasMaxAge": true
+                    }
+                }
+                """)
             .post("/tournament/Clubmeisterschaft 2021/competition/add")
             .then().assertThat()
             .statusCode(400);
@@ -471,28 +471,28 @@ public class TestCompetitionResource {
         given()
             .contentType(ContentType.JSON)
             .body(String.format("""
-                                    {
-                                        "id": "%s",
-                                        "name": "Damen2",
-                                        "description": "Für alle Damen",
-                                        "type": "KNOCKOUT",
-                                        "mode": "SINGLE",
-                                        "signUp": "INDIVIDUAL",
-                                        "playerA": {
-                                          "sex": "FEMALE",
-                                          "hasMinAge": false,
-                                          "hasMaxAge": false
-                                        },
-                                        "playerB": {
-                                          "different": false,
-                                          "sex": "ANY",
-                                          "hasMinAge": false,
-                                          "hasMaxAge": false
-                                        }
-                                    }
-                                    """, competitions
-                                    .getByName("Clubmeisterschaft 2021", "Herren")
-                                    .getId().toString()))
+                {
+                    "id": "%s",
+                    "name": "Damen2",
+                    "description": "Für alle Damen",
+                    "type": "KNOCKOUT",
+                    "mode": "SINGLE",
+                    "signUp": "INDIVIDUAL",
+                    "playerA": {
+                      "sex": "FEMALE",
+                      "hasMinAge": false,
+                      "hasMaxAge": false
+                    },
+                    "playerB": {
+                      "different": false,
+                      "sex": "ANY",
+                      "hasMinAge": false,
+                      "hasMaxAge": false
+                    }
+                }
+                """, competitions
+                .getByName("Clubmeisterschaft 2021", "Herren")
+                .getId().toString()))
             .post("/tournament/Clubmeisterschaft 2021/competition/update")
             .then().assertThat()
             .statusCode(200);
@@ -503,28 +503,28 @@ public class TestCompetitionResource {
         given()
             .contentType(ContentType.JSON)
             .body(String.format("""
-                                    {
-                                        "id": "%s",
-                                        "name": "Damen2",
-                                        "description": "Für alle Damen",
-                                        "type": "KNOCKOUT",
-                                        "mode": "SINGLE",
-                                        "signUp": "INDIVIDUAL",
-                                        "playerA": {
-                                          "sex": "FEMALE",
-                                          "hasMinAge": false,
-                                          "hasMaxAge": false
-                                        },
-                                        "playerB": {
-                                          "different": false,
-                                          "sex": "ANY",
-                                          "hasMinAge": false,
-                                          "hasMaxAge": false
-                                        }
-                                    }
-                                    """, competitions
-                                    .getByName("Clubmeisterschaft 2021", "Herren")
-                                    .getId().toString()))
+                {
+                    "id": "%s",
+                    "name": "Damen2",
+                    "description": "Für alle Damen",
+                    "type": "KNOCKOUT",
+                    "mode": "SINGLE",
+                    "signUp": "INDIVIDUAL",
+                    "playerA": {
+                      "sex": "FEMALE",
+                      "hasMinAge": false,
+                      "hasMaxAge": false
+                    },
+                    "playerB": {
+                      "different": false,
+                      "sex": "ANY",
+                      "hasMinAge": false,
+                      "hasMaxAge": false
+                    }
+                }
+                """, competitions
+                .getByName("Clubmeisterschaft 2021", "Herren")
+                .getId().toString()))
             .post("/tournament/Clubmeisterschaft 2021/competition/update")
             .then().assertThat()
             .statusCode(401);
@@ -536,26 +536,26 @@ public class TestCompetitionResource {
         given()
             .contentType(ContentType.JSON)
             .body("""
-                      {
-                          "id": "dummyid",
-                          "name": "Damen2",
-                          "description": "Für alle Damen",
-                          "type": "KNOCKOUT",
-                          "mode": "SINGLE",
-                          "signUp": "INDIVIDUAL",
-                          "playerA": {
-                            "sex": "FEMALE",
-                            "hasMinAge": false,
-                            "hasMaxAge": false
-                          },
-                          "playerB": {
-                            "different": false,
-                            "sex": "ANY",
-                            "hasMinAge": false,
-                            "hasMaxAge": false
-                          }
-                      }
-                      """)
+                {
+                    "id": "dummyid",
+                    "name": "Damen2",
+                    "description": "Für alle Damen",
+                    "type": "KNOCKOUT",
+                    "mode": "SINGLE",
+                    "signUp": "INDIVIDUAL",
+                    "playerA": {
+                      "sex": "FEMALE",
+                      "hasMinAge": false,
+                      "hasMaxAge": false
+                    },
+                    "playerB": {
+                      "different": false,
+                      "sex": "ANY",
+                      "hasMinAge": false,
+                      "hasMaxAge": false
+                    }
+                }
+                """)
             .post("/tournament/Clubmeisterschaft 2021/competition/update")
             .then().assertThat()
             .statusCode(400);
@@ -567,28 +567,28 @@ public class TestCompetitionResource {
         given()
             .contentType(ContentType.JSON)
             .body(String.format("""
-                                    {
-                                        "id": "%s",
-                                        "name": "Damen2",
-                                        "description": "Für alle Damen",
-                                        "type": "KNOCKOUT",
-                                        "mode": "SINGLE",
-                                        "signUp": "INDIVIDUAL",
-                                        "playerA": {
-                                          "sex": "FEMALE",
-                                          "hasMinAge": false,
-                                          "hasMaxAge": false
-                                        },
-                                        "playerB": {
-                                          "different": false,
-                                          "sex": "ANY",
-                                          "hasMinAge": false,
-                                          "hasMaxAge": false
-                                        }
-                                    }
-                                    """, competitions
-                                    .getByName("Clubmeisterschaft 2021", "Herren")
-                                    .getId().toString()))
+                {
+                    "id": "%s",
+                    "name": "Damen2",
+                    "description": "Für alle Damen",
+                    "type": "KNOCKOUT",
+                    "mode": "SINGLE",
+                    "signUp": "INDIVIDUAL",
+                    "playerA": {
+                      "sex": "FEMALE",
+                      "hasMinAge": false,
+                      "hasMaxAge": false
+                    },
+                    "playerB": {
+                      "different": false,
+                      "sex": "ANY",
+                      "hasMinAge": false,
+                      "hasMaxAge": false
+                    }
+                }
+                """, competitions
+                .getByName("Clubmeisterschaft 2021", "Herren")
+                .getId().toString()))
             .post("/tournament/Clubmeisterschaft 2022/competition/update")
             .then().assertThat()
             .statusCode(400);
@@ -602,7 +602,7 @@ public class TestCompetitionResource {
             .statusCode(200)
             .contentType(MediaType.APPLICATION_JSON)
             .body("$.size()", is(1),
-                  "[0].playerA.firstName", is("Rainer"));
+                "[0].playerA.firstName", is("Rainer"));
     }
 
     @Test
@@ -626,21 +626,21 @@ public class TestCompetitionResource {
             .statusCode(200)
             .contentType(MediaType.APPLICATION_JSON)
             .body("$.size()", is(1),
-                  "[0].playerA.firstName", is("Rainer"));
+                "[0].playerA.firstName", is("Rainer"));
         given()
             .get("/tournament/Clubmeisterschaft 2021/competition/Herren/signedUpTeams")
             .then().assertThat()
             .statusCode(200)
             .contentType(MediaType.APPLICATION_JSON)
             .body("$.size()", is(1),
-                  "[0].playerA.firstName", is("Rainer"));
+                "[0].playerA.firstName", is("Rainer"));
         given()
             .get("/tournament/Clubmeisterschaft 2022/competition/Damen/signedUpTeams")
             .then().assertThat()
             .statusCode(200)
             .contentType(MediaType.APPLICATION_JSON)
             .body("$.size()", is(1),
-                  "[0].playerA.firstName", is("Anna"));
+                "[0].playerA.firstName", is("Anna"));
     }
 
     @Transactional
@@ -719,14 +719,14 @@ public class TestCompetitionResource {
         given()
             .contentType(MediaType.APPLICATION_JSON)
             .body(String.format("""
-                                    {
-                                        "playerA": {
-                                          "id": "%s",
-                                          "firstName": "Rainer",
-                                          "lastName": "Zufall"
-                                        }
-                                    }
-                                    """, playerM.getId().toString()))
+                {
+                    "playerA": {
+                      "id": "%s",
+                      "firstName": "Rainer",
+                      "lastName": "Zufall"
+                    }
+                }
+                """, playerM.getId().toString()))
             .post("/tournament/Clubmeisterschaft 2020/competition/Herren/signUp")
             .then().assertThat()
             .statusCode(401);
@@ -740,14 +740,14 @@ public class TestCompetitionResource {
         given()
             .contentType(MediaType.APPLICATION_JSON)
             .body(String.format("""
-                                    {
-                                        "playerA": {
-                                          "id": "%s",
-                                          "firstName": "Rainer",
-                                          "lastName": "Zufall"
-                                        }
-                                    }
-                                    """, playerM.getId().toString()))
+                {
+                    "playerA": {
+                      "id": "%s",
+                      "firstName": "Rainer",
+                      "lastName": "Zufall"
+                    }
+                }
+                """, playerM.getId().toString()))
             .post("/tournament/Clubmeisterschaft 2022/competition/Herren/signUp")
             .then().assertThat()
             .statusCode(401);
@@ -762,14 +762,14 @@ public class TestCompetitionResource {
         given()
             .contentType(MediaType.APPLICATION_JSON)
             .body(String.format("""
-                                    {
-                                        "playerA": {
-                                          "id": "%s",
-                                          "firstName": "Rainer",
-                                          "lastName": "Zufall"
-                                        }
-                                    }
-                                    """, playerM.getId().toString()))
+                {
+                    "playerA": {
+                      "id": "%s",
+                      "firstName": "Rainer",
+                      "lastName": "Zufall"
+                    }
+                }
+                """, playerM.getId().toString()))
             .post("/tournament/Clubmeisterschaft 2022/competition/Single/signUp")
             .then().assertThat()
             .statusCode(200);
@@ -783,14 +783,14 @@ public class TestCompetitionResource {
         given()
             .contentType(MediaType.APPLICATION_JSON)
             .body(String.format("""
-                                    {
-                                        "playerA": {
-                                          "id": "%s",
-                                          "firstName": "Rainer",
-                                          "lastName": "Zufall"
-                                        }
-                                    }
-                                    """, playerM.getId().toString()))
+                {
+                    "playerA": {
+                      "id": "%s",
+                      "firstName": "Rainer",
+                      "lastName": "Zufall"
+                    }
+                }
+                """, playerM.getId().toString()))
             .post("/tournament/Clubmeisterschaft 2021/competition/Single/signUp")
             .then().assertThat()
             .statusCode(200);
@@ -817,28 +817,28 @@ public class TestCompetitionResource {
         given()
             .contentType(MediaType.APPLICATION_JSON)
             .body(String.format("""
-                                    {
-                                        "playerA": {
-                                          "id": "%s",
-                                          "firstName": "Rainer",
-                                          "lastName": "Zufall"
-                                        }
-                                    }
-                                    """, playerM.getId().toString()))
+                {
+                    "playerA": {
+                      "id": "%s",
+                      "firstName": "Rainer",
+                      "lastName": "Zufall"
+                    }
+                }
+                """, playerM.getId().toString()))
             .post("/tournament/Clubmeisterschaft 2021/competition/Single/signUp")
             .then().assertThat()
             .statusCode(200);
         given()
             .contentType(MediaType.APPLICATION_JSON)
             .body(String.format("""
-                                    {
-                                        "playerA": {
-                                          "id": "%s",
-                                          "firstName": "Rainer",
-                                          "lastName": "Zufall"
-                                        }
-                                    }
-                                    """, playerM.getId().toString()))
+                {
+                    "playerA": {
+                      "id": "%s",
+                      "firstName": "Rainer",
+                      "lastName": "Zufall"
+                    }
+                }
+                """, playerM.getId().toString()))
             .post("/tournament/Clubmeisterschaft 2021/competition/Single/signUp")
             .then().assertThat()
             .statusCode(409);
@@ -852,14 +852,14 @@ public class TestCompetitionResource {
         given()
             .contentType(MediaType.APPLICATION_JSON)
             .body(String.format("""
-                                    {
-                                        "playerA": {
-                                          "id": "%s",
-                                          "firstName": "Rainer",
-                                          "lastName": "Zufall"
-                                        }
-                                    }
-                                    """, playerM.getId().toString()))
+                {
+                    "playerA": {
+                      "id": "%s",
+                      "firstName": "Rainer",
+                      "lastName": "Zufall"
+                    }
+                }
+                """, playerM.getId().toString()))
             .post("/tournament/Clubmeisterschaft 2021/competition/Single2/signUp")
             .then().assertThat()
             .statusCode(400);
@@ -873,14 +873,14 @@ public class TestCompetitionResource {
         given()
             .contentType(MediaType.APPLICATION_JSON)
             .body(String.format("""
-                                    {
-                                        "playerA": {
-                                          "id": "%s",
-                                          "firstName": "Rainer",
-                                          "lastName": "Zufall"
-                                        }
-                                    }
-                                    """, playerM.getId().toString()))
+                {
+                    "playerA": {
+                      "id": "%s",
+                      "firstName": "Rainer",
+                      "lastName": "Zufall"
+                    }
+                }
+                """, playerM.getId().toString()))
             .post("/tournament/Clubmeisterschaft 2021/competition/DoubleIndSame/signUp")
             .then().assertThat()
             .statusCode(200);
@@ -895,14 +895,14 @@ public class TestCompetitionResource {
         given()
             .contentType(MediaType.APPLICATION_JSON)
             .body(String.format("""
-                                    {
-                                        "playerA": {
-                                          "id": "%s",
-                                          "firstName": "Rainer",
-                                          "lastName": "Zufall"
-                                        }
-                                    }
-                                    """, playerM.getId().toString()))
+                {
+                    "playerA": {
+                      "id": "%s",
+                      "firstName": "Rainer",
+                      "lastName": "Zufall"
+                    }
+                }
+                """, playerM.getId().toString()))
             .post("/tournament/Clubmeisterschaft 2021/competition/DoubleIndDif/signUp")
             .then().assertThat()
             .statusCode(200);
@@ -911,14 +911,14 @@ public class TestCompetitionResource {
         given()
             .contentType(MediaType.APPLICATION_JSON)
             .body(String.format("""
-                                    {
-                                        "playerB": {
-                                          "id": "%s",
-                                          "firstName": "Anny",
-                                          "lastName": "Gramm"
-                                        }
-                                    }
-                                    """, playerF.getId().toString()))
+                {
+                    "playerB": {
+                      "id": "%s",
+                      "firstName": "Anny",
+                      "lastName": "Gramm"
+                    }
+                }
+                """, playerF.getId().toString()))
             .post("/tournament/Clubmeisterschaft 2021/competition/DoubleIndDif/signUp")
             .then().assertThat()
             .statusCode(200);
@@ -933,19 +933,19 @@ public class TestCompetitionResource {
         given()
             .contentType(MediaType.APPLICATION_JSON)
             .body(String.format("""
-                                    {
-                                        "playerA": {
-                                          "id": "%s",
-                                          "firstName": "Rainer",
-                                          "lastName": "Zufall"
-                                        },
-                                        "playerB": {
-                                          "id": "%s",
-                                          "firstName": "Anny",
-                                          "lastName": "Gramm"
-                                        }
-                                    }
-                                    """, playerM.getId().toString(), playerF.getId().toString()))
+                {
+                    "playerA": {
+                      "id": "%s",
+                      "firstName": "Rainer",
+                      "lastName": "Zufall"
+                    },
+                    "playerB": {
+                      "id": "%s",
+                      "firstName": "Anny",
+                      "lastName": "Gramm"
+                    }
+                }
+                """, playerM.getId().toString(), playerF.getId().toString()))
             .post("/tournament/Clubmeisterschaft 2021/competition/DoubleIndDif/signUp")
             .then().assertThat()
             .statusCode(400);
@@ -967,19 +967,19 @@ public class TestCompetitionResource {
         given()
             .contentType(MediaType.APPLICATION_JSON)
             .body(String.format("""
-                                    {
-                                        "playerA": {
-                                          "id": "%s",
-                                          "firstName": "Rainer",
-                                          "lastName": "Zufall"
-                                        },
-                                        "playerB": {
-                                          "id": "%s",
-                                          "firstName": "Anna",
-                                          "lastName": "Gramm"
-                                        }
-                                    }
-                                    """, playerM.getId().toString(), playerF.getId().toString()))
+                {
+                    "playerA": {
+                      "id": "%s",
+                      "firstName": "Rainer",
+                      "lastName": "Zufall"
+                    },
+                    "playerB": {
+                      "id": "%s",
+                      "firstName": "Anna",
+                      "lastName": "Gramm"
+                    }
+                }
+                """, playerM.getId().toString(), playerF.getId().toString()))
             .post("/tournament/Clubmeisterschaft 2021/competition/DoubleTog/signUp")
             .then().assertThat()
             .statusCode(200);
@@ -994,14 +994,14 @@ public class TestCompetitionResource {
         given()
             .contentType(MediaType.APPLICATION_JSON)
             .body(String.format("""
-                                    {
-                                        "playerB": {
-                                          "id": "%s",
-                                          "firstName": "Anna",
-                                          "lastName": "Gramm"
-                                        }
-                                    }
-                                    """, playerF.getId().toString()))
+                {
+                    "playerB": {
+                      "id": "%s",
+                      "firstName": "Anna",
+                      "lastName": "Gramm"
+                    }
+                }
+                """, playerF.getId().toString()))
             .post("/tournament/Clubmeisterschaft 2021/competition/DoubleTog/signUp")
             .then().assertThat()
             .statusCode(400);
@@ -1009,14 +1009,14 @@ public class TestCompetitionResource {
         given()
             .contentType(MediaType.APPLICATION_JSON)
             .body(String.format("""
-                                    {
-                                        "playerA": {
-                                          "id": "%s",
-                                          "firstName": "Rainer",
-                                          "lastName": "Zufall"
-                                        }
-                                    }
-                                    """, playerM.getId().toString()))
+                {
+                    "playerA": {
+                      "id": "%s",
+                      "firstName": "Rainer",
+                      "lastName": "Zufall"
+                    }
+                }
+                """, playerM.getId().toString()))
             .post("/tournament/Clubmeisterschaft 2021/competition/DoubleTog/signUp")
             .then().assertThat()
             .statusCode(400);
@@ -1027,28 +1027,28 @@ public class TestCompetitionResource {
     public void updateTeamsChangeTeams() {
         Player playerF = players.getByName("Anna", "Gramm");
         UUID teamIdBefore = competitions.getByName("Clubmeisterschaft 2021", "Herren")
-                                        .getTeams().getFirst().getId();
+            .getTeams().getFirst().getId();
 
         given()
             .contentType(MediaType.APPLICATION_JSON)
             .body(String.format("""
-                                    [
-                                        {
-                                            "playerA": {
-                                              "id": "%s",
-                                              "firstName": "Anna",
-                                              "lastName": "Gramm"
-                                            }
-                                        }
-                                    ]
-                                    """, playerF.getId().toString()))
+                [
+                    {
+                        "playerA": {
+                          "id": "%s",
+                          "firstName": "Anna",
+                          "lastName": "Gramm"
+                        }
+                    }
+                ]
+                """, playerF.getId().toString()))
             .post("/tournament/Clubmeisterschaft 2021/competition/Herren/updateTeams")
             .then().assertThat()
             .statusCode(200)
             .contentType(MediaType.APPLICATION_JSON)
             .body("$.size()", is(1),
-                  "[0].id", not(teamIdBefore.toString()),
-                  "[0].playerA.id", is(playerF.getId().toString()));
+                "[0].id", not(teamIdBefore.toString()),
+                "[0].playerA.id", is(playerF.getId().toString()));
 
         given()
             .get("/tournament/Clubmeisterschaft 2021/competition/Herren/signedUpTeams")
@@ -1056,8 +1056,8 @@ public class TestCompetitionResource {
             .statusCode(200)
             .contentType(MediaType.APPLICATION_JSON)
             .body("$.size()", is(1),
-                  "[0].id", not(teamIdBefore.toString()),
-                  "[0].playerA.firstName", is("Anna"));
+                "[0].id", not(teamIdBefore.toString()),
+                "[0].playerA.firstName", is("Anna"));
     }
 
     @Test
@@ -1065,29 +1065,29 @@ public class TestCompetitionResource {
     public void updateTeamsChangePlayerInTeam() {
         Player playerF = players.getByName("Anna", "Gramm");
         UUID teamId = competitions.getByName("Clubmeisterschaft 2021", "Herren")
-                                  .getTeams().getFirst().getId();
+            .getTeams().getFirst().getId();
 
         given()
             .contentType(MediaType.APPLICATION_JSON)
             .body(String.format("""
-                                    [
-                                        {
-                                            "id": "%s",
-                                            "playerA": {
-                                              "id": "%s",
-                                              "firstName": "Anna",
-                                              "lastName": "Gramm"
-                                            }
-                                        }
-                                    ]
-                                    """, teamId, playerF.getId().toString()))
+                [
+                    {
+                        "id": "%s",
+                        "playerA": {
+                          "id": "%s",
+                          "firstName": "Anna",
+                          "lastName": "Gramm"
+                        }
+                    }
+                ]
+                """, teamId, playerF.getId().toString()))
             .post("/tournament/Clubmeisterschaft 2021/competition/Herren/updateTeams")
             .then().assertThat()
             .statusCode(200)
             .contentType(MediaType.APPLICATION_JSON)
             .body("$.size()", is(1),
-                  "[0].id", is(teamId.toString()),
-                  "[0].playerA.id", is(playerF.getId().toString()));
+                "[0].id", is(teamId.toString()),
+                "[0].playerA.id", is(playerF.getId().toString()));
 
         given()
             .get("/tournament/Clubmeisterschaft 2021/competition/Herren/signedUpTeams")
@@ -1095,8 +1095,8 @@ public class TestCompetitionResource {
             .statusCode(200)
             .contentType(MediaType.APPLICATION_JSON)
             .body("$.size()", is(1),
-                  "[0].id", is(teamId.toString()),
-                  "[0].playerA.firstName", is("Anna"));
+                "[0].id", is(teamId.toString()),
+                "[0].playerA.firstName", is("Anna"));
     }
 
     // TODO Tests
