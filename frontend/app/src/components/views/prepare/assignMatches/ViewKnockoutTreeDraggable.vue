@@ -127,8 +127,6 @@ const maxDepth = computed(() => props.depth)
 const teamsCount = computed(() => Math.pow(2, maxDepth.value))
 const height = computed(() => tableHeight())
 
-console.log("maxDepth", maxDepth.value)
-
 function tableHeight(): number {
 	return 2 * teamsCount.value + 2 * (teamsCount.value / 2 - 1) + 1
 }

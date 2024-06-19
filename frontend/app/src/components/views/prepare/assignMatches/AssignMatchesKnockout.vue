@@ -119,9 +119,7 @@ async function randomize() {
 	animated.value = true
 	let knockOutListIndex = 0
 	while (teams.value.length) {
-		console.log("teams", teams.value)
 		const element = selectRandomElement(teams)
-		console.log("after", teams.value)
 		await sleep(delayBetween.value)
 		while (
 			assignedTeams.value[knockOutListIndex][0].length === 1 &&
@@ -135,10 +133,8 @@ async function randomize() {
 			assignedTeams.value[knockOutListIndex][1].push(element)
 			knockOutListIndex++
 		}
-		console.log("assignedTeams", assignedTeams.value)
 		await sleep(delay.value)
 	}
-	console.log("assignedTeams", assignedTeams.value)
 	animated.value = false
 }
 
@@ -149,12 +145,9 @@ async function reroll() {
 
 async function reset() {
 	animated.value = true
-	console.log("assignedTeams", assignedTeams.value)
-	console.log("assignedTeams", assignedTeams.value.length)
 	for (let i = 0; i < assignedTeams.value.length; i++) {
 		let team1 = assignedTeams.value[i][0].pop()
 		let team2 = assignedTeams.value[i][1].pop()
-		console.log("team1", team1)
 		if (team1) teams.value.push(team1)
 		if (team2) teams.value.push(team2)
 		await sleep(delay.value)
@@ -185,7 +178,6 @@ async function update() {
 			)
 			.then(async (response) => {
 				let sortedTeams = response.data.teams.map((t) => teamServerToClient(t))
-				console.log("sorted teams", sortedTeams)
 				teamCount.value += sortedTeams.length
 				// initialize the knockout order
 				for (let i = 0; i < nearestPowerOf2(sortedTeams.length) / 2; i++) {
@@ -194,8 +186,6 @@ async function update() {
 						[sortedTeams[i * 2 + 1]],
 					])
 				}
-				console.log("assignedTeams", assignedTeams)
-				console.log("depth", size.value)
 				animated.value = false
 			})
 			.catch(() => {})
@@ -210,7 +200,6 @@ async function update() {
 					teams.value.push(teamServerToClient(team))
 					teamCount.value++
 				})
-				console.log("Final Count" + teamCount.value)
 				// await sleep(500)
 				if (competition.value?.cProgress === Progress.TEAMS) {
 					for (let i = 0; i < nearestPowerOf2(teams.value.length) / 2; i++) {
