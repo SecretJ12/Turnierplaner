@@ -172,7 +172,7 @@ async function update() {
 	while (assignedTeams.value.length > 0) {
 		assignedTeams.value.pop()
 	}
-	const anFin = sleep(firstUpdate ? 0 : 500)
+	// const anFin = sleep(firstUpdate ? 0 : 500)
 	firstUpdate = false
 	teamCount.value = 0
 	if (
