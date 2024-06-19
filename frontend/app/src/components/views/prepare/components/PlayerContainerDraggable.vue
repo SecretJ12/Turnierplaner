@@ -25,14 +25,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, TransitionGroup } from "vue"
+import { TransitionGroup } from "vue"
 import { Player } from "@/interfaces/player"
 import DraggablePanel from "@/draggable/DraggablePanel.vue"
 import PlayerCard from "@/components/views/prepare/components/PlayerCard.vue"
-import { Tournament } from "@/interfaces/tournament"
-import { Competition } from "@/interfaces/competition"
-import AddPlayer from "@/components/views/prepare/editTeams/AddPlayer.vue"
-import DeleteBox from "@/components/views/prepare/editTeams/DeleteBox.vue"
 
 const props = withDefaults(
 	defineProps<{

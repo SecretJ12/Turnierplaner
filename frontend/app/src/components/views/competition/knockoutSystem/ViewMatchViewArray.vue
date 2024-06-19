@@ -55,7 +55,6 @@ import ViewMatch from "@/components/views/competition/knockoutSystem/ViewMatch.v
 import { Mode } from "@/interfaces/competition"
 import { Team } from "@/interfaces/team"
 import { Set } from "@/interfaces/match"
-import { useI18n } from "vue-i18n"
 
 const props = defineProps<{
 	mode: Mode

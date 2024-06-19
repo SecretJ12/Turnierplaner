@@ -34,10 +34,8 @@ import { Tournament } from "@/interfaces/tournament"
 import { Competition } from "@/interfaces/competition"
 import AddPlayer from "@/components/views/prepare/editTeams/AddPlayer.vue"
 import DeleteBox from "@/components/views/prepare/editTeams/DeleteBox.vue"
-import { ref, TransitionGroup } from "vue"
+import { ref } from "vue"
 import { Player } from "@/interfaces/player"
-import PlayerCard from "@/components/views/prepare/components/PlayerCard.vue"
-import DraggablePanel from "@/draggable/DraggablePanel.vue"
 import PlayerContainerDraggable from "@/components/views/prepare/components/PlayerContainerDraggable.vue"
 
 const props = withDefaults(
