@@ -203,7 +203,8 @@
 			"emptyGroupSum": "Ungültige Gruppe(n)",
 			"emptyGroupDet": "Jede Gruppe benötigt mindestens 2 Teams",
 			"teams": "Teams",
-			"ranking": "Rangliste"
+			"ranking": "Rangliste",
+			"knockout_not_assigned": "Es wurden noch nicht alle Spiele ausgelost"
 		}
 	},
 	"validation": {

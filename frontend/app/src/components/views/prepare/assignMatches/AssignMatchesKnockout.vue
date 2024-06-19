@@ -121,7 +121,8 @@ const toast = useToast()
 const { t } = useI18n({ inheritLocale: true })
 
 const teams = ref<Team[]>([])
-const sortedTeams = ref<Team[]>([])
+//  [row number in the tree][ upper or lower part of a bracket ][just in an array for draggable]
+const assignedTeams = ref<Team[][][]>([])
 
 const animated = ref<boolean>(false)
 
@@ -308,7 +309,31 @@ const finale = computed(() =>
 
 const thirdPlace = computed(() => generateTree(0, []))
 
+function knockoutTreeCompletelyAssigned(): boolean {
+	console.log(assignedTeams.value)
+	for (let i = 0; i < assignedTeams.value.length; i++) {
+		if (
+			assignedTeams.value[i][0].length === 0 ||
+			assignedTeams.value[i][1].length === 0
+		) {
+			return false
+		}
+	}
+	return true
+}
+
 function save() {
+	if (!knockoutTreeCompletelyAssigned()) {
+		toast.add({
+			severity: "error",
+			summary: t("general.failure"),
+			detail: t("ViewPrepare.assignMatches.knockout_not_assigned"),
+			life: 3000,
+			closable: false,
+		})
+		return
+	}
+
 	const req: KnockoutOrder = {
 		teams: sortedTeams.value.map((t) => teamClientToServer(t)),
 	}
