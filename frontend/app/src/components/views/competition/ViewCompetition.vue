@@ -16,7 +16,7 @@
 				{{ route.params.compId }}
 			</h2>
 		</div>
-		<template v-if="tournament !== null">
+		<template v-if="tournamentSuc && tournament">
 			<template v-if="new Date() < tournament.registration_phase.begin">
 				{{ t("ViewCompetition.registration_not_started") }}
 				{{
@@ -67,7 +67,7 @@ const route = useRoute()
 const isLoggedIn = inject("loggedIn", ref(false))
 const canEdit = getCanEdit(<string>route.params.tourId, isLoggedIn)
 
-const tournament = getTournamentDetails(
+const { data: tournament, isSuccess: tournamentSuc } = getTournamentDetails(
 	<string>route.params.tourId,
 	t,
 	toast,

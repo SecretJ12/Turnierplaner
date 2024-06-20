@@ -107,8 +107,10 @@
 
 <script lang="ts" setup>
 import {
+	Tournament,
 	TournamentForm,
 	tournamentFormClientToServer,
+	tournamentToForm,
 } from "@/interfaces/tournament"
 import { useI18n } from "vue-i18n"
 
@@ -124,13 +126,23 @@ const props = withDefaults(
 	defineProps<{
 		submitText: string
 		disabled: boolean
-		data: TournamentForm
+		tourDetails?: Tournament
 		header: string
 	}>(),
 	{
 		disabled: false,
+		tourDetails: undefined,
 	},
 )
+const data = props.tourDetails
+	? tournamentToForm(props.tourDetails)
+	: {
+			name: "",
+			visible: false,
+			description: "",
+			registration_phase: undefined,
+			game_phase: undefined,
+		}
 
 setLocale({
 	mixed: {
@@ -180,11 +192,11 @@ const { defineInputBinds, errors, defineComponentBinds, handleSubmit } =
 			}),
 		),
 		initialValues: {
-			name: props.data.name,
-			visible: props.data.visible,
-			description: props.data.description,
-			registration_phase: props.data.registration_phase,
-			game_phase: props.data.game_phase,
+			name: data.name,
+			visible: data.visible,
+			description: data.description,
+			registration_phase: data.registration_phase,
+			game_phase: data.game_phase,
 		},
 	})
 
@@ -198,6 +210,7 @@ const game_phase = defineComponentBinds("game_phase")
 const emit = defineEmits(["submit"])
 
 const onSubmit = handleSubmit((values) => {
+	values.id = data.id
 	emit("submit", tournamentFormClientToServer(<TournamentForm>values))
 })
 </script>

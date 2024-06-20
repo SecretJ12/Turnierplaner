@@ -7,13 +7,19 @@ export interface TournamentForm {
 	game_phase: Date[] | undefined
 }
 
-export const TournamentFormDefault: TournamentForm = {
+export const TournamentDefault: Tournament = {
 	id: null,
 	name: "",
 	visible: false,
 	description: "",
-	registration_phase: [new Date(), new Date()],
-	game_phase: [new Date(), new Date()],
+	registration_phase: {
+		begin: new Date(),
+		end: new Date(),
+	},
+	game_phase: {
+		begin: new Date(),
+		end: new Date(),
+	},
 }
 
 export interface TournamentServer {
@@ -80,6 +86,23 @@ export function tournamentFormServerToClient(
 		game_phase: [
 			new Date(tournament.beginGamePhase),
 			new Date(tournament.endGamePhase),
+		],
+	}
+}
+
+export function tournamentToForm(tournament: Tournament): TournamentForm {
+	return {
+		id: tournament.id,
+		visible: tournament.visible,
+		name: tournament.name,
+		description: tournament.description,
+		registration_phase: [
+			new Date(tournament.registration_phase.begin),
+			new Date(tournament.registration_phase.end),
+		],
+		game_phase: [
+			new Date(tournament.game_phase.begin),
+			new Date(tournament.game_phase.end),
 		],
 	}
 }

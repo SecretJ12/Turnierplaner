@@ -27,7 +27,7 @@
 				/>
 			</div>
 			<div id="aside">
-				<template v-if="tournament === null">
+				<template v-if="isLoading || !data">
 					<Skeleton class="h-2rem mb-2" />
 					<Skeleton class="h-2rem" />
 				</template>
@@ -50,17 +50,17 @@
 							<strong>{{ t("TournamentSettings.registration_phase") }}</strong>
 							<br />
 							<strong>{{ t("ViewCompetitions.from") }}</strong>
-							{{ formatDate(tournament?.registration_phase.begin) }}<br />
+							{{ formatDate(data?.registration_phase.begin) }}<br />
 							<strong>{{ t("ViewCompetitions.till") }}</strong>
-							{{ formatDate(tournament?.registration_phase.end) }}
+							{{ formatDate(data?.registration_phase.end) }}
 						</template>
 						<template v-else>
 							<strong>{{ t("TournamentSettings.game_phase") }}</strong
 							><br />
 							<strong>{{ t("ViewCompetitions.from") }}</strong>
-							{{ formatDate(tournament?.game_phase.begin) }}<br />
+							{{ formatDate(data?.game_phase.begin) }}<br />
 							<strong>{{ t("ViewCompetitions.till") }}</strong>
-							{{ formatDate(tournament?.game_phase.end) }}
+							{{ formatDate(data?.game_phase.end) }}
 						</template>
 					</template>
 				</Timeline>
@@ -131,27 +131,32 @@ const status = ref([
 ])
 
 const openRegistration = ref(false)
-const tournament = getTournamentDetails(<string>route.params.tourId, t, toast, {
-	suc: () => {
-		if (tournament.value === null) return
+const { data, isLoading } = getTournamentDetails(
+	<string>route.params.tourId,
+	t,
+	toast,
+	{
+		suc: () => {
+			if (data.value === undefined) return
 
-		const date = new Date()
-		if (date > tournament.value.registration_phase.end) {
-			status.value[0].color = "green"
-			status.value[0].icon = "pi-check"
-			openRegistration.value = false
-		} else if (date > tournament.value.registration_phase.begin) {
-			status.value[0].color = "blue"
-			openRegistration.value = true
-		}
-		if (date > tournament.value.game_phase.end) {
-			status.value[1].color = "green"
-			status.value[1].icon = "pi-check"
-		} else if (date > tournament.value.game_phase.begin) {
-			status.value[1].color = "blue"
-		}
+			const date = new Date()
+			if (date > data.value.registration_phase.end) {
+				status.value[0].color = "green"
+				status.value[0].icon = "pi-check"
+				openRegistration.value = false
+			} else if (date > data.value.registration_phase.begin) {
+				status.value[0].color = "blue"
+				openRegistration.value = true
+			}
+			if (date > data.value.game_phase.end) {
+				status.value[1].color = "green"
+				status.value[1].icon = "pi-check"
+			} else if (date > data.value.game_phase.begin) {
+				status.value[1].color = "blue"
+			}
+		},
 	},
-})
+)
 
 function formatDate(d: Date) {
 	return d.toLocaleString(t("lang"), options)
@@ -178,6 +183,7 @@ function settingsItem(competition: string) {
 		params: { tourId: route.params.tourId, compId: competition },
 	})
 }
+
 function addCompetition() {
 	router.push({
 		name: "Create competition",

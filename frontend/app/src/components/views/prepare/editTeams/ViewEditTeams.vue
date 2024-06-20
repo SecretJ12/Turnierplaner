@@ -1,7 +1,7 @@
 <template>
 	<div class="flex flex-column gap-5">
 		<div
-			v-if="tournament && competition"
+			v-if="tournamentSuc && tournament && competition"
 			class="grid"
 			style="flex-wrap: nowrap"
 		>
@@ -132,7 +132,7 @@ function $t(name: string) {
 	return computed(() => t(name))
 }
 
-const tournament = getTournamentDetails(
+const { data: tournament, isSuccess: tournamentSuc } = getTournamentDetails(
 	<string>route.params.tourId,
 	t,
 	toast,
