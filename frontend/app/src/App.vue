@@ -2,8 +2,11 @@
 import HeadContent from "@/components/header/HeadContent.vue"
 import { provide, ref } from "vue"
 import { access_token, auth } from "@/security/AuthService"
+import { useQueryProvider } from "vue-query"
 
 let aside = false
+
+useQueryProvider()
 
 const silentLoginCompleted = ref(false)
 auth

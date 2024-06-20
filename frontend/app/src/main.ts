@@ -41,6 +41,7 @@ const options: I18nOptions = {
 	warnHtmlMessage: false,
 	missingWarn: false,
 	fallbackWarn: false,
+	// @ts-ignore
 	messages,
 	legacy: false,
 }
@@ -117,8 +118,11 @@ setLocale({
 	},
 })
 
+import { VueQueryPlugin } from 'vue-query'
+
 app
 	.use(i18n)
+	.use(VueQueryPlugin)
 	.use(VueAxios, axios)
 	.use(router)
 	/* Primevue */
