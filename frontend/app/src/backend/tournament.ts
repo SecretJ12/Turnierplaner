@@ -7,6 +7,7 @@ import {
 } from "@/interfaces/tournament"
 import { ToastServiceMethods } from "primevue/toastservice"
 import { useQuery } from "vue-query/esm"
+import { RouteLocationNormalizedLoaded } from "vue-router"
 
 export function getTournamentList(
 	isLoggedIn: Ref<boolean>,
@@ -37,7 +38,7 @@ export function getTournamentList(
 }
 
 export function getTournamentDetails(
-	tourId: string,
+	route: RouteLocationNormalizedLoaded,
 	t: (s: string) => string,
 	toast: ToastServiceMethods,
 	handler: {
@@ -46,10 +47,10 @@ export function getTournamentDetails(
 	},
 ) {
 	return useQuery(
-		["tournament", tourId],
+		["tournament", route.params.tourId],
 		async () => {
 			return axios
-				.get<TournamentServer>(`/tournament/${tourId}/details`)
+				.get<TournamentServer>(`/tournament/${route.params.tourId}/details`)
 				.then<Tournament>((response) => {
 					return tournamentServerToClient(response.data)
 				})

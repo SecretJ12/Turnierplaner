@@ -2,7 +2,7 @@
 	<div class="flex flex-column gap-2">
 		<ViewConditions
 			:begin-game-phase="props.tournament.game_phase.begin"
-			:player="props.competition.playerA"
+			:second="props.competition.playerA"
 		/>
 		<div class="p-inputgroup">
 			<Dropdown

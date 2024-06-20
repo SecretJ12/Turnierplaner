@@ -6,13 +6,13 @@ import {
 } from "@/interfaces/player"
 
 export interface Team {
-	id: string
+	id?: string
 	playerA: Player | null
 	playerB: Player | null
 }
 
 export interface TeamServer {
-	id: string
+	id?: string
 	playerA: PlayerServer | null
 	playerB: PlayerServer | null
 }

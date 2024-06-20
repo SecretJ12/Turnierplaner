@@ -35,7 +35,7 @@ const {
 	data: tourDetails,
 	isLoading,
 	isError,
-} = getTournamentDetails(<string>route.params.tourId, t, toast, {
+} = getTournamentDetails(route, t, toast, {
 	err: () => {
 		router.back()
 	},

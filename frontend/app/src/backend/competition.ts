@@ -1,39 +1,39 @@
 import { ToastServiceMethods } from "primevue/toastservice"
-import { Ref, ref, watch } from "vue"
+import { Ref } from "vue"
 import axios from "axios"
 import {
-	Competition,
 	CompetitionServer,
 	competitionServerToClient,
 } from "@/interfaces/competition"
 import { RouteLocationNormalizedLoaded } from "vue-router"
+import { useQuery } from "vue-query/esm"
 
-export function getListCompetitions(
+export function getCompetitionsList(
 	route: RouteLocationNormalizedLoaded,
 	isLoggedIn: Ref<boolean>,
 	t: (s: string) => string,
 	toast: ToastServiceMethods,
 	handler: {
-		suc?: (err: () => void) => void
+		suc?: () => void
 		err?: () => void
 	},
 ) {
-	const competitions = ref<Competition[] | null>(null)
-
-	watch(isLoggedIn, update)
-	watch(route, update)
-	update()
-
-	function update() {
-		axios
-			.get<CompetitionServer[]>(
-				`/tournament/${route.params.tourId}/competition/list`,
-			)
-			.then((response) => {
-				competitions.value = response.data.map(competitionServerToClient)
-				if (handler.suc) handler.suc(handler.err || (() => {}))
-			})
-			.catch((error) => {
+	return useQuery(
+		["competitionList", route.params.tourId, isLoggedIn],
+		async () => {
+			return axios
+				.get<
+					CompetitionServer[]
+				>(`/tournament/${route.params.tourId}/competition/list`)
+				.then((response) => {
+					return response.data.map(competitionServerToClient)
+				})
+		},
+		{
+			onSuccess() {
+				if (handler.suc) handler.suc()
+			},
+			onError(error) {
 				toast.add({
 					severity: "error",
 					summary: t("ViewCompetitions.loadingFailed"),
@@ -42,10 +42,9 @@ export function getListCompetitions(
 				})
 				console.log(error)
 				if (handler.err) handler.err()
-			})
-	}
-
-	return competitions
+			},
+		},
+	)
 }
 
 export function getCompetitionDetails(
@@ -57,23 +56,22 @@ export function getCompetitionDetails(
 		err?: () => void
 	},
 ) {
-	const competition = ref<Competition | null>(null)
-
-	watch(route, update)
-	update()
-
-	function update() {
-		if (!route.params.tourId || !route.params.compId) return
-
-		axios
-			.get<CompetitionServer>(
-				`/tournament/${route.params.tourId}/competition/${route.params.compId}/details`,
-			)
-			.then((response) => {
-				competition.value = competitionServerToClient(response.data)
+	return useQuery(
+		["tournament", route.params.tourId, route.params.compId],
+		async () => {
+			return axios
+				.get<CompetitionServer>(
+					`/tournament/${route.params.tourId}/competition/${route.params.compId}/details`,
+				)
+				.then((response) => {
+					return competitionServerToClient(response.data)
+				})
+		},
+		{
+			onSuccess() {
 				if (handler.suc) handler.suc()
-			})
-			.catch((error) => {
+			},
+			onError(error) {
 				toast.add({
 					severity: "error",
 					summary: t("ViewEditCompetition.loadingDetailsFailed"),
@@ -82,10 +80,9 @@ export function getCompetitionDetails(
 				})
 				console.log(error)
 				if (handler.err) handler.err()
-			})
-	}
-
-	return competition
+			},
+		},
+	)
 }
 
 export function updateCompetition(

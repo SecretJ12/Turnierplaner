@@ -29,7 +29,7 @@
 			<template v-else-if="new Date() < tournament.game_phase.begin">
 				<!-- show registration page -->
 				<ViewSignUp
-					v-if="competition !== null"
+					v-if="competition"
 					:allow-registration="tournament.registration_phase.end > new Date()"
 					:begin-game-phase="tournament.game_phase.begin"
 					:competition="competition"
@@ -39,7 +39,7 @@
 				<!-- TODO show after plan has been published -->
 				<!-- show game page -->
 				<ViewGame
-					v-if="competition !== null"
+					v-if="competition"
 					:tour-type="competition.tourType"
 					:mode="competition.mode"
 				/>
@@ -65,15 +65,15 @@ const toast = useToast()
 
 const route = useRoute()
 const isLoggedIn = inject("loggedIn", ref(false))
-const canEdit = getCanEdit(<string>route.params.tourId, isLoggedIn)
+const { data: canEdit } = getCanEdit(<string>route.params.tourId, isLoggedIn)
 
 const { data: tournament, isSuccess: tournamentSuc } = getTournamentDetails(
-	<string>route.params.tourId,
+	route,
 	t,
 	toast,
 	{},
 )
-const competition = getCompetitionDetails(route, t, toast, {})
+const { data: competition } = getCompetitionDetails(route, t, toast, {})
 
 function settings() {
 	router.push({

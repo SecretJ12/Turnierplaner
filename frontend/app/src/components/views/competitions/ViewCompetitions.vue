@@ -12,7 +12,7 @@
 					v-for="competition in competitions"
 					v-else
 					:key="competition.id === null ? undefined : competition.id"
-					:can-edit="canEdit"
+					:can-edit="!!canEdit"
 					:description="competition.description"
 					:name="competition.name"
 					:type="competition.tourType"
@@ -83,7 +83,7 @@
 
 <script lang="ts" setup>
 import Item from "../../items/ItemCompetition.vue"
-import { inject, ref } from "vue"
+import { inject, ref, watch } from "vue"
 import { useRoute } from "vue-router"
 import AddItem from "@/components/items/ItemAdd.vue"
 import { router } from "@/main"
@@ -93,7 +93,7 @@ import Timeline from "primevue/timeline"
 import { getCanEdit } from "@/backend/security"
 import { getTournamentDetails } from "@/backend/tournament"
 import { useToast } from "primevue/usetoast"
-import { getListCompetitions } from "@/backend/competition"
+import { getCompetitionsList } from "@/backend/competition"
 
 const { t } = useI18n({ inheritLocale: true })
 const toast = useToast()
@@ -101,12 +101,18 @@ const toast = useToast()
 const route = useRoute()
 
 const isLoggedIn = inject("loggedIn", ref(false))
-const canEdit = getCanEdit(<string>route.params.tourId, isLoggedIn)
-const competitions = getListCompetitions(route, isLoggedIn, t, toast, {
-	err: () => {
-		router.push({ name: "Tournaments" })
+const { data: canEdit } = getCanEdit(<string>route.params.tourId, isLoggedIn)
+const { data: competitions } = getCompetitionsList(
+	route,
+	isLoggedIn,
+	t,
+	toast,
+	{
+		err: () => {
+			router.push({ name: "Tournaments" })
+		},
 	},
-})
+)
 
 const options: Intl.DateTimeFormatOptions = {
 	weekday: "long",
@@ -131,32 +137,40 @@ const status = ref([
 ])
 
 const openRegistration = ref(false)
-const { data, isLoading } = getTournamentDetails(
-	<string>route.params.tourId,
-	t,
-	toast,
-	{
-		suc: () => {
-			if (data.value === undefined) return
+const { data, isLoading } = getTournamentDetails(route, t, toast, {})
 
-			const date = new Date()
-			if (date > data.value.registration_phase.end) {
-				status.value[0].color = "green"
-				status.value[0].icon = "pi-check"
-				openRegistration.value = false
-			} else if (date > data.value.registration_phase.begin) {
-				status.value[0].color = "blue"
-				openRegistration.value = true
-			}
-			if (date > data.value.game_phase.end) {
-				status.value[1].color = "green"
-				status.value[1].icon = "pi-check"
-			} else if (date > data.value.game_phase.begin) {
-				status.value[1].color = "blue"
-			}
-		},
-	},
-)
+const test = () => {
+	if (data.value === undefined) return
+
+	const date = new Date()
+	if (date > data.value.registration_phase.end) {
+		status.value[0].color = "green"
+		status.value[0].icon = "pi-check"
+		openRegistration.value = false
+	} else if (date > data.value.registration_phase.begin) {
+		status.value[0].color = "blue"
+		status.value[0].icon = "pi-pencil"
+		openRegistration.value = true
+	} else {
+		status.value[0].color = "#000000"
+		status.value[0].icon = "pi-pencil"
+		openRegistration.value = false
+	}
+	if (date > data.value.game_phase.end) {
+		status.value[1].color = "green"
+		status.value[1].icon = "pi-check"
+	} else if (date > data.value.game_phase.begin) {
+		status.value[1].color = "blue"
+		status.value[1].icon = "pi-play"
+	} else {
+		status.value[1].color = "#000000"
+		status.value[1].icon = "pi-play"
+	}
+	console.log("update")
+
+	setTimeout(test, 1000)
+}
+watch(data, test)
 
 function formatDate(d: Date) {
 	return d.toLocaleString(t("lang"), options)

@@ -108,7 +108,6 @@ import { useRoute, useRouter } from "vue-router"
 import { useToast } from "primevue/usetoast"
 import { useI18n } from "vue-i18n"
 import { getTournamentDetails } from "@/backend/tournament"
-import { getCompetitionDetails } from "@/backend/competition"
 import PlayerList from "@/components/views/prepare/editTeams/PlayerList.vue"
 import { computed, ref, Ref } from "vue"
 import { Player } from "@/interfaces/player"
@@ -122,6 +121,7 @@ import {
 import { Mode, Progress } from "@/interfaces/competition"
 import TeamList from "@/components/views/prepare/editTeams/TeamList.vue"
 import { v4 as uuidv4 } from "uuid"
+import { getCompetitionDetails } from "@/backend/competition"
 
 const route = useRoute()
 const router = useRouter()
@@ -133,12 +133,12 @@ function $t(name: string) {
 }
 
 const { data: tournament, isSuccess: tournamentSuc } = getTournamentDetails(
-	<string>route.params.tourId,
+	route,
 	t,
 	toast,
 	{},
 )
-const competition = getCompetitionDetails(route, t, toast, {
+const { data: competition } = getCompetitionDetails(route, t, toast, {
 	suc: () => {
 		update()
 	},
@@ -371,6 +371,7 @@ function prevPage() {
 		params: { tourId: route.params.tourId, compId: route.params.compId },
 	})
 }
+
 function nextPage() {
 	// TODO only if every player was assigned to a team
 	router.replace({
@@ -380,6 +381,7 @@ function nextPage() {
 }
 
 let firstUpdate = true
+
 async function update() {
 	isUpdating.value = true
 	teams.value = []

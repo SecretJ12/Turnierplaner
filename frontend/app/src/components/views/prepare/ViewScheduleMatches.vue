@@ -24,7 +24,7 @@ const router = useRouter()
 const toast = useToast()
 const { t } = useI18n({ inheritLocale: true })
 
-const competition = getCompetitionDetails(route, t, toast, {
+const { data: competition } = getCompetitionDetails(route, t, toast, {
 	suc: () => {
 		if (competition.value === null) return
 	},

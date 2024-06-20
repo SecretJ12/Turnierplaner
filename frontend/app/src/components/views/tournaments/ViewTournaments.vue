@@ -35,7 +35,7 @@ const { t } = useI18n({ inheritLocale: true })
 const toast = useToast()
 
 const isLoggedIn = inject("loggedIn", ref(false))
-const canCreate = getCanCreate(isLoggedIn)
+const { data: canCreate } = getCanCreate(isLoggedIn)
 const {
 	data: tournaments,
 	isLoading,

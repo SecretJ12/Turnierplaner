@@ -34,8 +34,8 @@
 			<template v-if="competition?.tourType === TourType.GROUPS">
 				<Card v-for="(group, i) in groups" :key="i">
 					<template #title
-						>{{ t("ViewPrepare.assignMatches.Group") }} {{ i + 1 }}</template
-					>
+						>{{ t("ViewPrepare.assignMatches.Group") }} {{ i + 1 }}
+					</template>
 					<template #content>
 						<TeamContainerDraggable
 							v-if="competition"
@@ -106,7 +106,7 @@ function $t(name: string) {
 	return computed(() => t(name))
 }
 
-const competition = getCompetitionDetails(route, t, toast, {
+const { data: competition } = getCompetitionDetails(route, t, toast, {
 	suc: () => {
 		if (competition.value === null) return
 		update()
@@ -230,6 +230,7 @@ const knockoutSystem = {
 }
 
 let firstUpdate = true
+
 async function update() {
 	animated.value = true
 	disabled.value = true
