@@ -139,7 +139,7 @@ const status = ref([
 const openRegistration = ref(false)
 const { data, isLoading } = getTournamentDetails(route, t, toast, {})
 
-const test = () => {
+watch(data, () => {
 	if (data.value === undefined) return
 
 	const date = new Date()
@@ -166,11 +166,7 @@ const test = () => {
 		status.value[1].color = "#000000"
 		status.value[1].icon = "pi-play"
 	}
-	console.log("update")
-
-	setTimeout(test, 1000)
-}
-watch(data, test)
+})
 
 function formatDate(d: Date) {
 	return d.toLocaleString(t("lang"), options)

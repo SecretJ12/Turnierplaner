@@ -121,8 +121,9 @@ const vueQueryPluginOptions: VueQueryPluginOptions = {
 	queryClientConfig: {
 		defaultOptions: {
 			queries: {
-				staleTime: 3600,
+				staleTime: 1000,
 				refetchOnWindowFocus: false,
+				refetchOnReconnect: false,
 				refetchOnMount: false,
 			},
 		},
@@ -133,10 +134,10 @@ app
 	.use(i18n)
 	.use(VueAxios, axios)
 	.use(router)
-	.use(VueQueryPlugin, vueQueryPluginOptions)
 	/* Primevue */
 	.use(PrimeVue, { ripple: true })
 	.use(ToastService)
+	.use(VueQueryPlugin, vueQueryPluginOptions)
 	.component("Steps", Steps)
 	.component("TabView", TabView)
 	.component("TabMenu", TabMenu)
