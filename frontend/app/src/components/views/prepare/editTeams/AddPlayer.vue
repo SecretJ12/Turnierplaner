@@ -2,7 +2,7 @@
 	<div class="flex flex-column gap-2">
 		<ViewConditions
 			:begin-game-phase="props.tournament.game_phase.begin"
-			:second="props.competition.playerA"
+			:second="props.competition.mode === Mode.DOUBLE"
 		/>
 		<div class="p-inputgroup">
 			<Dropdown
@@ -38,7 +38,7 @@ import { useI18n } from "vue-i18n"
 import { DropdownFilterEvent } from "primevue/dropdown"
 import axios from "axios"
 import { Player, playerServerToClient } from "@/interfaces/player"
-import { Competition, Sex } from "@/interfaces/competition"
+import {Competition, Mode, Sex} from "@/interfaces/competition"
 import { Tournament } from "@/interfaces/tournament"
 import { ref } from "vue"
 import { useToast } from "primevue/usetoast"
