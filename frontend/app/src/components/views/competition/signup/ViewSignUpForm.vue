@@ -159,7 +159,7 @@
 						v-model="selectedPlayerB"
 						:options="suggestionsPlayerB"
 						:auto-filter-focus="true"
-						:filter-placeholder="t('ViewCompetition.selectPlayer')"
+						:filter-placeholder="t('ViewCompetition.searchPlayer')"
 						:placeholder="t('ViewCompetition.selectPlayer')"
 						:loading="loadingB"
 						option-label="name"
