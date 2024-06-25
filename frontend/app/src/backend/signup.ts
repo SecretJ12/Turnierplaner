@@ -92,7 +92,7 @@ export function getSignedUp(
 					life: 3000,
 				})
 			},
-			initialData: {
+			placeholderData: {
 				playersA: [],
 				playersB: [],
 				teams: [],

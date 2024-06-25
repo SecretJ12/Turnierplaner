@@ -16,6 +16,7 @@
 						option-label="name"
 						data-key="id"
 						filter
+						:disabled="mutSingleLoading || mutDoubleLoading"
 						@filter="queryPlayerA"
 					>
 						<template #empty>
@@ -25,7 +26,10 @@
 							{{ t("ViewSignUp.noPlayerFound") }}
 						</template>
 					</Dropdown>
-					<Button @click="signUpSingle">
+					<Button
+						:disabled="mutSingleLoading || mutDoubleLoading"
+						@click="signUpSingle"
+					>
 						{{ t("general.signUp") }}
 					</Button>
 				</div>
@@ -55,6 +59,7 @@
 							option-label="name"
 							data-key="id"
 							filter
+							:disabled="mutSingleLoading || mutDoubleLoading"
 							@filter="queryPlayerA"
 						>
 							<template #empty>
@@ -77,6 +82,7 @@
 							option-label="name"
 							data-key="id"
 							filter
+							:disabled="mutSingleLoading || mutDoubleLoading"
 							@filter="queryPlayerB"
 						>
 							<template #empty>
@@ -88,7 +94,11 @@
 						</Dropdown>
 					</div>
 				</div>
-				<Button class="w-full" @click="signUpDoubleTog">
+				<Button
+					class="w-full"
+					:disabled="mutSingleLoading || mutDoubleLoading"
+					@click="signUpDoubleTog"
+				>
 					{{ t("general.signUp") }}
 				</Button>
 			</div>
@@ -109,6 +119,7 @@
 						option-label="name"
 						data-key="id"
 						filter
+						:disabled="mutSingleLoading || mutDoubleLoading"
 						@filter="queryPlayerA"
 					>
 						<template #empty>
@@ -118,7 +129,10 @@
 							{{ t("ViewSignUp.noPlayerFound") }}
 						</template>
 					</Dropdown>
-					<Button @click="signUpDoubleIndSame">
+					<Button
+						:disabled="mutSingleLoading || mutDoubleLoading"
+						@click="signUpDoubleIndSame"
+					>
 						{{ t("general.signUp") }}
 					</Button>
 				</div>
@@ -139,6 +153,7 @@
 						option-label="name"
 						data-key="id"
 						filter
+						:disabled="mutSingleLoading || mutDoubleLoading"
 						@filter="queryPlayerA"
 					>
 						<template #empty>
@@ -148,7 +163,10 @@
 							{{ t("ViewSignUp.noPlayerFound") }}
 						</template>
 					</Dropdown>
-					<Button @click="signUpDoubleIndDifA">
+					<Button
+						:disabled="mutSingleLoading || mutDoubleLoading"
+						@click="signUpDoubleIndDifA"
+					>
 						{{ t("general.signUp") }}
 					</Button>
 				</div>
@@ -165,6 +183,7 @@
 						option-label="name"
 						data-key="id"
 						filter
+						:disabled="mutSingleLoading || mutDoubleLoading"
 						@filter="queryPlayerB"
 					>
 						<template #empty>
@@ -174,7 +193,10 @@
 							{{ t("ViewSignUp.noPlayerFound") }}
 						</template>
 					</Dropdown>
-					<Button @click="signUpDoubleIndDifB">
+					<Button
+						:disabled="mutSingleLoading || mutDoubleLoading"
+						@click="signUpDoubleIndDifB"
+					>
 						{{ t("general.signUp") }}
 					</Button>
 				</div>
@@ -185,16 +207,18 @@
 
 <script lang="ts" setup>
 import { ref } from "vue"
-import axios from "axios"
 import ViewConditions from "@/components/views/competition/signup/ViewConditions.vue"
 import { useRoute } from "vue-router"
 import { Mode, SignUp } from "@/interfaces/competition"
-import { Player, playerClientToServer } from "@/interfaces/player"
+import { Player } from "@/interfaces/player"
 import { useI18n } from "vue-i18n"
 import { DropdownFilterEvent } from "primevue/dropdown"
 import { useToast } from "primevue/usetoast"
-import { TeamServer } from "@/interfaces/team"
-import { getCompetitionDetails } from "@/backend/competition"
+import {
+	getCompetitionDetails,
+	useSignUpDoubleTog,
+	useSignUpSingle,
+} from "@/backend/competition"
 import { useQueryClient } from "vue-query"
 import { extractSearchPlayer, getPlayer } from "@/backend/player"
 
@@ -223,6 +247,11 @@ const { data: suggestionsPlayerB, isFetching: loadingB } = getPlayer(
 	toast,
 )
 
+const { mutate: mutateSignUpSingle, isLoading: mutSingleLoading } =
+	useSignUpSingle(route, t, toast, queryClient)
+const { mutate: mutateSignUpDoubleTog, isLoading: mutDoubleLoading } =
+	useSignUpDoubleTog(route, t, toast, queryClient)
+
 function queryPlayerA(event: DropdownFilterEvent) {
 	searchA.value = event.value
 }
@@ -231,133 +260,24 @@ function queryPlayerB(event: DropdownFilterEvent) {
 	searchB.value = event.value
 }
 
-function signUpPlayer(playerA: boolean) {
-	const form: TeamServer = {
-		playerA: null,
-		playerB: null,
-	}
-	if (playerA) {
-		if (!selectedPlayerA.value) {
-			toast.add({
-				severity: "error",
-				summary: t("ViewSignUp.noPlayerSelected"),
-				detail: t("ViewSignUp.selectPlayerFirst"),
-				life: 3000,
-			})
-			return
-		}
-		form.playerA = playerClientToServer(selectedPlayerA.value)
-	} else {
-		if (!selectedPlayerB.value) {
-			toast.add({
-				severity: "error",
-				summary: t("ViewSignUp.noPlayerSelected"),
-				detail: t("ViewSignUp.selectPlayerFirst"),
-				life: 3000,
-			})
-			return
-		}
-		form.playerB = playerClientToServer(selectedPlayerB.value)
-	}
-
-	axios
-		.post(
-			`/tournament/${route.params.tourId}/competition/${route.params.compId}/signUp`,
-			form,
-		)
-		.then(() => {
-			toast.add({
-				severity: "success",
-				summary: t("Player.register_success"),
-				life: 3000,
-			})
-			queryClient.invalidateQueries([
-				"signedUp",
-				route.params.tourId,
-				route.params.compId,
-			])
-		})
-		.catch((error) => {
-			if (error.response.status === 409)
-				toast.add({
-					severity: "error",
-					summary: t("Player.already_exists"),
-					life: 3000,
-				})
-			else
-				toast.add({
-					severity: "error",
-					summary: t("Player.register_failed"),
-					detail: error,
-					life: 3000,
-				})
-		})
-}
-
 function signUpSingle() {
-	signUpPlayer(true)
+	mutateSignUpSingle({ player: selectedPlayerA, playerB: false })
 }
 
 function signUpDoubleIndSame() {
-	signUpPlayer(true)
+	mutateSignUpSingle({ player: selectedPlayerA, playerB: false })
 }
 
 function signUpDoubleIndDifA() {
-	signUpPlayer(true)
+	mutateSignUpSingle({ player: selectedPlayerA, playerB: false })
 }
 
 function signUpDoubleIndDifB() {
-	signUpPlayer(false)
+	mutateSignUpSingle({ player: selectedPlayerB, playerB: true })
 }
 
 function signUpDoubleTog() {
-	if (!selectedPlayerA.value || !selectedPlayerB.value) {
-		toast.add({
-			severity: "error",
-			summary: t("ViewSignUp.noPlayerSelected"),
-			detail: t("ViewSignUp.selectPlayerFirst"),
-			life: 3000,
-		})
-		return
-	}
-	const form = {
-		playerA: playerClientToServer(selectedPlayerA.value),
-		playerB: playerClientToServer(selectedPlayerB.value),
-	}
-
-	axios
-		.post(
-			`/tournament/${route.params.tourId}/competition/${route.params.compId}/signUp`,
-			form,
-		)
-		.then(() => {
-			toast.add({
-				severity: "success",
-				summary: t("Player.register_success"),
-				life: 3000,
-			})
-			queryClient.invalidateQueries([
-				"signedUp",
-				route.params.tourId,
-				route.params.compId,
-			])
-		})
-		.catch((error) => {
-			// TODO checks for team already partially registered also in backend
-			if (error.response.status === 409)
-				toast.add({
-					severity: "error",
-					summary: t("Player.already_exists"),
-					life: 3000,
-				})
-			else
-				toast.add({
-					severity: "error",
-					summary: t("Player.register_failed"),
-					detail: error,
-					life: 3000,
-				})
-		})
+	mutateSignUpDoubleTog({ playerA: selectedPlayerA, playerB: selectedPlayerB })
 }
 </script>
 

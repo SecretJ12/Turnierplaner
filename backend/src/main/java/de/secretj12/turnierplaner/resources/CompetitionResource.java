@@ -376,14 +376,14 @@ public class CompetitionResource {
         return (comp.getPlayerASex() == Sex.FEMALE && player.getSex() == SexType.MALE)
             || (comp.getPlayerASex() == Sex.MALE && player.getSex() == SexType.FEMALE)
             || (comp.playerAhasMinAge() && comp.getPlayerAminAge().isBefore(player.getBirthday()))
-            || (comp.playerAhasMaxAge() && comp.getPlayerAminAge().isAfter(player.getBirthday()));
+            || (comp.playerAhasMaxAge() && comp.getPlayerAmaxAge().isAfter(player.getBirthday()));
     }
 
     private boolean conditionsFailB(Competition comp, Player player) {
         return (comp.getPlayerBSex() == Sex.FEMALE && player.getSex() == SexType.MALE)
             || (comp.getPlayerBSex() == Sex.MALE && player.getSex() == SexType.FEMALE)
             || (comp.playerBhasMinAge() && comp.getPlayerBminAge().isBefore(player.getBirthday()))
-            || (comp.playerBhasMaxAge() && comp.getPlayerBminAge().isAfter(player.getBirthday()));
+            || (comp.playerBhasMaxAge() && comp.getPlayerBmaxAge().isAfter(player.getBirthday()));
     }
 
     @GET

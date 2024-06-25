@@ -48,12 +48,12 @@ export function getPlayer(
 	toast: ToastServiceMethods,
 ) {
 	return useQuery(
-		[search, searchPlayer],
+		["searchPlayer", search, searchPlayer],
 		async () => {
 			return axios
 				.get<
 					Player[]
-				>(`/player/find?search=${search.value.toLowerCase()}` + (searchPlayer.value.sex !== Sex.ANY ? `&sex=${searchPlayer.value.sex}` : "") + (searchPlayer.value.hasMinAge && searchPlayer.value.minAge !== null ? `&minAge=${searchPlayer.value.minAge.toISOString().slice(0, 10)}` : "") + (searchPlayer.value.hasMaxAge && searchPlayer.value.maxAge !== null ? `&minAge=${searchPlayer.value.maxAge.toISOString().slice(0, 10)}` : ""))
+				>(`/player/find?search=${search.value.toLowerCase()}` + (searchPlayer.value.sex !== Sex.ANY ? `&sex=${searchPlayer.value.sex}` : "") + (searchPlayer.value.hasMinAge && searchPlayer.value.minAge !== null ? `&minAge=${searchPlayer.value.minAge.toISOString().slice(0, 10)}` : "") + (searchPlayer.value.hasMaxAge && searchPlayer.value.maxAge !== null ? `&maxAge=${searchPlayer.value.maxAge.toISOString().slice(0, 10)}` : ""))
 				.then((result) => {
 					return result.data.map(playerServerToClient)
 				})
