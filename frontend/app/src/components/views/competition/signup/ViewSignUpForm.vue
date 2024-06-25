@@ -188,18 +188,15 @@ import { ref } from "vue"
 import axios from "axios"
 import ViewConditions from "@/components/views/competition/signup/ViewConditions.vue"
 import { useRoute } from "vue-router"
-import { Mode, Sex, SignUp } from "@/interfaces/competition"
-import {
-	Player,
-	playerClientToServer,
-	playerServerToClient,
-} from "@/interfaces/player"
+import { Mode, SignUp } from "@/interfaces/competition"
+import { Player, playerClientToServer } from "@/interfaces/player"
 import { useI18n } from "vue-i18n"
 import { DropdownFilterEvent } from "primevue/dropdown"
 import { useToast } from "primevue/usetoast"
 import { TeamServer } from "@/interfaces/team"
 import { getCompetitionDetails } from "@/backend/competition"
 import { useQueryClient } from "vue-query"
+import { extractSearchPlayer, getPlayer } from "@/backend/player"
 
 const { t } = useI18n({ inheritLocale: true })
 const toast = useToast()
@@ -207,115 +204,31 @@ const toast = useToast()
 const route = useRoute()
 const queryClient = useQueryClient()
 
-const selectedPlayerA = ref<Player | null>(null)
-const suggestionsPlayerA = ref<Player[]>([])
-const loadingA = ref<boolean>(false)
-const selectedPlayerB = ref<Player | null>(null)
-const suggestionsPlayerB = ref<Player[]>([])
-const loadingB = ref<boolean>(false)
-
 const { data: competition } = getCompetitionDetails(route, t, toast, {})
 
+const selectedPlayerA = ref<Player | null>(null)
+const searchA = ref<string>("")
+const { data: suggestionsPlayerA, isFetching: loadingA } = getPlayer(
+	searchA,
+	extractSearchPlayer(competition, false),
+	t,
+	toast,
+)
+const selectedPlayerB = ref<Player | null>(null)
+const searchB = ref<string>("")
+const { data: suggestionsPlayerB, isFetching: loadingB } = getPlayer(
+	searchB,
+	extractSearchPlayer(competition, true),
+	t,
+	toast,
+)
+
 function queryPlayerA(event: DropdownFilterEvent) {
-	if (!competition.value) return
-
-	loadingA.value = true
-	suggestionsPlayerA.value = suggestionsPlayerA.value.filter((item) => {
-		return item.name.toLowerCase().includes(event.value.toLowerCase())
-	})
-
-	if (
-		competition.value.playerA.hasMinAge &&
-		competition.value.playerA.minAge === null
-	) {
-		console.log("Data invalid")
-		return
-	}
-	// TODO put to backend file
-	axios
-		.get<Player[]>(
-			`/player/find?search=${event.value}` +
-				(competition.value.playerA.sex !== Sex.ANY
-					? `&sex=${competition.value.playerA.sex}`
-					: "") +
-				(competition.value.playerA.hasMinAge &&
-				competition.value.playerA.minAge !== null
-					? `&minAge=${competition.value.playerA.minAge.toISOString().slice(0, 10)}`
-					: "") +
-				(competition.value.playerA.hasMaxAge &&
-				competition.value.playerA.maxAge !== null
-					? `&minAge=${competition.value.playerA.maxAge.toISOString().slice(0, 10)}`
-					: ""),
-		)
-		.then((result) => {
-			// TODO avoid races
-			suggestionsPlayerA.value = result.data.map((item) => {
-				return playerServerToClient(item)
-			})
-		})
-		.catch((error) => {
-			toast.add({
-				severity: "error",
-				summary: t("ViewCompetition.query_search_failed"),
-				detail: error,
-				life: 3000,
-			})
-			console.log(error)
-		})
-		.finally(() => {
-			loadingA.value = false
-		})
+	searchA.value = event.value
 }
 
 function queryPlayerB(event: DropdownFilterEvent) {
-	if (!competition.value) return
-
-	loadingB.value = true
-	suggestionsPlayerB.value = suggestionsPlayerB.value.filter((item) => {
-		return item.name.toLowerCase().includes(event.value.toLowerCase())
-	})
-
-	if (
-		competition.value.playerB.hasMinAge &&
-		competition.value.playerB.minAge === null
-	) {
-		console.log("Data invalid")
-		return
-	}
-	// TODO put to backend file
-	axios
-		.get<Player[]>(
-			`/player/find?search=${event.value}` +
-				(competition.value.playerB.sex !== Sex.ANY
-					? `&sex=${competition.value.playerB.sex}`
-					: "") +
-				(competition.value.playerB.hasMinAge &&
-				competition.value.playerB.minAge !== null
-					? `&minAge=${competition.value.playerB.minAge.toISOString().slice(0, 10)}`
-					: "") +
-				(competition.value.playerB.hasMaxAge &&
-				competition.value.playerB.maxAge !== null
-					? `&minAge=${competition.value.playerB.maxAge.toISOString().slice(0, 10)}`
-					: ""),
-		)
-		.then((result) => {
-			// TODO avoid races
-			suggestionsPlayerB.value = result.data.map((item) => {
-				return playerServerToClient(item)
-			})
-		})
-		.catch((error) => {
-			toast.add({
-				severity: "error",
-				summary: t("ViewCompetition.query_search_failed"),
-				detail: error,
-				life: 3000,
-			})
-			console.log(error)
-		})
-		.finally(() => {
-			loadingB.value = false
-		})
+	searchB.value = event.value
 }
 
 function signUpPlayer(playerA: boolean) {
