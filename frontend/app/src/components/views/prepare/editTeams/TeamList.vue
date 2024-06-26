@@ -119,7 +119,6 @@ function memberRemoved(i: number) {
 }
 
 function wrap(el: Player, from: string): TeamArray {
-	console.log(from)
 	if (from === "playerA") {
 		return {
 			id: uuidv4(),

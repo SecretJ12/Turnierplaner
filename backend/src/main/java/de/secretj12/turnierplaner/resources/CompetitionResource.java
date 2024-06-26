@@ -122,7 +122,7 @@ public class CompetitionResource {
 
         Competition dbCompetition = new Competition();
         competition.toDB(dbCompetition);
-        dbCompetition.setcProgress(CreationProgress.PLAYER);
+        dbCompetition.setcProgress(CreationProgress.TEAMS);
         dbCompetition.setTournament(tournament);
         competitions.persist(dbCompetition);
         return "successfully added";

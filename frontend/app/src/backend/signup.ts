@@ -15,7 +15,11 @@ export function getSignedUp(
 ) {
 	const { data: competition } = getCompetitionDetails(route, t, toast, {})
 	return useQuery(
-		["signedUp", route.params.tourId, route.params.compId],
+		[
+			"signedUp",
+			computed(() => route.params.tourId),
+			computed(() => route.params.compId),
+		],
 		async () => {
 			return axios
 				.get<
@@ -98,6 +102,57 @@ export function getSignedUp(
 				teams: [],
 			},
 			enabled: computed(() => !!competition),
+		},
+	)
+}
+
+export function getSignedUpPrepare(
+	route: RouteLocationNormalizedLoaded,
+	t: (s: string) => string,
+	toast: ToastServiceMethods,
+) {
+	return useQuery(
+		[
+			"signedUp",
+			computed(() => route.params.tourId),
+			computed(() => route.params.compId),
+		],
+		async () => {
+			return axios
+				.get<
+					Team[]
+				>(`/tournament/${route.params.tourId}/competition/${route.params.compId}/signedUpTeams`)
+				.then<TeamLists>((response) => {
+					const teamLists: TeamLists = {
+						playersA: [],
+						playersB: [],
+						teams: [],
+					}
+					for (const team of response.data) {
+						if (team.playerA && team.playerB) {
+							teamLists.teams.push(teamServerToClient(team))
+						} else if (team.playerA) {
+							teamLists.playersA.push(playerServerToClient(team.playerA))
+						} else if (team.playerB) {
+							teamLists.playersB.push(playerServerToClient(team.playerB))
+						}
+					}
+					return teamLists
+				})
+		},
+		{
+			onError() {
+				toast.add({
+					severity: "error",
+					summary: t("ViewCompetition.query_player_failed"),
+					life: 3000,
+				})
+			},
+			placeholderData: {
+				playersA: [],
+				playersB: [],
+				teams: [],
+			},
 		},
 	)
 }

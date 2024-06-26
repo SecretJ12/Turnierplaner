@@ -109,19 +109,20 @@ import { useToast } from "primevue/usetoast"
 import { useI18n } from "vue-i18n"
 import { getTournamentDetails } from "@/backend/tournament"
 import PlayerList from "@/components/views/prepare/editTeams/PlayerList.vue"
-import { computed, ref, Ref } from "vue"
+import { computed, ref, Ref, watch } from "vue"
 import { Player } from "@/interfaces/player"
-import axios from "axios"
 import {
 	TeamArray,
 	teamArrayClientToServer,
-	teamArrayServerToClient,
-	TeamServer,
+	teamToArray,
 } from "@/interfaces/team"
 import { Mode, Progress } from "@/interfaces/competition"
 import TeamList from "@/components/views/prepare/editTeams/TeamList.vue"
 import { v4 as uuidv4 } from "uuid"
 import { getCompetitionDetails } from "@/backend/competition"
+import { getSignedUpPrepare } from "@/backend/signup"
+import { useQueryClient } from "vue-query"
+import axios from "axios"
 
 const route = useRoute()
 const router = useRouter()
@@ -132,27 +133,22 @@ function $t(name: string) {
 	return computed(() => t(name))
 }
 
+const isUpdating = ref(false)
+
+const teams = ref<TeamArray[]>([])
+const playersA = ref<Player[]>([])
+const playersB = ref<Player[]>([])
+
+const queryClient = useQueryClient()
 const { data: tournament, isSuccess: tournamentSuc } = getTournamentDetails(
 	route,
 	t,
 	toast,
 	{},
 )
-const { data: competition } = getCompetitionDetails(route, t, toast, {
-	suc: () => {
-		update()
-	},
-})
-const isUpdating = ref(false)
-
-// for restoring the initial state
-const initialTeam = ref<TeamArray[]>([])
-const initialPlayerA = ref<Player[]>([])
-const initialPlayerB = ref<Player[]>([])
-
-const teams = ref<TeamArray[]>([])
-const playersA = ref<Player[]>([])
-const playersB = ref<Player[]>([])
+const { data: competition } = getCompetitionDetails(route, t, toast, {})
+const { data: signedUpTeams, isPlaceholderData: signedUpPlaceholder } =
+	getSignedUpPrepare(route, t, toast)
 
 function sleep(milliseconds: number) {
 	return new Promise((resolve) => setTimeout(resolve, milliseconds))
@@ -275,18 +271,7 @@ const randomizeItems = ref([
 ])
 
 async function reset() {
-	isUpdating.value = true
-
-	teams.value.splice(0, teams.value.length)
-	playersA.value.splice(0, playersA.value.length)
-	playersB.value.splice(0, playersB.value.length)
-	await sleep(1000)
-
-	initialTeam.value.forEach((t) =>
-		teams.value.push(JSON.parse(JSON.stringify(t))),
-	)
-	initialPlayerA.value.forEach((p) => playersA.value.push(p))
-	initialPlayerB.value.forEach((p) => playersB.value.push(p))
+	await loadFromServer()
 
 	toast.add({
 		severity: "info",
@@ -294,9 +279,6 @@ async function reset() {
 		detail: "Restored initial configuration",
 		life: 3000,
 	})
-
-	await sleep(500)
-	isUpdating.value = false
 }
 
 function save() {
@@ -312,7 +294,6 @@ function save() {
 		return
 	}
 
-	isUpdating.value = true
 	const t = teams.value.map(teamArrayClientToServer)
 	playersA.value.forEach((player) =>
 		t.push({
@@ -328,40 +309,17 @@ function save() {
 			playerB: player,
 		}),
 	)
-	teams.value = []
-	playersA.value = []
-	playersB.value = []
-	initialTeam.value = []
-	initialPlayerA.value = []
-	initialPlayerB.value = []
-	const anFin = sleep(1000)
-
 	axios
-		.post<TeamServer[]>(
+		.post(
 			`/tournament/${route.params.tourId}/competition/${route.params.compId}/updateTeams`,
 			t,
 		)
-		.then(async (response) => {
-			await anFin
-			processServerTeams(response.data)
-
-			toast.add({
-				severity: "success",
-				summary: "Success",
-				detail: "Players updated",
-				life: 3000,
-			})
-			await sleep(500)
-			isUpdating.value = false
-		})
-		.catch((error) => {
-			console.log(error)
-			toast.add({
-				severity: "error",
-				summary: "Error",
-				detail: "Players could not be updated",
-				life: 3000,
-			})
+		.then(() => {
+			queryClient.invalidateQueries([
+				"signedUp",
+				route.params.tourId,
+				route.params.compId,
+			])
 		})
 }
 
@@ -381,56 +339,46 @@ function nextPage() {
 }
 
 let firstUpdate = true
+// extensive anti racing
+let loadingFromServer = false
+let rerunLoadFromServer = false
 
-async function update() {
+async function loadFromServer() {
+	if (!signedUpTeams.value || signedUpPlaceholder.value) return
+
+	if (loadingFromServer) {
+		rerunLoadFromServer = true
+		return
+	}
+	loadingFromServer = true
+
 	isUpdating.value = true
 	teams.value = []
 	playersA.value = []
 	playersB.value = []
-	initialTeam.value = []
-	initialPlayerA.value = []
-	initialPlayerB.value = []
 	const anFin = sleep(firstUpdate ? 0 : 300)
 	firstUpdate = false
-	axios
-		.get<
-			TeamServer[]
-		>(`/tournament/${route.params.tourId}/competition/${route.params.compId}/signedUpTeams`)
-		.then(async (response) => {
-			await anFin
-			processServerTeams(response.data)
-			await sleep(300)
-			isUpdating.value = false
-		})
+	await anFin
+	playerCount.value =
+		signedUpTeams.value.playersA.length +
+		signedUpTeams.value.playersB.length +
+		signedUpTeams.value.teams.length
+	playersA.value.push(...signedUpTeams.value.playersA)
+	playersB.value.push(...signedUpTeams.value.playersB)
+	teams.value.push(...signedUpTeams.value.teams.map(teamToArray))
+	await sleep(300)
+	isUpdating.value = false
+	loadingFromServer = false
+	if (rerunLoadFromServer) {
+		rerunLoadFromServer = false
+		await loadFromServer()
+	}
 }
 
-function processServerTeams(serverTeams: TeamServer[]) {
-	serverTeams.map(teamArrayServerToClient).forEach((team) => {
-		if (team.playerA.length > 0 && team.playerB.length === 0) {
-			playersA.value.push(team.playerA[0])
-			initialPlayerA.value.push(team.playerA[0])
-		} else if (
-			team.playerA.length === 0 &&
-			team.playerB.length > 0 &&
-			competition.value?.playerB.different
-		) {
-			playersB.value.push(team.playerB[0])
-			initialPlayerB.value.push(team.playerB[0])
-		} else if (
-			team.playerA.length === 0 &&
-			team.playerB.length > 0 &&
-			!competition.value?.playerB.different
-		) {
-			playersA.value.push(team.playerB[0])
-			initialPlayerA.value.push(team.playerB[0])
-		} else if (team.playerA.length > 0 && team.playerB.length > 0) {
-			teams.value.push(team)
-			initialTeam.value.push(JSON.parse(JSON.stringify(team)))
-			playerCount.value++
-		}
-		playerCount.value++
-	})
-}
+if (!signedUpPlaceholder.value) loadFromServer()
+watch(signedUpTeams, () => {
+	loadFromServer()
+})
 </script>
 
 <style scoped></style>

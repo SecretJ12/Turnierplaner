@@ -1,5 +1,5 @@
 import { ToastServiceMethods } from "primevue/toastservice"
-import { Ref } from "vue"
+import { computed, Ref } from "vue"
 import axios from "axios"
 import {
 	CompetitionServer,
@@ -22,7 +22,7 @@ export function getCompetitionsList(
 	},
 ) {
 	return useQuery(
-		["competitionList", route.params.tourId, isLoggedIn],
+		["competitionList", computed(() => route.params.tourId), isLoggedIn],
 		async () => {
 			return axios
 				.get<
@@ -60,7 +60,11 @@ export function getCompetitionDetails(
 	},
 ) {
 	return useQuery(
-		["tournament", route.params.tourId, route.params.compId],
+		[
+			"competitionDetails",
+			computed(() => route.params.tourId),
+			computed(() => route.params.compId),
+		],
 		async () => {
 			return axios
 				.get<CompetitionServer>(
@@ -84,6 +88,7 @@ export function getCompetitionDetails(
 				console.log(error)
 				if (handler.err) handler.err()
 			},
+			keepPreviousData: true,
 		},
 	)
 }

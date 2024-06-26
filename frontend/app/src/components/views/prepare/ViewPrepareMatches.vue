@@ -30,7 +30,7 @@
 
 <script setup lang="ts">
 import { useRoute, useRouter } from "vue-router"
-import { computed, inject, ref } from "vue"
+import { computed, inject, ref, watch } from "vue"
 import { useI18n } from "vue-i18n"
 import { useToast } from "primevue/usetoast"
 import { TabMenuChangeEvent } from "primevue/tabmenu"
@@ -55,7 +55,6 @@ const { data: competitions } = getCompetitionsList(
 	t,
 	toast,
 	{
-		suc: () => updateRoute(),
 		err: () => {
 			router.push({
 				name: "Tournaments",
@@ -64,6 +63,8 @@ const { data: competitions } = getCompetitionsList(
 	},
 )
 const activeTab = ref<number>(0)
+watch([competitions, route], () => updateRoute())
+updateRoute()
 
 function updateRoute(compId?: string) {
 	if (!competitions.value) return

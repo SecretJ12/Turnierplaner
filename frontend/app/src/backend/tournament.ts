@@ -1,4 +1,4 @@
-import { Ref } from "vue"
+import { computed, Ref } from "vue"
 import axios from "axios"
 import {
 	Tournament,
@@ -47,7 +47,7 @@ export function getTournamentDetails(
 	},
 ) {
 	return useQuery(
-		["tournament", route.params.tourId],
+		["tournament", computed(() => route.params.tourId)],
 		async () => {
 			return axios
 				.get<TournamentServer>(`/tournament/${route.params.tourId}/details`)
