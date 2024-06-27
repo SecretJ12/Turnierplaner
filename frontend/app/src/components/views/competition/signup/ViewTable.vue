@@ -181,7 +181,7 @@ import { Player } from "@/interfaces/player"
 import { useToast } from "primevue/usetoast"
 import { getCanEdit } from "@/backend/security"
 import { getCompetitionDetails } from "@/backend/competition"
-import { getSignedUp } from "@/backend/signup"
+import { getSignedUpSepByComp } from "@/backend/signup"
 
 const { t } = useI18n({ inheritLocale: true })
 const toast = useToast()
@@ -192,7 +192,7 @@ const isLoggedIn = inject("loggedIn", ref(false))
 const { data: canEdit } = getCanEdit(<string>route.params.tourId, isLoggedIn)
 
 const { data: competition } = getCompetitionDetails(route, t, toast, {})
-const { data: signedUp } = getSignedUp(route, t, toast)
+const { data: signedUp } = getSignedUpSepByComp(route, t, toast)
 
 function deletePlayer(player: Player) {
 	console.log(player)

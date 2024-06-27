@@ -9,7 +9,7 @@
 				v-model="selectedPlayer"
 				:options="suggestionsPlayer"
 				:loading="loading"
-				:disabled="isUpdating"
+				:disabled="props.isUpdating"
 				:auto-filter-focus="true"
 				:filter-placeholder="t('ViewCompetition.searchPlayer')"
 				:placeholder="t('ViewCompetition.selectPlayer')"
@@ -25,7 +25,7 @@
 					{{ t("ViewSignUp.noPlayerFound") }}
 				</template>
 			</Dropdown>
-			<Button :disabled="isUpdating" @click="addPlayer">
+			<Button :disabled="props.isUpdating" @click="addPlayer">
 				{{ t("general.signUp") }}
 			</Button>
 		</div>
@@ -48,6 +48,9 @@ import { getTournamentDetails } from "@/backend/tournament"
 const { t } = useI18n({ inheritLocale: true })
 const toast = useToast()
 
+const props = defineProps<{
+	isUpdating: boolean
+}>()
 const emit = defineEmits(["addPlayer"])
 
 const route = useRoute()

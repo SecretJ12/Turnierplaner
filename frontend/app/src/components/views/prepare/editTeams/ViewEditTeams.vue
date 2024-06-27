@@ -120,9 +120,9 @@ import { Mode, Progress } from "@/interfaces/competition"
 import TeamList from "@/components/views/prepare/editTeams/TeamList.vue"
 import { v4 as uuidv4 } from "uuid"
 import { getCompetitionDetails } from "@/backend/competition"
-import { getSignedUpPrepare } from "@/backend/signup"
 import { useQueryClient } from "vue-query"
 import axios from "axios"
+import { getSignedUpSeparated } from "@/backend/signup"
 
 const route = useRoute()
 const router = useRouter()
@@ -148,7 +148,7 @@ const { data: tournament, isSuccess: tournamentSuc } = getTournamentDetails(
 )
 const { data: competition } = getCompetitionDetails(route, t, toast, {})
 const { data: signedUpTeams, isPlaceholderData: signedUpPlaceholder } =
-	getSignedUpPrepare(route, t, toast)
+	getSignedUpSeparated(route, t, toast)
 
 function sleep(milliseconds: number) {
 	return new Promise((resolve) => setTimeout(resolve, milliseconds))
@@ -309,6 +309,7 @@ function save() {
 			playerB: player,
 		}),
 	)
+	// TODO vue-query
 	axios
 		.post(
 			`/tournament/${route.params.tourId}/competition/${route.params.compId}/updateTeams`,
@@ -375,10 +376,8 @@ async function loadFromServer() {
 	}
 }
 
+watch(signedUpTeams, loadFromServer)
 if (!signedUpPlaceholder.value) loadFromServer()
-watch(signedUpTeams, () => {
-	loadFromServer()
-})
 </script>
 
 <style scoped></style>
