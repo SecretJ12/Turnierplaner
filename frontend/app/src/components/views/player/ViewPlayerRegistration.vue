@@ -172,6 +172,7 @@ const phone = defineInputBinds("phone")
 const toast = useToast()
 const onSubmit = handleSubmit((values) => {
 	// TODO move to external files
+	// TODO vue-query
 	axios
 		.post("/player/registration", {
 			firstName: values.firstName,

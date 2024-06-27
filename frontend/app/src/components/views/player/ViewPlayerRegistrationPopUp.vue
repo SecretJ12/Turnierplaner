@@ -156,6 +156,7 @@ const emit = defineEmits(["registered"])
 
 const onSubmit = handleSubmit((values) => {
 	// TODO move to external files
+	// TODO vue-query
 	axios
 		.post(
 			`/tournament/${route.params.tourId}/competition/${

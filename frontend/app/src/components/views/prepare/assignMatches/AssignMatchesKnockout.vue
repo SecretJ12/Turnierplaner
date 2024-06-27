@@ -202,6 +202,7 @@ async function update() {
 	sortedTeams.value = []
 	const anFin = sleep(firstUpdate ? 0 : 500)
 	firstUpdate = false
+	// TODO vue-query
 	axios
 		.get<Team[]>(
 			`tournament/${route.params.tourId}/competition/${route.params.compId}/signedUpTeams`,
@@ -225,6 +226,7 @@ async function update() {
 		competition.value?.cProgress === Progress.GAMES ||
 		competition.value?.cProgress === Progress.SCHEDULING
 	) {
+		// TODO vue-query
 		axios
 			.get<KnockoutOrder>(
 				`tournament/${route.params.tourId}/competition/${route.params.compId}/knockoutOrder`,
@@ -309,6 +311,7 @@ function save() {
 		teams: sortedTeams.value.map((t) => teamClientToServer(t)),
 	}
 
+	// TODO vue-query
 	axios
 		.post<boolean>(
 			`/tournament/${route.params.tourId}/competition/${route.params.compId}/initKnockout`,

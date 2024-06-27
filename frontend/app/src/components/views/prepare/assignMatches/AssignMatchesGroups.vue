@@ -90,13 +90,14 @@ import { useRoute } from "vue-router"
 import { useI18n } from "vue-i18n"
 import { useToast } from "primevue/usetoast"
 import { KnockoutMatch } from "@/interfaces/knockoutSystem"
-import { computed, Ref, ref } from "vue"
+import { computed, Ref, ref, watch } from "vue"
 import axios from "axios"
 import { Team, teamClientToServer, teamServerToClient } from "@/interfaces/team"
 import TeamContainerDraggable from "@/components/views/prepare/assignMatches/TeamContainerDraggable.vue"
 import { GroupsDivision, Progress, TourType } from "@/interfaces/competition"
 import ViewKnockoutTree from "@/components/views/competition/knockoutSystem/ViewKnockoutTree.vue"
 import { getCompetitionDetails } from "@/backend/competition"
+import { getSignedUp } from "@/backend/signup"
 
 const route = useRoute()
 const toast = useToast()
@@ -109,9 +110,11 @@ function $t(name: string) {
 const { data: competition } = getCompetitionDetails(route, t, toast, {
 	suc: () => {
 		if (competition.value === null) return
-		update()
+		loadFromServer()
 	},
 })
+const { data: signedUpTeams, isPlaceholderData: signedUpPlaceholder } =
+	getSignedUp(route, t, toast)
 
 const noGroups = ref<number>(2)
 
@@ -229,38 +232,37 @@ const knockoutSystem = {
 	thirdPlace: generateTree(0),
 }
 
+function adjustUnsorted() {
+	teams.value = teams.value.filter(
+		(t) => !groups.value.some((group) => group.some((st) => st.id === t.id)),
+	)
+}
+
 let firstUpdate = true
 
-async function update() {
+async function loadFromServer() {
+	if (!signedUpTeams.value) return
+
 	animated.value = true
 	disabled.value = true
 	teams.value = []
 	groups.value = [[], []]
 	const anFin = sleep(firstUpdate ? 0 : 400)
 	firstUpdate = false
-	axios
-		.get<Team[]>(
-			`tournament/${route.params.tourId}/competition/${route.params.compId}/signedUpTeams`,
-		)
-		.then(async (response) => {
-			await anFin
-			response.data.forEach((team) => {
-				teams.value.push(teamServerToClient(team))
-				teamCount.value++
-			})
-			adjustUnsorted()
-			await sleep(400)
-			animated.value = false
-			disabled.value = false
-		})
-		.catch((error) => {
-			console.log(error)
-		})
+
+	await anFin
+	teams.value = signedUpTeams.value
+	teamCount.value = teams.value.length
+	adjustUnsorted()
+	await sleep(400)
+	animated.value = false
+	disabled.value = false
 
 	if (
 		competition.value?.cProgress === Progress.GAMES ||
 		competition.value?.cProgress === Progress.SCHEDULING
 	) {
+		// TODO vue-query
 		axios
 			.get<GroupsDivision>(
 				`tournament/${route.params.tourId}/competition/${route.params.compId}/groupsDivision`,
@@ -272,15 +274,11 @@ async function update() {
 				)
 				adjustUnsorted()
 			})
-			.catch(() => {})
 	}
 }
 
-function adjustUnsorted() {
-	teams.value = teams.value.filter(
-		(t) => !groups.value.some((group) => group.some((st) => st.id === t.id)),
-	)
-}
+watch(signedUpTeams, loadFromServer)
+if (!signedUpPlaceholder.value) loadFromServer()
 
 function save() {
 	if (groups.value.some((g) => g.length <= 1)) {
@@ -300,6 +298,7 @@ function save() {
 		),
 	}
 
+	// TODO vue-query
 	axios
 		.post<boolean>(
 			`/tournament/${route.params.tourId}/competition/${route.params.compId}/initGroups`,

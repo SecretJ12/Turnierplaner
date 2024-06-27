@@ -27,7 +27,8 @@ import ViewGroupTable from "@/components/views/competition/groupSystem/ViewGroup
 const route = useRoute()
 const groupSystem = ref<GroupSystem | undefined>()
 
-await axios
+// TODO vue-query
+axios
 	.get<GroupSystemServer>(
 		`tournament/${route.params.tourId}/competition/${route.params.compId}/groupMatches`,
 	)
