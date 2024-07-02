@@ -189,35 +189,7 @@ export function useSignUpSingle(
 				form,
 			)
 		},
-		{
-			onSuccess() {
-				queryClient.invalidateQueries([
-					"signedUp",
-					route.params.tourId,
-					route.params.compId,
-				])
-				toast.add({
-					severity: "success",
-					summary: t("Player.register_success"),
-					life: 3000,
-				})
-			},
-			onError(error: { response: { status: number } }) {
-				if (error.response.status === 409)
-					toast.add({
-						severity: "error",
-						summary: t("Player.already_exists"),
-						life: 3000,
-					})
-				else
-					toast.add({
-						severity: "error",
-						summary: t("Player.register_failed"),
-						detail: error,
-						life: 3000,
-					})
-			},
-		},
+		signUpOptions(route, t, toast, queryClient),
 	)
 }
 
@@ -252,35 +224,44 @@ export function useSignUpDoubleTog(
 				form,
 			)
 		},
-		{
-			onSuccess() {
-				queryClient.invalidateQueries([
-					"signedUp",
-					route.params.tourId,
-					route.params.compId,
-				])
+		signUpOptions(route, t, toast, queryClient),
+	)
+}
+
+function signUpOptions(
+	route: RouteLocationNormalizedLoaded,
+	t: (s: string) => string,
+	toast: ToastServiceMethods,
+	queryClient: QueryClient,
+) {
+	return {
+		onSuccess() {
+			queryClient.invalidateQueries([
+				"signedUp",
+				route.params.tourId,
+				route.params.compId,
+			])
+			toast.add({
+				severity: "success",
+				summary: t("Player.register_success"),
+				life: 3000,
+			})
+		},
+		onError(error: { response: { status: number } }) {
+			// TODO checks for team already partially registered also in backend
+			if (error.response.status === 409)
 				toast.add({
-					severity: "success",
-					summary: t("Player.register_success"),
+					severity: "error",
+					summary: t("Player.already_exists"),
 					life: 3000,
 				})
-			},
-			onError(error: { response: { status: number } }) {
-				// TODO checks for team already partially registered also in backend
-				if (error.response.status === 409)
-					toast.add({
-						severity: "error",
-						summary: t("Player.already_exists"),
-						life: 3000,
-					})
-				else
-					toast.add({
-						severity: "error",
-						summary: t("Player.register_failed"),
-						detail: error,
-						life: 3000,
-					})
-			},
+			else
+				toast.add({
+					severity: "error",
+					summary: t("Player.register_failed"),
+					detail: error,
+					life: 3000,
+				})
 		},
-	)
+	}
 }

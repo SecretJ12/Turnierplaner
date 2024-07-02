@@ -120,9 +120,7 @@ import { Mode, Progress } from "@/interfaces/competition"
 import TeamList from "@/components/views/prepare/editTeams/TeamList.vue"
 import { v4 as uuidv4 } from "uuid"
 import { getCompetitionDetails } from "@/backend/competition"
-import { useQueryClient } from "vue-query"
-import axios from "axios"
-import { getSignedUpSeparated } from "@/backend/signup"
+import { getSignedUpSeparated, useUpdateTeams } from "@/backend/signup"
 
 const route = useRoute()
 const router = useRouter()
@@ -139,7 +137,7 @@ const teams = ref<TeamArray[]>([])
 const playersA = ref<Player[]>([])
 const playersB = ref<Player[]>([])
 
-const queryClient = useQueryClient()
+const { mutate: updateTeams } = useUpdateTeams(route, t, toast)
 const { data: tournament, isSuccess: tournamentSuc } = getTournamentDetails(
 	route,
 	t,
@@ -309,19 +307,7 @@ function save() {
 			playerB: player,
 		}),
 	)
-	// TODO vue-query
-	axios
-		.post(
-			`/tournament/${route.params.tourId}/competition/${route.params.compId}/updateTeams`,
-			t,
-		)
-		.then(() => {
-			queryClient.invalidateQueries([
-				"signedUp",
-				route.params.tourId,
-				route.params.compId,
-			])
-		})
+	updateTeams()
 }
 
 function prevPage() {

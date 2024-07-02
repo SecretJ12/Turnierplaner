@@ -21,6 +21,7 @@
 		"next": "Weiter",
 		"saved": "Konkurrenz wurde gespeichert",
 		"save_failed": "Während dem Speichern ist etwas schiefgelaufen",
+		"loading_failed": "Während dem Laden ist etwas schiefgelaufen",
 		"tournament_tree": "Turnierbaum"
 	},
 	"ViewPlayerRegistration": {

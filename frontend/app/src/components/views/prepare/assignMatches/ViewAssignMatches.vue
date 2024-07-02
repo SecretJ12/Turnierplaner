@@ -24,6 +24,7 @@
 			<Button
 				:label="t('general.save')"
 				severity="success"
+				:disabled="groupsRef?.disabled"
 				@click="save"
 			></Button>
 			<Button

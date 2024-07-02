@@ -91,13 +91,13 @@ import { useI18n } from "vue-i18n"
 import { useToast } from "primevue/usetoast"
 import { KnockoutMatch } from "@/interfaces/knockoutSystem"
 import { computed, Ref, ref, watch } from "vue"
-import axios from "axios"
-import { Team, teamClientToServer, teamServerToClient } from "@/interfaces/team"
+import { Team } from "@/interfaces/team"
 import TeamContainerDraggable from "@/components/views/prepare/assignMatches/TeamContainerDraggable.vue"
-import { GroupsDivision, Progress, TourType } from "@/interfaces/competition"
+import { TourType } from "@/interfaces/competition"
 import ViewKnockoutTree from "@/components/views/competition/knockoutSystem/ViewKnockoutTree.vue"
 import { getCompetitionDetails } from "@/backend/competition"
 import { getSignedUp } from "@/backend/signup"
+import { getGroupsDivision, useInitGroups } from "@/backend/group"
 
 const route = useRoute()
 const toast = useToast()
@@ -115,6 +115,8 @@ const { data: competition } = getCompetitionDetails(route, t, toast, {
 })
 const { data: signedUpTeams, isPlaceholderData: signedUpPlaceholder } =
 	getSignedUp(route, t, toast)
+const { data: groupsServer } = getGroupsDivision(route, t, toast)
+const { mutate: initGroups } = useInitGroups(route, t, toast)
 
 const noGroups = ref<number>(2)
 
@@ -253,34 +255,21 @@ async function loadFromServer() {
 	await anFin
 	teams.value = signedUpTeams.value
 	teamCount.value = teams.value.length
+	groups.value = JSON.parse(JSON.stringify(groupsServer.value ?? [[], []])).map(
+		(g: Team[]) => g.sort(),
+	)
 	adjustUnsorted()
 	await sleep(400)
 	animated.value = false
 	disabled.value = false
-
-	if (
-		competition.value?.cProgress === Progress.GAMES ||
-		competition.value?.cProgress === Progress.SCHEDULING
-	) {
-		// TODO vue-query
-		axios
-			.get<GroupsDivision>(
-				`tournament/${route.params.tourId}/competition/${route.params.compId}/groupsDivision`,
-			)
-			.then(async (response) => {
-				await anFin
-				groups.value = response.data.groups.map((group) =>
-					group.map((team) => teamServerToClient(team)),
-				)
-				adjustUnsorted()
-			})
-	}
 }
 
-watch(signedUpTeams, loadFromServer)
-if (!signedUpPlaceholder.value) loadFromServer()
+watch([signedUpTeams, groupsServer], loadFromServer)
+if (!signedUpPlaceholder.value && !groupsServer.value) loadFromServer()
 
 function save() {
+	if (disabled.value) return
+
 	if (groups.value.some((g) => g.length <= 1)) {
 		toast.add({
 			severity: "error",
@@ -292,39 +281,10 @@ function save() {
 		return
 	}
 
-	const req: GroupsDivision = {
-		groups: groups.value.map((group) =>
-			group.map((t) => teamClientToServer(t)),
-		),
-	}
-
-	// TODO vue-query
-	axios
-		.post<boolean>(
-			`/tournament/${route.params.tourId}/competition/${route.params.compId}/initGroups`,
-			req,
-		)
-		.then(() => {
-			toast.add({
-				severity: "success",
-				summary: t("general.success"),
-				detail: t("general.saved"),
-				life: 3000,
-				closable: false,
-			})
-		})
-		.catch(() => {
-			toast.add({
-				severity: "error",
-				summary: t("general.failure"),
-				detail: t("general.save_failed"),
-				life: 3000,
-				closable: false,
-			})
-		})
+	initGroups(groups.value)
 }
 
-defineExpose({ save })
+defineExpose({ save, disabled })
 </script>
 
 <style scoped></style>

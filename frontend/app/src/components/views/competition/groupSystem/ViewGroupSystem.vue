@@ -10,7 +10,7 @@
 		/>
 	</template>
 
-	<!-- show finals -->
+	<!-- TODO show finals -->
 </template>
 
 <script lang="ts" setup>

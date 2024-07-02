@@ -1,12 +1,13 @@
 import { Team, TeamServer, teamServerToClient } from "@/interfaces/team"
 import { Player, playerServerToClient } from "@/interfaces/player"
 import { ToastServiceMethods } from "primevue/toastservice"
-import { useQuery } from "vue-query/esm"
+import { useMutation, useQuery } from "vue-query/esm"
 import axios from "axios"
 import { Competition, Mode, SignUp } from "@/interfaces/competition"
 import { getCompetitionDetails } from "@/backend/competition"
 import { RouteLocationNormalizedLoaded } from "vue-router"
 import { computed, Ref } from "vue"
+import { useQueryClient } from "vue-query"
 
 export function getSignedUp(
 	route: RouteLocationNormalizedLoaded,
@@ -158,4 +159,38 @@ export interface TeamLists {
 	playersA: Player[]
 	playersB: Player[]
 	teams: Team[]
+}
+
+export function useUpdateTeams(
+	route: RouteLocationNormalizedLoaded,
+	t: (s: string) => string,
+	toast: ToastServiceMethods,
+) {
+	const queryClient = useQueryClient()
+	return useMutation(
+		async () => {
+			return axios.post(
+				`/tournament/${route.params.tourId}/competition/${route.params.compId}/updateTeams`,
+				t,
+			)
+		},
+		{
+			onSuccess() {
+				return queryClient.invalidateQueries([
+					"signedUp",
+					route.params.tourId,
+					route.params.compId,
+				])
+			},
+			onError() {
+				toast.add({
+					severity: "error",
+					summary: t("general.failure"),
+					detail: t("general.save_failed"),
+					life: 3000,
+					closable: false,
+				})
+			},
+		},
+	)
 }
