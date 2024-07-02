@@ -6,6 +6,8 @@ import { useQuery } from "vue-query/esm"
 export function getCanCreate(isLoggedIn: Ref<boolean>) {
 	return useQuery(["can_create", isLoggedIn], fetchCanCreate, {
 		placeholderData: false,
+		staleTime: 0,
+		keepPreviousData: false,
 	})
 }
 
@@ -30,6 +32,7 @@ export function getCanEdit(tourId: string, isLoggedIn: Ref<boolean>) {
 		{
 			placeholderData: false,
 			staleTime: 0,
+			keepPreviousData: false,
 		},
 	)
 }

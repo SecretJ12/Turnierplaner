@@ -125,6 +125,7 @@ const vueQueryPluginOptions: VueQueryPluginOptions = {
 				refetchOnWindowFocus: false,
 				refetchOnReconnect: false,
 				refetchOnMount: false,
+				keepPreviousData: true,
 			},
 		},
 	},
