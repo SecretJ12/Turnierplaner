@@ -307,7 +307,7 @@ function save() {
 			playerB: player,
 		}),
 	)
-	updateTeams()
+	updateTeams(t)
 }
 
 function prevPage() {
