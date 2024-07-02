@@ -92,12 +92,12 @@ import { useToast } from "primevue/usetoast"
 import { KnockoutMatch } from "@/interfaces/knockoutSystem"
 import { computed, Ref, ref, watch } from "vue"
 import { Team } from "@/interfaces/team"
-import TeamContainerDraggable from "@/components/views/prepare/assignMatches/TeamContainerDraggable.vue"
 import { TourType } from "@/interfaces/competition"
 import ViewKnockoutTree from "@/components/views/competition/knockoutSystem/ViewKnockoutTree.vue"
 import { getCompetitionDetails } from "@/backend/competition"
 import { getSignedUp } from "@/backend/signup"
 import { getGroupsDivision, useInitGroups } from "@/backend/group"
+import TeamContainerDraggable from "@/components/views/prepare/components/TeamContainerDraggable.vue"
 
 const route = useRoute()
 const toast = useToast()
