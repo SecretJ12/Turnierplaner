@@ -23,7 +23,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import static de.secretj12.turnierplaner.db.entities.competition.CreationProgress.PLAYER;
+import static de.secretj12.turnierplaner.db.entities.competition.CreationProgress.TEAMS;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
@@ -76,7 +76,7 @@ public class TestCompetitionResource {
         comp20.setMode(CompetitionMode.SINGLES);
         comp20.setType(CompetitionType.KNOCKOUT);
         comp20.setPlayerASex(Sex.MALE);
-        comp20.setcProgress(PLAYER);
+        comp20.setcProgress(TEAMS);
         comp20.setSignup(CompetitionSignUp.INDIVIDUAL);
         comp20.setPlayerASex(Sex.ANY);
         comp20.setTournament(tour20);
@@ -87,7 +87,7 @@ public class TestCompetitionResource {
         comp21.setMode(CompetitionMode.SINGLES);
         comp21.setType(CompetitionType.KNOCKOUT);
         comp21.setPlayerASex(Sex.MALE);
-        comp21.setcProgress(PLAYER);
+        comp21.setcProgress(TEAMS);
         comp21.setSignup(CompetitionSignUp.INDIVIDUAL);
         comp21.setPlayerASex(Sex.ANY);
         comp21.setTournament(tour21);
@@ -98,7 +98,7 @@ public class TestCompetitionResource {
         comp22.setMode(CompetitionMode.SINGLES);
         comp22.setType(CompetitionType.KNOCKOUT);
         comp22.setPlayerASex(Sex.FEMALE);
-        comp22.setcProgress(PLAYER);
+        comp22.setcProgress(TEAMS);
         comp22.setSignup(CompetitionSignUp.INDIVIDUAL);
         comp22.setPlayerASex(Sex.ANY);
         comp22.setTournament(tour22);
@@ -653,7 +653,7 @@ public class TestCompetitionResource {
         compSingle.setMode(CompetitionMode.SINGLES);
         compSingle.setType(CompetitionType.KNOCKOUT);
         compSingle.setPlayerASex(Sex.MALE);
-        compSingle.setcProgress(PLAYER);
+        compSingle.setcProgress(TEAMS);
         compSingle.setSignup(CompetitionSignUp.INDIVIDUAL);
         compSingle.setPlayerASex(Sex.ANY);
         compSingle.setTournament(tour21);
@@ -664,7 +664,7 @@ public class TestCompetitionResource {
         compDoubleIndSame.setMode(CompetitionMode.DOUBLES);
         compDoubleIndSame.setType(CompetitionType.KNOCKOUT);
         compDoubleIndSame.setPlayerASex(Sex.MALE);
-        compDoubleIndSame.setcProgress(PLAYER);
+        compDoubleIndSame.setcProgress(TEAMS);
         compDoubleIndSame.setSignup(CompetitionSignUp.INDIVIDUAL);
         compDoubleIndSame.setPlayerASex(Sex.ANY);
         compDoubleIndSame.setPlayerBdifferent(false);
@@ -676,7 +676,7 @@ public class TestCompetitionResource {
         compDoubleIndDif.setMode(CompetitionMode.DOUBLES);
         compDoubleIndDif.setType(CompetitionType.KNOCKOUT);
         compDoubleIndDif.setPlayerASex(Sex.MALE);
-        compDoubleIndDif.setcProgress(PLAYER);
+        compDoubleIndDif.setcProgress(TEAMS);
         compDoubleIndDif.setSignup(CompetitionSignUp.INDIVIDUAL);
         compDoubleIndDif.setPlayerASex(Sex.MALE);
         compDoubleIndDif.setPlayerBdifferent(true);
@@ -689,7 +689,7 @@ public class TestCompetitionResource {
         compDoubleTog.setMode(CompetitionMode.DOUBLES);
         compDoubleTog.setType(CompetitionType.KNOCKOUT);
         compDoubleTog.setPlayerASex(Sex.MALE);
-        compDoubleTog.setcProgress(PLAYER);
+        compDoubleTog.setcProgress(TEAMS);
         compDoubleTog.setSignup(CompetitionSignUp.TOGETHER);
         compDoubleTog.setPlayerASex(Sex.ANY);
         compDoubleTog.setPlayerBSex(Sex.ANY);
@@ -703,7 +703,7 @@ public class TestCompetitionResource {
         compSingle2.setMode(CompetitionMode.SINGLES);
         compSingle2.setType(CompetitionType.KNOCKOUT);
         compSingle2.setPlayerASex(Sex.MALE);
-        compSingle2.setcProgress(PLAYER);
+        compSingle2.setcProgress(TEAMS);
         compSingle2.setSignup(CompetitionSignUp.INDIVIDUAL);
         compSingle2.setPlayerASex(Sex.ANY);
         compSingle2.setTournament(tour22);

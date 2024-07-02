@@ -1,6 +1,6 @@
 <template>
 	<p>Knockout system</p>
-	<template v-if="knockoutSystem !== null">
+	<template v-if="knockoutSystem">
 		<ViewKnockoutTree
 			:match="knockoutSystem.finale"
 			:third-place="knockoutSystem.thirdPlace"
@@ -11,32 +11,16 @@
 
 <script lang="ts" setup>
 import { useRoute } from "vue-router"
-import axios from "axios"
-import { ref } from "vue"
-import {
-	KnockoutSystem,
-	KnockoutSystemServer,
-	knockoutSystemServerToClient,
-} from "@/interfaces/knockoutSystem"
 import ViewKnockoutTree from "@/components/views/competition/knockoutSystem/ViewKnockoutTree.vue"
 import { Mode } from "@/interfaces/competition"
+import { getKnockout } from "@/backend/knockout"
 
 const props = defineProps<{
 	mode: Mode
 }>()
 
 const route = useRoute()
-const knockoutSystem = ref<KnockoutSystem | null>(null)
-
-axios
-	.get<KnockoutSystemServer>(
-		`tournament/${route.params.tourId}/competition/${route.params.compId}/knockoutMatches`,
-	)
-	.then((response) => {
-		knockoutSystem.value = knockoutSystemServerToClient(response.data)
-	})
-	.catch(() => {})
-
+const { data: knockoutSystem } = getKnockout(route)
 // TODO implement view
 </script>
 

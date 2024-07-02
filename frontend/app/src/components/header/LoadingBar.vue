@@ -1,5 +1,5 @@
 <template>
-	<div v-if="loading > 0" id="progress">
+	<div v-if="isFetching || loading > 0" id="progress">
 		<div id="progress-bar"></div>
 	</div>
 </template>
@@ -7,7 +7,11 @@
 <script lang="ts" setup>
 import { ref } from "vue"
 import axios from "axios"
+import { useIsFetching } from "vue-query"
 
+const isFetching = useIsFetching()
+
+// TODO remove old loading
 let loading = ref(0)
 
 axios.interceptors.request.use(

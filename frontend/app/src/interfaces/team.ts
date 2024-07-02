@@ -39,7 +39,8 @@ export interface TeamArray {
 	playerB: Player[]
 }
 
-export function teamArrayServerToClient(team: TeamServer) {
+export function teamToArray(team: Team): TeamArray {
+	if (!team.id) throw new Error("Id cannot be undefined")
 	return {
 		id: team.id,
 		playerA: team.playerA ? [playerServerToClient(team.playerA)] : [],
@@ -47,7 +48,7 @@ export function teamArrayServerToClient(team: TeamServer) {
 	}
 }
 
-export function teamArrayClientToServer(team: TeamArray) {
+export function teamArrayClientToServer(team: TeamArray): TeamServer {
 	return {
 		id: team.id,
 		playerA:

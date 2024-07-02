@@ -1,53 +1,52 @@
-import { Ref, ref, watch } from "vue"
+import { Ref } from "vue"
 import { auth } from "@/security/AuthService"
 import axios from "axios"
+import { useQuery } from "vue-query/esm"
 
 export function getCanCreate(isLoggedIn: Ref<boolean>) {
-	const canCreate = ref<boolean>(false)
+	return useQuery(["can_create", isLoggedIn], fetchCanCreate, {
+		placeholderData: false,
+		staleTime: 0,
+		keepPreviousData: false,
+	})
+}
 
-	watch(isLoggedIn, update)
-	update()
+async function fetchCanCreate() {
+	const user = await auth.getUser()
+	if (user === null) return false
 
-	function update() {
-		canCreate.value = false
-		auth.getUser().then((user) => {
-			if (user !== null) {
-				axios
-					.get<boolean>("/tournament/canCreate")
-					.then((response) => {
-						canCreate.value = response.data
-					})
-					.catch(() => {
-						canCreate.value = false
-					})
-			}
+	return await axios
+		.get<boolean>("/tournament/canCreate")
+		.then((response) => {
+			return response.data
 		})
-	}
-
-	return canCreate
+		.catch(() => {
+			return false
+		})
 }
 
 export function getCanEdit(tourId: string, isLoggedIn: Ref<boolean>) {
-	const canEdit = ref<boolean>(false)
+	return useQuery(
+		["can_edit", tourId, isLoggedIn],
+		() => fetchCanEdit(tourId),
+		{
+			placeholderData: false,
+			staleTime: 0,
+			keepPreviousData: false,
+		},
+	)
+}
 
-	watch(isLoggedIn, update)
-	update()
+async function fetchCanEdit(tourId: string) {
+	const user = await auth.getUser()
+	if (user === null) return false
 
-	function update() {
-		canEdit.value = false
-		auth.getUser().then((user) => {
-			if (user !== null) {
-				axios
-					.get<boolean>(`/tournament/${tourId}/competition/canEdit`)
-					.then((response) => {
-						canEdit.value = response.data
-					})
-					.catch(() => {
-						canEdit.value = false
-					})
-			}
+	return await axios
+		.get<boolean>(`/tournament/${tourId}/competition/canEdit`)
+		.then((response) => {
+			return response.data
 		})
-	}
-
-	return canEdit
+		.catch(() => {
+			return false
+		})
 }

@@ -1,11 +1,11 @@
 <template>
 	<div id="tournaments">
-		<template v-if="tournaments === null">
+		<template v-if="isLoading">
 			<Skeleton v-for="i in Array(5)" :key="i" class="w-23rem h-12rem" />
 		</template>
 		<item
 			v-for="tournament in tournaments"
-			v-else
+			v-else-if="isSuccess"
 			:key="tournament.name"
 			:can-create="canCreate"
 			:tournament="tournament"
@@ -28,15 +28,19 @@ import AddItem from "../../items/ItemAdd.vue"
 import { router } from "@/main"
 import { useI18n } from "vue-i18n"
 import { getCanCreate } from "@/backend/security"
-import { getListTournaments } from "@/backend/tournament"
+import { getTournamentList } from "@/backend/tournament"
 import { useToast } from "primevue/usetoast"
 
 const { t } = useI18n({ inheritLocale: true })
 const toast = useToast()
 
 const isLoggedIn = inject("loggedIn", ref(false))
-const canCreate = getCanCreate(isLoggedIn)
-const tournaments = getListTournaments(isLoggedIn, t, toast)
+const { data: canCreate } = getCanCreate(isLoggedIn)
+const {
+	data: tournaments,
+	isLoading,
+	isSuccess,
+} = getTournamentList(isLoggedIn, t, toast)
 
 function selected(tournament: string) {
 	router.push({

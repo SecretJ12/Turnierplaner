@@ -1,18 +1,18 @@
 <template>
-	<div class="flex flex-row gap-2">
+	<div v-if="tournament && player" class="flex flex-row gap-2">
 		<Tag
-			v-if="props.player.sex !== Sex.ANY"
+			v-if="player.sex !== Sex.ANY"
 			class="w-min font-medium"
 			rounded
-			:value="t('CompetitionSettings.' + props.player.sex.toLowerCase())"
+			:value="t('CompetitionSettings.' + player.sex.toLowerCase())"
 		/>
 		<Tag
-			v-if="props.player.hasMinAge"
+			v-if="player.hasMinAge"
 			v-tooltip="
 				t('ViewCompetition.born_before') +
 				' ' +
-				(props.player.minAge !== null
-					? props.player.minAge.toLocaleString(t('lang'), dateOptions)
+				(player.minAge !== null
+					? player.minAge.toLocaleString(t('lang'), dateOptions)
 					: 'Error')
 			"
 			class="w-min font-medium"
@@ -20,12 +20,12 @@
 			rounded
 		/>
 		<Tag
-			v-if="props.player.hasMaxAge"
+			v-if="player.hasMaxAge"
 			v-tooltip="
 				t('ViewCompetition.born_after') +
 				' ' +
-				(props.player.maxAge !== null
-					? props.player.maxAge.toLocaleString(t('lang'), dateOptions)
+				(player.maxAge !== null
+					? player.maxAge.toLocaleString(t('lang'), dateOptions)
 					: 'Error')
 			"
 			class="w-min font-medium"
@@ -37,28 +37,52 @@
 
 <script lang="ts" setup>
 import { useI18n } from "vue-i18n"
-import { settingsPlayer, Sex } from "@/interfaces/competition"
+import { Sex } from "@/interfaces/competition"
+import { getCompetitionDetails } from "@/backend/competition"
+import { getTournamentDetails } from "@/backend/tournament"
+import { useToast } from "primevue/usetoast"
+import { useRoute } from "vue-router"
+import { computed } from "vue"
 
 const { t } = useI18n({ inheritLocale: true })
+const toast = useToast()
 
-const props = defineProps<{
-	beginGamePhase: Date
-	player: settingsPlayer
-}>()
+const route = useRoute()
+
+const { data: competition } = getCompetitionDetails(route, t, toast, {})
+const { data: tournament } = getTournamentDetails(route, t, toast, {})
+
+const player = computed(() =>
+	props.second ? competition.value?.playerB : competition.value?.playerA,
+)
+
+const props = withDefaults(
+	defineProps<{
+		second?: boolean
+	}>(),
+	{
+		second: false,
+	},
+)
 
 function generateAboveTag() {
-	if (props.player.minAge === null) return ""
+	if (!tournament.value || !player.value || !player.value.minAge) return ""
+
 	const dif =
-		props.beginGamePhase.getFullYear() - props.player.minAge.getFullYear()
+		tournament.value.game_phase.begin.getFullYear() -
+		player.value.minAge.getFullYear()
 	return `${t("Player.over")}${dif}`
 }
 
 function generateUnderTag() {
-	if (props.player.maxAge === null) return ""
+	if (!tournament.value || !player.value || !player.value.maxAge) return ""
+
 	const dif =
-		props.beginGamePhase.getFullYear() - props.player.maxAge.getFullYear()
+		tournament.value.game_phase.begin.getFullYear() -
+		player.value.maxAge.getFullYear()
 	return `${t("Player.under")}${dif - 1}`
 }
+
 const dateOptions: Intl.DateTimeFormatOptions = {
 	year: "numeric",
 	month: "numeric",

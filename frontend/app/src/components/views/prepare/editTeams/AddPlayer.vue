@@ -1,15 +1,15 @@
 <template>
-	<div class="flex flex-column gap-2">
+	<div v-if="tournament && competition" class="flex flex-column gap-2">
 		<ViewConditions
-			:begin-game-phase="props.tournament.game_phase.begin"
-			:player="props.competition.playerA"
+			:begin-game-phase="tournament.game_phase.begin"
+			:second="competition.mode === Mode.DOUBLE"
 		/>
 		<div class="p-inputgroup">
 			<Dropdown
 				v-model="selectedPlayer"
 				:options="suggestionsPlayer"
-				:loading="isLoading"
-				:disabled="isUpdating"
+				:loading="loading"
+				:disabled="props.isUpdating"
 				:auto-filter-focus="true"
 				:filter-placeholder="t('ViewCompetition.searchPlayer')"
 				:placeholder="t('ViewCompetition.selectPlayer')"
@@ -25,7 +25,7 @@
 					{{ t("ViewSignUp.noPlayerFound") }}
 				</template>
 			</Dropdown>
-			<Button :disabled="isUpdating" @click="addPlayer">
+			<Button :disabled="props.isUpdating" @click="addPlayer">
 				{{ t("general.signUp") }}
 			</Button>
 		</div>
@@ -36,78 +36,37 @@
 import ViewConditions from "@/components/views/competition/signup/ViewConditions.vue"
 import { useI18n } from "vue-i18n"
 import { DropdownFilterEvent } from "primevue/dropdown"
-import axios from "axios"
-import { Player, playerServerToClient } from "@/interfaces/player"
-import { Competition, Sex } from "@/interfaces/competition"
-import { Tournament } from "@/interfaces/tournament"
+import { Player } from "@/interfaces/player"
+import { Mode } from "@/interfaces/competition"
 import { ref } from "vue"
 import { useToast } from "primevue/usetoast"
+import { extractSearchPlayer, getPlayer } from "@/backend/player"
+import { getCompetitionDetails } from "@/backend/competition"
+import { useRoute } from "vue-router"
+import { getTournamentDetails } from "@/backend/tournament"
 
 const { t } = useI18n({ inheritLocale: true })
 const toast = useToast()
 
 const props = defineProps<{
-	tournament: Tournament
-	competition: Competition
 	isUpdating: boolean
 }>()
 const emit = defineEmits(["addPlayer"])
 
+const route = useRoute()
+const { data: tournament } = getTournamentDetails(route, t, toast, {})
+const { data: competition } = getCompetitionDetails(route, t, toast, {})
 const selectedPlayer = ref<Player | null>(null)
-const suggestionsPlayer = ref<Player[]>([])
-const isLoading = ref<boolean>(false)
+const search = ref<string>("")
+const { data: suggestionsPlayer, isFetching: loading } = getPlayer(
+	search,
+	extractSearchPlayer(competition, false),
+	t,
+	toast,
+)
 
 function queryPlayer(event: DropdownFilterEvent) {
-	isLoading.value = true
-	suggestionsPlayer.value = suggestionsPlayer.value.filter((item) => {
-		return item.name.toLowerCase().includes(event.value.toLowerCase())
-	})
-
-	if (
-		props.competition.playerA.hasMinAge &&
-		props.competition.playerA.minAge === null
-	) {
-		console.log("Data invalid")
-		return
-	}
-	// TODO put to backend file
-	axios
-		.get<Player[]>(
-			`/player/find?search=${event.value}` +
-				(props.competition.playerA.sex !== Sex.ANY
-					? `&sex=${props.competition.playerA.sex}`
-					: "") +
-				(props.competition.playerA.hasMinAge &&
-				props.competition.playerA.minAge !== null
-					? `&minAge=${props.competition.playerA.minAge
-							.toISOString()
-							.slice(0, 10)}`
-					: "") +
-				(props.competition.playerA.hasMaxAge &&
-				props.competition.playerA.maxAge !== null
-					? `&minAge=${props.competition.playerA.maxAge
-							.toISOString()
-							.slice(0, 10)}`
-					: ""),
-		)
-		.then((result) => {
-			// TODO avoid races
-			suggestionsPlayer.value = result.data.map((item) => {
-				return playerServerToClient(item)
-			})
-		})
-		.catch((error) => {
-			toast.add({
-				severity: "error",
-				summary: t("ViewCompetition.query_search_failed"),
-				detail: error,
-				life: 3000,
-			})
-			console.log(error)
-		})
-		.finally(() => {
-			isLoading.value = false
-		})
+	search.value = event.value
 }
 
 function addPlayer() {

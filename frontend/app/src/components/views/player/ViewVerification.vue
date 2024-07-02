@@ -1,43 +1,41 @@
 <template>
 	<div id="container">
-		<div v-if="verified">
-			<h2 v-if="success">
-				{{ t("general.success") }}
-			</h2>
-			<h2 v-else>
-				{{ t("general.failure") }}
-			</h2>
-		</div>
-		<p v-if="success">
+		<h2 v-if="isSuccess">
+			{{ t("general.success") }}
+		</h2>
+		<h2 v-else-if="isError">
+			{{ t("general.failure") }}
+		</h2>
+		<p v-if="isSuccess">
 			{{ t("ViewPlayerRegistration.verification_success") }}
 		</p>
-		<p v-else>
+		<p v-else-if="isError">
 			{{ t("ViewPlayerRegistration.verification_failed") }}
 		</p>
 	</div>
 </template>
 
 <script lang="ts" setup>
-import axios from "axios"
-import { ref } from "vue"
 import { useI18n } from "vue-i18n"
+import { useVerify } from "@/backend/registration"
+import { useToast } from "primevue/usetoast"
 
 const { t } = useI18n({ inheritLocale: true })
+const toast = useToast()
 
-const verified = ref(false)
-const success = ref(false)
+const { mutate: verify, isSuccess, isError } = useVerify()
 
 let verificationCode = new URL(location.href).searchParams.get("code")
-
-axios
-	.get(`/player/verification?code=${verificationCode}`)
-	.then((response) => {
-		success.value = response.status === 202
+if (!verificationCode) {
+	toast.add({
+		severity: "error",
+		summary: t("ViewPlayerRegistration.registration_failed"),
+		detail: t("ViewPlayerRegistration.registration_failed_detail"),
+		life: 3000,
 	})
-	.catch(() => {})
-	.finally(() => {
-		verified.value = true
-	})
+} else {
+	verify(verificationCode)
+}
 </script>
 
 <style scoped>

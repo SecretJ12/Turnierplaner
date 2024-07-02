@@ -11,52 +11,9 @@ import VueAxios from "vue-axios"
 import axios from "axios"
 
 import { access_token } from "@/security/AuthService"
-
-axios.defaults.baseURL = settings.BACKEND
-
-axios.interceptors.request.use(
-	function (config) {
-		if (access_token.value !== null)
-			config.headers.Authorization = `Bearer ${access_token.value}`
-		return config
-	},
-	function (error) {
-		return Promise.reject(error)
-	},
-)
-
 /* i18n */
 import languages from "./i18n"
-const messages = languages
-
-export type MessageSchema = (typeof messages)["de"]
-
-declare module "vue-i18n" {
-	export interface DefineLocaleMessage extends MessageSchema {}
-}
-
-const options: I18nOptions = {
-	locale: "de", // set locale
-	fallbackLocale: "en", // set fallback locale
-	warnHtmlMessage: false,
-	missingWarn: false,
-	fallbackWarn: false,
-	messages,
-	legacy: false,
-}
-
-const i18n = createI18n<false, typeof options>(options)
-
-/* add font awesome icon component */
-const app = createApp(App)
-
 import routes from "./routes"
-
-const router = VueRouter.createRouter({
-	history: VueRouter.createWebHashHistory(),
-	routes,
-})
-
 /* Primevue components*/
 import PrimeVue from "primevue/config"
 import ToastService from "primevue/toastservice"
@@ -103,6 +60,49 @@ import "material-symbols"
 
 /* yup validation */
 import { setLocale } from "yup"
+import { VueQueryPlugin, VueQueryPluginOptions } from "vue-query"
+
+axios.defaults.baseURL = settings.BACKEND
+
+axios.interceptors.request.use(
+	function (config) {
+		if (access_token.value !== null)
+			config.headers.Authorization = `Bearer ${access_token.value}`
+		return config
+	},
+	function (error) {
+		return Promise.reject(error)
+	},
+)
+
+const messages = languages
+
+export type MessageSchema = (typeof messages)["de"]
+
+declare module "vue-i18n" {
+	export interface DefineLocaleMessage extends MessageSchema {}
+}
+
+const options: I18nOptions = {
+	locale: "de", // set locale
+	fallbackLocale: "en", // set fallback locale
+	warnHtmlMessage: false,
+	missingWarn: false,
+	fallbackWarn: false,
+	// @ts-expect-error "Not a fix datatype"
+	messages,
+	legacy: false,
+}
+
+const i18n = createI18n<false, typeof options>(options)
+
+/* add font awesome icon component */
+const app = createApp(App)
+
+const router = VueRouter.createRouter({
+	history: VueRouter.createWebHashHistory(),
+	routes,
+})
 
 setLocale({
 	// use constant translation keys for messages without values
@@ -117,6 +117,20 @@ setLocale({
 	},
 })
 
+const vueQueryPluginOptions: VueQueryPluginOptions = {
+	queryClientConfig: {
+		defaultOptions: {
+			queries: {
+				staleTime: 1000,
+				refetchOnWindowFocus: false,
+				refetchOnReconnect: false,
+				refetchOnMount: false,
+				keepPreviousData: true,
+			},
+		},
+	},
+}
+
 app
 	.use(i18n)
 	.use(VueAxios, axios)
@@ -124,6 +138,7 @@ app
 	/* Primevue */
 	.use(PrimeVue, { ripple: true })
 	.use(ToastService)
+	.use(VueQueryPlugin, vueQueryPluginOptions)
 	.component("Steps", Steps)
 	.component("TabView", TabView)
 	.component("TabMenu", TabMenu)

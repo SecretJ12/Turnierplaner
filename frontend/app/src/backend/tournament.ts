@@ -1,31 +1,30 @@
-import { Ref, ref, UnwrapRef, watch } from "vue"
+import { computed, Ref } from "vue"
 import axios from "axios"
 import {
 	Tournament,
-	TournamentForm,
-	tournamentFormServerToClient,
 	TournamentServer,
 	tournamentServerToClient,
 } from "@/interfaces/tournament"
 import { ToastServiceMethods } from "primevue/toastservice"
+import { useQuery } from "vue-query/esm"
+import { RouteLocationNormalizedLoaded } from "vue-router"
 
-export function getListTournaments(
+export function getTournamentList(
 	isLoggedIn: Ref<boolean>,
 	t: (s: string) => string,
 	toast: ToastServiceMethods,
 ) {
-	const tournaments = ref<Tournament[] | null>(null)
-
-	watch(isLoggedIn, update)
-	update()
-
-	function update() {
-		axios
-			.get<TournamentServer[]>("/tournament/list")
-			.then((response) => {
-				tournaments.value = response.data.map(tournamentServerToClient)
-			})
-			.catch((error) => {
+	return useQuery(
+		["tournamentList", isLoggedIn],
+		async () => {
+			return axios
+				.get<TournamentServer[]>("/tournament/list")
+				.then<Tournament[]>((response) => {
+					return response.data.map(tournamentServerToClient)
+				})
+		},
+		{
+			onError(error) {
 				toast.add({
 					severity: "error",
 					summary: t("ViewTournaments.loadingFailed"),
@@ -33,64 +32,13 @@ export function getListTournaments(
 					life: 3000,
 				})
 				console.log(error)
-			})
-	}
-
-	return tournaments
-}
-
-function getTournamentDetails_abs<T>(
-	tourId: string,
-	t: (s: string) => string,
-	toast: ToastServiceMethods,
-	mapper: (arg0: TournamentServer) => UnwrapRef<T>,
-	handler: {
-		suc?: () => void
-		err?: () => void
-	},
-) {
-	const tournament = ref<T | null>(null)
-
-	axios
-		.get<TournamentServer>(`/tournament/${tourId}/details`)
-		.then((response) => {
-			tournament.value = mapper(response.data)
-			if (handler.suc) handler.suc()
-		})
-		.catch((error) => {
-			toast.add({
-				severity: "error",
-				summary: t("ViewEditTournament.loadingDetailsFailed"),
-				detail: error,
-				life: 3000,
-			})
-			console.log(error)
-			if (handler.err) handler.err()
-		})
-
-	return tournament
-}
-
-export function getTournamentFormDetails(
-	tourId: string,
-	t: (s: string) => string,
-	toast: ToastServiceMethods,
-	handler: {
-		suc?: () => void
-		err?: () => void
-	},
-) {
-	return getTournamentDetails_abs<TournamentForm>(
-		tourId,
-		t,
-		toast,
-		tournamentFormServerToClient,
-		handler,
+			},
+		},
 	)
 }
 
 export function getTournamentDetails(
-	tourId: string,
+	route: RouteLocationNormalizedLoaded,
 	t: (s: string) => string,
 	toast: ToastServiceMethods,
 	handler: {
@@ -98,12 +46,28 @@ export function getTournamentDetails(
 		err?: () => void
 	},
 ) {
-	return getTournamentDetails_abs<Tournament>(
-		tourId,
-		t,
-		toast,
-		tournamentServerToClient,
-		handler,
+	return useQuery(
+		["tournament", computed(() => route.params.tourId)],
+		async () => {
+			return axios
+				.get<TournamentServer>(`/tournament/${route.params.tourId}/details`)
+				.then<Tournament>((response) => {
+					return tournamentServerToClient(response.data)
+				})
+		},
+		{
+			onError(error) {
+				toast.add({
+					severity: "error",
+					summary: t("ViewEditTournament.loadingDetailsFailed"),
+					detail: error,
+					life: 3000,
+				})
+				console.log(error)
+				if (handler.err) handler.err()
+			},
+			onSuccess: handler.suc,
+		},
 	)
 }
 

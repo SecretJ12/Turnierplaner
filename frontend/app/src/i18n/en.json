@@ -21,6 +21,7 @@
 		"next": "Next",
 		"saved": "Changes saved",
 		"save_failed": "Something went wrong while saving",
+		"loading_failed": "Something went wrong while loading",
 		"tournament_tree": "Tournament tree"
 	},
 	"ViewPlayerRegistration": {

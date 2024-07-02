@@ -24,6 +24,7 @@
 			<Button
 				:label="t('general.save')"
 				severity="success"
+				:disabled="groupsRef?.disabled"
 				@click="save"
 			></Button>
 			<Button
@@ -40,7 +41,6 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from "vue-router"
 import { useI18n } from "vue-i18n"
-import { getCompetitionDetails } from "@/backend/competition"
 import { useToast } from "primevue/usetoast"
 import { TourType } from "@/interfaces/competition"
 import Groups from "@/components/views/prepare/assignMatches/AssignMatchesGroups.vue"
@@ -48,6 +48,7 @@ import AssignMatchesGroups from "@/components/views/prepare/assignMatches/Assign
 import Knockout from "@/components/views/prepare/assignMatches/AssignMatchesKnockout.vue"
 import AssignMatchesKnockout from "@/components/views/prepare/assignMatches/AssignMatchesKnockout.vue"
 import { ref } from "vue"
+import { getCompetitionDetails } from "@/backend/competition"
 
 const route = useRoute()
 const router = useRouter()
@@ -57,7 +58,7 @@ const { t } = useI18n({ inheritLocale: true })
 const knockoutRef = ref<InstanceType<typeof AssignMatchesKnockout> | null>(null)
 const groupsRef = ref<InstanceType<typeof AssignMatchesGroups> | null>(null)
 
-const competition = getCompetitionDetails(route, t, toast, {
+const { data: competition } = getCompetitionDetails(route, t, toast, {
 	suc: () => {
 		if (competition.value === null) return
 	},

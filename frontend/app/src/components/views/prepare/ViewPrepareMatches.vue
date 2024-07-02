@@ -30,11 +30,11 @@
 
 <script setup lang="ts">
 import { useRoute, useRouter } from "vue-router"
-import { computed, inject, ref } from "vue"
+import { computed, inject, ref, watch } from "vue"
 import { useI18n } from "vue-i18n"
 import { useToast } from "primevue/usetoast"
 import { TabMenuChangeEvent } from "primevue/tabmenu"
-import { getListCompetitions } from "@/backend/competition"
+import { getCompetitionsList } from "@/backend/competition"
 import Steps from "primevue/steps"
 import { Progress } from "@/interfaces/competition"
 
@@ -43,23 +43,31 @@ const { t } = useI18n({ inheritLocale: true })
 function $t(name: string) {
 	return computed(() => t(name))
 }
+
 const router = useRouter()
 const route = useRoute()
 const toast = useToast()
 
 const isLoggedIn = inject("loggedIn", ref(false))
-const competitions = getListCompetitions(route, isLoggedIn, t, toast, {
-	suc: () => updateRoute(),
-	err: () => {
-		router.push({
-			name: "Tournaments",
-		})
+const { data: competitions } = getCompetitionsList(
+	route,
+	isLoggedIn,
+	t,
+	toast,
+	{
+		err: () => {
+			router.push({
+				name: "Tournaments",
+			})
+		},
 	},
-})
+)
 const activeTab = ref<number>(0)
+watch([competitions, route], () => updateRoute())
+updateRoute()
 
 function updateRoute(compId?: string) {
-	if (competitions.value === null) return
+	if (!competitions.value) return
 
 	if (!compId) compId = <string>route.params.compId
 	if (compId === "" || !competitions.value.find((c) => c.name === compId))
@@ -92,7 +100,7 @@ function updateRoute(compId?: string) {
 }
 
 function tabChange(event: TabMenuChangeEvent) {
-	if (competitions.value === null) return
+	if (!competitions.value) return
 
 	activeTab.value = event.index
 	updateRoute(competitions.value[event.index].name)

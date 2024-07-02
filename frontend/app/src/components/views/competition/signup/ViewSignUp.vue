@@ -20,18 +20,11 @@
 					{{ t("ViewCompetition.registration_over") }}
 				</p>
 				<template v-else>
-					<ViewSignUpForm
-						:begin-game-phase="props.beginGamePhase"
-						:competition="props.competition"
-						@registered="childUpdate"
-					/>
+					<ViewSignUpForm />
 				</template>
 
 				<div class="mt-2">
-					<ViewTable
-						:competition="props.competition"
-						:update="updateChildren"
-					/>
+					<ViewTable />
 				</div>
 			</template>
 		</Card>
@@ -41,10 +34,7 @@
 </template>
 
 <script lang="ts" setup>
-import { inject, ref, watch } from "vue"
-import { auth } from "@/security/AuthService"
-import axios from "axios"
-import { useRoute } from "vue-router"
+import { ref } from "vue"
 import ViewTable from "@/components/views/competition/signup/ViewTable.vue"
 import ViewSignUpForm from "@/components/views/competition/signup/ViewSignUpForm.vue"
 import { Competition } from "@/interfaces/competition"
@@ -62,38 +52,6 @@ const props = defineProps<{
 	beginGamePhase: Date
 	competition: Competition
 }>()
-
-const route = useRoute()
-const isLoggedIn = inject("loggedIn", ref(false))
-const canEdit = ref(false)
-
-const updateChildren = ref(0)
-watch(isLoggedIn, async () => {
-	update()
-})
-update()
-
-function update() {
-	canEdit.value = false
-	auth.getUser().then((user) => {
-		if (user !== null) {
-			axios
-				.get<boolean>(`/tournament/${route.params.tourId}/competition/canEdit`)
-				.then((response) => {
-					canEdit.value = response.data
-				})
-				.catch(() => {
-					canEdit.value = false
-				})
-		}
-	})
-
-	updateChildren.value++
-}
-
-function childUpdate() {
-	updateChildren.value++
-}
 </script>
 
 <style scoped></style>

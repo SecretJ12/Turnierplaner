@@ -3,7 +3,7 @@
 		<Card id="card">
 			<template #content>
 				<FormCompetition
-					v-if="competition === null || reload"
+					v-if="!competition || reload"
 					:competition="CompetitionDefault"
 					:disabled="true"
 					@submit="submit"
@@ -64,7 +64,7 @@ function sleep(milliseconds: number) {
 }
 
 const reload = ref(false)
-const competition = getCompetitionDetails(route, t, toast, {
+const { data: competition } = getCompetitionDetails(route, t, toast, {
 	suc: async () => {
 		reload.value = true
 		await sleep(100)

@@ -103,7 +103,6 @@ import { useRoute } from "vue-router"
 import { useToast } from "primevue/usetoast"
 import { useI18n } from "vue-i18n"
 import { computed, Ref, ref, TransitionGroup } from "vue"
-import { getCompetitionDetails } from "@/backend/competition"
 import TeamContainerDraggable from "@/components/views/prepare/assignMatches/TeamContainerDraggable.vue"
 import { Team, teamClientToServer, teamServerToClient } from "@/interfaces/team"
 import axios from "axios"
@@ -113,6 +112,7 @@ import DraggablePanel from "@/draggable/DraggablePanel.vue"
 import PlayerCard from "@/components/views/prepare/components/PlayerCard.vue"
 import { KnockoutMatch } from "@/interfaces/knockoutSystem"
 import ViewKnockoutTree from "@/components/views/competition/knockoutSystem/ViewKnockoutTree.vue"
+import { getCompetitionDetails } from "@/backend/competition"
 
 const route = useRoute()
 const toast = useToast()
@@ -138,7 +138,7 @@ function $t(name: string) {
 	return computed(() => t(name))
 }
 
-const competition = getCompetitionDetails(route, t, toast, {
+const { data: competition } = getCompetitionDetails(route, t, toast, {
 	suc: () => {
 		if (competition.value === null) return
 		update()
@@ -202,6 +202,7 @@ async function update() {
 	sortedTeams.value = []
 	const anFin = sleep(firstUpdate ? 0 : 500)
 	firstUpdate = false
+	// TODO vue-query
 	axios
 		.get<Team[]>(
 			`tournament/${route.params.tourId}/competition/${route.params.compId}/signedUpTeams`,
@@ -225,6 +226,7 @@ async function update() {
 		competition.value?.cProgress === Progress.GAMES ||
 		competition.value?.cProgress === Progress.SCHEDULING
 	) {
+		// TODO vue-query
 		axios
 			.get<KnockoutOrder>(
 				`tournament/${route.params.tourId}/competition/${route.params.compId}/knockoutOrder`,
@@ -309,6 +311,7 @@ function save() {
 		teams: sortedTeams.value.map((t) => teamClientToServer(t)),
 	}
 
+	// TODO vue-query
 	axios
 		.post<boolean>(
 			`/tournament/${route.params.tourId}/competition/${route.params.compId}/initKnockout`,
