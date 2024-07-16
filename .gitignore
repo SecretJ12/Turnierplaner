@@ -37,3 +37,11 @@ nb-configuration.xml
 
 # Local environment
 .env
+
+# Frontend
+node_modules/**
+package-lock.json
+
+keycloak/**
+keycloak-19.0.1/**
+backend/.mvn

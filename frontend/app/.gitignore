@@ -26,3 +26,10 @@ coverage
 *.njsproj
 *.sln
 *.sw?
+
+package-lock.json
+node/**
+/auto-imports.d.ts
+/components.d.ts
+
+bun.lockb

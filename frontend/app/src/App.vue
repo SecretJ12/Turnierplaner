@@ -1,81 +1,71 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+<script lang="ts" setup>
+import HeadContent from "@/components/header/HeadContent.vue"
+import { provide, ref } from "vue"
+import { access_token, auth } from "@/security/AuthService"
+
+let aside = false
+
+const silentLoginCompleted = ref(false)
+auth
+	.silentLogin()
+	.then(() => {
+		silentLoginCompleted.value = true
+	})
+	.catch(() => {
+		silentLoginCompleted.value = true
+		console.log("Error logging in")
+	})
+
+const loggedIn = ref(false)
+provide("loggedIn", loggedIn)
+auth.addUserLoadedListener(() => {
+	auth.getUser().then((user) => {
+		if (user !== null) {
+			access_token.value = user.access_token
+			loggedIn.value = true
+		} else {
+			access_token.value = null
+		}
+	})
+})
+auth.addUserUnloadedListener(() => {
+	access_token.value = null
+	loggedIn.value = false
+})
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
+	<HeadContent />
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+	<div v-if="silentLoginCompleted" id="body">
+		<router-view />
+		<aside v-if="aside">
+			<h2>Aside content</h2>
+		</aside>
+	</div>
+	<Toast />
 </template>
 
 <style>
-@import './assets/base.css';
+body {
+	margin: 0;
+	padding: 0 !important;
+}
+</style>
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-
-  font-weight: normal;
+<style scoped>
+#body {
+	margin-top: 20px;
+	display: flex;
 }
 
-header {
-  line-height: 1.5;
+main {
+	flex-grow: 1;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-}
-
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
-}
-
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
-
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
-
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
+aside {
+	height: 100px;
+	width: 400px;
+	background-color: blue;
 }
 </style>

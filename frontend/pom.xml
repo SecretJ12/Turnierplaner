@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.example</groupId>
+        <groupId>de.secretj12.turnierplaner</groupId>
         <artifactId>main</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
@@ -15,7 +15,8 @@
 
     <properties>
         <working.dir>app</working.dir>
-        <node.version>v16.14.2</node.version>
+        <node.version>v20.12.0</node.version>
+        <npm.version>10.5.0</npm.version>
         <production.build.dir>${working.dir}/dist</production.build.dir>
     </properties>
 
@@ -36,6 +37,7 @@
                         <configuration>
                             <workingDirectory>${working.dir}</workingDirectory>
                             <nodeVersion>${node.version}</nodeVersion>
+                            <npmVersion>${npm.version}</npmVersion>
                         </configuration>
                         <executions>
                             <execution>
@@ -75,6 +77,12 @@
                             <filesets>
                                 <fileset>
                                     <directory>app/node_modules</directory>
+                                </fileset>
+                                <fileset>
+                                    <directory>app/node</directory>
+                                </fileset>
+                                <fileset>
+                                    <directory>app/dist</directory>
                                 </fileset>
                             </filesets>
                         </configuration>
