@@ -1,43 +1,76 @@
 <template>
 	<table
 		:class="{
-			tableSingles: props.single,
-			tableDoubles: !props.single,
+			tableSingles: props.mode === Mode.SINGLE,
+			tableDoubles: props.mode === Mode.DOUBLE,
 		}"
 	>
-		<tr :class="{ winner: props.finished && !props.winner }">
+		<tr :class="{ winner: props.match.finished && !props.match.winner }">
 			<td class="name">
-				<slot name="teamA-name"></slot>
+				{{
+					props.match.teamA?.playerA
+						? `${props.match.teamA.playerA.lastName}, ${props.match.teamA.playerA.firstName}`
+						: ""
+				}}
+				<template v-if="props.mode === Mode.DOUBLE">
+					<br />
+					{{
+						props.match.teamA?.playerB
+							? `${props.match.teamA.playerB.lastName}, ${props.match.teamA.playerB.firstName}`
+							: ""
+					}}
+				</template>
 			</td>
-			<template v-if="props.sets !== null">
-				<td v-for="set in props.sets" :key="set.index" class="result">
+
+			<template v-if="props.match.sets !== null">
+				<td v-for="set in props.match.sets" :key="set.index" class="result">
 					{{ set.scoreA }}
 				</td>
 			</template>
 		</tr>
-		<tr :class="{ winner: props.finished && props.winner }">
+		<tr :class="{ winner: props.match.finished && props.match.winner }">
 			<td class="name">
-				<slot name="teamB-name" />
+				{{
+					props.match.teamB?.playerA
+						? `${props.match.teamB.playerA.lastName}, ${props.match.teamB.playerA.firstName}`
+						: ""
+				}}
+				<template v-if="props.mode === Mode.DOUBLE">
+					<br />
+					{{
+						props.match.teamB?.playerB
+							? `${props.match.teamB.playerB.lastName}, ${props.match.teamB.playerB.firstName}`
+							: ""
+					}}
+				</template>
 			</td>
 
-			<template v-if="props.sets !== null">
-				<td v-for="set in props.sets" :key="set.index" class="result">
+			<template v-if="props.match.sets !== null">
+				<td v-for="set in props.match.sets" :key="set.index" class="result">
 					{{ set.scoreB }}
 				</td>
 			</template>
 		</tr>
 	</table>
+
 </template>
 
 <script setup lang="ts">
-import { Set } from "@/interfaces/match"
+import { KnockoutMatch } from "@/interfaces/knockoutSystem"
+import { Mode } from "@/interfaces/competition"
 
 const props = defineProps<{
-	sets: Array<Set> | null
-	single: boolean
-	finished: boolean
-	winner: boolean | null
+	match: KnockoutMatch
+	mode: Mode
 }>()
+
+const dateOptions: Intl.DateTimeFormatOptions = {
+	year: "2-digit",
+	month: "numeric",
+	day: "numeric",
+	hour: "numeric",
+	minute: "numeric",
+}
 </script>
 
 <style scoped>

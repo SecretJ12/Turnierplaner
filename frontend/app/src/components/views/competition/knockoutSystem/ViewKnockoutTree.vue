@@ -1,305 +1,289 @@
 <template>
-	<div>
-		<table
-			:class="props.mode === Mode.SINGLE ? 'tableSingles' : 'tableDoubles'"
-		>
-			<tr>
-				<template v-for="index in rangeArr(maxDepth)" :key="index">
-					<th>
-						{{ roundTitle(index + 1, maxDepth) }}
-					</th>
-					<template v-if="index < maxDepth - 1">
-						<th class="interCell"></th>
-						<th class="interCell"></th>
-					</template>
-				</template>
-			</tr>
-			<tr v-for="indexR in rangeArr(height)" :key="indexR">
-				<template v-for="indexC in rangeArr(maxDepth)" :key="indexC">
-					<td
-						v-if="matchColumnCellType(indexR, indexC) === cellType.match"
-						rowspan="5"
-						class="matchCol"
+	<div id="wrapper">
+		<template v-for="level in range(treeHeight)" :key="level">
+			<!-- Data column -->
+			<div class="column">
+				<div v-if="props.titles" class="title" style="text-align: center">
+					{{ props.titles(level, treeHeight) }}
+				</div>
+				<template v-for="index in range(Math.pow(2, treeHeight-level-1))" :key="index">
+					<div class="match"
+							 :style="{
+                      height: maxHeight+'px',
+                      'margin-top': getMargin(level, index)+'px',
+                    }"
 					>
-						<ViewMatchView
-							:match="getMatch(indexR, indexC)"
-							:mode="props.mode"
-							:teamA="getMatch(indexR, indexC).teamA"
-							:teamB="getMatch(indexR, indexC).teamB"
-							:sets="getMatch(indexR, indexC).sets"
-							:finished="getMatch(indexR, indexC).finished"
-							:winner="getMatch(indexR, indexC).winner"
-							:single="props.mode === Mode.SINGLE"
-						>
-						</ViewMatchView>
-					</td>
-					<td
-						v-else-if="
-							matchColumnCellType(indexR, indexC) === cellType.emptyCell
-						"
-					></td>
-					<td
-						v-else-if="
-							matchColumnCellType(indexR, indexC) === cellType.thirdPlace
-						"
-						class="fixHeight"
-					>
-						{{ t("ViewKnockout.thirdPlace") }}
-					</td>
-
-					<template v-if="indexC < maxDepth - 1">
-						<td
-							v-if="
-								interColumnCellType(indexR, indexC) === interCellType.topRight
-							"
-							class="topRightInterCell interCell"
-						></td>
-						<td
-							v-else-if="
-								interColumnCellType(indexR, indexC) ===
-								interCellType.bottomRight
-							"
-							class="bottomRightInterCell interCell"
-						></td>
-						<td
-							v-else-if="
-								interColumnCellType(indexR, indexC) === interCellType.right
-							"
-							class="rightInterCell interCell"
-						></td>
-						<td
-							v-else-if="
-								interColumnCellType(indexR, indexC) === interCellType.blank
-							"
-							class="interCell"
-						></td>
-
-						<td
-							v-if="isBottomInterCell(indexR, indexC)"
-							class="bottomInterCell interCell"
-						></td>
-						<td v-else class="interCell"></td>
-					</template>
+						<div style="height: fit-content; flex: 1 0 auto" :ref="(el: HTMLElement) => setEl(level, index, el)">
+							<slot name="match" v-bind="{ match: getMatch(level, index) }">
+								Fallback
+							</slot>
+						</div>
+					</div>
+					<div v-if="level > 0 || index < Math.pow(2, treeHeight-level-1)-1" class="additionalPar">
+						<div class="additionalCont">
+							<slot name="additional" v-bind="{ match: getMatch(level, index) }">
+							</slot>
+						</div>
+					</div>
+					<div v-else>
+						<slot name="additional" v-bind="{ match: getMatch(level, index) }">
+						</slot>
+					</div>
 				</template>
-			</tr>
-		</table>
+				<template v-if="level === treeHeight - 1">
+					<div class="match"
+							 :style="{
+                      height: maxHeight+'px',
+                      'margin-top': props.marginSmall + 'px',
+                    }"
+					>
+						<div style="height: fit-content; flex: 1 0 auto">
+							<slot name="match" v-bind="{ match: thirdPlace }">
+								Fallback
+							</slot>
+						</div>
+					</div>
+					<slot name="additional" v-bind="{ match: thirdPlace }">
+					</slot>
+				</template>
+			</div>
+			<!-- Connection columns -->
+			<div class="column" v-if="level < treeHeight-1" :style="{width: (props.conWidth+props.borderThickness) + 'px'}">
+				<div v-if="props.titles" class="title"></div>
+				<div v-for="index in range(Math.pow(2, treeHeight-level-2))" :key="index" class="left-con"
+						 :style="{
+                height: getHeightCon(level, index)+'px',
+                'margin-top': getMarginConLeft(level, index)+'px',
+                'border-right': props.borderThickness + 'px solid black',
+                'border-top': props.borderThickness + 'px solid black',
+                'border-bottom': props.borderThickness + 'px solid black',
+                'border-radius': `0 ${props.borderRadius}px ${props.borderRadius}px 0`
+             }"
+				>
+				</div>
+			</div>
+			<div class="column" v-if="level < treeHeight-1" :style="{width: props.conWidth + 'px'}">
+				<div v-if="props.titles" class="title"></div>
+				<div v-for="index in range(Math.pow(2, treeHeight-level-2))" :key="index" class="right-con"
+						 :style="{
+                'margin-top': getMarginConRight(level, index)+'px',
+                'height': props.borderThickness+'px'
+          }"
+				>
+				</div>
+			</div>
+		</template>
 	</div>
 </template>
 
 <script setup lang="ts">
+import {computed, Ref, ref, watch} from "vue";
 import { KnockoutMatch } from "@/interfaces/knockoutSystem"
-import { useI18n } from "vue-i18n"
-import { Mode } from "@/interfaces/competition"
-import { computed } from "vue"
-import ViewMatchView from "@/components/views/competition/knockoutSystem/ViewMatchView.vue"
 
-const { t } = useI18n({ inheritLocale: true })
+const finale = defineModel<KnockoutMatch>("finale")
+const thirdPlace = defineModel<KnockoutMatch>("thirdPlace")
 
-const props = defineProps<{
-	match: KnockoutMatch
-	thirdPlace: KnockoutMatch
-	mode: Mode
-}>()
+const props = withDefaults(defineProps<{
+	marginSmall?: number,
+	marginBig?: number,
+	conWidth?: number,
+	borderThickness?: number,
+	borderRadius?: number,
+	titles?: ((round: number, total: number) => string)
+}>(), {
+	marginSmall: 10,
+	marginBig: 20,
+	conWidth: 7,
+	borderThickness: 1,
+	borderRadius: 10
+})
 
-const maxDepth = computed(() => calcMaxDepth(props.match))
-const teamsCount = computed(() => Math.pow(2, maxDepth.value))
-const height = computed(() => tableHeight())
+function measureHeight(tree: KnockoutMatch): number {
+	const a = tree.prevMatch ? measureHeight(tree.prevMatch.a) : 0
+	const b = tree.prevMatch ? measureHeight(tree.prevMatch.b) : 0
+	return 1 + Math.max(a, b)
+}
 
-function getMatch(indexR: number, indexC: number): KnockoutMatch {
-	// detect semifinal
-	if (indexC === maxDepth.value - 1 && indexR > height.value / 2) {
-		return props.thirdPlace
+const treeHeight = computed(() => finale.value ? measureHeight(finale.value) : 0)
+
+const matchRefs: Ref<HTMLElement[][]> = ref<HTMLElement[][]>([])
+const margins: Ref<number[][]> = ref<number[][]>([])
+const heightCon: Ref<number[][]> = ref<number[][]>([])
+const marginConLeft: Ref<number[][]> = ref<number[][]>([])
+const marginConRight: Ref<number[][]> = ref<number[][]>([])
+const resizeObserver: Ref<ResizeObserver[][]> = ref<ResizeObserver[][]>([])
+
+function setEl(level: number, index: number, el: HTMLElement) {
+	if (!matchRefs.value[level])
+		matchRefs.value[level] = []
+	if (!resizeObserver.value[level])
+		resizeObserver.value[level] = []
+	if (!resizeObserver.value[level][index])
+		resizeObserver.value[level][index] = new ResizeObserver(update)
+	matchRefs.value[level][index] = el
+	resizeObserver.value[level][index].observe(el)
+}
+
+const maxHeight = ref(0)
+
+watch([props], update)
+
+function update() {
+	let mH = 0;
+	for (const row of matchRefs.value) {
+		for (const match of (row ?? [])) {
+			mH = Math.max(mH, match.getBoundingClientRect().height)
+		}
+	}
+	if (mH === maxHeight.value)
+		return
+	maxHeight.value = mH
+
+	if (matchRefs.value.length === 0)
+		return
+
+	margins.value[0] = []
+	margins.value[0][0] = 0
+	for (let index = 1; index < matchRefs.value[0].length; index++) {
+		if (index % 2 === 1) {
+			margins.value[0][index] = props.marginSmall
+		} else {
+			margins.value[0][index] = props.marginBig
+		}
+	}
+	for (let level = 1; level < matchRefs.value.length; level++) {
+		if (!margins.value[level])
+			margins.value[level] = []
+		const blockHeight = Math.pow(2, level) * maxHeight.value
+			+ Math.pow(2, level - 1) * props.marginSmall
+			+ (Math.pow(2, Math.max(0, level - 1)) - 1) * props.marginBig
+
+		margins.value[level][0] = blockHeight / 2 - maxHeight.value / 2
+		for (let index = 1; index < matchRefs.value[level].length; index++) {
+			if (matchRefs.value.length < level || matchRefs.value[level - 1].length < 2 * index + 1)
+				continue
+
+			margins.value[level][index] = blockHeight + props.marginBig - maxHeight.value
+		}
 	}
 
-	let curMatch = props.match
-	let curHeight = height.value
-	for (let i = 0; i < maxDepth.value - indexC - 1; i++) {
+	for (let level = 0; level < treeHeight.value - 1; level++) {
+		heightCon.value[level] = []
+		marginConLeft.value[level] = []
+		marginConRight.value[level] = []
+
+		const height = ((Math.pow(2, level)) * maxHeight.value)
+			+ ((Math.pow(2, Math.max(level - 1, 0))) * props.marginSmall)
+			+ ((level === 0 ? 0 : Math.pow(2, level - 1)) * props.marginBig)
+		for (let index = 0; index < Math.pow(2, treeHeight.value - level - 2); index++) {
+			heightCon.value[level][index] = height + props.borderThickness
+			if (index === 0) {
+				marginConLeft.value[level][index] = margins.value[level][index] + (maxHeight.value / 2) - (props.borderThickness / 2)
+				marginConRight.value[level][index] = margins.value[level][index] + (maxHeight.value / 2) + (height / 2) - (props.borderThickness / 2)
+			} else {
+				if (level === 0) {
+					marginConLeft.value[level][index] = maxHeight.value + props.marginBig - props.borderThickness
+					marginConRight.value[level][index] = maxHeight.value + props.marginBig + height - props.borderThickness
+				} else {
+					marginConLeft.value[level][index] = height - props.borderThickness
+					marginConRight.value[level][index] = 2 * height - props.borderThickness
+				}
+			}
+		}
+	}
+}
+
+
+function range(n: number) {
+	return [...Array(n)].map((_, i) => i)
+}
+
+function getMargin(level: number, index: number) {
+	return getSafeValue(level, index, margins.value)
+}
+
+function getHeightCon(level: number, index: number) {
+	return getSafeValue(level, index, heightCon.value)
+}
+
+function getMarginConLeft(level: number, index: number) {
+	return getSafeValue(level, index, marginConLeft.value)
+}
+
+function getMarginConRight(level: number, index: number) {
+	return getSafeValue(level, index, marginConRight.value)
+}
+
+function getSafeValue(level: number, index: number, array: number[][]) {
+	if (array.length <= level)
+		return 0
+	if (array[level].length <= index)
+		return 0
+
+	return array[level][index]
+}
+
+function getMatch(level: number, index: number): KnockoutMatch {
+	let curMatch = finale.value
+	if (!curMatch)
+		throw new Error("Finale is undefined")
+	let curHeight = Math.pow(2, treeHeight.value)
+	for (let i = 0; i < treeHeight.value - level - 1; i++) {
 		curHeight /= 2
-		if (curMatch.prevMatch === undefined)
+		if (!curMatch.prevMatch)
 			throw new Error("prevMatch is undefined")
-		if (indexR < curHeight) {
+		if (index < curHeight) {
 			curMatch = curMatch.prevMatch.a
 		} else {
 			curMatch = curMatch.prevMatch.b
-			indexR -= curHeight
+			index -= curHeight
 		}
 	}
 	return curMatch
 }
-
-function tableHeight(): number {
-	if (teamsCount.value === 3 || teamsCount.value === 4) return 17
-	return 2 * teamsCount.value + 2 * (teamsCount.value / 2 - 1) + 1
-}
-
-function roundTitle(round: number, totalRounds: number): string {
-	if (round === totalRounds) return t("ViewKnockout.finale")
-	else if (round === totalRounds - 1) return t("ViewKnockout.semifinals")
-	else if (round === totalRounds - 2) return t("ViewKnockout.quarterfinals")
-	else return t("ViewKnockout.round") + " " + round
-}
-
-function matchColumnCellType(indexR: number, indexC: number): cellType {
-	if (teamsCount.value === 3 || teamsCount.value === 4) {
-		if (indexC === 0) {
-			if (indexR === 0) return cellType.match
-			else if (indexR < 5) return cellType.empty
-			else if (indexR < 12) return cellType.emptyCell
-			else if (indexR === 12) return cellType.match
-			else return cellType.empty
-		} else {
-			if (indexR === 6) return cellType.match
-			else if (indexR < 11) return cellType.empty
-			else if (indexR === 11) return cellType.thirdPlace
-			else if (indexR === 12) return cellType.match
-			else return cellType.empty
-		}
-	}
-
-	if (indexC === 0) {
-		const mod = indexR % 6
-		if (mod === 0) return cellType.match
-		else if (mod < 5) return cellType.empty
-		else return cellType.emptyCell
-	}
-
-	const countMatchesLeftTop = Math.pow(2, indexC - 1)
-	const heightLeftTop =
-		4 * countMatchesLeftTop + 2 * (countMatchesLeftTop - 1) - 1
-
-	const countMatchesLeft = Math.pow(2, indexC)
-	const heightLeft = 4 * countMatchesLeft + 2 * countMatchesLeft
-
-	if (indexR < heightLeftTop) return cellType.emptyCell
-	const mod = (indexR - heightLeftTop) % heightLeft
-	if (mod === 0) return cellType.match
-	else if (mod < 5) return cellType.empty
-	else {
-		if (indexC < maxDepth.value - 1) return cellType.emptyCell
-		else {
-			if (mod === 5) return cellType.emptyCell
-			else if (mod === 6) return cellType.thirdPlace
-			else if (mod === 7) return cellType.match
-			else if (mod < 11) return cellType.empty
-			else return cellType.emptyCell
-		}
-	}
-}
-
-function interColumnCellType(indexR: number, indexC: number): interCellType {
-	if (teamsCount.value === 3 || teamsCount.value === 4) {
-		if (indexR < 2) return interCellType.blank
-		else if (indexR === 2) return interCellType.topRight
-		else if (indexR < 13) return interCellType.right
-		else if (indexR === 13) return interCellType.bottomRight
-		else return interCellType.blank
-	}
-
-	const countMatchesLeftTop = Math.pow(2, indexC)
-	const heightLeftTop = 4 * countMatchesLeftTop + 2 * (countMatchesLeftTop - 1)
-
-	const countMatchesLeft = Math.pow(2, indexC + 1)
-	const heightLeft =
-		4 * countMatchesLeft + 2 * (countMatchesLeft - 1) - heightLeftTop
-
-	const mod = (indexR - heightLeftTop / 2) % (2 * heightLeft)
-	if (indexR < heightLeftTop / 2) return interCellType.blank
-	if (mod === 0) return interCellType.topRight
-	if (mod === heightLeft - 1) return interCellType.bottomRight
-	if (mod < heightLeft) return interCellType.right
-	else return interCellType.blank
-}
-
-function isBottomInterCell(indexR: number, indexC: number): boolean {
-	if (teamsCount.value === 3 || teamsCount.value === 4) {
-		return indexR === 7
-	}
-
-	const countMatchesLeftTop = Math.pow(2, indexC)
-	const heightLeftTop =
-		4 * countMatchesLeftTop + 2 * (countMatchesLeftTop - 1) - 1
-
-	const countMatchesLeft = Math.pow(2, indexC + 1)
-	const heightLeft = 4 * countMatchesLeft + 2 * countMatchesLeft
-
-	if (indexR < heightLeftTop) return false
-	const mod = (indexR - heightLeftTop) % heightLeft
-	return mod === 1
-}
-
-function calcMaxDepth(match: KnockoutMatch): number {
-	if (match.prevMatch === undefined) return 1
-
-	return (
-		1 +
-		Math.max(calcMaxDepth(match.prevMatch.a), calcMaxDepth(match.prevMatch.b))
-	)
-}
-
-enum cellType {
-	match,
-	empty,
-	emptyCell,
-	thirdPlace,
-}
-
-enum interCellType {
-	topRight,
-	bottomRight,
-	right,
-	blank,
-}
-
-function rangeArr(r: number) {
-	return Array.from({ length: r }, (value, index) => index)
-}
 </script>
 
 <style scoped>
-table {
-	table-layout: fixed;
-	border-collapse: collapse;
+#wrapper {
+	padding: 5px;
+	display: flex;
+	width: fit-content;
+	flex-direction: row;
 }
 
-th {
-	text-align: center;
+.match {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
-td {
-	padding: 0;
+.column {
+	height: 100%;
+	width: max-content;
 }
 
-.tableSingles > tr > td {
-	height: 20px;
-	font-size: 13px;
+.left-con {
+	box-sizing: border-box;
 }
 
-.tableDoubles > tr > td {
-	height: 28px;
+.right-con {
+	background-color: black
 }
 
-.matchCol {
+.additionalPar {
+	position: relative;
 }
 
-.topRightInterCell {
-	border-top: solid black 2px;
-	border-right: solid black 2px;
+.additionalCont {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0
 }
 
-.bottomRightInterCell {
-	border-right: solid black 2px;
-	border-bottom: solid black 2px;
-}
-
-.rightInterCell {
-	border-right: solid black 2px;
-}
-
-.bottomInterCell {
-	border-bottom: solid black 2px;
-}
-
-.interCell {
-	min-width: 25px;
+.title {
+	height: 30px;
+	font-weight: bold;
 }
 </style>
