@@ -22,21 +22,10 @@
 				v-if="item.playerA && competition?.mode === Mode.SINGLE"
 				:player="item.playerA"
 			></PlayerCard>
-			<TeamBox
+			<TeamCard
 				v-else-if="competition?.mode === Mode.DOUBLE"
-				:different="competition?.playerB.different || false"
-			>
-				<template #playerA>
-					<PlayerCard v-if="item.playerA" :player="item.playerA"></PlayerCard>
-				</template>
-				<template #playerB>
-					<PlayerCard
-						v-if="item.playerB"
-						:player="item.playerB"
-						:secondary="competition?.playerB.different || false"
-					></PlayerCard>
-				</template>
-			</TeamBox>
+				:team="item"
+			></TeamCard>
 		</template>
 	</DraggablePanel>
 </template>
@@ -46,8 +35,8 @@ import { TransitionGroup } from "vue"
 import { Competition, Mode } from "@/interfaces/competition"
 import { Team } from "@/interfaces/team"
 import PlayerCard from "@/components/views/prepare/components/PlayerCard.vue"
-import TeamBox from "@/components/views/prepare/components/TeamBox.vue"
 import DraggablePanel from "@/draggable/DraggablePanel.vue"
+import TeamCard from "@/components/views/prepare/components/TeamCard.vue"
 
 const props = defineProps<{
 	teams: Team[]

@@ -1,7 +1,5 @@
 <template>
-	<div
-		id="date"
-	>
+	<div id="date">
 		{{ props.match.begin?.toLocaleString(t("lang"), dateOptions) || "" }}
 	</div>
 </template>

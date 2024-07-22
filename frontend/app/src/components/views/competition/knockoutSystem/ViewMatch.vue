@@ -52,7 +52,6 @@
 			</template>
 		</tr>
 	</table>
-
 </template>
 
 <script setup lang="ts">
@@ -63,14 +62,6 @@ const props = defineProps<{
 	match: KnockoutMatch
 	mode: Mode
 }>()
-
-const dateOptions: Intl.DateTimeFormatOptions = {
-	year: "2-digit",
-	month: "numeric",
-	day: "numeric",
-	hour: "numeric",
-	minute: "numeric",
-}
 </script>
 
 <style scoped>
