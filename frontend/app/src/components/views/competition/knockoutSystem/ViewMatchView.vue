@@ -53,7 +53,7 @@
 </template>
 
 <script setup lang="ts">
-import ViewMatch from "@/components/views/competition/knockoutSystem/ViewMatch.vue"
+import ViewMatch from "@/components/views/competition/knockoutSystem/ViewMatch_old.vue"
 import { KnockoutMatch } from "@/interfaces/knockoutSystem"
 import { Mode } from "@/interfaces/competition"
 import { Team } from "@/interfaces/team"
