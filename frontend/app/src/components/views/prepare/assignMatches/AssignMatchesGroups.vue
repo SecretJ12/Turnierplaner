@@ -31,56 +31,43 @@
 			</Card>
 		</div>
 		<div class="col-8 flex flex-column gap-3">
-			<template v-if="competition?.tourType === TourType.GROUPS">
-				<Card v-for="(group, i) in groups" :key="i">
-					<template #title
-						>{{ t("ViewPrepare.assignMatches.Group") }} {{ i + 1 }}
-					</template>
-					<template #content>
-						<TeamContainerDraggable
-							v-if="competition"
-							:animated="animated"
-							:teams="group"
-							:competition="competition"
-						/>
-					</template>
-				</Card>
-				<div class="flex flex-row gap-2">
-					<Button
-						:label="t('ViewPrepare.assignMatches.remove')"
-						:disabled="noGroups <= 2 || disabled"
-						severity="danger"
-						@click="
-							() => {
-								noGroups /= 2
-								adjustSize(noGroups)
-							}
-						"
-					></Button>
-					<Button
-						:label="t('ViewPrepare.assignMatches.add')"
-						:disabled="noGroups >= 64 || disabled"
-						severity="success"
-						@click="
-							() => {
-								noGroups *= 2
-								adjustSize(noGroups)
-							}
-						"
-					></Button>
-				</div>
-			</template>
-			<template v-else>
-				<Card v-if="competition">
-					<template #content>
-						<ViewKnockoutTree
-							:mode="competition.mode"
-							:match="knockoutSystem.finale"
-							:third-place="knockoutSystem.thirdPlace"
-						/>
-					</template>
-				</Card>
-			</template>
+			<Card v-for="(group, i) in groups" :key="i">
+				<template #title
+					>{{ t("ViewPrepare.assignMatches.Group") }} {{ i + 1 }}
+				</template>
+				<template #content>
+					<TeamContainerDraggable
+						v-if="competition"
+						:animated="animated"
+						:teams="group"
+						:competition="competition"
+					/>
+				</template>
+			</Card>
+			<div class="flex flex-row gap-2">
+				<Button
+					:label="t('ViewPrepare.assignMatches.remove')"
+					:disabled="noGroups <= 2 || disabled"
+					severity="danger"
+					@click="
+						() => {
+							noGroups /= 2
+							adjustSize(noGroups)
+						}
+					"
+				></Button>
+				<Button
+					:label="t('ViewPrepare.assignMatches.add')"
+					:disabled="noGroups >= 64 || disabled"
+					severity="success"
+					@click="
+						() => {
+							noGroups *= 2
+							adjustSize(noGroups)
+						}
+					"
+				></Button>
+			</div>
 		</div>
 	</div>
 </template>
@@ -89,11 +76,8 @@
 import { useRoute } from "vue-router"
 import { useI18n } from "vue-i18n"
 import { useToast } from "primevue/usetoast"
-import { KnockoutMatch } from "@/interfaces/knockoutSystem"
 import { computed, Ref, ref, watch } from "vue"
 import { Team } from "@/interfaces/team"
-import { TourType } from "@/interfaces/competition"
-import ViewKnockoutTree from "@/components/views/competition/knockoutSystem/ViewKnockoutTree_old.vue"
 import { getCompetitionDetails } from "@/backend/competition"
 import { getSignedUp } from "@/backend/signup"
 import { getGroupsDivision, useInitGroups } from "@/backend/group"
@@ -205,33 +189,6 @@ async function reset() {
 		}
 	}
 	animated.value = false
-}
-
-function generateTree(size: number): KnockoutMatch {
-	return {
-		court: "a",
-		begin: new Date(),
-		end: new Date(),
-		finished: false,
-		winner: null,
-		teamA: null,
-		teamB: null,
-		sets: null,
-		curGame: null,
-		prevMatch:
-			size > 0
-				? {
-						winner: true,
-						a: generateTree(size - 1),
-						b: generateTree(size - 1),
-					}
-				: undefined,
-	}
-}
-
-const knockoutSystem = {
-	finale: generateTree(1),
-	thirdPlace: generateTree(0),
 }
 
 function adjustUnsorted() {

@@ -9,10 +9,10 @@
 			:margin-small="30"
 			:margin-big="40"
 		>
-			<template #match="{match}">
+			<template #match="{ match }">
 				<ViewMatch v-if="match" :match="match" :mode="props.mode" />
 			</template>
-			<template #additional="{match}">
+			<template #additional="{ match }">
 				<ViewMatchDate v-if="match" :match="match" />
 			</template>
 		</ViewKnockoutTree>
