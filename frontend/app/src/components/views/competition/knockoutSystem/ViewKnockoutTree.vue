@@ -163,7 +163,8 @@ function setEl(level: number, index: number, el: HTMLElement) {
 	if (!resizeObserver.value[level][index])
 		resizeObserver.value[level][index] = new ResizeObserver(update)
 	matchRefs.value[level][index] = el
-	resizeObserver.value[level][index].observe(el)
+	if (el)
+		resizeObserver.value[level][index].observe(el)
 }
 
 const maxHeight = ref(0)
@@ -174,7 +175,8 @@ function update() {
 	let mH = 0
 	for (const row of matchRefs.value) {
 		for (const match of row ?? []) {
-			mH = Math.max(mH, match.getBoundingClientRect().height)
+			if (match)
+				mH = Math.max(mH, match.getBoundingClientRect().height)
 		}
 	}
 	maxHeight.value = mH

@@ -72,19 +72,31 @@ const route = useRoute()
 const toast = useToast()
 const { t } = useI18n({ inheritLocale: true })
 
-const { data: competition } = getCompetitionDetails(route, t, toast, {})
-const { data: signedUp } = getSignedUp(route, t, toast)
+let firstUpdate = true
+const { data: competition } = getCompetitionDetails(route, t, toast, {
+	suc: () => {
+		if (competition.value === null) return
+		loadFromServer()
+	},
+})
+const { data: signedUp, isPlaceholderData: signedUpPlaceholder } = getSignedUp(route, t, toast)
 
 const teams = ref<Team[]>([])
 
 const tree = ref(genTree(0))
-watch([signedUp], () => {
+watch([signedUp], loadFromServer)
+if (!signedUpPlaceholder.value) loadFromServer()
+
+async  function loadFromServer() {
 	if (!signedUp.value) return
 
 	teams.value = []
-	signedUp.value.forEach((t) => teams.value.push(t))
 	tree.value = genTree(Math.ceil(Math.log2(signedUp.value.length)))
-})
+	await sleep(firstUpdate ? 0 : 400)
+	firstUpdate = false
+
+	signedUp.value.forEach((t) => teams.value.push(t))
+}
 
 //  [row number in the tree][ upper or lower part of a bracket ][just in an array for draggable]
 const assignedTeams = ref<Team[][][]>([])
@@ -192,7 +204,6 @@ async function reset() {
 	animated.value = false
 }
 
-let firstUpdate = true
 
 // async function update() {
 // 	animated.value = true
