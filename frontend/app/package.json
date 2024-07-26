@@ -12,6 +12,7 @@
 		"format:validate": "ESLINT_USE_FLAT_CONFIG=false eslint . --ext .vue,.ts,.tsx,.js,.jsx && prettier . --check",
 		"format:fix": "ESLINT_USE_FLAT_CONFIG=false eslint . --ext .vue,.ts,.tsx,.js,.jsx --fix && prettier . --write"
 	},
+	"type": "module",
 	"dependencies": {
 		"@vee-validate/yup": "^4.12.3",
 		"@vue/cli": "^5.0.8",

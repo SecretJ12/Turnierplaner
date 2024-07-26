@@ -1,6 +1,6 @@
 <template>
 	<div class="grid">
-		<div class="col-4 flex flex-column gap-3">
+		<div class="col-3 flex flex-column gap-3">
 			<Card>
 				<!-- TODO i18n -->
 				<template #title>
@@ -30,66 +30,18 @@
 				</template>
 			</Card>
 		</div>
-		<div class="col-2">
-			<Card>
-				<template #title>{{ t("ViewPrepare.assignMatches.ranking") }}</template>
-				<template #content>
-					<DraggablePanel
-						:list="sortedTeams"
-						:put="true"
-						item-key="id"
-						:tag="TransitionGroup"
-						:component-data="{
-							tag: 'div',
-							name: animated ? 'playerList' : 'default',
-							type: 'transition',
-						}"
-						group="teams"
-						class="flex flex-column gap-2 border-3 border-round border-dashed justify-content-center"
-						:class="{
-							'min-player-height': competition?.mode === Mode.SINGLE,
-							'min-team-height': competition?.mode === Mode.DOUBLE,
-						}"
-						style="box-sizing: content-box"
-					>
-						<template #default="{ item }">
-							<PlayerCard
-								v-if="item.playerA && competition?.mode === Mode.SINGLE"
-								:player="item.playerA"
-							></PlayerCard>
-							<TeamBox
-								v-else-if="competition?.mode === Mode.DOUBLE"
-								:different="competition?.playerB.different || false"
-							>
-								<template #playerA>
-									<PlayerCard
-										v-if="item.playerA"
-										:player="item.playerA"
-									></PlayerCard>
-								</template>
-								<template #playerB>
-									<PlayerCard
-										v-if="item.playerB"
-										:player="item.playerB"
-										:secondary="competition?.playerB.different || false"
-									></PlayerCard>
-								</template>
-							</TeamBox>
-						</template>
-					</DraggablePanel>
-				</template>
-			</Card>
-		</div>
-		<div class="col-6">
+		<div class="col-9">
 			<Card class="w-full">
 				<template #title>{{ t("general.tournament_tree") }}</template>
 				<template #content>
-					<ScrollPanel style="width: 100%; height: 500px">
-						<ViewKnockoutTree
-							v-if="competition && finale && thirdPlace"
+					<ScrollPanel style="width: 100%; height: 1000px">
+						<ViewKnockoutTreeDraggable
+							v-if="competition && !animated"
 							:mode="competition.mode"
-							:match="finale"
+							:depth="size + 1"
 							:third-place="thirdPlace"
+							:competition="competition"
+							:assigned-teams="assignedTeams"
 						/>
 					</ScrollPanel>
 				</template>
@@ -102,26 +54,24 @@
 import { useRoute } from "vue-router"
 import { useToast } from "primevue/usetoast"
 import { useI18n } from "vue-i18n"
-import { computed, Ref, ref, TransitionGroup } from "vue"
-import TeamContainerDraggable from "@/components/views/prepare/assignMatches/TeamContainerDraggable.vue"
+import { computed, Ref, ref } from "vue"
+import { getCompetitionDetails } from "@/backend/competition"
+import TeamContainerDraggable from "@/components/views/prepare/components/TeamContainerDraggable.vue"
 import { Team, teamClientToServer, teamServerToClient } from "@/interfaces/team"
 import axios from "axios"
-import { KnockoutOrder, Mode, Progress } from "@/interfaces/competition"
-import TeamBox from "@/components/views/prepare/components/TeamBox.vue"
-import DraggablePanel from "@/draggable/DraggablePanel.vue"
-import PlayerCard from "@/components/views/prepare/components/PlayerCard.vue"
+import { KnockoutOrder, Progress } from "@/interfaces/competition"
 import { KnockoutMatch } from "@/interfaces/knockoutSystem"
-import ViewKnockoutTree from "@/components/views/competition/knockoutSystem/ViewKnockoutTree.vue"
-import { getCompetitionDetails } from "@/backend/competition"
+import ViewKnockoutTreeDraggable from "@/components/views/prepare/assignMatches/ViewKnockoutTreeDraggable.vue"
 
 const route = useRoute()
 const toast = useToast()
 const { t } = useI18n({ inheritLocale: true })
 
 const teams = ref<Team[]>([])
-const sortedTeams = ref<Team[]>([])
+//  [row number in the tree][ upper or lower part of a bracket ][just in an array for draggable]
+const assignedTeams = ref<Team[][][]>([])
 
-const animated = ref<boolean>(false)
+const animated = ref<boolean>(true)
 
 const duration = 2000
 const teamCount = ref(0)
@@ -162,16 +112,27 @@ function selectRandomElement<T>(players: Ref<T[]>) {
 	const r = Math.floor(Math.random() * players.value.length)
 	const element = players.value[r]
 	players.value.splice(r, 1)
-	//players.value = players.value.filter((v, i) => i !== r)
 	return element
 }
 
 async function randomize() {
 	animated.value = true
+	let knockOutListIndex = 0
 	while (teams.value.length) {
 		const element = selectRandomElement(teams)
 		await sleep(delayBetween.value)
-		sortedTeams.value.push(element)
+		while (
+			assignedTeams.value[knockOutListIndex][0].length === 1 &&
+			assignedTeams.value[knockOutListIndex][1].length === 1
+		) {
+			knockOutListIndex++
+		}
+		if (assignedTeams.value[knockOutListIndex][0].length === 0) {
+			assignedTeams.value[knockOutListIndex][0].push(element)
+		} else {
+			assignedTeams.value[knockOutListIndex][1].push(element)
+			knockOutListIndex++
+		}
 		await sleep(delay.value)
 	}
 	animated.value = false
@@ -184,68 +145,77 @@ async function reroll() {
 
 async function reset() {
 	animated.value = true
-	while (sortedTeams.value.length) {
-		let i = sortedTeams.value.length - 1
-		const team = sortedTeams.value.splice(i, 1)[0]
-		await sleep(delayBetween.value)
-		teams.value.push(team)
+	for (let i = 0; i < assignedTeams.value.length; i++) {
+		let team1 = assignedTeams.value[i][0].pop()
+		let team2 = assignedTeams.value[i][1].pop()
+		if (team1) teams.value.push(team1)
+		if (team2) teams.value.push(team2)
 		await sleep(delay.value)
+		console.log(assignedTeams.value.length)
 	}
+
 	animated.value = false
 }
 
-let firstUpdate = true
+// let firstUpdate = true
 
 async function update() {
 	animated.value = true
 	teams.value = []
-	sortedTeams.value = []
-	const anFin = sleep(firstUpdate ? 0 : 500)
-	firstUpdate = false
-	// TODO vue-query
-	axios
-		.get<Team[]>(
-			`tournament/${route.params.tourId}/competition/${route.params.compId}/signedUpTeams`,
-		)
-		.then(async (response) => {
-			await anFin
-			teamCount.value = 0
-			response.data.forEach((team) => {
-				teams.value.push(teamServerToClient(team))
-				teamCount.value++
-			})
-			adjustUnsorted()
-			await sleep(500)
-			animated.value = false
-		})
-		.catch((error) => {
-			console.log(error)
-		})
-
+	while (assignedTeams.value.length > 0) {
+		assignedTeams.value.pop()
+	}
+	// const anFin = sleep(firstUpdate ? 0 : 500)
+	// firstUpdate = false
+	teamCount.value = 0
 	if (
 		competition.value?.cProgress === Progress.GAMES ||
 		competition.value?.cProgress === Progress.SCHEDULING
 	) {
-		// TODO vue-query
 		axios
 			.get<KnockoutOrder>(
 				`tournament/${route.params.tourId}/competition/${route.params.compId}/knockoutOrder`,
 			)
 			.then(async (response) => {
-				await anFin
-				sortedTeams.value = response.data.teams.map((t) =>
-					teamServerToClient(t),
-				)
-				adjustUnsorted()
+				let sortedTeams = response.data.teams.map((t) => teamServerToClient(t))
+				teamCount.value += sortedTeams.length
+				// initialize the knockout order
+				for (let i = 0; i < nearestPowerOf2(sortedTeams.length) / 2; i++) {
+					assignedTeams.value.push([
+						[sortedTeams[i * 2]],
+						[sortedTeams[i * 2 + 1]],
+					])
+				}
+				animated.value = false
 			})
 			.catch(() => {})
+	} else {
+		axios
+			.get<Team[]>(
+				`tournament/${route.params.tourId}/competition/${route.params.compId}/signedUpTeams`,
+			)
+			.then(async (response) => {
+				// await anFin
+				response.data.forEach((team) => {
+					teams.value.push(teamServerToClient(team))
+					teamCount.value++
+				})
+				// await sleep(500)
+				if (competition.value?.cProgress === Progress.TEAMS) {
+					for (let i = 0; i < nearestPowerOf2(teams.value.length) / 2; i++) {
+						assignedTeams.value.push([[], []])
+					}
+				}
+				animated.value = false
+			})
+			.catch((error) => {
+				console.log(error)
+			})
 	}
 }
 
-function adjustUnsorted() {
-	teams.value = teams.value.filter(
-		(e) => !sortedTeams.value.some((t) => t.id === e.id),
-	)
+function nearestPowerOf2(n: number): number {
+	return 1 << (31 - Math.clz32(n))
 }
 
 function split(size: number, teams: Team[]): Team[][] {
@@ -295,23 +265,41 @@ function generateTree(
 const size = computed(() =>
 	Math.max(0, Math.ceil(Math.log2(teamCount.value)) - 1),
 )
-const finale = computed(() =>
-	generateTree(
-		size.value,
-		sortedTeams.value.concat(
-			new Array(2 ** (size.value + 1) - sortedTeams.value.length).fill(null),
-		),
-	),
-)
 
 const thirdPlace = computed(() => generateTree(0, []))
 
+function knockoutTreeCompletelyAssigned(): boolean {
+	console.log(assignedTeams.value)
+	for (let i = 0; i < assignedTeams.value.length; i++) {
+		if (
+			assignedTeams.value[i][0].length === 0 ||
+			assignedTeams.value[i][1].length === 0
+		) {
+			return false
+		}
+	}
+	return true
+}
+
 function save() {
-	const req: KnockoutOrder = {
-		teams: sortedTeams.value.map((t) => teamClientToServer(t)),
+	if (!knockoutTreeCompletelyAssigned()) {
+		toast.add({
+			severity: "error",
+			summary: t("general.failure"),
+			detail: t("ViewPrepare.assignMatches.knockout_not_assigned"),
+			life: 3000,
+			closable: false,
+		})
+		return
 	}
 
-	// TODO vue-query
+	const req: KnockoutOrder = {
+		teams: assignedTeams.value
+			.flat()
+			.flat()
+			.map((t) => teamClientToServer(t)),
+	}
+
 	axios
 		.post<boolean>(
 			`/tournament/${route.params.tourId}/competition/${route.params.compId}/initKnockout`,

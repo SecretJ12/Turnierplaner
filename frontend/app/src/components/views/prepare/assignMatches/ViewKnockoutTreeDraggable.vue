@@ -17,21 +17,38 @@
 			<tr v-for="indexR in rangeArr(height)" :key="indexR">
 				<template v-for="indexC in rangeArr(maxDepth)" :key="indexC">
 					<td
-						v-if="matchColumnCellType(indexR, indexC) === cellType.match"
+						v-if="
+							matchColumnCellType(indexR, indexC) === cellType.match &&
+							indexC === 0
+						"
 						rowspan="5"
 						class="matchCol"
 					>
-						<ViewMatchView
-							:match="getMatch(indexR, indexC)"
-							:mode="props.mode"
-							:team-a="getMatch(indexR, indexC).teamA"
-							:team-b="getMatch(indexR, indexC).teamB"
-							:sets="getMatch(indexR, indexC).sets"
-							:finished="getMatch(indexR, indexC).finished"
-							:winner="getMatch(indexR, indexC).winner"
+						<ViewMatchEdit
+							:team-a="props.assignedTeams[indexR / 6][0]"
+							:team-b="props.assignedTeams[indexR / 6][1]"
 							:single="props.mode === Mode.SINGLE"
+							:competition="props.competition"
 						>
-						</ViewMatchView>
+						</ViewMatchEdit>
+						{{ indexR }} {{ indexC }}
+					</td>
+					<td
+						v-else-if="matchColumnCellType(indexR, indexC) === cellType.match"
+						rowspan="5"
+						class="matchCol"
+					>
+						<ViewMatchViewArray
+							:team-a="props.assignedTeams[Math.floor((indexR - 3) / 6)][0]"
+							:team-b="props.assignedTeams[Math.floor((indexR - 3) / 6)][1]"
+							:mode="props.mode"
+							:single="props.mode === Mode.SINGLE"
+							:sets="null"
+							:winner="false"
+							:finished="true"
+						>
+						</ViewMatchViewArray>
+						{{ indexR }} {{ indexC }}
 					</td>
 					<td
 						v-else-if="
@@ -89,46 +106,28 @@
 <script setup lang="ts">
 import { KnockoutMatch } from "@/interfaces/knockoutSystem"
 import { useI18n } from "vue-i18n"
-import { Mode } from "@/interfaces/competition"
+import ViewMatchEdit from "@/components/views/competition/knockoutSystem/ViewMatchEdit.vue"
+import ViewMatchViewArray from "@/components/views/competition/knockoutSystem/ViewMatchViewArray.vue"
+import { Competition, Mode } from "@/interfaces/competition"
 import { computed } from "vue"
-import ViewMatchView from "@/components/views/competition/knockoutSystem/ViewMatchView.vue"
+import { Team } from "@/interfaces/team"
 
 const { t } = useI18n({ inheritLocale: true })
 
 const props = defineProps<{
-	match: KnockoutMatch
+	depth: number
+	// match: KnockoutMatch
 	thirdPlace: KnockoutMatch
 	mode: Mode
+	competition: Competition
+	assignedTeams: Team[][][]
 }>()
 
-const maxDepth = computed(() => calcMaxDepth(props.match))
+const maxDepth = computed(() => props.depth)
 const teamsCount = computed(() => Math.pow(2, maxDepth.value))
 const height = computed(() => tableHeight())
 
-function getMatch(indexR: number, indexC: number): KnockoutMatch {
-	// detect semifinal
-	if (indexC === maxDepth.value - 1 && indexR > height.value / 2) {
-		return props.thirdPlace
-	}
-
-	let curMatch = props.match
-	let curHeight = height.value
-	for (let i = 0; i < maxDepth.value - indexC - 1; i++) {
-		curHeight /= 2
-		if (curMatch.prevMatch === undefined)
-			throw new Error("prevMatch is undefined")
-		if (indexR < curHeight) {
-			curMatch = curMatch.prevMatch.a
-		} else {
-			curMatch = curMatch.prevMatch.b
-			indexR -= curHeight
-		}
-	}
-	return curMatch
-}
-
 function tableHeight(): number {
-	if (teamsCount.value === 3 || teamsCount.value === 4) return 17
 	return 2 * teamsCount.value + 2 * (teamsCount.value / 2 - 1) + 1
 }
 
@@ -140,21 +139,21 @@ function roundTitle(round: number, totalRounds: number): string {
 }
 
 function matchColumnCellType(indexR: number, indexC: number): cellType {
-	if (teamsCount.value === 3 || teamsCount.value === 4) {
-		if (indexC === 0) {
-			if (indexR === 0) return cellType.match
-			else if (indexR < 5) return cellType.empty
-			else if (indexR < 12) return cellType.emptyCell
-			else if (indexR === 12) return cellType.match
-			else return cellType.empty
-		} else {
-			if (indexR === 6) return cellType.match
-			else if (indexR < 11) return cellType.empty
-			else if (indexR === 11) return cellType.thirdPlace
-			else if (indexR === 12) return cellType.match
-			else return cellType.empty
-		}
-	}
+	// if (teamsCount.value === 3 || teamsCount.value === 4) {
+	// 	if (indexC === 0) {
+	// 		if (indexR === 0) return cellType.match
+	// 		else if (indexR < 5) return cellType.empty
+	// 		else if (indexR < 12) return cellType.emptyCell
+	// 		else if (indexR === 12) return cellType.match
+	// 		else return cellType.empty
+	// 	} else {
+	// 		if (indexR === 3) return cellType.match
+	// 		else if (indexR < 11) return cellType.empty
+	// 		else if (indexR === 11) return cellType.thirdPlace
+	// 		else if (indexR === 12) return cellType.match
+	// 		else return cellType.empty
+	// 	}
+	// }
 
 	if (indexC === 0) {
 		const mod = indexR % 6
@@ -187,13 +186,13 @@ function matchColumnCellType(indexR: number, indexC: number): cellType {
 }
 
 function interColumnCellType(indexR: number, indexC: number): interCellType {
-	if (teamsCount.value === 3 || teamsCount.value === 4) {
-		if (indexR < 2) return interCellType.blank
-		else if (indexR === 2) return interCellType.topRight
-		else if (indexR < 13) return interCellType.right
-		else if (indexR === 13) return interCellType.bottomRight
-		else return interCellType.blank
-	}
+	// if (teamsCount.value === 3 || teamsCount.value === 4) {
+	// 	if (indexR < 2) return interCellType.blank
+	// 	else if (indexR === 2) return interCellType.topRight
+	// 	else if (indexR < 13) return interCellType.right
+	// 	else if (indexR === 13) return interCellType.bottomRight
+	// 	else return interCellType.blank
+	// }
 
 	const countMatchesLeftTop = Math.pow(2, indexC)
 	const heightLeftTop = 4 * countMatchesLeftTop + 2 * (countMatchesLeftTop - 1)
@@ -211,9 +210,9 @@ function interColumnCellType(indexR: number, indexC: number): interCellType {
 }
 
 function isBottomInterCell(indexR: number, indexC: number): boolean {
-	if (teamsCount.value === 3 || teamsCount.value === 4) {
-		return indexR === 7
-	}
+	// if (teamsCount.value === 3 || teamsCount.value === 4) {
+	// 	return indexR === 7
+	// }
 
 	const countMatchesLeftTop = Math.pow(2, indexC)
 	const heightLeftTop =
@@ -227,14 +226,14 @@ function isBottomInterCell(indexR: number, indexC: number): boolean {
 	return mod === 1
 }
 
-function calcMaxDepth(match: KnockoutMatch): number {
-	if (match.prevMatch === undefined) return 1
-
-	return (
-		1 +
-		Math.max(calcMaxDepth(match.prevMatch.a), calcMaxDepth(match.prevMatch.b))
-	)
-}
+// function calcMaxDepth(match: KnockoutMatch): number {
+// 	if (match.prevMatch === undefined) return 1
+//
+// 	return (
+// 		1 +
+// 		Math.max(calcMaxDepth(match.prevMatch.a), calcMaxDepth(match.prevMatch.b))
+// 	)
+// }
 
 enum cellType {
 	match,

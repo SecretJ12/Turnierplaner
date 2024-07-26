@@ -205,7 +205,8 @@
 			"emptyGroupSum": "Invalid group(s)",
 			"emptyGroupDet": "Every group needs at least 2 teams",
 			"teams": "Teams",
-			"ranking": "Ranking"
+			"ranking": "Ranking",
+			"knockout_not_assigned": "Not all games have been assigned yet"
 		}
 	},
 	"validation": {

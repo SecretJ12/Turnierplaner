@@ -168,10 +168,10 @@ export function useUpdateTeams(
 ) {
 	const queryClient = useQueryClient()
 	return useMutation(
-		async () => {
+		async (req) => {
 			return axios.post(
 				`/tournament/${route.params.tourId}/competition/${route.params.compId}/updateTeams`,
-				t,
+				req,
 			)
 		},
 		{

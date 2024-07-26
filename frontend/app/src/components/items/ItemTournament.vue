@@ -4,7 +4,7 @@
 			{{ props.tournament.name }}
 		</template>
 		<template #subtitle>
-			<p v-if="new Date() >= props.tournament.registration_phase[1]">
+			<p v-if="new Date() >= props.tournament.registration_phase.end">
 				{{ props.tournament.game_phase.begin.toLocaleDateString() }}
 				- {{ props.tournament.game_phase.end.toLocaleDateString() }}
 			</p>
