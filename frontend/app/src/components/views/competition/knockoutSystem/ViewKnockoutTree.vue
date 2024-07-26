@@ -24,8 +24,8 @@
 						<ViewMatchView
 							:match="getMatch(indexR, indexC)"
 							:mode="props.mode"
-							:teamA="getMatch(indexR, indexC).teamA"
-							:teamB="getMatch(indexR, indexC).teamB"
+							:team-a="getMatch(indexR, indexC).teamA"
+							:team-b="getMatch(indexR, indexC).teamB"
 							:sets="getMatch(indexR, indexC).sets"
 							:finished="getMatch(indexR, indexC).finished"
 							:winner="getMatch(indexR, indexC).winner"

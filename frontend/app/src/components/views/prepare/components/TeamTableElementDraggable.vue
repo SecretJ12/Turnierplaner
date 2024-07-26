@@ -18,7 +18,7 @@
 		}"
 		style="box-sizing: content-box"
 	>
-		<template #default="{ item }">
+		<template #default="{}">
 			<td
 				class="border-round select-none cursor-pointer font-bold pl-3 pr-3 min-player-height inline text-900 flex align-items-center justify-content-center"
 			>

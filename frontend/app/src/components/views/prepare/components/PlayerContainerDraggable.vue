@@ -32,7 +32,7 @@ import PlayerCard from "@/components/views/prepare/components/PlayerCard.vue"
 
 const props = withDefaults(
 	defineProps<{
-		id?: string
+		id: string
 		players: Player[]
 		group: string
 		secondary?: boolean

@@ -25,8 +25,8 @@
 						class="matchCol"
 					>
 						<ViewMatchEdit
-							:teamA="props.assignedTeams[indexR / 6][0]"
-							:teamB="props.assignedTeams[indexR / 6][1]"
+							:team-a="props.assignedTeams[indexR / 6][0]"
+							:team-b="props.assignedTeams[indexR / 6][1]"
 							:single="props.mode === Mode.SINGLE"
 							:competition="props.competition"
 						>
@@ -39,8 +39,8 @@
 						class="matchCol"
 					>
 						<ViewMatchViewArray
-							:teamA="props.assignedTeams[Math.floor((indexR - 3) / 6)][0]"
-							:teamB="props.assignedTeams[Math.floor((indexR - 3) / 6)][1]"
+							:team-a="props.assignedTeams[Math.floor((indexR - 3) / 6)][0]"
+							:team-b="props.assignedTeams[Math.floor((indexR - 3) / 6)][1]"
 							:mode="props.mode"
 							:single="props.mode === Mode.SINGLE"
 							:sets="null"
@@ -226,14 +226,14 @@ function isBottomInterCell(indexR: number, indexC: number): boolean {
 	return mod === 1
 }
 
-function calcMaxDepth(match: KnockoutMatch): number {
-	if (match.prevMatch === undefined) return 1
-
-	return (
-		1 +
-		Math.max(calcMaxDepth(match.prevMatch.a), calcMaxDepth(match.prevMatch.b))
-	)
-}
+// function calcMaxDepth(match: KnockoutMatch): number {
+// 	if (match.prevMatch === undefined) return 1
+//
+// 	return (
+// 		1 +
+// 		Math.max(calcMaxDepth(match.prevMatch.a), calcMaxDepth(match.prevMatch.b))
+// 	)
+// }
 
 enum cellType {
 	match,

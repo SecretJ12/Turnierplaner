@@ -41,7 +41,7 @@
 							:depth="size + 1"
 							:third-place="thirdPlace"
 							:competition="competition"
-							:assignedTeams="assignedTeams"
+							:assigned-teams="assignedTeams"
 						/>
 					</ScrollPanel>
 				</template>
@@ -157,7 +157,7 @@ async function reset() {
 	animated.value = false
 }
 
-let firstUpdate = true
+// let firstUpdate = true
 
 async function update() {
 	animated.value = true
@@ -166,7 +166,7 @@ async function update() {
 		assignedTeams.value.pop()
 	}
 	// const anFin = sleep(firstUpdate ? 0 : 500)
-	firstUpdate = false
+	// firstUpdate = false
 	teamCount.value = 0
 	if (
 		competition.value?.cProgress === Progress.GAMES ||
