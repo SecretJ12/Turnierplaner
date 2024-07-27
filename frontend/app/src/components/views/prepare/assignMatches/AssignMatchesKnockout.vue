@@ -227,6 +227,7 @@ async function reroll() {
 }
 
 async function reset() {
+	// TODO adapt to new structure
 	animated.value = true
 	for (let i = 0; i < assignedTeams.value.length; i++) {
 		let team1 = assignedTeams.value[i][0].pop()
@@ -240,6 +241,7 @@ async function reset() {
 	animated.value = false
 }
 
+// TODO adapt to new structure
 // async function update() {
 // 	animated.value = true
 // 	teams.value = []
