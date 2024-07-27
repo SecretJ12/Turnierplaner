@@ -23,7 +23,14 @@
 						>
 							<slot
 								name="match"
-								v-bind="{ match: getMatch(level, index), level, index }"
+								:match="getMatch(level, index)"
+								:level="level"
+								:index="index"
+								@update:teamA="(team: Team | null) => {
+									console.log('update teamA')
+									getMatch(level, index).teamA = team
+								}"
+								@update:teamB="(team: Team | null) => getMatch(level, index).teamB = team"
 							>
 								Fallback
 							</slot>
@@ -36,7 +43,9 @@
 						<div class="additionalCont">
 							<slot
 								name="additional"
-								v-bind="{ match: getMatch(level, index), level, index }"
+								:match="getMatch(level, index)"
+								:level="level"
+								:index="index"
 							>
 							</slot>
 						</div>
@@ -61,6 +70,14 @@
 							<slot
 								name="match"
 								v-bind="{ match: thirdPlace, level, index: 1 }"
+								@update:teamA="(team: Team | null) => {
+									if (thirdPlace)
+										thirdPlace.teamA = team
+								}"
+								@update:teamB="(team: Team | null) => {
+									if (thirdPlace)
+										thirdPlace.teamB = team
+								}"
 							>
 								Fallback
 							</slot>
@@ -117,6 +134,8 @@
 <script setup lang="ts">
 import { computed, Ref, ref, watch } from "vue"
 import { KnockoutMatch } from "@/interfaces/knockoutSystem"
+import { Match } from "@/interfaces/match"
+import { Team } from "@/interfaces/team"
 
 const finale = defineModel<KnockoutMatch>("finale")
 const thirdPlace = defineModel<KnockoutMatch | undefined>("thirdPlace")
@@ -169,7 +188,7 @@ function setEl(level: number, index: number, el: HTMLElement) {
 
 const maxHeight = ref(0)
 
-watch([props, matchRefs], update)
+watch([props, matchRefs, finale, thirdPlace], update)
 
 function update() {
 	let mH = 0
@@ -280,21 +299,33 @@ function getSafeValue(level: number, index: number, array: number[][]) {
 	return array[level][index]
 }
 
-function getMatch(level: number, index: number): KnockoutMatch {
-	let curMatch = finale.value
-	if (!curMatch) throw new Error("Finale is undefined")
-	let curHeight = Math.pow(2, treeHeight.value)
-	for (let i = 0; i < treeHeight.value - level - 1; i++) {
-		curHeight /= 2
-		if (!curMatch.prevMatch) throw new Error("prevMatch is undefined")
-		if (index < curHeight) {
-			curMatch = curMatch.prevMatch.a
-		} else {
-			curMatch = curMatch.prevMatch.b
-			index -= curHeight
-		}
+function getMatches(level: number): (KnockoutMatch | undefined)[] {
+	let cur = [finale.value]
+	for (let i = 0; i < treeHeight.value-level-1; i++) {
+		cur = cur.map(m => m?.prevMatch ? [m.prevMatch.a, m.prevMatch.b] : [])
+			.flat()
 	}
-	return curMatch
+	return cur
+}
+
+function getMatch(level: number, index: number): KnockoutMatch {
+	// let curMatch = finale.value
+	// if (!curMatch) throw new Error("Finale is undefined")
+	const match = getMatches(level)[index]
+	if (!match) throw new Error("Match is undefined")
+	return match
+	// let curHeight = Math.pow(2, treeHeight.value)
+	// for (let i = 0; i < treeHeight.value - level - 1; i++) {
+	// 	curHeight /= 2
+	// 	if (!curMatch.prevMatch) throw new Error("prevMatch is undefined")
+	// 	if (index < curHeight) {
+	// 		curMatch = curMatch.prevMatch.a
+	// 	} else {
+	// 		curMatch = curMatch.prevMatch.b
+	// 		index -= curHeight
+	// 	}
+	// }
+	// return curMatch
 }
 </script>
 
