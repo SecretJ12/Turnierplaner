@@ -40,8 +40,8 @@
 							:border-thickness="2"
 							:border-radius="0"
 						>
-							<template #match="{ match, level }">
-								<ViewMatchEdit v-if="level === 0" :match="match" />
+							<template #match="{ match, level, 'onUpdate:teamA': updateTeamA, 'onUpdate:teamB': updateTeamB}">
+								<ViewMatchEdit v-if="level === 0" :match="match" @update:teamA="updateTeamA" @update:teamB="updateTeamB" />
 								<ViewMatch v-else :match="match" :mode="competition.mode" />
 							</template>
 						</ViewKnockoutTree>
@@ -67,12 +67,14 @@ import { getSignedUp } from "@/backend/signup"
 import ViewKnockoutTree from "@/components/views/competition/knockoutSystem/ViewKnockoutTree.vue"
 import ViewMatch from "@/components/views/competition/knockoutSystem/ViewMatch.vue"
 import ViewMatchEdit from "@/components/views/prepare/assignMatches/ViewMatchEdit.vue"
+import { Match } from "@/interfaces/match"
 
 const route = useRoute()
 const toast = useToast()
 const { t } = useI18n({ inheritLocale: true })
 
 let firstUpdate = true
+let treeDepth = 0
 const { data: competition } = getCompetitionDetails(route, t, toast, {
 	suc: () => {
 		if (competition.value === null) return
@@ -91,7 +93,9 @@ async  function loadFromServer() {
 	if (!signedUp.value) return
 
 	teams.value = []
-	tree.value = genTree(Math.ceil(Math.log2(signedUp.value.length)))
+	treeDepth = Math.ceil(Math.log2(signedUp.value.length))-1
+	tree.value = genTree(treeDepth)
+	console.log(tree.value)
 	await sleep(firstUpdate ? 0 : 400)
 	firstUpdate = false
 
@@ -156,33 +160,51 @@ const randomizeItems = ref([
 ])
 
 function selectRandomElement<T>(players: Ref<T[]>) {
+	if (players.value.length === 0)
+		return null
+
 	const r = Math.floor(Math.random() * players.value.length)
 	const element = players.value[r]
 	players.value.splice(r, 1)
 	return element
 }
 
+function getMatches(): Match[] {
+	let cur = [tree.value]
+	for (let i = 0; i < treeDepth; i++) {
+		cur = cur.map(m => m.prevMatch ? [m.prevMatch.a, m.prevMatch.b] : [])
+			.flat()
+	}
+	return cur
+}
+
 async function randomize() {
 	animated.value = true
 	let knockOutListIndex = 0
-	while (teams.value.length) {
-		const element = selectRandomElement(teams)
-		await sleep(delayBetween.value)
-		while (
-			assignedTeams.value[knockOutListIndex][0].length === 1 &&
-			assignedTeams.value[knockOutListIndex][1].length === 1
-		) {
-			knockOutListIndex++
+	const matches = getMatches()
+	while (teams.value.length && knockOutListIndex < matches.length) {
+
+		if (!matches[knockOutListIndex].teamA) {
+			const teamA = selectRandomElement(teams)
+			await sleep(delayBetween.value)
+
+			matches[knockOutListIndex].teamA = teamA
+			await sleep(delay.value)
 		}
-		if (assignedTeams.value[knockOutListIndex][0].length === 0) {
-			assignedTeams.value[knockOutListIndex][0].push(element)
-		} else {
-			assignedTeams.value[knockOutListIndex][1].push(element)
-			knockOutListIndex++
+
+		if (!matches[knockOutListIndex].teamB) {
+			const teamB = selectRandomElement(teams)
+			if (!teamB)
+				break
+			matches[knockOutListIndex].teamB = teamB
+			await sleep(delayBetween.value)
 		}
+
+		knockOutListIndex++;
 		await sleep(delay.value)
 	}
 	animated.value = false
+	console.log(tree.value)
 }
 
 async function reroll() {
@@ -264,9 +286,9 @@ async function reset() {
 // 	return 1 << (31 - Math.clz32(n))
 // }
 
-const size = computed(() =>
-	Math.max(0, Math.ceil(Math.log2(teamCount.value)) - 1),
-)
+// const size = computed(() =>
+// 	Math.max(0, Math.ceil(Math.log2(teamCount.value)) - 1),
+// )
 
 function knockoutTreeCompletelyAssigned(): boolean {
 	console.log(assignedTeams.value)
@@ -282,6 +304,7 @@ function knockoutTreeCompletelyAssigned(): boolean {
 }
 
 function save() {
+	// TODO send new save as a tree?
 	if (!knockoutTreeCompletelyAssigned()) {
 		toast.add({
 			severity: "error",

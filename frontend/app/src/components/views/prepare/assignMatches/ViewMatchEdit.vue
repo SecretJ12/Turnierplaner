@@ -12,6 +12,8 @@
 				group="team"
 				item-key="id"
 				style="width: 100%; height: 100%"
+				:wrap="updateA"
+				@onRemove="() => updateA(null, '')"
 				single
 			>
 				<template #default="{ item: team }">
@@ -31,6 +33,8 @@
 				group="team"
 				item-key="id"
 				style="width: 100%; height: 100%"
+				:wrap="updateB"
+				@onRemove="() => updateB(null, '')"
 				single
 			>
 				<template #default="{ item: team }">
@@ -47,19 +51,29 @@ import { ref, TransitionGroup, watch } from "vue"
 import DraggablePanel from "@/draggable/DraggablePanel.vue"
 import TeamCard from "@/components/views/prepare/components/TeamCard.vue"
 import MatchBox from "@/components/views/prepare/components/MatchBox.vue"
+import { Team } from "@/interfaces/team"
 
-const match = defineModel<KnockoutMatch>()
+const props = defineProps<{ match: KnockoutMatch }>()
+const emit = defineEmits(['update:teamA', 'update:teamB'])
 
-const teamA = ref([])
-const teamB = ref([])
+const teamA = ref<Team[]>([])
+const teamB = ref<Team[]>([])
 
-watch(teamA.value, () => {
-	if (!match.value) return
-	match.value.teamA = teamA.value[0]
-})
-watch(teamB.value, () => {
-	if (!match.value) return
-	match.value.teamB = teamB.value[0]
+function updateA(val: Team | null, _: string) {
+	emit('update:teamA', val)
+	return val
+}
+function updateB(val: Team | null, _: string) {
+	emit('update:teamB', val)
+	return val
+}
+
+watch(props, () => {
+	console.log("update")
+	if (teamA.value !== (props.match.teamA ? [props.match.teamA] : []))
+		teamA.value = props.match.teamA ? [props.match.teamA] : []
+	if (teamB.value !== (props.match.teamB ? [props.match.teamB] : []))
+		teamB.value = props.match.teamB ? [props.match.teamB] : []
 })
 </script>
 
