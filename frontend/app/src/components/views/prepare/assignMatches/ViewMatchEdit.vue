@@ -13,8 +13,8 @@
 				item-key="id"
 				style="width: 100%; height: 100%"
 				:wrap="updateA"
-				@onRemove="() => updateA(null, '')"
 				single
+				@on-remove="removeA"
 			>
 				<template #default="{ item: team }">
 					<TeamCard :team="team" />
@@ -34,8 +34,8 @@
 				item-key="id"
 				style="width: 100%; height: 100%"
 				:wrap="updateB"
-				@onRemove="() => updateB(null, '')"
 				single
+				@on-remove="removeB"
 			>
 				<template #default="{ item: team }">
 					<TeamCard :team="team" />
@@ -54,18 +54,24 @@ import MatchBox from "@/components/views/prepare/components/MatchBox.vue"
 import { Team } from "@/interfaces/team"
 
 const props = defineProps<{ match: KnockoutMatch }>()
-const emit = defineEmits(['update:teamA', 'update:teamB'])
+const emit = defineEmits(["update:teamA", "update:teamB"])
 
 const teamA = ref<Team[]>([])
 const teamB = ref<Team[]>([])
 
-function updateA(val: Team | null, _: string) {
-	emit('update:teamA', val)
+function updateA(val: Team) {
+	emit("update:teamA", val)
 	return val
 }
-function updateB(val: Team | null, _: string) {
-	emit('update:teamB', val)
+function removeA() {
+	emit("update:teamA", null)
+}
+function updateB(val: Team) {
+	emit("update:teamB", val)
 	return val
+}
+function removeB() {
+	emit("update:teamB", null)
 }
 
 watch(props, () => {

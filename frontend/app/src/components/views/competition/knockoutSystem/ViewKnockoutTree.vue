@@ -26,11 +26,15 @@
 								:match="getMatch(level, index)"
 								:level="level"
 								:index="index"
-								@update:teamA="(team: Team | null) => {
-									console.log('update teamA')
-									getMatch(level, index).teamA = team
-								}"
-								@update:teamB="(team: Team | null) => getMatch(level, index).teamB = team"
+								@update:teamA="
+									(team: Team | null) => {
+										console.log('update teamA')
+										getMatch(level, index).teamA = team
+									}
+								"
+								@update:teamB="
+									(team: Team | null) => (getMatch(level, index).teamB = team)
+								"
 							>
 								Fallback
 							</slot>
@@ -70,14 +74,16 @@
 							<slot
 								name="match"
 								v-bind="{ match: thirdPlace, level, index: 1 }"
-								@update:teamA="(team: Team | null) => {
-									if (thirdPlace)
-										thirdPlace.teamA = team
-								}"
-								@update:teamB="(team: Team | null) => {
-									if (thirdPlace)
-										thirdPlace.teamB = team
-								}"
+								@update:teamA="
+									(team: Team | null) => {
+										if (thirdPlace) thirdPlace.teamA = team
+									}
+								"
+								@update:teamB="
+									(team: Team | null) => {
+										if (thirdPlace) thirdPlace.teamB = team
+									}
+								"
 							>
 								Fallback
 							</slot>
@@ -134,7 +140,6 @@
 <script setup lang="ts">
 import { computed, Ref, ref, watch } from "vue"
 import { KnockoutMatch } from "@/interfaces/knockoutSystem"
-import { Match } from "@/interfaces/match"
 import { Team } from "@/interfaces/team"
 
 const finale = defineModel<KnockoutMatch>("finale")
@@ -182,8 +187,7 @@ function setEl(level: number, index: number, el: HTMLElement) {
 	if (!resizeObserver.value[level][index])
 		resizeObserver.value[level][index] = new ResizeObserver(update)
 	matchRefs.value[level][index] = el
-	if (el)
-		resizeObserver.value[level][index].observe(el)
+	if (el) resizeObserver.value[level][index].observe(el)
 }
 
 const maxHeight = ref(0)
@@ -194,8 +198,7 @@ function update() {
 	let mH = 0
 	for (const row of matchRefs.value) {
 		for (const match of row ?? []) {
-			if (match)
-				mH = Math.max(mH, match.getBoundingClientRect().height)
+			if (match) mH = Math.max(mH, match.getBoundingClientRect().height)
 		}
 	}
 	maxHeight.value = mH
@@ -301,8 +304,9 @@ function getSafeValue(level: number, index: number, array: number[][]) {
 
 function getMatches(level: number): (KnockoutMatch | undefined)[] {
 	let cur = [finale.value]
-	for (let i = 0; i < treeHeight.value-level-1; i++) {
-		cur = cur.map(m => m?.prevMatch ? [m.prevMatch.a, m.prevMatch.b] : [])
+	for (let i = 0; i < treeHeight.value - level - 1; i++) {
+		cur = cur
+			.map((m) => (m?.prevMatch ? [m.prevMatch.a, m.prevMatch.b] : []))
 			.flat()
 	}
 	return cur
