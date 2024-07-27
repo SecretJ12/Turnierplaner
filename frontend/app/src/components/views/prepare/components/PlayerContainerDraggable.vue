@@ -39,6 +39,7 @@ const props = withDefaults(
 		isUpdating: boolean
 	}>(),
 	{
+		id: "default",
 		isUpdating: false,
 		secondary: false,
 	},

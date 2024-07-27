@@ -40,8 +40,20 @@
 							:border-thickness="2"
 							:border-radius="0"
 						>
-							<template #match="{ match, level, 'onUpdate:teamA': updateTeamA, 'onUpdate:teamB': updateTeamB}">
-								<ViewMatchEdit v-if="level === 0" :match="match" @update:teamA="updateTeamA" @update:teamB="updateTeamB" />
+							<template
+								#match="{
+									match,
+									level,
+									'onUpdate:teamA': updateTeamA,
+									'onUpdate:teamB': updateTeamB,
+								}"
+							>
+								<ViewMatchEdit
+									v-if="level === 0"
+									:match="match"
+									@update:team-a="updateTeamA"
+									@update:team-b="updateTeamB"
+								/>
 								<ViewMatch v-else :match="match" :mode="competition.mode" />
 							</template>
 						</ViewKnockoutTree>
@@ -81,7 +93,11 @@ const { data: competition } = getCompetitionDetails(route, t, toast, {
 		loadFromServer()
 	},
 })
-const { data: signedUp, isPlaceholderData: signedUpPlaceholder } = getSignedUp(route, t, toast)
+const { data: signedUp, isPlaceholderData: signedUpPlaceholder } = getSignedUp(
+	route,
+	t,
+	toast,
+)
 
 const teams = ref<Team[]>([])
 
@@ -89,11 +105,11 @@ const tree = ref(genTree(0))
 watch([signedUp], loadFromServer)
 if (!signedUpPlaceholder.value) loadFromServer()
 
-async  function loadFromServer() {
+async function loadFromServer() {
 	if (!signedUp.value) return
 
 	teams.value = []
-	treeDepth = Math.ceil(Math.log2(signedUp.value.length))-1
+	treeDepth = Math.ceil(Math.log2(signedUp.value.length)) - 1
 	tree.value = genTree(treeDepth)
 	console.log(tree.value)
 	await sleep(firstUpdate ? 0 : 400)
@@ -160,8 +176,7 @@ const randomizeItems = ref([
 ])
 
 function selectRandomElement<T>(players: Ref<T[]>) {
-	if (players.value.length === 0)
-		return null
+	if (players.value.length === 0) return null
 
 	const r = Math.floor(Math.random() * players.value.length)
 	const element = players.value[r]
@@ -172,7 +187,8 @@ function selectRandomElement<T>(players: Ref<T[]>) {
 function getMatches(): Match[] {
 	let cur = [tree.value]
 	for (let i = 0; i < treeDepth; i++) {
-		cur = cur.map(m => m.prevMatch ? [m.prevMatch.a, m.prevMatch.b] : [])
+		cur = cur
+			.map((m) => (m.prevMatch ? [m.prevMatch.a, m.prevMatch.b] : []))
 			.flat()
 	}
 	return cur
@@ -183,7 +199,6 @@ async function randomize() {
 	let knockOutListIndex = 0
 	const matches = getMatches()
 	while (teams.value.length && knockOutListIndex < matches.length) {
-
 		if (!matches[knockOutListIndex].teamA) {
 			const teamA = selectRandomElement(teams)
 			await sleep(delayBetween.value)
@@ -194,13 +209,12 @@ async function randomize() {
 
 		if (!matches[knockOutListIndex].teamB) {
 			const teamB = selectRandomElement(teams)
-			if (!teamB)
-				break
+			if (!teamB) break
 			matches[knockOutListIndex].teamB = teamB
 			await sleep(delayBetween.value)
 		}
 
-		knockOutListIndex++;
+		knockOutListIndex++
 		await sleep(delay.value)
 	}
 	animated.value = false
@@ -225,7 +239,6 @@ async function reset() {
 
 	animated.value = false
 }
-
 
 // async function update() {
 // 	animated.value = true
