@@ -71,9 +71,8 @@ import { useI18n } from "vue-i18n"
 import { computed, Ref, ref, watch } from "vue"
 import { getCompetitionDetails } from "@/backend/competition"
 import TeamContainerDraggable from "@/components/views/prepare/components/TeamContainerDraggable.vue"
-import { Team, teamClientToServer } from "@/interfaces/team"
+import { Team } from "@/interfaces/team"
 import axios from "axios"
-import { KnockoutOrder } from "@/interfaces/competition"
 import { KnockoutMatch } from "@/interfaces/knockoutSystem"
 import { getSignedUp } from "@/backend/signup"
 import ViewKnockoutTree from "@/components/views/competition/knockoutSystem/ViewKnockoutTree.vue"
@@ -117,9 +116,6 @@ async function loadFromServer() {
 
 	signedUp.value.forEach((t) => teams.value.push(t))
 }
-
-//  [row number in the tree][ upper or lower part of a bracket ][just in an array for draggable]
-const assignedTeams = ref<Team[][][]>([])
 
 function genTree(height: number): KnockoutMatch {
 	const default_game = {
@@ -229,14 +225,6 @@ async function reroll() {
 async function reset() {
 	// TODO adapt to new structure
 	animated.value = true
-	for (let i = 0; i < assignedTeams.value.length; i++) {
-		let team1 = assignedTeams.value[i][0].pop()
-		let team2 = assignedTeams.value[i][1].pop()
-		if (team1) teams.value.push(team1)
-		if (team2) teams.value.push(team2)
-		await sleep(delay.value)
-		console.log(assignedTeams.value.length)
-	}
 
 	animated.value = false
 }
@@ -306,16 +294,13 @@ async function reset() {
 // )
 
 function knockoutTreeCompletelyAssigned(): boolean {
-	console.log(assignedTeams.value)
-	for (let i = 0; i < assignedTeams.value.length; i++) {
-		if (
-			assignedTeams.value[i][0].length === 0 ||
-			assignedTeams.value[i][1].length === 0
-		) {
-			return false
-		}
+	// check that tree is completely assigned
+	const check = (m: KnockoutMatch): boolean => {
+		if (m.prevMatch) {
+			return check(m.prevMatch.a) && check(m.prevMatch.b)
+		} else return m.teamA !== null && m.teamB !== null
 	}
-	return true
+	return check(tree.value)
 }
 
 function save() {
@@ -331,17 +316,19 @@ function save() {
 		return
 	}
 
-	const req: KnockoutOrder = {
-		teams: assignedTeams.value
-			.flat()
-			.flat()
-			.map((t) => teamClientToServer(t)),
-	}
+	console.log("tree", tree.value)
 
+	// const req: KnockoutOrder = {
+	// 	teams: assignedTeams.value
+	// 		.flat()
+	// 		.flat()
+	// 		.map((t) => teamClientToServer(t)),
+	// }
+	// console.log("assignedTeams: ", req)
 	axios
 		.post<boolean>(
 			`/tournament/${route.params.tourId}/competition/${route.params.compId}/initKnockout`,
-			req,
+			tree.value,
 		)
 		.then(() => {
 			toast.add({
