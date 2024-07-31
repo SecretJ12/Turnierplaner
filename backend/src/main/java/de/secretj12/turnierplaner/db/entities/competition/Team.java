@@ -2,6 +2,7 @@ package de.secretj12.turnierplaner.db.entities.competition;
 
 import de.secretj12.turnierplaner.db.entities.Player;
 
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -17,7 +18,7 @@ import java.util.UUID;
                                JOIN MatchOfGroup mog ON m = mog.match
                                JOIN Group g ON mog.group = g
                                WHERE g = :group""")})
-public class Team {
+public class Team extends PanacheEntityBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -78,5 +79,9 @@ public class Team {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public static Team findById(UUID id){
+        return find("id", id).firstResult();
     }
 }
