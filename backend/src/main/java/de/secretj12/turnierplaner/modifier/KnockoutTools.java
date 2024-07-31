@@ -6,11 +6,13 @@ import de.secretj12.turnierplaner.db.entities.competition.Team;
 import de.secretj12.turnierplaner.db.entities.knockout.NextMatch;
 import de.secretj12.turnierplaner.db.repositories.MatchRepository;
 import de.secretj12.turnierplaner.db.repositories.NextMatchRepository;
+import de.secretj12.turnierplaner.resources.jsonEntities.user.knockout.jUserKnockoutMatchResponse;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.InternalServerErrorException;
 
 import java.util.Arrays;
+import java.util.UUID;
 
 @ApplicationScoped
 public class KnockoutTools {
@@ -20,82 +22,115 @@ public class KnockoutTools {
     @Inject
     NextMatchRepository nextMatches;
 
-    public void generateKnockoutTree(Competition competition, int size, Team[] teams) {
-        Match finale = matches.getFinal(competition);
-
-        if (finale == null) {
-            generateTree(competition, true, size, false, teams);
-        } else {
-            int curSize = 0;
-            Match curMatch = finale;
-            while (curMatch.getDependentOn() != null) {
-                curMatch = curMatch.getDependentOn().getPreviousA();
-                curSize++;
-            }
-
-            if (curSize != size) {
-                matches.deleteByComp(competition);
-
-                generateTree(competition, true, size, false, teams);
-            } else {
-                updateTree(size, false, finale, teams);
-            }
-        }
+public Match updateKnockoutTree(Competition competition, jUserKnockoutMatchResponse tree) {
+    if(tree == null){
+        return null;
     }
-
-    private Match generateTree(Competition competition, boolean finale, int size, boolean reversed, Team[] teams) {
-        var splits = split(size, teams);
-
-        Match match = new Match();
-        match.setCompetition(competition);
-        if (size == 0) {
-            match.setTeamA(teams[reversed ? 1 : 0]);
-            match.setTeamB(teams[reversed ? 0 : 1]);
-        }
-        matches.persist(match);
-
-        if (size > 0) {
-            Match matchA = generateTree(competition, false, size - 1, false, reversed ? splits.y : splits.x);
-            Match matchB = generateTree(competition, false, size - 1, true, reversed ? splits.x : splits.y);
-
-            NextMatch nMatch = new NextMatch();
-            nMatch.setPreviousA(matchA);
-            nMatch.setPreviousB(matchB);
-            nMatch.setNextMatch(match);
-
-            if (finale) {
-                Match thirdPlace = new Match();
-                thirdPlace.setCompetition(competition);
-                matches.persist(thirdPlace);
-
-                NextMatch nextMatchThird = new NextMatch();
-                nextMatchThird.setPreviousA(matchA);
-                nextMatchThird.setPreviousB(matchB);
-                nextMatchThird.setNextMatch(thirdPlace);
-                nextMatchThird.setWinner(false);
-                nextMatches.persist(nextMatchThird);
-            }
-
-            nextMatches.persist(nMatch);
-        }
-
-        return match;
+    Match match = new Match();
+    match.setBegin(tree.getBegin());
+    match.setEnd(tree.getEnd());
+    if(!tree.getTeamA_id().isEmpty()){
+        UUID teamA_id = UUID.fromString(tree.getTeamA_id());
+        match.setTeamA(Team.findById(teamA_id));
     }
-
-    private void updateTree(int size, boolean reversed, Match match, Team[] teams) {
-        var splits = split(size, teams);
-
-        if (size == 0) {
-            match.setTeamA(teams[reversed ? 1 : 0]);
-            match.setTeamB(teams[reversed ? 0 : 1]);
-            matches.persist(match);
-        }
-
-        if (size > 0) {
-            updateTree(size - 1, false, match.getDependentOn().getPreviousA(), reversed ? splits.y : splits.x);
-            updateTree(size - 1, true, match.getDependentOn().getPreviousB(), reversed ? splits.x : splits.y);
-        }
+    if(!tree.getTeamB_id().isEmpty()){
+        UUID teamB_id = UUID.fromString(tree.getTeamB_id());
+        match.setTeamB(Team.findById(teamB_id));
     }
+    match.setFinished(tree.getFinished());
+    match.setCompetition(competition);
+    match.setWinner(tree.getWinner());
+
+
+    NextMatch nMatch = new NextMatch();
+    nMatch.setNextMatch(match);
+    Match a = updateKnockoutTree(competition, tree.getPreviousA());
+    nMatch.setPreviousA(a);
+    Match b = updateKnockoutTree(competition, tree.getPreviousB());
+    nMatch.setPreviousB(b);
+
+    nextMatches.persist(nMatch);
+    matches.persist(match);
+    return match;
+}
+
+    /// TODO - to be deleted?
+//    public void generateKnockoutTree(Competition competition, int size, Team[] teams) {
+//        Match finale = matches.getFinal(competition);
+//
+//        if (finale == null) {
+//            generateTree(competition, true, size, false, teams);
+//        } else {
+//            int curSize = 0;
+//            Match curMatch = finale;
+//            while (curMatch.getDependentOn() != null) {
+//                curMatch = curMatch.getDependentOn().getPreviousA();
+//                curSize++;
+//            }
+//
+//            if (curSize != size) {
+//                matches.deleteByComp(competition);
+//
+//                generateTree(competition, true, size, false, teams);
+//            } else {
+//                updateTree(size, false, finale, teams);
+//            }
+//        }
+//    }
+//
+//    private Match generateTree(Competition competition, boolean finale, int size, boolean reversed, Team[] teams) {
+//        var splits = split(size, teams);
+//
+//        Match match = new Match();
+//        match.setCompetition(competition);
+//        if (size == 0) {
+//            match.setTeamA(teams[reversed ? 1 : 0]);
+//            match.setTeamB(teams[reversed ? 0 : 1]);
+//        }
+//        matches.persist(match);
+//
+//        if (size > 0) {
+//            Match matchA = generateTree(competition, false, size - 1, false, reversed ? splits.y : splits.x);
+//            Match matchB = generateTree(competition, false, size - 1, true, reversed ? splits.x : splits.y);
+//
+//            NextMatch nMatch = new NextMatch();
+//            nMatch.setPreviousA(matchA);
+//            nMatch.setPreviousB(matchB);
+//            nMatch.setNextMatch(match);
+//
+//            if (finale) {
+//                Match thirdPlace = new Match();
+//                thirdPlace.setCompetition(competition);
+//                matches.persist(thirdPlace);
+//
+//                NextMatch nextMatchThird = new NextMatch();
+//                nextMatchThird.setPreviousA(matchA);
+//                nextMatchThird.setPreviousB(matchB);
+//                nextMatchThird.setNextMatch(thirdPlace);
+//                nextMatchThird.setWinner(false);
+//                nextMatches.persist(nextMatchThird);
+//            }
+//
+//            nextMatches.persist(nMatch);
+//        }
+//
+//        return match;
+//    }
+//
+//    private void updateTree(int size, boolean reversed, Match match, Team[] teams) {
+//        var splits = split(size, teams);
+//
+//        if (size == 0) {
+//            match.setTeamA(teams[reversed ? 1 : 0]);
+//            match.setTeamB(teams[reversed ? 0 : 1]);
+//            matches.persist(match);
+//        }
+//
+//        if (size > 0) {
+//            updateTree(size - 1, false, match.getDependentOn().getPreviousA(), reversed ? splits.y : splits.x);
+//            updateTree(size - 1, true, match.getDependentOn().getPreviousB(), reversed ? splits.x : splits.y);
+//        }
+//    }
 
     public Team[] knockoutOrder(Competition competition) {
         Match finale = matches.getFinal(competition);

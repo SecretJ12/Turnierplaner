@@ -73,7 +73,10 @@ import { getCompetitionDetails } from "@/backend/competition"
 import TeamContainerDraggable from "@/components/views/prepare/components/TeamContainerDraggable.vue"
 import { Team } from "@/interfaces/team"
 import axios from "axios"
-import { KnockoutMatch } from "@/interfaces/knockoutSystem"
+import {
+	KnockoutMatch,
+	knockoutMatchClientToServer,
+} from "@/interfaces/knockoutSystem"
 import { getSignedUp } from "@/backend/signup"
 import ViewKnockoutTree from "@/components/views/competition/knockoutSystem/ViewKnockoutTree.vue"
 import ViewMatch from "@/components/views/competition/knockoutSystem/ViewMatch.vue"
@@ -316,8 +319,6 @@ function save() {
 		return
 	}
 
-	console.log("tree", tree.value)
-
 	// const req: KnockoutOrder = {
 	// 	teams: assignedTeams.value
 	// 		.flat()
@@ -325,10 +326,12 @@ function save() {
 	// 		.map((t) => teamClientToServer(t)),
 	// }
 	// console.log("assignedTeams: ", req)
+	console.log("tree", tree.value)
+	console.log("tree: ", knockoutMatchClientToServer(tree.value))
 	axios
 		.post<boolean>(
 			`/tournament/${route.params.tourId}/competition/${route.params.compId}/initKnockout`,
-			tree.value,
+			knockoutMatchClientToServer(tree.value),
 		)
 		.then(() => {
 			toast.add({

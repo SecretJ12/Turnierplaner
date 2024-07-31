@@ -59,3 +59,27 @@ function knockoutMatchServerToClient(
 	}
 	return match
 }
+
+export function knockoutMatchClientToServer(
+	match: KnockoutMatch,
+): KnockoutMatchServer {
+	return {
+		court: match.court ? match.court : "",
+		begin: match.begin ? match.begin.toString() : "2024-04-01T23:15:30",
+		end: match.end ? match.end.toISOString() : "2024-04-01T23:15:30",
+		finished: match.finished,
+		winner: match.winner,
+		teamA: match.teamA && match.teamA.id ? match.teamA.id : null,
+		teamB: match.teamB && match.teamB.id ? match.teamB.id : null,
+		sets: match.sets ? match.sets : [],
+
+		winningPlayer: match.prevMatch?.winner ?? false,
+
+		previousA: match.prevMatch?.a
+			? knockoutMatchClientToServer(match.prevMatch.a)
+			: null,
+		previousB: match.prevMatch?.b
+			? knockoutMatchClientToServer(match.prevMatch.b)
+			: null,
+	}
+}
