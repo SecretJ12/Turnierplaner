@@ -33,7 +33,7 @@ const props = withDefaults(
 		ghost?: string
 		single?: boolean
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		wrap?: ((el: any, id: string) => T) | null
+		wrap?: ((el: any, id: string) => T)
 	}>(),
 	{
 		componentData: {},
@@ -44,7 +44,7 @@ const props = withDefaults(
 		put: true,
 		ghost: "ghost",
 		single: false,
-		wrap: null,
+		wrap: (e, _) => e,
 	},
 )
 
@@ -91,32 +91,26 @@ function create() {
 			if (targetSingle) {
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
-				props.list.splice(event.oldIndex, 1, selectedElement)
+				props.list.splice(event.oldIndex, 1, props.wrap(selectedElement, event.from.id))
 			} else {
 				props.list.splice(event.oldIndex, 1)
+				emit("onRemove")
 			}
-			emit("onRemove")
 			reload()
 		},
 		onAdd: (event: Sortable.SortableEvent) => {
 			if (event.newIndex === undefined) return
 
 			targetSingle = props.single && props.list.length === 1
-			if (props.wrap) {
-				if (selectedElement != null)
-					props.list.splice(
-						event.newIndex,
-						0,
-						props.wrap(selectedElement, event.from.id),
-					)
-			} else if (props.single && props.list.length === 1) {
+
+			if (props.single && props.list.length === 1) {
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
-				selectedElement = props.list.splice(0, 1, selectedElement)[0]
+				selectedElement = props.list.splice(0, 1, props.wrap(selectedElement, event.from.id))[0]
 			} else {
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
-				props.list.splice(event.newIndex, 0, selectedElement)
+				props.list.splice(event.newIndex, 0, props.wrap(selectedElement, event.from.id))
 			}
 			reload()
 		},
