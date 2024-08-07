@@ -81,7 +81,7 @@ public class Team extends PanacheEntityBase {
         return Objects.hash(id);
     }
 
-    public static Team findById(UUID id){
+    public static Team findById(UUID id) {
         return find("id", id).firstResult();
     }
 }

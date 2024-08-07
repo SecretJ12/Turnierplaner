@@ -12,13 +12,13 @@ import de.secretj12.turnierplaner.modifier.KnockoutTools;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorCompetitionAdd;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorCompetitionUpdate;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorGroupsDivision;
-import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorKnockoutOrder;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.competition.jUserCompetition;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.group.jUserGroupSystem;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayer;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayerRegistrationForm;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayerSignUpForm;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserTeam;
+import de.secretj12.turnierplaner.resources.jsonEntities.user.knockout.jUserKnockoutMatch;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.knockout.jUserKnockoutSystem;
 import io.quarkus.security.UnauthorizedException;
 import io.quarkus.security.identity.SecurityIdentity;
@@ -30,7 +30,10 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Path("/tournament/{tourName}/competition")
@@ -434,23 +437,17 @@ public class CompetitionResource {
 
     @POST
     @Transactional
-    @RolesAllowed("director")
     @Path("/{compName}/initKnockout")
     @Produces(MediaType.TEXT_PLAIN)
     public boolean initializeMatchesKnockout(@PathParam("tourName") String tourName,
-                                             @PathParam("compName") String compName, jDirectorKnockoutOrder init) {
+                                             @PathParam("compName") String compName, jUserKnockoutMatch tree) {
         checkTournamentAccessibility(tourName);
 
         Competition competition = competitions.getByName(tourName, compName);
-        int size = (int) Math.max(0, Math.ceil((Math.log(competition.getTeams().size()) / Math.log(2)) - 1));
-        int teamsCount = (int) Math.pow(2, size + 1);
-
-        Team[] teamOrder = init.getTeams().stream()
-            .map(t -> teams.getById(t.getId()))
-            .toArray((i) -> new Team[teamsCount]);
-        if (Arrays.stream(teamOrder).anyMatch(Objects::isNull)) throw new NotFoundException("Player not found");
-
-        knockoutTools.generateKnockoutTree(competition, size, teamOrder);
+        Match finale = matches.getFinal(competition);
+        if (finale == null)
+            finale = new Match();
+        knockoutTools.updateKnockoutTree(competition, tree, finale);
 
         competition.setcProgress(CreationProgress.GAMES);
         competitions.persist(competition);
@@ -460,15 +457,18 @@ public class CompetitionResource {
     @GET
     @Transactional
     @RolesAllowed("director")
-    @Path("/{compName}/knockoutOrder")
+    @Path("/{compName}/knockoutTree")
     @Produces(MediaType.APPLICATION_JSON)
-    public jDirectorKnockoutOrder knockoutOrder(@PathParam("tourName") String tourName,
-                                                @PathParam("compName") String compName) {
+    public jUserKnockoutMatch knockoutTree(@PathParam("tourName") String tourName,
+                                           @PathParam("compName") String compName) {
         checkTournamentAccessibility(tourName);
 
         Competition competition = competitions.getByName(tourName, compName);
-        List<Team> teams = Arrays.stream(knockoutTools.knockoutOrder(competition)).filter(Objects::nonNull).toList();
-        return new jDirectorKnockoutOrder(teams);
+        Match finale = matches.getFinal(competition);
+        if (finale == null)
+            return null;
+
+        return new jUserKnockoutMatch(finale);
     }
 
     @POST

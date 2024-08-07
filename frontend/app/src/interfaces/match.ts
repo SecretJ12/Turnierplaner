@@ -24,11 +24,11 @@ export interface Match {
 }
 
 export interface MatchServer {
-	court: string
-	begin: string
-	end: string
-	finished: boolean
-	winner: boolean | null
+	court: string | undefined
+	begin: string | undefined
+	end: string | undefined
+	finished: boolean | undefined
+	winner: boolean | undefined
 	teamA: string | null
 	teamB: string | null
 	// TODO add result
@@ -62,11 +62,11 @@ export function matchServerToClient(
 	}
 
 	return {
-		court: match.court,
-		begin: new Date(match.begin),
-		end: new Date(match.end),
-		finished: match.finished,
-		winner: match.winner,
+		court: match.court ? match.court : null,
+		begin: match.begin ? new Date(match.begin) : null,
+		end: match.end ? new Date(match.end) : null,
+		finished: !!match.finished,
+		winner: match.winner ? match.winner : null,
 		teamA: teamA,
 		teamB: teamB,
 		sets: sets,

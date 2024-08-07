@@ -113,7 +113,7 @@ async function loadFromServer() {
 	teams.value = []
 	treeDepth = Math.ceil(Math.log2(signedUp.value.length)) - 1
 	tree.value = genTree(treeDepth)
-	console.log(tree.value)
+
 	await sleep(firstUpdate ? 0 : 400)
 	firstUpdate = false
 
@@ -319,13 +319,6 @@ function save() {
 		return
 	}
 
-	// const req: KnockoutOrder = {
-	// 	teams: assignedTeams.value
-	// 		.flat()
-	// 		.flat()
-	// 		.map((t) => teamClientToServer(t)),
-	// }
-	// console.log("assignedTeams: ", req)
 	console.log("tree", tree.value)
 	console.log("tree: ", knockoutMatchClientToServer(tree.value))
 	axios

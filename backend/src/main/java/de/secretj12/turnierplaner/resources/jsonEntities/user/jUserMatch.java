@@ -20,6 +20,9 @@ public class jUserMatch {
 
     private List<jUserSet> sets;
 
+    public jUserMatch() {
+    }
+
     public jUserMatch(Match match) {
         this.court = match.getCourt() != null ? match.getCourt().getName() : null;
         this.begin = match.getBegin();
