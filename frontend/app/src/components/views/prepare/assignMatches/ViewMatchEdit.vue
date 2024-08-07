@@ -6,6 +6,7 @@
 				:component-data="{
 					tag: 'div',
 					type: 'transition',
+					name: props.animated ? 'playerList' : 'default',
 				}"
 				:list="teamA"
 				:tag="TransitionGroup"
@@ -27,6 +28,7 @@
 				:component-data="{
 					tag: 'div',
 					type: 'transition',
+					name: props.animated ? 'playerList' : 'default',
 				}"
 				:list="teamB"
 				:tag="TransitionGroup"
@@ -53,7 +55,7 @@ import TeamCard from "@/components/views/prepare/components/TeamCard.vue"
 import MatchBox from "@/components/views/prepare/components/MatchBox.vue"
 import { Team } from "@/interfaces/team"
 
-const props = defineProps<{ match: KnockoutMatch }>()
+const props = defineProps<{ match: KnockoutMatch; animated: boolean }>()
 const emit = defineEmits(["update:teamA", "update:teamB"])
 
 const teamA = ref<Team[]>([])
