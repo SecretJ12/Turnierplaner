@@ -87,6 +87,8 @@ const route = useRoute()
 const toast = useToast()
 const { t } = useI18n({ inheritLocale: true })
 
+let loadFromServerRunning = false
+let loadFromServerRefresh = false
 let firstUpdate = true
 let treeDepth = 0
 const { data: competition } = getCompetitionDetails(route, t, toast, {
@@ -100,6 +102,7 @@ const { data: signedUp, isPlaceholderData: signedUpPlaceholder } = getSignedUp(
 	t,
 	toast,
 )
+const animated = ref<boolean>(true)
 
 const teams = ref<Team[]>([])
 
@@ -109,6 +112,13 @@ if (!signedUpPlaceholder.value) loadFromServer()
 
 async function loadFromServer() {
 	if (!signedUp.value) return
+	if (loadFromServerRunning) {
+		loadFromServerRefresh = true
+		return
+	}
+	loadFromServerRunning = true
+
+	animated.value = true
 
 	teams.value = []
 	treeDepth = Math.ceil(Math.log2(signedUp.value.length)) - 1
@@ -118,6 +128,13 @@ async function loadFromServer() {
 	firstUpdate = false
 
 	signedUp.value.forEach((t) => teams.value.push(t))
+	await sleep(400)
+	animated.value = false
+	if (loadFromServerRefresh) {
+		loadFromServerRefresh = false
+		await loadFromServer()
+	}
+	loadFromServerRunning = false
 }
 
 function genTree(height: number): KnockoutMatch {
@@ -143,8 +160,6 @@ function genTree(height: number): KnockoutMatch {
 		},
 	}
 }
-
-const animated = ref<boolean>(true)
 
 const duration = 2000
 const teamCount = ref(0)
@@ -319,8 +334,6 @@ function save() {
 		return
 	}
 
-	console.log("tree", tree.value)
-	console.log("tree: ", knockoutMatchClientToServer(tree.value))
 	axios
 		.post<boolean>(
 			`/tournament/${route.params.tourId}/competition/${route.params.compId}/initKnockout`,
