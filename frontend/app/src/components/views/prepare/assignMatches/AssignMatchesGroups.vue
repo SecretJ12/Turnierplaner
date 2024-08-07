@@ -222,7 +222,7 @@ async function loadFromServer() {
 }
 
 watch([signedUpTeams, groupsServer], loadFromServer)
-if (!signedUpPlaceholder.value && !groupsServer.value) loadFromServer()
+if (!signedUpPlaceholder.value && groupsServer.value) loadFromServer()
 
 function save() {
 	if (disabled.value) return

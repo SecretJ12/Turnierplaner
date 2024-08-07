@@ -33,15 +33,15 @@ export function useInitKnockout(
 	toast: ToastServiceMethods,
 ) {
 	const queryClient = useQueryClient()
-	return useMutation(async (tree: KnockoutMatch) => {
-		return axios
+	return useMutation(async (tree: KnockoutMatch) =>
+		axios
 			.post<boolean>(
 				`/tournament/${route.params.tourId}/competition/${route.params.compId}/initKnockout`,
 				knockoutMatchClientToServer(tree),
 			)
 			.then(() => {
 				queryClient.invalidateQueries([
-					"signedUp",
+					"knockout",
 					route.params.tourId,
 					route.params.compId,
 				])
@@ -61,6 +61,6 @@ export function useInitKnockout(
 					life: 3000,
 					closable: false,
 				})
-			})
-	})
+			}),
+	)
 }

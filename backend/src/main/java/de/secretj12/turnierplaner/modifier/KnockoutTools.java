@@ -23,7 +23,7 @@ public class KnockoutTools {
             return null;
         }
         match.setTeamA(Team.findById(tree.getTeamA()));
-        match.setTeamB(Team.findById(tree.getTeamA()));
+        match.setTeamB(Team.findById(tree.getTeamB()));
 
         match.setFinished(false);
         match.setCompetition(competition);

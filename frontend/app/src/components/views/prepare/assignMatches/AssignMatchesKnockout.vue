@@ -54,7 +54,7 @@
 									@update:team-a="updateTeamA"
 									@update:team-b="updateTeamB"
 								/>
-								<ViewMatch v-else :match="match" :mode="competition.mode" />
+								<ViewMatch v-else :match="match" :mode="Mode.SINGLE" />
 							</template>
 						</ViewKnockoutTree>
 					</ScrollPanel>
@@ -78,72 +78,83 @@ import ViewKnockoutTree from "@/components/views/competition/knockoutSystem/View
 import ViewMatch from "@/components/views/competition/knockoutSystem/ViewMatch.vue"
 import ViewMatchEdit from "@/components/views/prepare/assignMatches/ViewMatchEdit.vue"
 import { Match } from "@/interfaces/match"
-import { useInitKnockout } from "@/backend/knockout"
+import { getKnockout, useInitKnockout } from "@/backend/knockout"
+import { Mode } from "@/interfaces/competition"
 
 const route = useRoute()
 const toast = useToast()
 const { t } = useI18n({ inheritLocale: true })
 
+// TODO refactoring for the whole file for smoother loading and clearer code
+
 let loadFromServerRunning = false
 let loadFromServerRefresh = false
 let firstUpdate = true
 let treeDepth = 0
-const { data: competition } = getCompetitionDetails(route, t, toast, {
-	suc: () => {
-		if (competition.value === null) return
-		loadFromServer()
-	},
-})
+const { data: competition } = getCompetitionDetails(route, t, toast, {})
 const { data: signedUp, isPlaceholderData: signedUpPlaceholder } = getSignedUp(
 	route,
 	t,
 	toast,
 )
+const { data: knockoutSystem } = getKnockout(route)
 const { mutate: initKnockout } = useInitKnockout(route, t, toast)
 const animated = ref<boolean>(true)
 
 const teams = ref<Team[]>([])
 
-const tree = ref(genTree(0))
-watch([signedUp], loadFromServer)
-if (!signedUpPlaceholder.value) loadFromServer()
+const tree = ref(
+	genTree(treeDepth, knockoutSystem.value ? knockoutSystem.value.finale : null),
+)
+watch([signedUp, competition, knockoutSystem], loadFromServer)
+// if (!signedUpPlaceholder.value && knockoutSystem.value) loadFromServer()
 
 async function loadFromServer() {
-	if (!signedUp.value) return
+	if (!signedUp.value || signedUpPlaceholder.value || !knockoutSystem.value)
+		return
+
 	if (loadFromServerRunning) {
 		loadFromServerRefresh = true
 		return
 	}
 	loadFromServerRunning = true
+	loadFromServerRefresh = false
 
 	animated.value = true
-
-	teams.value = []
 	treeDepth = Math.ceil(Math.log2(signedUp.value.length)) - 1
-	tree.value = genTree(treeDepth)
-
+	teams.value = []
+	tree.value = genTree(treeDepth, null)
 	await sleep(firstUpdate ? 0 : 400)
 	firstUpdate = false
-
+	tree.value = genTree(
+		treeDepth,
+		knockoutSystem.value ? knockoutSystem.value.finale : null,
+	)
 	signedUp.value.forEach((t) => teams.value.push(t))
+	getMatches().forEach((m) => {
+		teams.value = teams.value.filter(
+			(t) => t.id !== m.teamA?.id && t.id !== m.teamB?.id,
+		)
+	})
 	await sleep(400)
 	animated.value = false
+
+	loadFromServerRunning = false
 	if (loadFromServerRefresh) {
 		loadFromServerRefresh = false
 		await loadFromServer()
 	}
-	loadFromServerRunning = false
 }
 
-function genTree(height: number): KnockoutMatch {
+function genTree(height: number, tree: KnockoutMatch | null): KnockoutMatch {
 	const default_game = {
 		court: null,
 		begin: null,
 		end: null,
 		finished: false,
 		winner: null,
-		teamA: null,
-		teamB: null,
+		teamA: tree ? tree.teamA : null,
+		teamB: tree ? tree.teamB : null,
 		sets: null,
 		curGame: null,
 	}
@@ -153,8 +164,8 @@ function genTree(height: number): KnockoutMatch {
 		...default_game,
 		prevMatch: {
 			winner: true,
-			a: genTree(height - 1),
-			b: genTree(height - 1),
+			a: genTree(height - 1, tree?.prevMatch ? tree.prevMatch.a : null),
+			b: genTree(height - 1, tree?.prevMatch ? tree.prevMatch.b : null),
 		},
 	}
 }
@@ -247,70 +258,6 @@ async function reroll() {
 	await reset()
 	await randomize()
 }
-
-// TODO adapt to new structure
-// async function update() {
-// 	animated.value = true
-// 	teams.value = []
-// 	while (assignedTeams.value.length > 0) {
-// 		assignedTeams.value.pop()
-// 	}
-// 	// const anFin = sleep(firstUpdate ? 0 : 500)
-// 	firstUpdate = false
-// 	teamCount.value = 0
-// 	if (
-// 		competition.value?.cProgress === Progress.GAMES ||
-// 		competition.value?.cProgress === Progress.SCHEDULING
-// 	) {
-// 		axios
-// 			.get<KnockoutOrder>(
-// 				`tournament/${route.params.tourId}/competition/${route.params.compId}/knockoutOrder`,
-// 			)
-// 			.then(async (response) => {
-// 				let sortedTeams = response.data.teams.map((t) => teamServerToClient(t))
-// 				teamCount.value += sortedTeams.length
-// 				// initialize the knockout order
-// 				for (let i = 0; i < nearestPowerOf2(sortedTeams.length) / 2; i++) {
-// 					assignedTeams.value.push([
-// 						[sortedTeams[i * 2]],
-// 						[sortedTeams[i * 2 + 1]],
-// 					])
-// 				}
-// 				animated.value = false
-// 			})
-// 			.catch(() => {})
-// 	} else {
-// 		axios
-// 			.get<Team[]>(
-// 				`tournament/${route.params.tourId}/competition/${route.params.compId}/signedUpTeams`,
-// 			)
-// 			.then(async (response) => {
-// 				// await anFin
-// 				response.data.forEach((team) => {
-// 					teams.value.push(teamServerToClient(team))
-// 					teamCount.value++
-// 				})
-// 				// await sleep(500)
-// 				if (competition.value?.cProgress === Progress.TEAMS) {
-// 					for (let i = 0; i < nearestPowerOf2(teams.value.length) / 2; i++) {
-// 						assignedTeams.value.push([[], []])
-// 					}
-// 				}
-// 				animated.value = false
-// 			})
-// 			.catch((error) => {
-// 				console.log(error)
-// 			})
-// 	}
-// }
-
-// function nearestPowerOf2(n: number): number {
-// 	return 1 << (31 - Math.clz32(n))
-// }
-
-// const size = computed(() =>
-// 	Math.max(0, Math.ceil(Math.log2(teamCount.value)) - 1),
-// )
 
 function knockoutTreeCompletelyAssigned(): boolean {
 	// check that tree is completely assigned
