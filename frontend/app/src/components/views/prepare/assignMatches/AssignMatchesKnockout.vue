@@ -2,7 +2,6 @@
 	<div v-if="competition" class="grid">
 		<div class="col-3 flex flex-column gap-3">
 			<Card>
-				<!-- TODO i18n -->
 				<template #title>
 					<div class="flex flex-row justify-content-between">
 						<div>{{ t("ViewPrepare.assignMatches.teams") }}</div>
@@ -34,7 +33,7 @@
 			<Card class="w-full">
 				<template #title>{{ t("general.tournament_tree") }}</template>
 				<template #content>
-					<ScrollPanel style="width: 100%; height: 1000px">
+					<ScrollPanel style="width: 100%; height: 500px">
 						<ViewKnockoutTree
 							:finale="tree"
 							:border-thickness="2"
@@ -51,6 +50,7 @@
 								<ViewMatchEdit
 									v-if="level === 0"
 									:match="match"
+									:animated="animated"
 									@update:team-a="updateTeamA"
 									@update:team-b="updateTeamB"
 								/>
@@ -72,16 +72,13 @@ import { computed, Ref, ref, watch } from "vue"
 import { getCompetitionDetails } from "@/backend/competition"
 import TeamContainerDraggable from "@/components/views/prepare/components/TeamContainerDraggable.vue"
 import { Team } from "@/interfaces/team"
-import axios from "axios"
-import {
-	KnockoutMatch,
-	knockoutMatchClientToServer,
-} from "@/interfaces/knockoutSystem"
+import { KnockoutMatch } from "@/interfaces/knockoutSystem"
 import { getSignedUp } from "@/backend/signup"
 import ViewKnockoutTree from "@/components/views/competition/knockoutSystem/ViewKnockoutTree.vue"
 import ViewMatch from "@/components/views/competition/knockoutSystem/ViewMatch.vue"
 import ViewMatchEdit from "@/components/views/prepare/assignMatches/ViewMatchEdit.vue"
 import { Match } from "@/interfaces/match"
+import { useInitKnockout } from "@/backend/knockout"
 
 const route = useRoute()
 const toast = useToast()
@@ -102,6 +99,7 @@ const { data: signedUp, isPlaceholderData: signedUpPlaceholder } = getSignedUp(
 	t,
 	toast,
 )
+const { mutate: initKnockout } = useInitKnockout(route, t, toast)
 const animated = ref<boolean>(true)
 
 const teams = ref<Team[]>([])
@@ -232,19 +230,22 @@ async function randomize() {
 		await sleep(delay.value)
 	}
 	animated.value = false
-	console.log(tree.value)
+}
+
+async function reset() {
+	animated.value = true
+	const matches = getMatches()
+	matches.forEach((m) => {
+		m.teamA = null
+		m.teamB = null
+	})
+	await loadFromServer()
+	await sleep(400)
 }
 
 async function reroll() {
 	await reset()
 	await randomize()
-}
-
-async function reset() {
-	// TODO adapt to new structure
-	animated.value = true
-
-	animated.value = false
 }
 
 // TODO adapt to new structure
@@ -322,7 +323,6 @@ function knockoutTreeCompletelyAssigned(): boolean {
 }
 
 function save() {
-	// TODO send new save as a tree?
 	if (!knockoutTreeCompletelyAssigned()) {
 		toast.add({
 			severity: "error",
@@ -334,29 +334,7 @@ function save() {
 		return
 	}
 
-	axios
-		.post<boolean>(
-			`/tournament/${route.params.tourId}/competition/${route.params.compId}/initKnockout`,
-			knockoutMatchClientToServer(tree.value),
-		)
-		.then(() => {
-			toast.add({
-				severity: "success",
-				summary: t("general.success"),
-				detail: t("general.saved"),
-				life: 3000,
-				closable: false,
-			})
-		})
-		.catch(() => {
-			toast.add({
-				severity: "error",
-				summary: t("general.failure"),
-				detail: t("general.save_failed"),
-				life: 3000,
-				closable: false,
-			})
-		})
+	initKnockout(tree.value)
 }
 
 defineExpose({ save })
