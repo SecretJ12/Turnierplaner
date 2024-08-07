@@ -13,16 +13,18 @@ public class jUserKnockoutSystem {
     private jUserKnockoutMatch finale;
     private jUserKnockoutMatch thirdPlace;
 
-    public jUserKnockoutSystem(Match finale, Match thirdPlace) {
-        if (finale == null)
+    public jUserKnockoutSystem(Match finale, Match thirdPlace, boolean nullable) {
+        if (finale == null && !nullable)
             throw new NotFoundException("Finale was not found");
-        if (thirdPlace == null)
+        if (thirdPlace == null && !nullable)
             throw new NotFoundException("Game for third place was not found");
 
         Set<Team> teams = new HashSet<>();
         Queue<Match> matchQueue = new ArrayDeque<>();
-        matchQueue.add(finale);
-        matchQueue.add(thirdPlace);
+        if (finale != null)
+            matchQueue.add(finale);
+        if (thirdPlace != null)
+            matchQueue.add(thirdPlace);
         Match match;
         while ((match = matchQueue.poll()) != null) {
             teams.add(match.getTeamA());
@@ -33,8 +35,8 @@ public class jUserKnockoutSystem {
             }
         }
         this.teams = teams.stream().filter(Objects::nonNull).map(jUserTeam::new).toList();
-        this.finale = new jUserKnockoutMatch(finale);
-        this.thirdPlace = new jUserKnockoutMatch(thirdPlace, false);
+        this.finale = finale == null ? null : new jUserKnockoutMatch(finale);
+        this.thirdPlace = thirdPlace == null ? null : new jUserKnockoutMatch(thirdPlace, false);
     }
 
     public List<jUserTeam> getTeams() {

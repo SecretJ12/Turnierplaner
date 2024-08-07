@@ -397,13 +397,13 @@ public class CompetitionResource {
         checkTournamentAccessibility(tourName);
 
         Competition competition = competitions.getByName(tourName, compName);
-        if (competition == null) throw new NotFoundException("Could not found competition");
+        if (competition == null) throw new NotFoundException("Could not find competition");
         if (competition.getType() != CompetitionType.KNOCKOUT)
             throw new WebApplicationException("Competition does not have type knockout", Response.Status.METHOD_NOT_ALLOWED);
 
         Match finale = matches.getFinal(competition);
         Match thirdPlace = matches.getThirdPlace(competition);
-        return new jUserKnockoutSystem(finale, thirdPlace);
+        return new jUserKnockoutSystem(finale, thirdPlace, securityIdentity.hasRole("director"));
     }
 
     @GET
@@ -437,6 +437,7 @@ public class CompetitionResource {
 
     @POST
     @Transactional
+    @RolesAllowed("director")
     @Path("/{compName}/initKnockout")
     @Produces(MediaType.TEXT_PLAIN)
     public boolean initializeMatchesKnockout(@PathParam("tourName") String tourName,
@@ -448,27 +449,11 @@ public class CompetitionResource {
         if (finale == null)
             finale = new Match();
         knockoutTools.updateKnockoutTree(competition, tree, finale);
+        // TODO third place
 
         competition.setcProgress(CreationProgress.GAMES);
         competitions.persist(competition);
         return true;
-    }
-
-    @GET
-    @Transactional
-    @RolesAllowed("director")
-    @Path("/{compName}/knockoutTree")
-    @Produces(MediaType.APPLICATION_JSON)
-    public jUserKnockoutMatch knockoutTree(@PathParam("tourName") String tourName,
-                                           @PathParam("compName") String compName) {
-        checkTournamentAccessibility(tourName);
-
-        Competition competition = competitions.getByName(tourName, compName);
-        Match finale = matches.getFinal(competition);
-        if (finale == null)
-            return null;
-
-        return new jUserKnockoutMatch(finale);
     }
 
     @POST

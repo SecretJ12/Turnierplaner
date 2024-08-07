@@ -1,14 +1,13 @@
 import { Match, MatchServer, matchServerToClient } from "@/interfaces/match"
-import { Team } from "@/interfaces/team"
+import { Team, TeamServer, teamServerToClient } from "@/interfaces/team"
 
 export interface KnockoutSystem {
-	teams: Team[]
-	finale: KnockoutMatch
-	thirdPlace: KnockoutMatch
+	finale: KnockoutMatch | null
+	thirdPlace: KnockoutMatch | null
 }
 
 export interface KnockoutSystemServer {
-	teams: Team[]
+	teams: TeamServer[]
 	finale: KnockoutMatchServer
 	thirdPlace: KnockoutMatchServer
 }
@@ -36,12 +35,15 @@ export function knockoutSystemServerToClient(
 			console.error("Team without id:", team)
 			return
 		}
-		teams.set(team.id, team)
+		teams.set(team.id, teamServerToClient(team))
 	})
 	return {
-		teams: knockoutSystem.teams,
-		finale: knockoutMatchServerToClient(knockoutSystem.finale, teams),
-		thirdPlace: knockoutMatchServerToClient(knockoutSystem.thirdPlace, teams),
+		finale: knockoutSystem.finale
+			? knockoutMatchServerToClient(knockoutSystem.finale, teams)
+			: null,
+		thirdPlace: knockoutSystem.thirdPlace
+			? knockoutMatchServerToClient(knockoutSystem.thirdPlace, teams)
+			: null,
 	}
 }
 
