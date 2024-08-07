@@ -171,6 +171,22 @@ public class Match {
         this.dependentOn = dependentOn;
     }
 
+    public Collection<NextMatch> getPreviousOfA() {
+        return previousOfA;
+    }
+
+    public void setPreviousOfA(Collection<NextMatch> previousOfA) {
+        this.previousOfA = previousOfA;
+    }
+
+    public Collection<NextMatch> getPreviousOfB() {
+        return previousOfB;
+    }
+
+    public void setPreviousOfB(Collection<NextMatch> previousOfB) {
+        this.previousOfB = previousOfB;
+    }
+
     public FinalOfGroup getFinalOfGroup() {
         return finalOfGroup;
     }

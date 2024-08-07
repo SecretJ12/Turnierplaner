@@ -9,6 +9,9 @@ public class jUserKnockoutMatch extends jUserMatch {
     private jUserKnockoutMatch previousA;
     private jUserKnockoutMatch previousB;
 
+    public jUserKnockoutMatch() {
+    }
+
     public jUserKnockoutMatch(Match match) {
         this(match, true);
     }

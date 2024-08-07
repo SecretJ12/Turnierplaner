@@ -75,7 +75,6 @@ function removeB() {
 }
 
 watch(props, () => {
-	console.log("update")
 	if (teamA.value !== (props.match.teamA ? [props.match.teamA] : []))
 		teamA.value = props.match.teamA ? [props.match.teamA] : []
 	if (teamB.value !== (props.match.teamB ? [props.match.teamB] : []))

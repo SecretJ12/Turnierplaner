@@ -23,8 +23,8 @@ export interface KnockoutMatch extends Match {
 
 export interface KnockoutMatchServer extends MatchServer {
 	winningPlayer: boolean
-	previousA: KnockoutMatchServer | null
-	previousB: KnockoutMatchServer | null
+	previousA: KnockoutMatchServer | undefined
+	previousB: KnockoutMatchServer | undefined
 }
 
 export function knockoutSystemServerToClient(
@@ -50,7 +50,7 @@ function knockoutMatchServerToClient(
 	teams: Map<string, Team>,
 ): KnockoutMatch {
 	const match: KnockoutMatch = matchServerToClient(matchServer, teams)
-	if (matchServer.previousA !== null && matchServer.previousB !== null) {
+	if (matchServer.previousA && matchServer.previousB) {
 		match.prevMatch = {
 			winner: matchServer.winningPlayer,
 			a: knockoutMatchServerToClient(matchServer.previousA, teams),
@@ -64,11 +64,11 @@ export function knockoutMatchClientToServer(
 	match: KnockoutMatch,
 ): KnockoutMatchServer {
 	return {
-		court: match.court ? match.court : "",
-		begin: match.begin ? match.begin.toString() : "2024-04-01T23:15:30",
-		end: match.end ? match.end.toISOString() : "2024-04-01T23:15:30",
+		court: match.court ? match.court : undefined,
+		begin: match.begin ? match.begin.toString() : undefined,
+		end: match.end ? match.end.toISOString() : undefined,
 		finished: match.finished,
-		winner: match.winner,
+		winner: match.winner ? match.winner : undefined,
 		teamA: match.teamA && match.teamA.id ? match.teamA.id : null,
 		teamB: match.teamB && match.teamB.id ? match.teamB.id : null,
 		sets: match.sets ? match.sets : [],
@@ -77,9 +77,9 @@ export function knockoutMatchClientToServer(
 
 		previousA: match.prevMatch?.a
 			? knockoutMatchClientToServer(match.prevMatch.a)
-			: null,
+			: undefined,
 		previousB: match.prevMatch?.b
 			? knockoutMatchClientToServer(match.prevMatch.b)
-			: null,
+			: undefined,
 	}
 }
