@@ -8,10 +8,7 @@
 				</Card>
 			</div>
 			<div class="col-8">
-				<Card>
-					<template #title>Calendar</template>
-					<template #content> The calendar should be shown here </template>
-				</Card>
+				<SchedulingCalendar />
 			</div>
 		</div>
 	</div>
@@ -22,6 +19,7 @@ import { getCompetitionDetails } from "@/backend/competition"
 import { useRoute, useRouter } from "vue-router"
 import { useToast } from "primevue/usetoast"
 import { useI18n } from "vue-i18n"
+import SchedulingCalendar from "@/components/views/prepare/scheduleMatches/SchedulingCalendar.vue"
 
 const route = useRoute()
 const router = useRouter()

@@ -2,7 +2,7 @@ import viewTournaments from "@/components/views/tournaments/ViewTournaments.vue"
 import viewCompetition from "@/components/views/competition/ViewCompetition.vue"
 import viewPrepareMatches from "@/components/views/prepare/ViewPrepareMatches.vue"
 import ViewAssignMatches from "@/components/views/prepare/assignMatches/ViewAssignMatches.vue"
-import ViewScheduleMatches from "@/components/views/prepare/ViewScheduleMatches.vue"
+import ViewScheduleMatches from "@/components/views/prepare/scheduleMatches/ViewScheduleMatches.vue"
 import ViewEditTeams from "@/components/views/prepare/editTeams/ViewEditTeams.vue"
 import ViewEditCompetition from "@/components/views/prepare/ViewEditCompetition.vue"
 
