@@ -47,9 +47,47 @@ public class KnockoutTools {
             nMatch.setPreviousB(b);
             nMatch.setNextMatch(match);
             nextMatches.persist(nMatch);
+            match.setDependentOn(nMatch);
         }
 
         return match;
+    }
+
+    public void updateThirdPlace(Competition competition, Match finale) {
+        Match thirdPlace = matches.getThirdPlace(competition);
+
+        // cover deletion of third place
+        if (finale.getDependentOn() == null) {
+            if (thirdPlace != null) {
+                nextMatches.delete(thirdPlace.getDependentOn());
+                matches.delete(thirdPlace);
+            }
+
+            return;
+        }
+
+        if (thirdPlace == null) {
+            // create third place if didn't exist before
+            thirdPlace = new Match();
+            thirdPlace.setCompetition(competition);
+            NextMatch nMatch = new NextMatch();
+            nMatch.setWinner(false);
+            nMatch.setNextMatch(thirdPlace);
+
+            nMatch.setPreviousA(finale.getDependentOn().getPreviousA());
+            nMatch.setPreviousB(finale.getDependentOn().getPreviousB());
+
+            matches.persist(thirdPlace);
+            nextMatches.persist(nMatch);
+        } else {
+            // update third place if already existing
+            NextMatch nMatch = thirdPlace.getDependentOn();
+
+            nMatch.setPreviousA(finale.getDependentOn().getPreviousA());
+            nMatch.setPreviousB(finale.getDependentOn().getPreviousB());
+
+            nextMatches.persist(nMatch);
+        }
     }
 
     private void deletePrevious(Match match) {
