@@ -449,7 +449,7 @@ public class CompetitionResource {
         if (finale == null)
             finale = new Match();
         knockoutTools.updateKnockoutTree(competition, tree, finale);
-        // TODO third place
+        knockoutTools.updateThirdPlace(competition, finale);
 
         competition.setcProgress(CreationProgress.GAMES);
         competitions.persist(competition);

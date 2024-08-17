@@ -2,8 +2,8 @@
 	<p>Knockout system</p>
 	<template v-if="knockoutSystem">
 		<ViewKnockoutTree
-			:finale="knockoutSystem.finale"
-			:third-place="knockoutSystem.thirdPlace"
+			:finale="knockoutSystem.finale ?? undefined"
+			:third-place="knockoutSystem.thirdPlace ?? undefined"
 			:border-radius="0"
 			:border-thickness="2"
 			:margin-small="30"

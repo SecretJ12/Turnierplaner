@@ -36,6 +36,7 @@
 					<ScrollPanel style="width: 100%; height: 500px">
 						<ViewKnockoutTree
 							:finale="tree"
+							:third-place="thirdPlace"
 							:border-thickness="2"
 							:border-radius="0"
 						>
@@ -106,6 +107,10 @@ const teams = ref<Team[]>([])
 const tree = ref(
 	genTree(treeDepth, knockoutSystem.value ? knockoutSystem.value.finale : null),
 )
+const thirdPlace = computed(() => {
+	if (signedUp.value && signedUp.value.length > 2) return genTree(0, null)
+	else return null
+})
 watch([signedUp, competition, knockoutSystem], loadFromServer)
 // if (!signedUpPlaceholder.value && knockoutSystem.value) loadFromServer()
 
