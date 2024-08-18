@@ -4,7 +4,7 @@ services:
     command:
       - start-dev --http-enabled=true
     environment:
-      KEYCLOAK_ADMIN: admin2
-      KEYCLOAK_ADMIN_PASSWORD: admin2
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
     ports:
       - 8080:8080
