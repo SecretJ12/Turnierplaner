@@ -1,15 +1,34 @@
 <template>
-	Schedule matches: {{ competition?.name }}
+	<div class="flex flex-column gap-1">
+		<div class="grid">
+			<div class="col-4">
+				<Card>
+					<template #title>Matches</template>
+					<template #content>
+						<MatchesContainerDraggable :competition="competition" />
+					</template>
+				</Card>
+			</div>
+			<div class="col-8">
+				<Card>
+					<template #title>Calendar</template>
+					<template #content>
+						The calendar should be shown here
+					</template>
+				</Card>
+			</div>
+		</div>
 
-	<div class="grid grid-nogutter justify-content-between mt-4">
-		<Button label="Back" icon="pi pi-angle-left" @click="prevPage" />
-		<Button
-			label="Complete"
-			icon="pi pi-check"
-			icon-pos="right"
-			class="p-button-success"
-			@click="complete"
-		/>
+		<div class="grid grid-nogutter justify-content-between mt-4">
+			<Button label="Back" icon="pi pi-angle-left" @click="prevPage" />
+			<Button
+				label="Complete"
+				icon="pi pi-check"
+				icon-pos="right"
+				class="p-button-success"
+				@click="complete"
+			/>
+		</div>
 	</div>
 </template>
 
@@ -18,6 +37,7 @@ import { getCompetitionDetails } from "@/backend/competition"
 import { useRoute, useRouter } from "vue-router"
 import { useToast } from "primevue/usetoast"
 import { useI18n } from "vue-i18n"
+import MatchesContainerDraggable from "@/components/views/prepare/scheduleMatches/MatchesContainerDraggable.vue"
 
 const route = useRoute()
 const router = useRouter()

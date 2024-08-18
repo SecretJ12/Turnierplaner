@@ -1,19 +1,9 @@
 <template>
 	<div class="flex flex-column gap-1">
-		<div
-			v-if="competition"
-			class="flex flex-row overflow-hidden"
-			style="flex-wrap: nowrap"
-		>
-			<Transition>
-				<Groups
-					v-if="competition.tourType === TourType.GROUPS"
-					ref="groupsRef"
-					class="w-full flex-shrink-0"
-				/>
-				<Knockout v-else ref="knockoutRef" class="w-full flex-shrink-0" />
-			</Transition>
-		</div>
+		<Transition v-if="competition">
+			<Groups v-if="competition.tourType === TourType.GROUPS" ref="groupsRef" />
+			<Knockout v-else ref="knockoutRef" />
+		</Transition>
 
 		<div class="grid grid-nogutter justify-content-between mt-4">
 			<Button

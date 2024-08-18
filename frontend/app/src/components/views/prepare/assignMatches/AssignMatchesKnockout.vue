@@ -36,7 +36,7 @@
 					<ScrollPanel style="width: 100%; height: 500px">
 						<ViewKnockoutTree
 							:finale="tree"
-							:third-place="thirdPlace"
+							:third-place="thirdPlace ?? undefined"
 							:border-thickness="2"
 							:border-radius="0"
 						>

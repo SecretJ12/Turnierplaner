@@ -1,31 +1,29 @@
 <template>
-	<div id="button">
-		<Card class="w-12">
-			<template #header>
-				<TabMenu
-					:active-index="activeTab"
-					:model="competitions || []"
-					@tab-change="tabChange"
-				>
-					<template #item="{ item, props }">
-						<div v-bind="props.action" class="cursor-pointer">
-							<span v-bind="props.label">{{ item.name }}</span>
-						</div>
-					</template>
-				</TabMenu>
-				<Steps
-					:active-step="<number>route.meta.step - 1"
-					:model="stepList"
-					:readonly="true"
-					class="mt-5"
-				>
-				</Steps>
-			</template>
-			<template #content>
-				<router-view />
-			</template>
-		</Card>
-	</div>
+	<Card class="w-full m-2" style="margin-top: -10px !important">
+		<template #header>
+			<TabMenu
+				:active-index="activeTab"
+				:model="competitions || []"
+				@tab-change="tabChange"
+			>
+				<template #item="{ item, props }">
+					<div v-bind="props.action" class="cursor-pointer">
+						<span v-bind="props.label">{{ item.name }}</span>
+					</div>
+				</template>
+			</TabMenu>
+			<Steps
+				:active-step="<number>route.meta.step - 1"
+				:model="stepList"
+				:readonly="true"
+				class="mt-5"
+			>
+			</Steps>
+		</template>
+		<template #content>
+			<router-view />
+		</template>
+	</Card>
 </template>
 
 <script setup lang="ts">
@@ -139,6 +137,7 @@ const stepList = ref([
 	flex-wrap: wrap;
 	flex-direction: row;
 	justify-content: center;
+	overflow: hidden;
 }
 
 ::v-deep(b) {
