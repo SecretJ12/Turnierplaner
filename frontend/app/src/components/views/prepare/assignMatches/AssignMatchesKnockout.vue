@@ -22,7 +22,7 @@
 				<template #content>
 					<TeamContainerDraggable
 						v-if="competition && signedUp"
-						:animated="animated"
+						:animated="isUpdating"
 						:teams="teams"
 						:competition="competition"
 					/>
@@ -51,7 +51,7 @@
 								<ViewMatchEdit
 									v-if="level === 0"
 									:match="match"
-									:animated="animated"
+									:animated="isUpdating"
 									@update:team-a="updateTeamA"
 									@update:team-b="updateTeamB"
 								/>
@@ -100,7 +100,8 @@ const { data: signedUp, isPlaceholderData: signedUpPlaceholder } = getSignedUp(
 )
 const { data: knockoutSystem } = getKnockout(route)
 const { mutate: initKnockout } = useInitKnockout(route, t, toast)
-const animated = ref<boolean>(true)
+
+const isUpdating = defineModel<boolean>("isUpdating", { default: false })
 
 const teams = ref<Team[]>([])
 
@@ -125,7 +126,7 @@ async function loadFromServer() {
 	loadFromServerRunning = true
 	loadFromServerRefresh = false
 
-	animated.value = true
+	isUpdating.value = true
 	treeDepth = Math.ceil(Math.log2(signedUp.value.length)) - 1
 	teams.value = []
 	tree.value = genTree(treeDepth, null)
@@ -142,7 +143,7 @@ async function loadFromServer() {
 		)
 	})
 	await sleep(400)
-	animated.value = false
+	isUpdating.value = false
 
 	loadFromServerRunning = false
 	if (loadFromServerRefresh) {
@@ -223,7 +224,7 @@ function getMatches(): Match[] {
 }
 
 async function randomize() {
-	animated.value = true
+	isUpdating.value = true
 	let knockOutListIndex = 0
 	const matches = getMatches()
 	while (teams.value.length && knockOutListIndex < matches.length) {
@@ -245,11 +246,11 @@ async function randomize() {
 		knockOutListIndex++
 		await sleep(delay.value)
 	}
-	animated.value = false
+	isUpdating.value = false
 }
 
 async function reset() {
-	animated.value = true
+	isUpdating.value = true
 	const matches = getMatches()
 	matches.forEach((m) => {
 		m.teamA = null

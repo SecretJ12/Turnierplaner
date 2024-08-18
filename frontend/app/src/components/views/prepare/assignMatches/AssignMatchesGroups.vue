@@ -7,7 +7,7 @@
 						<div>Teams</div>
 						<SplitButton
 							:model="randomizeItems"
-							:disabled="disabled"
+							:disabled="isUpdating"
 							class="w-fit"
 							:label="t('ViewPrepare.editTeams.randomize')"
 							@click="randomize"
@@ -23,7 +23,7 @@
 				<template #content>
 					<TeamContainerDraggable
 						v-if="competition"
-						:animated="animated"
+						:animated="isUpdating"
 						:teams="teams"
 						:competition="competition"
 					/>
@@ -38,7 +38,7 @@
 				<template #content>
 					<TeamContainerDraggable
 						v-if="competition"
-						:animated="animated"
+						:animated="isUpdating"
 						:teams="group"
 						:competition="competition"
 					/>
@@ -47,7 +47,7 @@
 			<div class="flex flex-row gap-2">
 				<Button
 					:label="t('ViewPrepare.assignMatches.remove')"
-					:disabled="noGroups <= 2 || disabled"
+					:disabled="noGroups <= 2 || isUpdating"
 					severity="danger"
 					@click="
 						() => {
@@ -58,7 +58,7 @@
 				></Button>
 				<Button
 					:label="t('ViewPrepare.assignMatches.add')"
-					:disabled="noGroups >= 64 || disabled"
+					:disabled="noGroups >= 64 || isUpdating"
 					severity="success"
 					@click="
 						() => {
@@ -106,8 +106,7 @@ const noGroups = ref<number>(2)
 
 const teams = ref<Team[]>([])
 const groups = ref<Team[][]>([[], []])
-const disabled = ref<boolean>(false)
-const animated = ref<boolean>(false)
+const isUpdating = defineModel<boolean>("isUpdating", { default: false })
 
 const duration = 2000
 const teamCount = ref(0)
@@ -121,7 +120,7 @@ function sleep(milliseconds: number) {
 }
 
 function adjustSize(size: number) {
-	disabled.value = true
+	isUpdating.value = true
 	if (groups.value.length > size) {
 		for (let i = size; i < groups.value.length; i++) {
 			groups.value[i].forEach((e) => teams.value.push(e))
@@ -134,7 +133,7 @@ function adjustSize(size: number) {
 			...Array.from({ length: size - groups.value.length }, () => []),
 		)
 	}
-	disabled.value = false
+	isUpdating.value = false
 }
 
 const randomizeItems = ref([
@@ -159,7 +158,7 @@ function selectRandomElement<T>(players: Ref<T[]>) {
 }
 
 async function randomize() {
-	animated.value = true
+	isUpdating.value = true
 	while (teams.value.length) {
 		const min = Math.min(...groups.value.map((group) => group.length))
 		const minInd = groups.value.findIndex((group) => group.length === min)
@@ -169,7 +168,7 @@ async function randomize() {
 		groups.value[minInd].push(element)
 		await sleep(delay.value)
 	}
-	animated.value = false
+	isUpdating.value = false
 }
 
 async function reroll() {
@@ -178,7 +177,7 @@ async function reroll() {
 }
 
 async function reset() {
-	animated.value = true
+	isUpdating.value = true
 	for (const group of groups.value) {
 		while (group.length) {
 			let i = group.length - 1
@@ -188,7 +187,7 @@ async function reset() {
 			await sleep(delay.value)
 		}
 	}
-	animated.value = false
+	isUpdating.value = false
 }
 
 function adjustUnsorted() {
@@ -202,8 +201,7 @@ let firstUpdate = true
 async function loadFromServer() {
 	if (!signedUpTeams.value) return
 
-	animated.value = true
-	disabled.value = true
+	isUpdating.value = true
 	teams.value = []
 	groups.value = [[], []]
 	const anFin = sleep(firstUpdate ? 0 : 400)
@@ -217,15 +215,14 @@ async function loadFromServer() {
 	)
 	adjustUnsorted()
 	await sleep(400)
-	animated.value = false
-	disabled.value = false
+	isUpdating.value = false
 }
 
 watch([signedUpTeams, groupsServer], loadFromServer)
 if (!signedUpPlaceholder.value && groupsServer.value) loadFromServer()
 
 function save() {
-	if (disabled.value) return
+	if (isUpdating.value) return
 
 	if (groups.value.some((g) => g.length <= 1)) {
 		toast.add({
@@ -241,7 +238,7 @@ function save() {
 	initGroups(groups.value)
 }
 
-defineExpose({ save, disabled })
+defineExpose({ save, disabled: isUpdating })
 </script>
 
 <style scoped></style>

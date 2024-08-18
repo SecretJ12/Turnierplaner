@@ -4,30 +4,15 @@
 			<div class="col-4">
 				<Card>
 					<template #title>Matches</template>
-					<template #content>
-						<MatchesContainerDraggable :competition="competition" />
-					</template>
+					<template #content> We show the matches here </template>
 				</Card>
 			</div>
 			<div class="col-8">
 				<Card>
 					<template #title>Calendar</template>
-					<template #content>
-						The calendar should be shown here
-					</template>
+					<template #content> The calendar should be shown here </template>
 				</Card>
 			</div>
-		</div>
-
-		<div class="grid grid-nogutter justify-content-between mt-4">
-			<Button label="Back" icon="pi pi-angle-left" @click="prevPage" />
-			<Button
-				label="Complete"
-				icon="pi pi-check"
-				icon-pos="right"
-				class="p-button-success"
-				@click="complete"
-			/>
 		</div>
 	</div>
 </template>
@@ -37,13 +22,13 @@ import { getCompetitionDetails } from "@/backend/competition"
 import { useRoute, useRouter } from "vue-router"
 import { useToast } from "primevue/usetoast"
 import { useI18n } from "vue-i18n"
-import MatchesContainerDraggable from "@/components/views/prepare/scheduleMatches/MatchesContainerDraggable.vue"
 
 const route = useRoute()
 const router = useRouter()
 const toast = useToast()
 const { t } = useI18n({ inheritLocale: true })
 
+const isUpdating = defineModel<boolean>("isUpdating", { default: false })
 const { data: competition } = getCompetitionDetails(route, t, toast, {
 	suc: () => {
 		if (competition.value === null) return
@@ -57,7 +42,7 @@ function prevPage() {
 	})
 }
 
-function complete() {
+function nextPage() {
 	// TODO
 	toast.add({
 		severity: "success",
@@ -66,6 +51,20 @@ function complete() {
 		life: 3000,
 	})
 }
+
+function save() {
+	// TODO
+	isUpdating.value = true
+	toast.add({
+		severity: "success",
+		summary: "Scheduling saved",
+		detail: "TODO",
+		life: 3000,
+	})
+	isUpdating.value = false
+}
+
+defineExpose({ prevPage, save, nextPage })
 </script>
 
 <style scoped></style>
