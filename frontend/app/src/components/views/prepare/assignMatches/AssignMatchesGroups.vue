@@ -76,21 +76,25 @@
 import { useRoute } from "vue-router"
 import { useI18n } from "vue-i18n"
 import { useToast } from "primevue/usetoast"
-import { computed, Ref, ref } from "vue"
+import { Ref, ref } from "vue"
 import { Team } from "@/interfaces/team"
 import { getCompetitionDetails } from "@/backend/competition"
 import { getSignedUp } from "@/backend/signup"
 import { getGroupsDivision, useInitGroups } from "@/backend/group"
 import TeamContainerDraggable from "@/components/views/prepare/components/TeamContainerDraggable.vue"
 import { sleep, track } from "@/backend/Tracker"
+import {
+	genRandomizeItems,
+	getDelays,
+	selectRandomElement,
+} from "@/components/views/prepare/assignMatches/AssginMatchesHelper"
 
 const route = useRoute()
 const toast = useToast()
 const { t } = useI18n({ inheritLocale: true })
+const randomizeItems = genRandomizeItems(t, reroll, reset)
 
-function $t(name: string) {
-	return computed(() => t(name))
-}
+const isUpdating = defineModel<boolean>("isUpdating", { default: false })
 
 const { data: competition } = getCompetitionDetails(route, t, toast, {
 	suc: () => {
@@ -110,14 +114,6 @@ const { data: groupsServer, isLoading: groupsLoading } = getGroupsDivision(
 const { mutate: initGroups } = useInitGroups(route, t, toast)
 
 const noGroups = ref<number>(2)
-
-const duration = 2000
-const delay = computed(() =>
-	Math.min((duration * 2) / 3 / data.value.teamCount, 50),
-)
-const delayBetween = computed(() => delay.value / 2)
-
-const isUpdating = defineModel<boolean>("isUpdating", { default: false })
 const { data, reload } = track(
 	loadFromServer,
 	{
@@ -154,42 +150,7 @@ function loadFromServer({
 	}
 }
 
-function adjustSize(size: number) {
-	isUpdating.value = true
-	if (data.value.groups.length > size) {
-		for (let i = size; i < data.value.groups.length; i++) {
-			data.value.groups[i].forEach((e) => data.value.teams.push(e))
-		}
-		data.value.groups.splice(size, data.value.groups.length - size)
-	} else {
-		data.value.groups.splice(
-			data.value.groups.length,
-			0,
-			...Array.from({ length: size - data.value.groups.length }, () => []),
-		)
-	}
-	isUpdating.value = false
-}
-
-const randomizeItems = ref([
-	{
-		label: $t("ViewPrepare.editTeams.reroll"),
-		icon: "pi pi-refresh",
-		command: reroll,
-	},
-	{
-		label: $t("ViewPrepare.editTeams.reset"),
-		icon: "pi pi-times",
-		command: reset,
-	},
-])
-
-function selectRandomElement<T>(players: T[]) {
-	const r = Math.floor(Math.random() * players.length)
-	const element = players[r]
-	players.splice(r, 1)
-	return element
-}
+const { delay, delayBetween } = getDelays(data)
 
 async function randomize() {
 	isUpdating.value = true
@@ -199,15 +160,10 @@ async function randomize() {
 
 		const element = selectRandomElement(data.value.teams)
 		await sleep(delayBetween.value)
-		data.value.groups[minInd].push(element)
+		if (element) data.value.groups[minInd].push(element)
 		await sleep(delay.value)
 	}
 	isUpdating.value = false
-}
-
-async function reroll() {
-	await reset()
-	await randomize()
 }
 
 async function reset() {
@@ -222,6 +178,11 @@ async function reset() {
 		}
 	}
 	isUpdating.value = false
+}
+
+async function reroll() {
+	await reset()
+	await randomize()
 }
 
 function save() {
@@ -241,7 +202,24 @@ function save() {
 	initGroups(data.value.groups)
 }
 
-defineExpose({ save, reload, disabled: isUpdating })
+function adjustSize(size: number) {
+	isUpdating.value = true
+	if (data.value.groups.length > size) {
+		for (let i = size; i < data.value.groups.length; i++) {
+			data.value.groups[i].forEach((e) => data.value.teams.push(e))
+		}
+		data.value.groups.splice(size, data.value.groups.length - size)
+	} else {
+		data.value.groups.splice(
+			data.value.groups.length,
+			0,
+			...Array.from({ length: size - data.value.groups.length }, () => []),
+		)
+	}
+	isUpdating.value = false
+}
+
+defineExpose({ save, reload })
 </script>
 
 <style scoped></style>

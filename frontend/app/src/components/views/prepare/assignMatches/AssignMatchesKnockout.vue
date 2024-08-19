@@ -69,7 +69,7 @@
 import { useRoute } from "vue-router"
 import { useToast } from "primevue/usetoast"
 import { useI18n } from "vue-i18n"
-import { computed, Ref, ref, watch } from "vue"
+import { computed, ref, watch } from "vue"
 import { getCompetitionDetails } from "@/backend/competition"
 import TeamContainerDraggable from "@/components/views/prepare/components/TeamContainerDraggable.vue"
 import { Team } from "@/interfaces/team"
@@ -81,17 +81,21 @@ import ViewMatchEdit from "@/components/views/prepare/assignMatches/ViewMatchEdi
 import { Match } from "@/interfaces/match"
 import { getKnockout, useInitKnockout } from "@/backend/knockout"
 import { Mode } from "@/interfaces/competition"
+import {
+	genRandomizeItems,
+	selectRandomElement,
+} from "@/components/views/prepare/assignMatches/AssginMatchesHelper"
+import { sleep } from "@/backend/Tracker"
 
 const route = useRoute()
 const toast = useToast()
 const { t } = useI18n({ inheritLocale: true })
+const randomizeItems = genRandomizeItems(t, reroll, reset)
+
+const isUpdating = defineModel<boolean>("isUpdating", { default: false })
 
 // TODO refactoring for the whole file for smoother loading and clearer code
 
-let loadFromServerRunning = false
-let loadFromServerRefresh = false
-let firstUpdate = true
-let treeDepth = 0
 const { data: competition } = getCompetitionDetails(route, t, toast, {})
 const { data: signedUp, isPlaceholderData: signedUpPlaceholder } = getSignedUp(
 	route,
@@ -101,7 +105,10 @@ const { data: signedUp, isPlaceholderData: signedUpPlaceholder } = getSignedUp(
 const { data: knockoutSystem } = getKnockout(route)
 const { mutate: initKnockout } = useInitKnockout(route, t, toast)
 
-const isUpdating = defineModel<boolean>("isUpdating", { default: false })
+let loadFromServerRunning = false
+let loadFromServerRefresh = false
+let firstUpdate = true
+let treeDepth = 0
 
 const teams = ref<Team[]>([])
 
@@ -152,76 +159,12 @@ async function loadFromServer() {
 	}
 }
 
-function genTree(height: number, tree: KnockoutMatch | null): KnockoutMatch {
-	const default_game = {
-		court: null,
-		begin: null,
-		end: null,
-		finished: false,
-		winner: null,
-		teamA: tree ? tree.teamA : null,
-		teamB: tree ? tree.teamB : null,
-		sets: null,
-		curGame: null,
-	}
-	if (height === 0) return default_game
-
-	return {
-		...default_game,
-		prevMatch: {
-			winner: true,
-			a: genTree(height - 1, tree?.prevMatch ? tree.prevMatch.a : null),
-			b: genTree(height - 1, tree?.prevMatch ? tree.prevMatch.b : null),
-		},
-	}
-}
-
 const duration = 2000
 const teamCount = ref(0)
 const delay = computed(() =>
 	Math.min((duration * 2) / 3 / teamCount.value, 100),
 )
 const delayBetween = computed(() => delay.value / 2)
-
-function sleep(milliseconds: number) {
-	return new Promise((resolve) => setTimeout(resolve, milliseconds))
-}
-
-function $t(name: string) {
-	return computed(() => t(name))
-}
-
-const randomizeItems = ref([
-	{
-		label: $t("ViewPrepare.editTeams.reroll"),
-		icon: "pi pi-refresh",
-		command: reroll,
-	},
-	{
-		label: $t("ViewPrepare.editTeams.reset"),
-		icon: "pi pi-times",
-		command: reset,
-	},
-])
-
-function selectRandomElement<T>(players: Ref<T[]>) {
-	if (players.value.length === 0) return null
-
-	const r = Math.floor(Math.random() * players.value.length)
-	const element = players.value[r]
-	players.value.splice(r, 1)
-	return element
-}
-
-function getMatches(): Match[] {
-	let cur = [tree.value]
-	for (let i = 0; i < treeDepth; i++) {
-		cur = cur
-			.map((m) => (m.prevMatch ? [m.prevMatch.a, m.prevMatch.b] : []))
-			.flat()
-	}
-	return cur
-}
 
 async function randomize() {
 	isUpdating.value = true
@@ -265,16 +208,6 @@ async function reroll() {
 	await randomize()
 }
 
-function knockoutTreeCompletelyAssigned(): boolean {
-	// check that tree is completely assigned
-	const check = (m: KnockoutMatch): boolean => {
-		if (m.prevMatch) {
-			return check(m.prevMatch.a) && check(m.prevMatch.b)
-		} else return m.teamA !== null && m.teamB !== null
-	}
-	return check(tree.value)
-}
-
 function save() {
 	if (!knockoutTreeCompletelyAssigned()) {
 		toast.add({
@@ -288,6 +221,50 @@ function save() {
 	}
 
 	initKnockout(tree.value)
+}
+
+function knockoutTreeCompletelyAssigned(): boolean {
+	// check that tree is completely assigned
+	const check = (m: KnockoutMatch): boolean => {
+		if (m.prevMatch) {
+			return check(m.prevMatch.a) && check(m.prevMatch.b)
+		} else return m.teamA !== null && m.teamB !== null
+	}
+	return check(tree.value)
+}
+
+function getMatches(): Match[] {
+	let cur = [tree.value]
+	for (let i = 0; i < treeDepth; i++) {
+		cur = cur
+			.map((m) => (m.prevMatch ? [m.prevMatch.a, m.prevMatch.b] : []))
+			.flat()
+	}
+	return cur
+}
+
+function genTree(height: number, tree: KnockoutMatch | null): KnockoutMatch {
+	const default_game = {
+		court: null,
+		begin: null,
+		end: null,
+		finished: false,
+		winner: null,
+		teamA: tree ? tree.teamA : null,
+		teamB: tree ? tree.teamB : null,
+		sets: null,
+		curGame: null,
+	}
+	if (height === 0) return default_game
+
+	return {
+		...default_game,
+		prevMatch: {
+			winner: true,
+			a: genTree(height - 1, tree?.prevMatch ? tree.prevMatch.a : null),
+			b: genTree(height - 1, tree?.prevMatch ? tree.prevMatch.b : null),
+		},
+	}
 }
 
 defineExpose({ save })
