@@ -52,7 +52,6 @@ export function getGroupsDivision(
 				})
 		},
 		{
-			placeholderData: [[], []],
 			onError() {
 				toast.add({
 					severity: "error",

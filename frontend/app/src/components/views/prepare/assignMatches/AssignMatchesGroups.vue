@@ -24,14 +24,14 @@
 					<TeamContainerDraggable
 						v-if="competition"
 						:animated="isUpdating"
-						:teams="teams"
+						:teams="data.teams"
 						:competition="competition"
 					/>
 				</template>
 			</Card>
 		</div>
 		<div class="col-8 flex flex-column gap-3">
-			<Card v-for="(group, i) in groups" :key="i">
+			<Card v-for="(group, i) in data.groups" :key="i">
 				<template #title
 					>{{ t("ViewPrepare.assignMatches.Group") }} {{ i + 1 }}
 				</template>
@@ -76,12 +76,13 @@
 import { useRoute } from "vue-router"
 import { useI18n } from "vue-i18n"
 import { useToast } from "primevue/usetoast"
-import { computed, Ref, ref, watch } from "vue"
+import { computed, Ref, ref } from "vue"
 import { Team } from "@/interfaces/team"
 import { getCompetitionDetails } from "@/backend/competition"
 import { getSignedUp } from "@/backend/signup"
 import { getGroupsDivision, useInitGroups } from "@/backend/group"
 import TeamContainerDraggable from "@/components/views/prepare/components/TeamContainerDraggable.vue"
+import { sleep, track } from "@/backend/Tracker"
 
 const route = useRoute()
 const toast = useToast()
@@ -94,43 +95,77 @@ function $t(name: string) {
 const { data: competition } = getCompetitionDetails(route, t, toast, {
 	suc: () => {
 		if (competition.value === null) return
-		loadFromServer()
 	},
 })
-const { data: signedUpTeams, isPlaceholderData: signedUpPlaceholder } =
-	getSignedUp(route, t, toast)
-const { data: groupsServer } = getGroupsDivision(route, t, toast)
+const { data: signedUpTeams, isLoading: signedUpLoading } = getSignedUp(
+	route,
+	t,
+	toast,
+)
+const { data: groupsServer, isLoading: groupsLoading } = getGroupsDivision(
+	route,
+	t,
+	toast,
+)
 const { mutate: initGroups } = useInitGroups(route, t, toast)
 
 const noGroups = ref<number>(2)
 
-const teams = ref<Team[]>([])
-const groups = ref<Team[][]>([[], []])
-const isUpdating = defineModel<boolean>("isUpdating", { default: false })
-
 const duration = 2000
-const teamCount = ref(0)
 const delay = computed(() =>
-	Math.min((duration * 2) / 3 / teamCount.value, 100),
+	Math.min((duration * 2) / 3 / data.value.teamCount, 50),
 )
 const delayBetween = computed(() => delay.value / 2)
 
-function sleep(milliseconds: number) {
-	return new Promise((resolve) => setTimeout(resolve, milliseconds))
+const isUpdating = defineModel<boolean>("isUpdating", { default: false })
+const data = track(
+	loadFromServer,
+	{
+		teams: [],
+		groups: [[], []],
+		teamCount: 0,
+	},
+	{ signedUpTeams, groupsServer },
+	[signedUpTeams, groupsServer],
+	[signedUpLoading, groupsLoading],
+	isUpdating,
+	400,
+)
+
+function loadFromServer({
+	signedUpTeams,
+	groupsServer,
+}: {
+	signedUpTeams: Ref<undefined> | Ref<Team[]>
+	groupsServer: Ref<undefined> | Ref<Team[][]>
+}) {
+	if (!signedUpTeams.value || !groupsServer.value) return null
+
+	const groups: Team[][] = JSON.parse(
+		JSON.stringify(groupsServer.value ?? [[], []]),
+	).map((g: Team[]) => g.sort())
+	const teams: Team[] = signedUpTeams.value
+		.filter((t) => !groups.some((group) => group.some((st) => st.id === t.id)))
+		.sort()
+	return {
+		teams,
+		groups,
+		teamCount: signedUpTeams.value.length,
+	}
 }
 
 function adjustSize(size: number) {
 	isUpdating.value = true
-	if (groups.value.length > size) {
-		for (let i = size; i < groups.value.length; i++) {
-			groups.value[i].forEach((e) => teams.value.push(e))
+	if (data.value.groups.length > size) {
+		for (let i = size; i < data.value.groups.length; i++) {
+			data.value.groups[i].forEach((e) => data.value.teams.push(e))
 		}
-		groups.value.splice(size, groups.value.length - size)
+		data.value.groups.splice(size, data.value.groups.length - size)
 	} else {
-		groups.value.splice(
-			groups.value.length,
+		data.value.groups.splice(
+			data.value.groups.length,
 			0,
-			...Array.from({ length: size - groups.value.length }, () => []),
+			...Array.from({ length: size - data.value.groups.length }, () => []),
 		)
 	}
 	isUpdating.value = false
@@ -149,23 +184,22 @@ const randomizeItems = ref([
 	},
 ])
 
-function selectRandomElement<T>(players: Ref<T[]>) {
-	const r = Math.floor(Math.random() * players.value.length)
-	const element = players.value[r]
-	players.value.splice(r, 1)
-	//players.value = players.value.filter((v, i) => i !== r)
+function selectRandomElement<T>(players: T[]) {
+	const r = Math.floor(Math.random() * players.length)
+	const element = players[r]
+	players.splice(r, 1)
 	return element
 }
 
 async function randomize() {
 	isUpdating.value = true
-	while (teams.value.length) {
-		const min = Math.min(...groups.value.map((group) => group.length))
-		const minInd = groups.value.findIndex((group) => group.length === min)
+	while (data.value.teams.length) {
+		const min = Math.min(...data.value.groups.map((group) => group.length))
+		const minInd = data.value.groups.findIndex((group) => group.length === min)
 
-		const element = selectRandomElement(teams)
+		const element = selectRandomElement(data.value.teams)
 		await sleep(delayBetween.value)
-		groups.value[minInd].push(element)
+		data.value.groups[minInd].push(element)
 		await sleep(delay.value)
 	}
 	isUpdating.value = false
@@ -178,53 +212,22 @@ async function reroll() {
 
 async function reset() {
 	isUpdating.value = true
-	for (const group of groups.value) {
+	for (const group of data.value.groups) {
 		while (group.length) {
 			let i = group.length - 1
 			const team = group.splice(i, 1)[0]
 			await sleep(delayBetween.value)
-			teams.value.push(team)
+			data.value.teams.push(team)
 			await sleep(delay.value)
 		}
 	}
 	isUpdating.value = false
 }
 
-function adjustUnsorted() {
-	teams.value = teams.value.filter(
-		(t) => !groups.value.some((group) => group.some((st) => st.id === t.id)),
-	)
-}
-
-let firstUpdate = true
-
-async function loadFromServer() {
-	if (!signedUpTeams.value) return
-
-	isUpdating.value = true
-	teams.value = []
-	groups.value = [[], []]
-	const anFin = sleep(firstUpdate ? 0 : 400)
-	firstUpdate = false
-
-	await anFin
-	teams.value = signedUpTeams.value
-	teamCount.value = teams.value.length
-	groups.value = JSON.parse(JSON.stringify(groupsServer.value ?? [[], []])).map(
-		(g: Team[]) => g.sort(),
-	)
-	adjustUnsorted()
-	await sleep(400)
-	isUpdating.value = false
-}
-
-watch([signedUpTeams, groupsServer], loadFromServer)
-if (!signedUpPlaceholder.value && groupsServer.value) loadFromServer()
-
 function save() {
 	if (isUpdating.value) return
 
-	if (groups.value.some((g) => g.length <= 1)) {
+	if (data.value.groups.some((g) => g.length <= 1)) {
 		toast.add({
 			severity: "error",
 			summary: t("ViewPrepare.assignMatches.emptyGroupSum"),
@@ -235,7 +238,7 @@ function save() {
 		return
 	}
 
-	initGroups(groups.value)
+	initGroups(data.value.groups)
 }
 
 defineExpose({ save, disabled: isUpdating })
