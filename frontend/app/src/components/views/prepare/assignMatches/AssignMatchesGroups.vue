@@ -118,7 +118,7 @@ const delay = computed(() =>
 const delayBetween = computed(() => delay.value / 2)
 
 const isUpdating = defineModel<boolean>("isUpdating", { default: false })
-const data = track(
+const { data, reload } = track(
 	loadFromServer,
 	{
 		teams: [],
@@ -241,7 +241,7 @@ function save() {
 	initGroups(data.value.groups)
 }
 
-defineExpose({ save, disabled: isUpdating })
+defineExpose({ save, reload, disabled: isUpdating })
 </script>
 
 <style scoped></style>

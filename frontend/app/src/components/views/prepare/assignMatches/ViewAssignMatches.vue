@@ -62,7 +62,17 @@ function save() {
 	}
 }
 
-defineExpose({ prevPage, save, nextPage })
+function reset() {
+	if (competition.value?.tourType === TourType.GROUPS) {
+		if (groupsRef.value === null) return
+		groupsRef.value.reload()
+	} else {
+		if (knockoutRef.value === null) return
+		// knockoutRef.value.reload()
+	}
+}
+
+defineExpose({ prevPage, save, reset, nextPage })
 </script>
 
 <style scoped>

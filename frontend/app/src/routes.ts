@@ -62,7 +62,7 @@ export default [
 				path: "assignMatches",
 				name: "assignMatches",
 				component: ViewAssignMatches,
-				meta: { step: 3, reset: false },
+				meta: { step: 3, reset: true },
 			},
 			{
 				path: "scheduleMatches",

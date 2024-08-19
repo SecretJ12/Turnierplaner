@@ -13,7 +13,7 @@ export function track<T, U>(
 	isLoadings: Ref<boolean>[],
 	isUpdating: Ref<boolean>,
 	delay: number,
-): Ref<U> {
+): { data: Ref<U>; reload: () => void } {
 	const editableData = <Ref<U>>ref<U>(def)
 
 	let buffer: U | null = null
@@ -53,5 +53,9 @@ export function track<T, U>(
 		},
 	)
 
-	return editableData
+	function reload() {
+		set(func(data) ?? def)
+	}
+
+	return { data: editableData, reload }
 }
