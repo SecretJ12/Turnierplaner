@@ -9,12 +9,12 @@
 		:split-days="splitDays"
 		:sticky-split-labels="true"
 		:min-split-width="150"
-		snapToTime="15"
+		snap-to-time="15"
 	/>
 </template>
 
 <script setup lang="ts">
-// @ts-ignore
+// @ts-expect-error vue-cal does not have proper typescript support
 import VueCal from "vue-cal"
 import "vue-cal/dist/vuecal.css"
 

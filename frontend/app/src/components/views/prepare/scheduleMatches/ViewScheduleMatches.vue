@@ -1,15 +1,13 @@
 <template>
-	<div class="flex flex-column gap-1">
-		<div class="grid">
-			<div class="col-4">
-				<Card>
-					<template #title>Matches</template>
-					<template #content> We show the matches here </template>
-				</Card>
-			</div>
-			<div class="col-8">
-				<SchedulingCalendar />
-			</div>
+	<div class="grid">
+		<div class="col-4">
+			<Card>
+				<template #title> Matches </template>
+				<template #content> We show the matches here </template>
+			</Card>
+		</div>
+		<div class="col-8">
+			<SchedulingCalendar v-if="true" />
 		</div>
 	</div>
 </template>
