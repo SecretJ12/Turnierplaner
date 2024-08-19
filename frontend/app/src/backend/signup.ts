@@ -37,7 +37,6 @@ export function getSignedUp(
 					life: 3000,
 				})
 			},
-			placeholderData: [],
 		},
 	)
 }

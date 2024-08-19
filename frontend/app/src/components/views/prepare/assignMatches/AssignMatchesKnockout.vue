@@ -21,9 +21,9 @@
 				</template>
 				<template #content>
 					<TeamContainerDraggable
-						v-if="competition && signedUp"
+						v-if="competition && signedUpTeams"
 						:animated="isUpdating"
-						:teams="teams"
+						:teams="data.teams"
 						:competition="competition"
 					/>
 				</template>
@@ -35,7 +35,7 @@
 				<template #content>
 					<ScrollPanel style="width: 100%; height: 500px">
 						<ViewKnockoutTree
-							:finale="tree"
+							:finale="data.tree"
 							:third-place="thirdPlace ?? undefined"
 							:border-thickness="2"
 							:border-radius="0"
@@ -69,11 +69,11 @@
 import { useRoute } from "vue-router"
 import { useToast } from "primevue/usetoast"
 import { useI18n } from "vue-i18n"
-import { computed, ref, watch } from "vue"
+import { computed, Ref, ref } from "vue"
 import { getCompetitionDetails } from "@/backend/competition"
 import TeamContainerDraggable from "@/components/views/prepare/components/TeamContainerDraggable.vue"
 import { Team } from "@/interfaces/team"
-import { KnockoutMatch } from "@/interfaces/knockoutSystem"
+import { KnockoutMatch, KnockoutSystem } from "@/interfaces/knockoutSystem"
 import { getSignedUp } from "@/backend/signup"
 import ViewKnockoutTree from "@/components/views/competition/knockoutSystem/ViewKnockoutTree.vue"
 import ViewMatch from "@/components/views/competition/knockoutSystem/ViewMatch.vue"
@@ -85,7 +85,7 @@ import {
 	genRandomizeItems,
 	selectRandomElement,
 } from "@/components/views/prepare/assignMatches/AssginMatchesHelper"
-import { sleep } from "@/backend/Tracker"
+import { sleep, track } from "@/backend/Tracker"
 
 const route = useRoute()
 const toast = useToast()
@@ -94,68 +94,62 @@ const randomizeItems = genRandomizeItems(t, reroll, reset)
 
 const isUpdating = defineModel<boolean>("isUpdating", { default: false })
 
-// TODO refactoring for the whole file for smoother loading and clearer code
-
 const { data: competition } = getCompetitionDetails(route, t, toast, {})
-const { data: signedUp, isPlaceholderData: signedUpPlaceholder } = getSignedUp(
+const { data: signedUpTeams, isLoading: signedUpLoading } = getSignedUp(
 	route,
 	t,
 	toast,
 )
-const { data: knockoutSystem } = getKnockout(route)
+const { data: knockoutSystem, isLoading: knockoutSystemLoading } =
+	getKnockout(route)
 const { mutate: initKnockout } = useInitKnockout(route, t, toast)
 
-let loadFromServerRunning = false
-let loadFromServerRefresh = false
-let firstUpdate = true
-let treeDepth = 0
-
-const teams = ref<Team[]>([])
-
-const tree = ref(
-	genTree(treeDepth, knockoutSystem.value ? knockoutSystem.value.finale : null),
+const { data, reload } = track(
+	loadFromServer,
+	{
+		teams: [],
+		tree: genTree(0, null),
+		treeDepth: 0,
+		teamCount: 0,
+	},
+	{ signedUpTeams, knockoutSystem },
+	[signedUpTeams, knockoutSystem],
+	[signedUpLoading, knockoutSystemLoading],
+	isUpdating,
+	400,
 )
 const thirdPlace = computed(() => {
-	if (signedUp.value && signedUp.value.length > 2) return genTree(0, null)
+	if (signedUpTeams.value && signedUpTeams.value.length > 2)
+		return genTree(0, null)
 	else return null
 })
-watch([signedUp, competition, knockoutSystem], loadFromServer)
-// if (!signedUpPlaceholder.value && knockoutSystem.value) loadFromServer()
 
-async function loadFromServer() {
-	if (!signedUp.value || signedUpPlaceholder.value || !knockoutSystem.value)
-		return
+function loadFromServer({
+	signedUpTeams,
+	knockoutSystem,
+}: {
+	signedUpTeams: Ref<undefined> | Ref<Team[]>
+	knockoutSystem: Ref<undefined> | Ref<KnockoutSystem>
+}) {
+	if (!signedUpTeams.value || !knockoutSystem.value) return null
 
-	if (loadFromServerRunning) {
-		loadFromServerRefresh = true
-		return
-	}
-	loadFromServerRunning = true
-	loadFromServerRefresh = false
-
-	isUpdating.value = true
-	treeDepth = Math.ceil(Math.log2(signedUp.value.length)) - 1
-	teams.value = []
-	tree.value = genTree(treeDepth, null)
-	await sleep(firstUpdate ? 0 : 400)
-	firstUpdate = false
-	tree.value = genTree(
+	const treeDepth = Math.ceil(Math.log2(signedUpTeams.value.length)) - 1
+	let teams: Team[] = []
+	const tree = genTree(
 		treeDepth,
 		knockoutSystem.value ? knockoutSystem.value.finale : null,
 	)
-	signedUp.value.forEach((t) => teams.value.push(t))
-	getMatches().forEach((m) => {
-		teams.value = teams.value.filter(
-			(t) => t.id !== m.teamA?.id && t.id !== m.teamB?.id,
-		)
-	})
-	await sleep(400)
-	isUpdating.value = false
-
-	loadFromServerRunning = false
-	if (loadFromServerRefresh) {
-		loadFromServerRefresh = false
-		await loadFromServer()
+	signedUpTeams.value.forEach((t) => teams.push(t))
+	if (knockoutSystem.value.finale)
+		getMatches(knockoutSystem.value.finale, treeDepth).forEach((m) => {
+			teams = teams.filter((t) => t.id !== m.teamA?.id && t.id !== m.teamB?.id)
+		})
+	const teamCount = signedUpTeams.value.length
+	return {
+		teams,
+		treeDepth,
+		tree,
+		teamCount,
 	}
 }
 
@@ -170,9 +164,9 @@ async function randomize() {
 	isUpdating.value = true
 	let knockOutListIndex = 0
 	const matches = getMatches()
-	while (teams.value.length && knockOutListIndex < matches.length) {
+	while (data.value.teams.length && knockOutListIndex < matches.length) {
 		if (!matches[knockOutListIndex].teamA) {
-			const teamA = selectRandomElement(teams)
+			const teamA = selectRandomElement(data.value.teams)
 			await sleep(delayBetween.value)
 
 			matches[knockOutListIndex].teamA = teamA
@@ -180,7 +174,7 @@ async function randomize() {
 		}
 
 		if (!matches[knockOutListIndex].teamB) {
-			const teamB = selectRandomElement(teams)
+			const teamB = selectRandomElement(data.value.teams)
 			if (!teamB) break
 			matches[knockOutListIndex].teamB = teamB
 			await sleep(delayBetween.value)
@@ -196,10 +190,11 @@ async function reset() {
 	isUpdating.value = true
 	const matches = getMatches()
 	matches.forEach((m) => {
+		if (m.teamA) data.value.teams.push(m.teamA)
+		if (m.teamB) data.value.teams.push(m.teamB)
 		m.teamA = null
 		m.teamB = null
 	})
-	await loadFromServer()
 	await sleep(400)
 }
 
@@ -220,7 +215,7 @@ function save() {
 		return
 	}
 
-	initKnockout(tree.value)
+	initKnockout(data.value.tree)
 }
 
 function knockoutTreeCompletelyAssigned(): boolean {
@@ -230,12 +225,12 @@ function knockoutTreeCompletelyAssigned(): boolean {
 			return check(m.prevMatch.a) && check(m.prevMatch.b)
 		} else return m.teamA !== null && m.teamB !== null
 	}
-	return check(tree.value)
+	return check(data.value.tree)
 }
 
-function getMatches(): Match[] {
-	let cur = [tree.value]
-	for (let i = 0; i < treeDepth; i++) {
+function getMatches(tree?: KnockoutMatch, treeDepth?: number): Match[] {
+	let cur = [tree ?? data.value.tree]
+	for (let i = 0; i < (treeDepth ?? data.value.treeDepth); i++) {
 		cur = cur
 			.map((m) => (m.prevMatch ? [m.prevMatch.a, m.prevMatch.b] : []))
 			.flat()
@@ -267,7 +262,7 @@ function genTree(height: number, tree: KnockoutMatch | null): KnockoutMatch {
 	}
 }
 
-defineExpose({ save })
+defineExpose({ save, reload })
 </script>
 
 <style scoped></style>

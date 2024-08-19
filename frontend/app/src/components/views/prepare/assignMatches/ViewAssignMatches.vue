@@ -68,7 +68,7 @@ function reset() {
 		groupsRef.value.reload()
 	} else {
 		if (knockoutRef.value === null) return
-		// knockoutRef.value.reload()
+		knockoutRef.value.reload()
 	}
 }
 
