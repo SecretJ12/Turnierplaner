@@ -1,31 +1,78 @@
 <template>
-	<div id="button">
-		<Card class="w-12">
-			<template #header>
-				<TabMenu
-					:active-index="activeTab"
-					:model="competitions || []"
-					@tab-change="tabChange"
-				>
-					<template #item="{ item, props }">
-						<div v-bind="props.action" class="cursor-pointer">
-							<span v-bind="props.label">{{ item.name }}</span>
-						</div>
-					</template>
-				</TabMenu>
-				<Steps
-					:active-step="<number>route.meta.step - 1"
-					:model="stepList"
-					:readonly="true"
-					class="mt-5"
-				>
-				</Steps>
-			</template>
-			<template #content>
-				<router-view />
-			</template>
-		</Card>
-	</div>
+	<Card class="w-full m-2" style="margin-top: -10px !important">
+		<template #header>
+			<TabMenu
+				:active-index="activeTab"
+				:model="competitions || []"
+				@tab-change="tabChange"
+			>
+				<template #item="{ item, props }">
+					<div v-bind="props.action" class="cursor-pointer">
+						<span v-bind="props.label">{{ item.name }}</span>
+					</div>
+				</template>
+			</TabMenu>
+			<Steps
+				:active-step="<number>route.meta.step - 1"
+				:model="stepList"
+				:readonly="true"
+				class="mt-5"
+			>
+			</Steps>
+		</template>
+		<template #content>
+			<router-view v-slot="{ Component }">
+				<component
+					:is="Component"
+					ref="curPrepStep"
+					v-model:is-updating="isUpdating"
+				/>
+			</router-view>
+
+			<div class="mt-2 grid grid-nogutter justify-content-between">
+				<Button
+					:style="{
+						visibility: route.meta.step !== 1 ? 'visible' : 'hidden',
+					}"
+					:disabled="route.meta.step === 1 || isUpdating"
+					:label="t('general.back')"
+					icon="pi pi-angle-left"
+					icon-pos="left"
+					@click="prevPage"
+				/>
+				<Button
+					v-if="route.meta.reset"
+					:disabled="isUpdating"
+					:label="t('general.reset')"
+					severity="danger"
+					@click="reset"
+				/>
+				<Button
+					:disabled="isUpdating"
+					:label="t('general.save')"
+					severity="success"
+					@click="save"
+				/>
+				<Button
+					v-if="route.meta.step !== 4"
+					:disabled="isUpdating"
+					icon="pi pi-angle-right"
+					icon-pos="right"
+					:label="t('general.next')"
+					@click="nextPage"
+				/>
+				<Button
+					v-else
+					:disabled="isUpdating"
+					label="Complete"
+					icon="pi pi-check"
+					icon-pos="right"
+					class="p-button-success"
+					@click="nextPage"
+				/>
+			</div>
+		</template>
+	</Card>
 </template>
 
 <script setup lang="ts">
@@ -37,6 +84,8 @@ import { TabMenuChangeEvent } from "primevue/tabmenu"
 import { getCompetitionsList } from "@/backend/competition"
 import Steps from "primevue/steps"
 import { Progress } from "@/interfaces/competition"
+import Button from "primevue/button"
+import ViewEditTeams from "@/components/views/prepare/editTeams/ViewEditTeams.vue"
 
 const { t } = useI18n({ inheritLocale: true })
 
@@ -47,6 +96,9 @@ function $t(name: string) {
 const router = useRouter()
 const route = useRoute()
 const toast = useToast()
+
+const isUpdating = ref(false)
+const curPrepStep = ref<InstanceType<typeof ViewEditTeams> | null>()
 
 const isLoggedIn = inject("loggedIn", ref(false))
 const { data: competitions } = getCompetitionsList(
@@ -106,7 +158,22 @@ function tabChange(event: TabMenuChangeEvent) {
 	updateRoute(competitions.value[event.index].name)
 }
 
-// TODO internalization
+function prevPage() {
+	if (curPrepStep.value) curPrepStep.value.prevPage()
+}
+
+function reset() {
+	if (curPrepStep.value) curPrepStep.value.reset()
+}
+
+function save() {
+	if (curPrepStep.value) curPrepStep.value.save()
+}
+
+function nextPage() {
+	if (curPrepStep.value) curPrepStep.value.nextPage()
+}
+
 const stepList = ref([
 	{
 		label: $t("ViewPrepare.steps.settings"),
@@ -132,15 +199,6 @@ const stepList = ref([
 </script>
 
 <style scoped>
-#button {
-	width: 100%;
-	margin: -10px 10px 10px 10px;
-	display: flex;
-	flex-wrap: wrap;
-	flex-direction: row;
-	justify-content: center;
-}
-
 ::v-deep(b) {
 	display: block;
 }

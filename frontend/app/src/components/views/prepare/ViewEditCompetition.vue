@@ -3,42 +3,20 @@
 		<Card id="card">
 			<template #content>
 				<FormCompetition
-					v-if="!competition || reload"
+					v-if="!competition || isUpdating"
 					:competition="CompetitionDefault"
 					:disabled="true"
-					@submit="submit"
+					@submit="save"
 				/>
 				<FormCompetition
 					v-else
 					ref="form"
 					:competition="competition"
 					:disabled="false"
-					@submit="submit"
+					@submit="save"
 				/>
 			</template>
 		</Card>
-	</div>
-
-	<div class="mt-5 grid grid-nogutter justify-content-between">
-		<Button
-			:disabled="true"
-			:label="t('general.back')"
-			icon="pi pi-angle-left"
-			icon-pos="left"
-		/>
-		<Button
-			:disabled="competition === null"
-			:label="t('general.save')"
-			severity="success"
-			@click="() => form !== null && form.onSubmit()"
-		/>
-		<Button
-			v-if="route.params.step !== 'scheduleMatches'"
-			:label="t('general.next')"
-			icon="pi pi-angle-right"
-			icon-pos="right"
-			@click="nextPage"
-		/>
 	</div>
 </template>
 
@@ -51,7 +29,6 @@ import { CompetitionDefault, CompetitionServer } from "@/interfaces/competition"
 import { getCompetitionDetails, updateCompetition } from "@/backend/competition"
 import { useToast } from "primevue/usetoast"
 import { ref } from "vue"
-import Button from "primevue/button"
 
 const { t } = useI18n({ inheritLocale: true })
 const toast = useToast()
@@ -59,23 +36,24 @@ const toast = useToast()
 const route = useRoute()
 const form = ref<InstanceType<typeof FormCompetition> | null>(null)
 
+const isUpdating = defineModel<boolean>("isUpdating", { default: false })
+
 function sleep(milliseconds: number) {
 	return new Promise((resolve) => setTimeout(resolve, milliseconds))
 }
 
-const reload = ref(false)
 const { data: competition } = getCompetitionDetails(route, t, toast, {
 	suc: async () => {
-		reload.value = true
+		isUpdating.value = true
 		await sleep(100)
-		reload.value = false
+		isUpdating.value = false
 	},
 	err: () => {
 		router.back()
 	},
 })
 
-function submit(server_data: CompetitionServer) {
+function save(server_data: CompetitionServer) {
 	updateCompetition(server_data, <string>route.params.tourId, t, toast, {})
 }
 
@@ -85,6 +63,8 @@ function nextPage() {
 		params: { tourId: route.params.tourId, compId: route.params.compId },
 	})
 }
+
+defineExpose({ save, nextPage })
 </script>
 
 <style scoped>

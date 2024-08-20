@@ -7,7 +7,7 @@
 						<div>Teams</div>
 						<SplitButton
 							:model="randomizeItems"
-							:disabled="disabled"
+							:disabled="isUpdating"
 							class="w-fit"
 							:label="t('ViewPrepare.editTeams.randomize')"
 							@click="randomize"
@@ -23,22 +23,22 @@
 				<template #content>
 					<TeamContainerDraggable
 						v-if="competition"
-						:animated="animated"
-						:teams="teams"
+						:animated="isUpdating"
+						:teams="data.teams"
 						:competition="competition"
 					/>
 				</template>
 			</Card>
 		</div>
 		<div class="col-8 flex flex-column gap-3">
-			<Card v-for="(group, i) in groups" :key="i">
+			<Card v-for="(group, i) in data.groups" :key="i">
 				<template #title
 					>{{ t("ViewPrepare.assignMatches.Group") }} {{ i + 1 }}
 				</template>
 				<template #content>
 					<TeamContainerDraggable
 						v-if="competition"
-						:animated="animated"
+						:animated="isUpdating"
 						:teams="group"
 						:competition="competition"
 					/>
@@ -47,7 +47,7 @@
 			<div class="flex flex-row gap-2">
 				<Button
 					:label="t('ViewPrepare.assignMatches.remove')"
-					:disabled="noGroups <= 2 || disabled"
+					:disabled="noGroups <= 2 || isUpdating"
 					severity="danger"
 					@click="
 						() => {
@@ -58,7 +58,7 @@
 				></Button>
 				<Button
 					:label="t('ViewPrepare.assignMatches.add')"
-					:disabled="noGroups >= 64 || disabled"
+					:disabled="noGroups >= 64 || isUpdating"
 					severity="success"
 					@click="
 						() => {
@@ -76,100 +76,108 @@
 import { useRoute } from "vue-router"
 import { useI18n } from "vue-i18n"
 import { useToast } from "primevue/usetoast"
-import { computed, Ref, ref, watch } from "vue"
+import { Ref, ref } from "vue"
 import { Team } from "@/interfaces/team"
 import { getCompetitionDetails } from "@/backend/competition"
 import { getSignedUp } from "@/backend/signup"
 import { getGroupsDivision, useInitGroups } from "@/backend/group"
 import TeamContainerDraggable from "@/components/views/prepare/components/TeamContainerDraggable.vue"
+import { sleep, track } from "@/backend/Tracker"
+import {
+	genRandomizeItems,
+	getDelays,
+	selectRandomElement,
+} from "@/components/views/prepare/assignMatches/AssginMatchesHelper"
 
 const route = useRoute()
 const toast = useToast()
 const { t } = useI18n({ inheritLocale: true })
+const randomizeItems = genRandomizeItems(t, reroll, reset)
 
-function $t(name: string) {
-	return computed(() => t(name))
-}
+const isUpdating = defineModel<boolean>("isUpdating", { default: false })
 
 const { data: competition } = getCompetitionDetails(route, t, toast, {
 	suc: () => {
 		if (competition.value === null) return
-		loadFromServer()
 	},
 })
-const { data: signedUpTeams, isPlaceholderData: signedUpPlaceholder } =
-	getSignedUp(route, t, toast)
-const { data: groupsServer } = getGroupsDivision(route, t, toast)
+const { data: signedUpTeams, isLoading: signedUpLoading } = getSignedUp(
+	route,
+	t,
+	toast,
+)
+const { data: groupsServer, isLoading: groupsLoading } = getGroupsDivision(
+	route,
+	t,
+	toast,
+)
 const { mutate: initGroups } = useInitGroups(route, t, toast)
 
 const noGroups = ref<number>(2)
-
-const teams = ref<Team[]>([])
-const groups = ref<Team[][]>([[], []])
-const disabled = ref<boolean>(false)
-const animated = ref<boolean>(false)
-
-const duration = 2000
-const teamCount = ref(0)
-const delay = computed(() =>
-	Math.min((duration * 2) / 3 / teamCount.value, 100),
+const { data, reload } = track(
+	loadFromServer,
+	{
+		teams: [],
+		groups: [[], []],
+		teamCount: 0,
+	},
+	{ signedUpTeams, groupsServer },
+	[signedUpTeams, groupsServer],
+	[signedUpLoading, groupsLoading],
+	isUpdating,
+	400,
 )
-const delayBetween = computed(() => delay.value / 2)
 
-function sleep(milliseconds: number) {
-	return new Promise((resolve) => setTimeout(resolve, milliseconds))
-}
+function loadFromServer({
+	signedUpTeams,
+	groupsServer,
+}: {
+	signedUpTeams: Ref<undefined> | Ref<Team[]>
+	groupsServer: Ref<undefined> | Ref<Team[][]>
+}) {
+	if (!signedUpTeams.value || !groupsServer.value) return null
 
-function adjustSize(size: number) {
-	disabled.value = true
-	if (groups.value.length > size) {
-		for (let i = size; i < groups.value.length; i++) {
-			groups.value[i].forEach((e) => teams.value.push(e))
-		}
-		groups.value.splice(size, groups.value.length - size)
-	} else {
-		groups.value.splice(
-			groups.value.length,
-			0,
-			...Array.from({ length: size - groups.value.length }, () => []),
-		)
+	const groups: Team[][] = JSON.parse(
+		JSON.stringify(groupsServer.value ?? [[], []]),
+	).map((g: Team[]) => g.sort())
+	const teams: Team[] = signedUpTeams.value
+		.filter((t) => !groups.some((group) => group.some((st) => st.id === t.id)))
+		.sort()
+	return {
+		teams,
+		groups,
+		teamCount: signedUpTeams.value.length,
 	}
-	disabled.value = false
 }
 
-const randomizeItems = ref([
-	{
-		label: $t("ViewPrepare.editTeams.reroll"),
-		icon: "pi pi-refresh",
-		command: reroll,
-	},
-	{
-		label: $t("ViewPrepare.editTeams.reset"),
-		icon: "pi pi-times",
-		command: reset,
-	},
-])
-
-function selectRandomElement<T>(players: Ref<T[]>) {
-	const r = Math.floor(Math.random() * players.value.length)
-	const element = players.value[r]
-	players.value.splice(r, 1)
-	//players.value = players.value.filter((v, i) => i !== r)
-	return element
-}
+const { delay, delayBetween } = getDelays(data)
 
 async function randomize() {
-	animated.value = true
-	while (teams.value.length) {
-		const min = Math.min(...groups.value.map((group) => group.length))
-		const minInd = groups.value.findIndex((group) => group.length === min)
+	isUpdating.value = true
+	while (data.value.teams.length) {
+		const min = Math.min(...data.value.groups.map((group) => group.length))
+		const minInd = data.value.groups.findIndex((group) => group.length === min)
 
-		const element = selectRandomElement(teams)
+		const element = selectRandomElement(data.value.teams)
 		await sleep(delayBetween.value)
-		groups.value[minInd].push(element)
+		if (element) data.value.groups[minInd].push(element)
 		await sleep(delay.value)
 	}
-	animated.value = false
+	isUpdating.value = false
+}
+
+async function reset() {
+	isUpdating.value = true
+	for (const group of data.value.groups) {
+		while (group.length) {
+			let i = group.length - 1
+			const team = group.splice(i, 1)[0]
+			await sleep(delayBetween.value)
+			data.value.teams.push(team)
+			await sleep(delay.value)
+		}
+	}
+	isUpdating.value = false
 }
 
 async function reroll() {
@@ -177,57 +185,10 @@ async function reroll() {
 	await randomize()
 }
 
-async function reset() {
-	animated.value = true
-	for (const group of groups.value) {
-		while (group.length) {
-			let i = group.length - 1
-			const team = group.splice(i, 1)[0]
-			await sleep(delayBetween.value)
-			teams.value.push(team)
-			await sleep(delay.value)
-		}
-	}
-	animated.value = false
-}
-
-function adjustUnsorted() {
-	teams.value = teams.value.filter(
-		(t) => !groups.value.some((group) => group.some((st) => st.id === t.id)),
-	)
-}
-
-let firstUpdate = true
-
-async function loadFromServer() {
-	if (!signedUpTeams.value) return
-
-	animated.value = true
-	disabled.value = true
-	teams.value = []
-	groups.value = [[], []]
-	const anFin = sleep(firstUpdate ? 0 : 400)
-	firstUpdate = false
-
-	await anFin
-	teams.value = signedUpTeams.value
-	teamCount.value = teams.value.length
-	groups.value = JSON.parse(JSON.stringify(groupsServer.value ?? [[], []])).map(
-		(g: Team[]) => g.sort(),
-	)
-	adjustUnsorted()
-	await sleep(400)
-	animated.value = false
-	disabled.value = false
-}
-
-watch([signedUpTeams, groupsServer], loadFromServer)
-if (!signedUpPlaceholder.value && groupsServer.value) loadFromServer()
-
 function save() {
-	if (disabled.value) return
+	if (isUpdating.value) return
 
-	if (groups.value.some((g) => g.length <= 1)) {
+	if (data.value.groups.some((g) => g.length <= 1)) {
 		toast.add({
 			severity: "error",
 			summary: t("ViewPrepare.assignMatches.emptyGroupSum"),
@@ -238,10 +199,27 @@ function save() {
 		return
 	}
 
-	initGroups(groups.value)
+	initGroups(data.value.groups)
 }
 
-defineExpose({ save, disabled })
+function adjustSize(size: number) {
+	isUpdating.value = true
+	if (data.value.groups.length > size) {
+		for (let i = size; i < data.value.groups.length; i++) {
+			data.value.groups[i].forEach((e) => data.value.teams.push(e))
+		}
+		data.value.groups.splice(size, data.value.groups.length - size)
+	} else {
+		data.value.groups.splice(
+			data.value.groups.length,
+			0,
+			...Array.from({ length: size - data.value.groups.length }, () => []),
+		)
+	}
+	isUpdating.value = false
+}
+
+defineExpose({ save, reload })
 </script>
 
 <style scoped></style>

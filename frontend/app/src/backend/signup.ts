@@ -37,7 +37,6 @@ export function getSignedUp(
 					life: 3000,
 				})
 			},
-			placeholderData: [],
 		},
 	)
 }
@@ -168,7 +167,7 @@ export function useUpdateTeams(
 ) {
 	const queryClient = useQueryClient()
 	return useMutation(
-		async (req) => {
+		async (req: TeamServer[]) => {
 			return axios.post(
 				`/tournament/${route.params.tourId}/competition/${route.params.compId}/updateTeams`,
 				req,

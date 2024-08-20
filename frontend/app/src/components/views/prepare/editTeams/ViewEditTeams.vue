@@ -71,39 +71,10 @@
 				<Skeleton class="h-30rem" />
 			</div>
 		</div>
-
-		<div class="mt-2 grid grid-nogutter justify-content-between">
-			<Button
-				:label="t('general.back')"
-				icon="pi pi-angle-left"
-				icon-pos="left"
-				@click="prevPage"
-			/>
-			<Button
-				:disabled="isUpdating"
-				:label="t('general.reset')"
-				severity="danger"
-				@click="reset"
-			/>
-			<Button
-				:disabled="isUpdating"
-				:label="t('general.save')"
-				severity="success"
-				@click="save"
-			/>
-			<Button
-				v-if="route.params.step !== 'scheduleMatches'"
-				icon="pi pi-angle-right"
-				icon-pos="right"
-				:label="t('general.next')"
-				@click="nextPage"
-			/>
-		</div>
 	</div>
 </template>
 
 <script lang="ts" setup>
-import Button from "primevue/button"
 import { useRoute, useRouter } from "vue-router"
 import { useToast } from "primevue/usetoast"
 import { useI18n } from "vue-i18n"
@@ -131,7 +102,7 @@ function $t(name: string) {
 	return computed(() => t(name))
 }
 
-const isUpdating = ref(false)
+const isUpdating = defineModel<boolean>("isUpdating", { default: false })
 
 const teams = ref<TeamArray[]>([])
 const playersA = ref<Player[]>([])
@@ -364,6 +335,8 @@ async function loadFromServer() {
 
 watch(signedUpTeams, loadFromServer)
 if (!signedUpPlaceholder.value) loadFromServer()
+
+defineExpose({ prevPage, reset, save, nextPage })
 </script>
 
 <style scoped></style>

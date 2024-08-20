@@ -1,40 +1,13 @@
 <template>
 	<div class="flex flex-column gap-1">
-		<div
-			v-if="competition"
-			class="flex flex-row overflow-hidden"
-			style="flex-wrap: nowrap"
-		>
-			<Transition>
-				<Groups
-					v-if="competition.tourType === TourType.GROUPS"
-					ref="groupsRef"
-					class="w-full flex-shrink-0"
-				/>
-				<Knockout v-else ref="knockoutRef" class="w-full flex-shrink-0" />
-			</Transition>
-		</div>
-
-		<div class="grid grid-nogutter justify-content-between mt-4">
-			<Button
-				:label="t('general.back')"
-				icon="pi pi-angle-left"
-				@click="prevPage"
+		<Transition v-if="competition">
+			<Groups
+				v-if="competition.tourType === TourType.GROUPS"
+				ref="groupsRef"
+				v-model:is-updating="isUpdating"
 			/>
-			<Button
-				:label="t('general.save')"
-				severity="success"
-				:disabled="groupsRef?.disabled"
-				@click="save"
-			></Button>
-			<Button
-				v-if="route.params.step !== 'scheduleMatches'"
-				:label="t('general.next')"
-				icon="pi pi-angle-right"
-				icon-pos="right"
-				@click="nextPage"
-			/>
-		</div>
+			<Knockout v-else ref="knockoutRef" v-model:is-updating="isUpdating" />
+		</Transition>
 	</div>
 </template>
 
@@ -55,6 +28,7 @@ const router = useRouter()
 const toast = useToast()
 const { t } = useI18n({ inheritLocale: true })
 
+const isUpdating = defineModel<boolean>("isUpdating", { default: false })
 const knockoutRef = ref<InstanceType<typeof AssignMatchesKnockout> | null>(null)
 const groupsRef = ref<InstanceType<typeof AssignMatchesGroups> | null>(null)
 
@@ -87,6 +61,18 @@ function save() {
 		knockoutRef.value.save()
 	}
 }
+
+function reset() {
+	if (competition.value?.tourType === TourType.GROUPS) {
+		if (groupsRef.value === null) return
+		groupsRef.value.reload()
+	} else {
+		if (knockoutRef.value === null) return
+		knockoutRef.value.reload()
+	}
+}
+
+defineExpose({ prevPage, save, reset, nextPage })
 </script>
 
 <style scoped>
