@@ -218,5 +218,13 @@
 		"field_invalid_number": "Bitte geben Sie eine gültige Zahl an",
 		"field_invalid_url": "Bitte geben Sie eine gültige URL an",
 		"date_missing": "Bitte wähle ein Anfangs- und Enddatum"
+	},
+	"court": {
+		"type": "Typ",
+		"courtTypes": {
+			"HARD": "Hart",
+			"CLAY": "Sand",
+			"GRASS": "Gras"
+		}
 	}
 }

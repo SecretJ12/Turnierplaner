@@ -1,31 +1,61 @@
 <template>
 	<div class="grid">
-		<div class="col-4">
+		<div class="col-4 flex flex-column gap-3">
 			<Card>
-				<template #title> Matches </template>
-				<template #content> We show the matches here </template>
+				<template #title>Options</template>
+				<template #content>
+					<MultiSelect
+						v-model="selectedCourts"
+						:loading="!courts || !selectedCourts"
+						:options="courts"
+						option-label="name"
+						placeholder="Select courts"
+						class="w-full"
+					>
+						<template #footer>
+							<div class="w-full flex align-items-center p-2">
+								<ViewCreateCourtSmall />
+							</div>
+						</template>
+					</MultiSelect>
+				</template>
+			</Card>
+			<Card>
+				<template #title> Matches</template>
+				<template #content> We show the matches here</template>
 			</Card>
 		</div>
 		<div class="col-8">
-			<SchedulingCalendar v-if="true" />
+			<div class="flex flex-column gap-3">
+				<SchedulingCalendar :courts="selectedCourts" />
+			</div>
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
-import { getCompetitionDetails } from "@/backend/competition"
 import { useRoute, useRouter } from "vue-router"
 import { useToast } from "primevue/usetoast"
-import { useI18n } from "vue-i18n"
 import SchedulingCalendar from "@/components/views/prepare/scheduleMatches/SchedulingCalendar.vue"
+import { getCourts } from "@/backend/court"
+import { ref, watch } from "vue"
+import { Court } from "@/interfaces/court"
+import ViewCreateCourtSmall from "@/components/views/court/ViewCreateCourtSmall.vue"
 
 const route = useRoute()
 const router = useRouter()
 const toast = useToast()
-const { t } = useI18n({ inheritLocale: true })
 
 const isUpdating = defineModel<boolean>("isUpdating", { default: false })
-const { data: competition } = getCompetitionDetails(route, t, toast)
+
+const { data: courts } = getCourts()
+
+const selectedCourts = ref<Court[]>([])
+watch(selectedCourts, () => {
+	selectedCourts.value = selectedCourts.value.sort((a, b) =>
+		a.name < b.name ? -1 : 1,
+	)
+})
 
 function prevPage() {
 	router.replace({

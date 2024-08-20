@@ -220,5 +220,13 @@
 		"field_invalid_number": "Field is not a valid number",
 		"field_invalid_url": "Field is not a valid URL",
 		"date_missing": "Please choose start and end date"
+	},
+	"court": {
+		"type": "Type",
+		"courtTypes": {
+			"HARD": "Hard",
+			"CLAY": "Sand",
+			"GRASS": "Grass"
+		}
 	}
 }

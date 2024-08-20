@@ -46,9 +46,10 @@ public class CourtResource {
     }
 
     @DELETE
+    @Path("/{name}")
     @Transactional
-    public String delete(jUserCourt court) {
-        Court exCourt = courtRepositiory.findByName(court.getName());
+    public String delete(@PathParam("name") String courtName) {
+        Court exCourt = courtRepositiory.findByName(courtName);
         if (exCourt == null)
             throw new NotFoundException("Court does not exist");
 

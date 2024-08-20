@@ -9,7 +9,7 @@
 		:split-days="splitDays"
 		:sticky-split-labels="true"
 		:min-split-width="150"
-		snap-to-time="15"
+		:snap-to-time="15"
 	/>
 </template>
 
@@ -17,15 +17,22 @@
 // @ts-expect-error vue-cal does not have proper typescript support
 import VueCal from "vue-cal"
 import "vue-cal/dist/vuecal.css"
+import { Court } from "@/interfaces/court"
+import { computed } from "vue"
 
-const splitDays = [
-	{ id: 1, label: "Platz 1", class: "court1" },
-	{ id: 2, label: "Platz 2", class: "court2" },
-	{ id: 3, label: "Platz 3", class: "court3" },
-	{ id: 4, label: "Platz 4", class: "court4" },
-	{ id: 5, label: "Platz 5", class: "court5" },
-	{ id: 6, label: "Platz 6", class: "court6" },
-]
+const props = defineProps<{
+	courts: Court[]
+}>()
+
+const splitDays = computed(() => {
+	return props.courts.map((court, index) => {
+		return {
+			id: index + 1,
+			label: court.name,
+			class: "court" + (index + 1),
+		}
+	})
+})
 </script>
 
 <style>

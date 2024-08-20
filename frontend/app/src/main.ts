@@ -47,6 +47,8 @@ import Fieldset from "primevue/fieldset"
 import SplitButton from "primevue/splitbutton"
 import OverlayPanel from "primevue/overlaypanel"
 import Dialog from "primevue/dialog"
+import MultiSelect from "primevue/multiselect"
+import InputGroup from "primevue/inputgroup"
 
 /* Primevue styling */
 import "primeflex/primeflex.css"
@@ -144,6 +146,7 @@ app
 	.component("TabMenu", TabMenu)
 	.component("TabPanel", TabPanel)
 	.component("Card", Card)
+	.component("MultiSelect", MultiSelect)
 	.component("Button", Button)
 	.component("Toolbar", Toolbar)
 	.component("InputText", InputText)
@@ -158,6 +161,7 @@ app
 	.component("Skeleton", Skeleton)
 	.component("Panel", Panel)
 	.component("ScrollPanel", ScrollPanel)
+	.component("InputGroup", InputGroup)
 	.component("DataTable", DataTable)
 	.component("Column", Column)
 	.component("Tag", Tag)
