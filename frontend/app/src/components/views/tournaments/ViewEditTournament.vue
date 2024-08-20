@@ -23,7 +23,7 @@ import { TournamentDefault, TournamentServer } from "@/interfaces/tournament"
 import FormTournament from "@/components/views/tournaments/FormTournament.vue"
 import { useI18n } from "vue-i18n"
 import { useToast } from "primevue/usetoast"
-import { getTournamentDetails, updateTournament } from "@/backend/tournament"
+import { getTournamentDetails, useUpdateTournament } from "@/backend/tournament"
 import { router } from "@/main"
 
 const { t } = useI18n({ inheritLocale: true })
@@ -41,8 +41,14 @@ const {
 	},
 })
 
+const { mutate } = useUpdateTournament(t, toast, {
+	err: () => {
+		router.back()
+	},
+})
+
 function submit(server_data: TournamentServer) {
-	updateTournament(server_data, t, toast, {})
+	mutate(server_data)
 }
 </script>
 

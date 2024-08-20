@@ -26,7 +26,10 @@ import { useRoute } from "vue-router"
 import FormCompetition from "@/components/views/competitions/FormCompetition.vue"
 import { useI18n } from "vue-i18n"
 import { CompetitionDefault, CompetitionServer } from "@/interfaces/competition"
-import { getCompetitionDetails, updateCompetition } from "@/backend/competition"
+import {
+	getCompetitionDetails,
+	useUpdateCompetition,
+} from "@/backend/competition"
 import { useToast } from "primevue/usetoast"
 import { ref } from "vue"
 
@@ -49,12 +52,21 @@ const { data: competition } = getCompetitionDetails(route, t, toast, {
 		isUpdating.value = false
 	},
 	err: () => {
-		router.back()
+		// router.back()
+	},
+})
+
+const { mutate } = useUpdateCompetition(route, t, toast, {
+	suc(competition) {
+		router.replace({
+			name: "settings",
+			params: { tourId: route.params.tourid, compId: competition.name },
+		})
 	},
 })
 
 function save(server_data: CompetitionServer) {
-	updateCompetition(server_data, <string>route.params.tourId, t, toast, {})
+	mutate(server_data)
 }
 
 function nextPage() {

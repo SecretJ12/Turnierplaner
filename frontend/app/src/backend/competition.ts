@@ -7,7 +7,7 @@ import {
 } from "@/interfaces/competition"
 import { RouteLocationNormalizedLoaded } from "vue-router"
 import { useQuery } from "vue-query/esm"
-import { QueryClient, useMutation } from "vue-query"
+import { QueryClient, useMutation, useQueryClient } from "vue-query"
 import { Player, playerClientToServer } from "@/interfaces/player"
 import { TeamServer } from "@/interfaces/team"
 
@@ -93,41 +93,66 @@ export function getCompetitionDetails(
 	)
 }
 
-export function updateCompetition(
-	competition: CompetitionServer,
-	tourId: string,
+export function useUpdateCompetition(
+	route: RouteLocationNormalizedLoaded,
 	t: (s: string) => string,
 	toast: ToastServiceMethods,
 	handler: {
-		suc?: () => void
+		suc?: (competition: CompetitionServer) => void
 		err?: () => void
 	},
 ) {
-	axios
-		.post(`/tournament/${tourId}/competition/update`, competition)
-		.then(() => {
-			toast.add({
-				severity: "success",
-				summary: t("ViewEditCompetition.competitionUpdate"),
-				detail: t("ViewEditCompetition.competitionUpdated"),
-				life: 3000,
-			})
-			if (handler.suc) handler.suc()
-		})
-		.catch((error) => {
-			toast.add({
-				severity: "error",
-				summary: t("ViewEditCompetition.tournamentUpdateFailed"),
-				detail: error,
-				life: 3000,
-			})
-			if (handler.err) handler.err()
-		})
+	const queryClient = useQueryClient()
+	return useMutation(
+		(competition: CompetitionServer) =>
+			axios.post(
+				`/tournament/${<string>route.params.tourId}/competition/update`,
+				competition,
+			),
+		{
+			onSuccess(_, competition) {
+				toast.add({
+					severity: "success",
+					summary: t("ViewEditCompetition.competitionUpdate"),
+					detail: t("ViewEditCompetition.competitionUpdated"),
+					life: 3000,
+				})
+
+				Promise.all([
+					queryClient.invalidateQueries([
+						"competitionList",
+						route.params.tourId,
+						true,
+					]),
+					queryClient.invalidateQueries([
+						"competitionList",
+						route.params.tourId,
+						false,
+					]),
+					queryClient.invalidateQueries([
+						"competitionDetails",
+						route.params.tourId,
+						competition.id,
+					]),
+				]).then(() => {
+					if (handler.suc) handler.suc(competition)
+				})
+			},
+			onError(error) {
+				toast.add({
+					severity: "error",
+					summary: t("ViewEditCompetition.tournamentUpdateFailed"),
+					detail: error,
+					life: 3000,
+				})
+				if (handler.err) handler.err()
+			},
+		},
+	)
 }
 
-export function addCompetition(
-	competition: CompetitionServer,
-	tourId: string,
+export function useAddCompetition(
+	route: RouteLocationNormalizedLoaded,
 	t: (s: string) => string,
 	toast: ToastServiceMethods,
 	handler: {
@@ -135,28 +160,46 @@ export function addCompetition(
 		err?: () => void
 	},
 ) {
-	axios
-		.post(`/tournament/${tourId}/competition/add`, competition)
-		.then(() => {
-			toast.add({
-				severity: "success",
-				summary: t("ViewCreateCompetition.competitionCreation"),
-				detail: t("ViewCreateCompetition.competitionCreated"),
-				life: 3000,
-				closable: false,
-			})
-			if (handler.suc) handler.suc()
-		})
-		.catch(() => {
-			toast.add({
-				severity: "error",
-				summary: t("ViewCreateCompetition.competitionCreation"),
-				detail: t("ViewCreateCompetition.creationFailed"),
-				life: 3000,
-				closable: false,
-			})
-			if (handler.err) handler.err()
-		})
+	const queryClient = useQueryClient()
+	return useMutation(
+		(competition: CompetitionServer) =>
+			axios.post(
+				`/tournament/${<string>route.params.tourId}/competition/add`,
+				competition,
+			),
+		{
+			onSuccess() {
+				toast.add({
+					severity: "success",
+					summary: t("ViewCreateCompetition.competitionCreation"),
+					detail: t("ViewCreateCompetition.competitionCreated"),
+					life: 3000,
+					closable: false,
+				})
+				queryClient.invalidateQueries([
+					"competitionList",
+					route.params.tourId,
+					true,
+				])
+				queryClient.invalidateQueries([
+					"competitionList",
+					route.params.tourId,
+					false,
+				])
+				if (handler.suc) handler.suc()
+			},
+			onError() {
+				toast.add({
+					severity: "error",
+					summary: t("ViewCreateCompetition.competitionCreation"),
+					detail: t("ViewCreateCompetition.creationFailed"),
+					life: 3000,
+					closable: false,
+				})
+				if (handler.err) handler.err()
+			},
+		},
+	)
 }
 
 export function useSignUpSingle(

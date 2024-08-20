@@ -32,12 +32,13 @@ import {
 	Competition,
 	CompetitionServer,
 	Mode,
+	Progress,
 	Sex,
 	SignUp,
 	TourType,
 } from "@/interfaces/competition"
 import { useToast } from "primevue/usetoast"
-import { addCompetition } from "@/backend/competition"
+import { useAddCompetition } from "@/backend/competition"
 
 const { t } = useI18n({ inheritLocale: true })
 const toast = useToast()
@@ -66,17 +67,20 @@ const competition = reactive<Competition>({
 		hasMaxAge: false,
 		maxAge: null,
 	},
+	cProgress: Progress.TEAMS,
+})
+
+const { mutate } = useAddCompetition(route, t, toast, {
+	suc: () => {
+		router.push({
+			name: "Competitions",
+			params: { tourId: route.params.tourId },
+		})
+	},
 })
 
 function submit(server_data: CompetitionServer) {
-	addCompetition(server_data, <string>route.params.tourId, t, toast, {
-		suc: () => {
-			router.push({
-				name: "Competitions",
-				params: { tourId: route.params.tourId },
-			})
-		},
-	})
+	mutate(server_data)
 }
 </script>
 

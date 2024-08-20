@@ -8,6 +8,7 @@ import {
 import { ToastServiceMethods } from "primevue/toastservice"
 import { useQuery } from "vue-query/esm"
 import { RouteLocationNormalizedLoaded } from "vue-router"
+import { useMutation, useQueryClient } from "vue-query"
 
 export function getTournamentList(
 	isLoggedIn: Ref<boolean>,
@@ -71,8 +72,7 @@ export function getTournamentDetails(
 	)
 }
 
-export function updateTournament(
-	tournament: TournamentServer,
+export function useUpdateTournament(
 	t: (s: string) => string,
 	toast: ToastServiceMethods,
 	handler: {
@@ -80,30 +80,37 @@ export function updateTournament(
 		err?: () => void
 	},
 ) {
-	axios
-		.post("/tournament/update", tournament)
-		.then(() => {
-			toast.add({
-				severity: "success",
-				summary: t("ViewEditTournament.tournamentUpdating"),
-				detail: t("ViewEditTournament.tournamentUpdated"),
-				life: 3000,
-			})
-			if (handler.suc) handler.suc()
-		})
-		.catch((error) => {
-			toast.add({
-				severity: "error",
-				summary: t("ViewEditTournament.tournamentUpdateFailed"),
-				detail: error,
-				life: 3000,
-			})
-			if (handler.err) handler.err()
-		})
+	const queryClient = useQueryClient()
+	return useMutation(
+		(tournament: TournamentServer) =>
+			axios.post("/tournament/update", tournament),
+		{
+			onSuccess(__, tournament) {
+				toast.add({
+					severity: "success",
+					summary: t("ViewEditTournament.tournamentUpdating"),
+					detail: t("ViewEditTournament.tournamentUpdated"),
+					life: 3000,
+				})
+				queryClient.invalidateQueries(["tournamentList", true])
+				queryClient.invalidateQueries(["tournamentList", false])
+				queryClient.invalidateQueries(["tournament", tournament.name])
+				if (handler.suc) handler.suc()
+			},
+			onError(error) {
+				toast.add({
+					severity: "error",
+					summary: t("ViewEditTournament.tournamentUpdateFailed"),
+					detail: error,
+					life: 3000,
+				})
+				if (handler.err) handler.err()
+			},
+		},
+	)
 }
 
-export function addTournament(
-	tournament: TournamentServer,
+export function useAddTournament(
 	t: (s: string) => string,
 	toast: ToastServiceMethods,
 	handler: {
@@ -111,26 +118,32 @@ export function addTournament(
 		err?: () => void
 	},
 ) {
-	axios
-		.post("/tournament/add", tournament)
-		.then(() => {
-			toast.add({
-				severity: "success",
-				summary: t("ViewCreateTournament.tournamentCreating"),
-				detail: t("ViewCreateTournament.tournamentCreated"),
-				life: 3000,
-				closable: false,
-			})
-			if (handler.suc) handler.suc()
-		})
-		.catch(() => {
-			toast.add({
-				severity: "error",
-				summary: t("ViewCreateTournament.tournamentCreating"),
-				detail: t("ViewCreateTournament.tournamentCreationFailed"),
-				life: 3000,
-				closable: false,
-			})
-			if (handler.err) handler.err()
-		})
+	const queryClient = useQueryClient()
+	return useMutation(
+		(tournament: TournamentServer) => axios.post("/tournament/add", tournament),
+		{
+			onSuccess() {
+				toast.add({
+					severity: "success",
+					summary: t("ViewCreateTournament.tournamentCreating"),
+					detail: t("ViewCreateTournament.tournamentCreated"),
+					life: 3000,
+					closable: false,
+				})
+				queryClient.invalidateQueries(["tournamentList", true])
+				queryClient.invalidateQueries(["tournamentList", false])
+				if (handler.suc) handler.suc()
+			},
+			onError() {
+				toast.add({
+					severity: "error",
+					summary: t("ViewCreateTournament.tournamentCreating"),
+					detail: t("ViewCreateTournament.tournamentCreationFailed"),
+					life: 3000,
+					closable: false,
+				})
+				if (handler.err) handler.err()
+			},
+		},
+	)
 }
