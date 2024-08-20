@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
+import java.util.Set;
 
 @Entity
 @Table(name = "tournaments")
@@ -30,6 +31,14 @@ public class Tournament {
 
     @Column(name = "visible")
     private boolean visible;
+
+    @ManyToMany(cascade = {CascadeType.ALL})
+    @JoinTable(
+               name = "court_of_tournament",
+               joinColumns = {@JoinColumn(name = "id")},
+               inverseJoinColumns = {@JoinColumn(name = "name")}
+    )
+    private Set<Court> courts;
 
     public UUID getId() {
         return id;
@@ -93,5 +102,13 @@ public class Tournament {
 
     public void setVisible(boolean visible) {
         this.visible = visible;
+    }
+
+    public Set<Court> getCourts() {
+        return courts;
+    }
+
+    public void setCourts(Set<Court> courts) {
+        this.courts = courts;
     }
 }
