@@ -15,6 +15,7 @@ RUN /opt/keycloak/bin/kc.sh build
 FROM quay.io/keycloak/keycloak:latest
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
 COPY keycloak_realm.json /data/import/keycloak_realm.jsonk
+
 # change these values to point to a running postgres instance
 ENV KC_DB=postgres
 ENV KC_DB_URL=jdbc:postgresql://localhost:5432/keycloak
