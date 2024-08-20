@@ -1,10 +1,4 @@
 services:
   keycloak:
-    image: quay.io/keycloak/keycloak-x
-    command:
-      - start-dev --http-enabled=true
-    environment:
-      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
-      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
-    ports:
-      - 8080:8080
+    build: .
+    network_mode: host
