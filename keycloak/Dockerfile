@@ -1,4 +1,4 @@
-FROM quay.io/keycloak/keycloak:latest as builder
+FROM quay.io/keycloak/keycloak:latest AS builder
 
 # Enable health and metrics support
 ENV KC_HEALTH_ENABLED=true
@@ -14,7 +14,7 @@ RUN /opt/keycloak/bin/kc.sh build
 
 FROM quay.io/keycloak/keycloak:latest
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
-COPY keycloak_realm.json /data/import/keycloak_realm.jsonk
+COPY keycloak_realm.json /opt/keycloak/data/import/
 
 # change these values to point to a running postgres instance
 ENV KC_DB=postgres
@@ -22,4 +22,5 @@ ENV KC_DB_URL=jdbc:postgresql://localhost:5432/keycloak
 ENV KC_DB_USERNAME=${KC_DB_USERNAME}
 ENV KC_DB_PASSWORD=${KC_DB_PASSWORD}
 ENV KC_HOSTNAME=localhost
+
 ENTRYPOINT ["/opt/keycloak/bin/kc.sh", "start", "--import-realm"]
