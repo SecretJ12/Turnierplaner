@@ -27,14 +27,9 @@ KC_DB_USERNAME=${the username for the keycloak database}
 KC_DB_PASSWORD=${the password for the keycloak database}
 ```
 
-# Quarkus + Vue
-
+# Starting the application in development mode
+The application can be started in development mode by following the steps below:
 ## Vue
-
-Edit your VueJs app inside of `frontend/app`
-
-To setup the project use
-
 ```shell
 mvn compile -DfrontendDev -DnoFrontendComp
 ```
@@ -50,18 +45,10 @@ npm run dev
 ```
 
 ## Quarkus
-
-For testing run
+The Quarkus application starts in development mode also a keycloak container, which is used for user authentication:
 ```shell
 cd backend
 mvn compile quarkus:dev -DbackendDev
-```
-
-For just building and running the quarkus application in production mode:
-```shell
-cd backend
-./mvnw install
-java -jar target/quarkus-app/quarkus-run.jar
 ```
 
 ## Build Quarkus+Vue
@@ -83,3 +70,25 @@ mvn package -DnoBackendComp
 ```shell
 mvn clean
 ```
+
+# Starting the application in production mode
+First start the keycloak service by running the following command in the `keycloak` directory:
+```shell
+docker compose up
+```
+Then you need to import the Quarkus realm under:
+- Realm settings in the menu.
+- Point to the Action menu in the top right corner of the realm settings screen, and select Partial import.
+- A prompt then appears where you can select the file you want to import. 
+  Based on this file, you see the resources you can import along with the realm settings.
+- Click Import.
+
+After that you can start the Quarkus application by running the following command in the `backend` directory:
+```shell
+./mvnw install
+java -jar target/quarkus-app/quarkus-run.jar
+```
+
+Finally, start the Vue application by running the following command in the `frontend/app` directory:
+TBD
+
