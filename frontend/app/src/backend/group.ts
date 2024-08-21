@@ -1,5 +1,4 @@
 import { RouteLocationNormalizedLoaded } from "vue-router"
-import { useQuery } from "vue-query/esm"
 import { computed } from "vue"
 import axios from "axios"
 import {
@@ -9,22 +8,22 @@ import {
 import { ToastServiceMethods } from "primevue/toastservice"
 import { GroupsDivision } from "@/interfaces/competition"
 import { Team, teamClientToServer, teamServerToClient } from "@/interfaces/team"
-import { useMutation, useQueryClient } from "vue-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query"
 
 export function getGroup(route: RouteLocationNormalizedLoaded) {
-	return useQuery(
-		[
+	return useQuery({
+		queryKey: [
 			"group",
 			computed(() => route.params.tourId),
 			computed(() => route.params.compId),
 		],
-		async () =>
+		queryFn: async () =>
 			axios
 				.get<GroupSystemServer>(
 					`tournament/${route.params.tourId}/competition/${route.params.compId}/groupMatches`,
 				)
 				.then((response) => groupSystemServerToClient(response.data)),
-	)
+	})
 }
 
 export function getGroupsDivision(
@@ -32,13 +31,13 @@ export function getGroupsDivision(
 	t: (s: string) => string,
 	toast: ToastServiceMethods,
 ) {
-	return useQuery(
-		[
+	return useQuery({
+		queryKey: [
 			"groupsDivision",
 			computed(() => route.params.tourId),
 			computed(() => route.params.compId),
 		],
-		async () => {
+		queryFn: async () => {
 			return axios
 				.get<GroupsDivision>(
 					`tournament/${route.params.tourId}/competition/${route.params.compId}/groupsDivision`,
@@ -50,19 +49,18 @@ export function getGroupsDivision(
 						group.map((team) => teamServerToClient(team)),
 					)
 				})
-		},
-		{
-			onError() {
-				toast.add({
-					severity: "error",
-					summary: t("general.failure"),
-					detail: t("general.loading_failed"),
-					life: 3000,
-					closable: false,
+				.catch((error) => {
+					toast.add({
+						severity: "error",
+						summary: t("general.failure"),
+						detail: t("general.loading_failed"),
+						life: 3000,
+						closable: false,
+					})
+					throw error
 				})
-			},
 		},
-	)
+	})
 }
 
 export function useInitGroups(
@@ -71,8 +69,8 @@ export function useInitGroups(
 	toast: ToastServiceMethods,
 ) {
 	const queryClient = useQueryClient()
-	return useMutation(
-		async (groups: Team[][]) => {
+	return useMutation({
+		mutationFn: async (groups: Team[][]) => {
 			return axios.post<boolean>(
 				`/tournament/${route.params.tourId}/competition/${route.params.compId}/initGroups`,
 				{
@@ -82,30 +80,27 @@ export function useInitGroups(
 				},
 			)
 		},
-		{
-			onSuccess() {
-				queryClient.invalidateQueries([
-					"groupsDivision",
-					route.params.tourId,
-					route.params.compId,
-				])
-				toast.add({
-					severity: "success",
-					summary: t("general.success"),
-					detail: t("general.saved"),
-					life: 3000,
-					closable: false,
-				})
-			},
-			onError() {
-				toast.add({
-					severity: "error",
-					summary: t("general.failure"),
-					detail: t("general.save_failed"),
-					life: 3000,
-					closable: false,
-				})
-			},
+		onSuccess() {
+			queryClient.invalidateQueries({
+				queryKey: ["groupsDivision", route.params.tourId, route.params.compId],
+				refetchType: "all",
+			})
+			toast.add({
+				severity: "success",
+				summary: t("general.success"),
+				detail: t("general.saved"),
+				life: 3000,
+				closable: false,
+			})
 		},
-	)
+		onError() {
+			toast.add({
+				severity: "error",
+				summary: t("general.failure"),
+				detail: t("general.save_failed"),
+				life: 3000,
+				closable: false,
+			})
+		},
+	})
 }

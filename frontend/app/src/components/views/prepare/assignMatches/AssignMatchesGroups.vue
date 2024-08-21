@@ -96,11 +96,7 @@ const randomizeItems = genRandomizeItems(t, reroll, reset)
 
 const isUpdating = defineModel<boolean>("isUpdating", { default: false })
 
-const { data: competition } = getCompetitionDetails(route, t, toast, {
-	suc: () => {
-		if (competition.value === null) return
-	},
-})
+const { data: competition } = getCompetitionDetails(route, t, toast)
 const { data: signedUpTeams, isLoading: signedUpLoading } = getSignedUp(
 	route,
 	t,

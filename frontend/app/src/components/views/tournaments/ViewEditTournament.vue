@@ -35,11 +35,7 @@ const {
 	data: tourDetails,
 	isLoading,
 	isError,
-} = getTournamentDetails(route, t, toast, {
-	err: () => {
-		router.back()
-	},
-})
+} = getTournamentDetails(route, t, toast)
 
 const { mutate } = useUpdateTournament(t, toast, {
 	err: () => {

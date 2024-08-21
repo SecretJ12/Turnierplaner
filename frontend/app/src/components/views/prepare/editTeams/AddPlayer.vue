@@ -54,8 +54,8 @@ const props = defineProps<{
 const emit = defineEmits(["addPlayer"])
 
 const route = useRoute()
-const { data: tournament } = getTournamentDetails(route, t, toast, {})
-const { data: competition } = getCompetitionDetails(route, t, toast, {})
+const { data: tournament } = getTournamentDetails(route, t, toast)
+const { data: competition } = getCompetitionDetails(route, t, toast)
 const selectedPlayer = ref<Player | null>(null)
 const search = ref<string>("")
 const { data: suggestionsPlayer, isFetching: loading } = getPlayer(

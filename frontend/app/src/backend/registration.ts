@@ -1,14 +1,14 @@
 import { ToastServiceMethods } from "primevue/toastservice"
-import { useMutation } from "vue-query"
 import axios from "axios"
 import { PlayerRegistration } from "@/interfaces/player"
+import { useMutation } from "@tanstack/vue-query"
 
 export function useRegisterPlayer(
 	t: (s: string) => string,
 	toast: ToastServiceMethods,
 ) {
-	return useMutation(
-		async (reg: PlayerRegistration) => {
+	return useMutation({
+		mutationFn: async (reg: PlayerRegistration) => {
 			return axios.post("/player/registration", {
 				firstName: reg.firstName,
 				lastName: reg.lastName,
@@ -18,31 +18,31 @@ export function useRegisterPlayer(
 				phone: reg.phone,
 			})
 		},
-		{
-			onSuccess() {
-				toast.add({
-					severity: "success",
-					summary: t("ViewPlayerRegistration.registration_successful"),
-					detail: t("ViewPlayerRegistration.after"),
-					life: 3000,
-				})
-			},
-			onError(error) {
-				console.log(error)
-				toast.add({
-					severity: "error",
-					summary: t("ViewPlayerRegistration.registration_failed"),
-					detail: t("ViewPlayerRegistration.registration_failed_detail"),
-					life: 3000,
-				})
-			},
+		onSuccess() {
+			toast.add({
+				severity: "success",
+				summary: t("ViewPlayerRegistration.registration_successful"),
+				detail: t("ViewPlayerRegistration.after"),
+				life: 3000,
+			})
 		},
-	)
+		onError(error) {
+			console.log(error)
+			toast.add({
+				severity: "error",
+				summary: t("ViewPlayerRegistration.registration_failed"),
+				detail: t("ViewPlayerRegistration.registration_failed_detail"),
+				life: 3000,
+			})
+		},
+	})
 }
 
 export function useVerify() {
-	return useMutation(async (code: string) => {
-		return axios.get(`/player/verification?code=${code}`)
+	return useMutation({
+		mutationFn: async (code: string) => {
+			return axios.get(`/player/verification?code=${code}`)
+		},
 	})
 }
 

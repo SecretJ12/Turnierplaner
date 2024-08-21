@@ -6,14 +6,14 @@
 					v-if="!competition || isUpdating"
 					:competition="CompetitionDefault"
 					:disabled="true"
-					@submit="save"
+					@submit="submit"
 				/>
 				<FormCompetition
 					v-else
 					ref="form"
 					:competition="competition"
 					:disabled="false"
-					@submit="save"
+					@submit="submit"
 				/>
 			</template>
 		</Card>
@@ -31,7 +31,7 @@ import {
 	useUpdateCompetition,
 } from "@/backend/competition"
 import { useToast } from "primevue/usetoast"
-import { ref } from "vue"
+import { ref, watch } from "vue"
 
 const { t } = useI18n({ inheritLocale: true })
 const toast = useToast()
@@ -45,15 +45,11 @@ function sleep(milliseconds: number) {
 	return new Promise((resolve) => setTimeout(resolve, milliseconds))
 }
 
-const { data: competition } = getCompetitionDetails(route, t, toast, {
-	suc: async () => {
-		isUpdating.value = true
-		await sleep(100)
-		isUpdating.value = false
-	},
-	err: () => {
-		// router.back()
-	},
+const { data: competition } = getCompetitionDetails(route, t, toast)
+watch(competition, async () => {
+	isUpdating.value = true
+	await sleep(100)
+	isUpdating.value = false
 })
 
 const { mutate } = useUpdateCompetition(route, t, toast, {
@@ -65,7 +61,11 @@ const { mutate } = useUpdateCompetition(route, t, toast, {
 	},
 })
 
-function save(server_data: CompetitionServer) {
+function save() {
+	form.value?.onSubmit()
+}
+
+function submit(server_data: CompetitionServer) {
 	mutate(server_data)
 }
 

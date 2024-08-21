@@ -1,44 +1,43 @@
 import { Team, TeamServer, teamServerToClient } from "@/interfaces/team"
 import { Player, playerServerToClient } from "@/interfaces/player"
 import { ToastServiceMethods } from "primevue/toastservice"
-import { useMutation, useQuery } from "vue-query/esm"
 import axios from "axios"
 import { Competition, Mode, SignUp } from "@/interfaces/competition"
 import { getCompetitionDetails } from "@/backend/competition"
 import { RouteLocationNormalizedLoaded } from "vue-router"
 import { computed, Ref } from "vue"
-import { useQueryClient } from "vue-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query"
 
 export function getSignedUp(
 	route: RouteLocationNormalizedLoaded,
 	t: (s: string) => string,
 	toast: ToastServiceMethods,
 ) {
-	return useQuery(
-		[
+	return useQuery({
+		queryKey: [
 			"signedUp",
 			computed(() => route.params.tourId),
 			computed(() => route.params.compId),
 		],
-		async () => {
+		queryFn: async () => {
 			return axios
-				.get<
-					TeamServer[]
-				>(`/tournament/${route.params.tourId}/competition/${route.params.compId}/signedUpTeams`)
+				.get<TeamServer[]>(
+					`/tournament/${route.params.tourId}/competition/${route.params.compId}/signedUpTeams`,
+				)
 				.then<Team[]>((response) => {
 					return response.data.map(teamServerToClient)
 				})
-		},
-		{
-			onError() {
-				toast.add({
-					severity: "error",
-					summary: t("ViewCompetition.query_player_failed"),
-					life: 3000,
+				.catch((error) => {
+					toast.add({
+						severity: "error",
+						summary: t("ViewCompetition.query_player_failed"),
+						life: 3000,
+					})
+					console.log(error)
+					throw error
 				})
-			},
 		},
-	)
+	})
 }
 
 export function getSignedUpSepByComp(
@@ -46,7 +45,7 @@ export function getSignedUpSepByComp(
 	t: (s: string) => string,
 	toast: ToastServiceMethods,
 ) {
-	const { data: competition } = getCompetitionDetails(route, t, toast, {})
+	const { data: competition } = getCompetitionDetails(route, t, toast)
 	const signedUp = getSignedUp(route, t, toast)
 
 	return {
@@ -166,30 +165,27 @@ export function useUpdateTeams(
 	toast: ToastServiceMethods,
 ) {
 	const queryClient = useQueryClient()
-	return useMutation(
-		async (req: TeamServer[]) => {
+	return useMutation({
+		mutationFn: async (req: TeamServer[]) => {
 			return axios.post(
 				`/tournament/${route.params.tourId}/competition/${route.params.compId}/updateTeams`,
 				req,
 			)
 		},
-		{
-			onSuccess() {
-				return queryClient.invalidateQueries([
-					"signedUp",
-					route.params.tourId,
-					route.params.compId,
-				])
-			},
-			onError() {
-				toast.add({
-					severity: "error",
-					summary: t("general.failure"),
-					detail: t("general.save_failed"),
-					life: 3000,
-					closable: false,
-				})
-			},
+		onSuccess() {
+			return queryClient.invalidateQueries({
+				queryKey: ["signedUp", route.params.tourId, route.params.compId],
+				refetchType: "all",
+			})
 		},
-	)
+		onError() {
+			toast.add({
+				severity: "error",
+				summary: t("general.failure"),
+				detail: t("general.save_failed"),
+				life: 3000,
+				closable: false,
+			})
+		},
+	})
 }

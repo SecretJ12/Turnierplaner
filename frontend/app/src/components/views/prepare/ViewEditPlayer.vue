@@ -44,11 +44,7 @@ const router = useRouter()
 const route = useRoute()
 const toast = useToast()
 
-const { data: competition } = getCompetitionDetails(route, t, toast, {
-	suc: () => {
-		if (competition.value === null) return
-	},
-})
+const { data: competition } = getCompetitionDetails(route, t, toast)
 
 onUpdated(() => {})
 

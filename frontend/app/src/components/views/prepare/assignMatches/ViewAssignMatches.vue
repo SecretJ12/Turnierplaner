@@ -32,11 +32,7 @@ const isUpdating = defineModel<boolean>("isUpdating", { default: false })
 const knockoutRef = ref<InstanceType<typeof AssignMatchesKnockout> | null>(null)
 const groupsRef = ref<InstanceType<typeof AssignMatchesGroups> | null>(null)
 
-const { data: competition } = getCompetitionDetails(route, t, toast, {
-	suc: () => {
-		if (competition.value === null) return
-	},
-})
+const { data: competition } = getCompetitionDetails(route, t, toast)
 
 function prevPage() {
 	router.replace({

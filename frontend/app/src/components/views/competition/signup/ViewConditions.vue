@@ -49,8 +49,8 @@ const toast = useToast()
 
 const route = useRoute()
 
-const { data: competition } = getCompetitionDetails(route, t, toast, {})
-const { data: tournament } = getTournamentDetails(route, t, toast, {})
+const { data: competition } = getCompetitionDetails(route, t, toast)
+const { data: tournament } = getTournamentDetails(route, t, toast)
 
 const player = computed(() =>
 	props.second ? competition.value?.playerB : competition.value?.playerA,
