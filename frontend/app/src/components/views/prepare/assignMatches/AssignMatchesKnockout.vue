@@ -239,7 +239,7 @@ function getMatches(tree?: KnockoutMatch, treeDepth?: number): Match[] {
 }
 
 function genTree(height: number, tree: KnockoutMatch | null): KnockoutMatch {
-	const default_game = {
+	const default_game: KnockoutMatch = {
 		court: null,
 		begin: null,
 		end: null,

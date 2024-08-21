@@ -22,7 +22,7 @@
 			</Card>
 			<Card>
 				<template #title> Matches</template>
-				<template #content> We show the matches here</template>
+				<template #content><MatchesContainerDraggable :isUpdating="isUpdating" /></template>
 			</Card>
 		</div>
 		<div class="col-8">
@@ -41,6 +41,7 @@ import { getCourts } from "@/backend/court"
 import { ref, watch } from "vue"
 import { Court } from "@/interfaces/court"
 import ViewCreateCourtSmall from "@/components/views/court/ViewCreateCourtSmall.vue"
+import MatchesContainerDraggable from "@/components/views/prepare/scheduleMatches/MatchesContainerDraggable.vue"
 
 const route = useRoute()
 const router = useRouter()

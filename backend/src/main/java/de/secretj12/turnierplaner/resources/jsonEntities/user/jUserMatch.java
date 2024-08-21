@@ -8,6 +8,7 @@ import java.util.UUID;
 
 public class jUserMatch {
 
+    private UUID id;
     private String court;
     private LocalDateTime begin;
     private LocalDateTime end;
@@ -24,6 +25,7 @@ public class jUserMatch {
     }
 
     public jUserMatch(Match match) {
+        this.id = match.getId();
         this.court = match.getCourt() != null ? match.getCourt().getName() : null;
         this.begin = match.getBegin();
         this.end = match.getEnd();
@@ -37,6 +39,14 @@ public class jUserMatch {
             this.teamB = match.getTeamB().getId();
 
         this.sets = match.getSets().stream().map(jUserSet::new).toList();
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public String getCourt() {

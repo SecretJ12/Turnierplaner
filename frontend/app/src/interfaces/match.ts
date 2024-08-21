@@ -12,6 +12,7 @@ export interface Set {
 }
 
 export interface Match {
+	id?: string
 	court: string | null
 	begin: Date | null
 	end: Date | null
@@ -24,6 +25,7 @@ export interface Match {
 }
 
 export interface MatchServer {
+	id?: string
 	court: string | undefined
 	begin: string | undefined
 	end: string | undefined
@@ -62,6 +64,7 @@ export function matchServerToClient(
 	}
 
 	return {
+		id: match.id,
 		court: match.court ? match.court : null,
 		begin: match.begin ? new Date(match.begin) : null,
 		end: match.end ? new Date(match.end) : null,
