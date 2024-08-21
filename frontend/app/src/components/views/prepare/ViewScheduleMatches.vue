@@ -29,7 +29,6 @@ const toast = useToast()
 const { t } = useI18n({ inheritLocale: true })
 
 const isUpdating = defineModel<boolean>("isUpdating", { default: false })
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const { data: competition } = getCompetitionDetails(route, t, toast)
 
 function prevPage() {
