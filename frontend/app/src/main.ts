@@ -60,7 +60,7 @@ import "material-symbols"
 
 /* yup validation */
 import { setLocale } from "yup"
-import { VueQueryPlugin, VueQueryPluginOptions } from "vue-query"
+import { VueQueryPlugin, VueQueryPluginOptions } from "@tanstack/vue-query"
 
 axios.defaults.baseURL = settings.BACKEND
 
@@ -125,10 +125,10 @@ const vueQueryPluginOptions: VueQueryPluginOptions = {
 				refetchOnWindowFocus: false,
 				refetchOnReconnect: false,
 				refetchOnMount: false,
-				keepPreviousData: true,
 			},
 		},
 	},
+	enableDevtoolsV6Plugin: true,
 }
 
 app

@@ -219,7 +219,7 @@ import {
 	useSignUpDoubleTog,
 	useSignUpSingle,
 } from "@/backend/competition"
-import { useQueryClient } from "vue-query"
+import { useQueryClient } from "@tanstack/vue-query"
 import { extractSearchPlayer, getPlayer } from "@/backend/player"
 
 const { t } = useI18n({ inheritLocale: true })
@@ -228,7 +228,7 @@ const toast = useToast()
 const route = useRoute()
 const queryClient = useQueryClient()
 
-const { data: competition } = getCompetitionDetails(route, t, toast, {})
+const { data: competition } = getCompetitionDetails(route, t, toast)
 
 const selectedPlayerA = ref<Player | null>(null)
 const searchA = ref<string>("")
@@ -247,9 +247,9 @@ const { data: suggestionsPlayerB, isFetching: loadingB } = getPlayer(
 	toast,
 )
 
-const { mutate: mutateSignUpSingle, isLoading: mutSingleLoading } =
+const { mutate: mutateSignUpSingle, isPending: mutSingleLoading } =
 	useSignUpSingle(route, t, toast, queryClient)
-const { mutate: mutateSignUpDoubleTog, isLoading: mutDoubleLoading } =
+const { mutate: mutateSignUpDoubleTog, isPending: mutDoubleLoading } =
 	useSignUpDoubleTog(route, t, toast, queryClient)
 
 function queryPlayerA(event: DropdownFilterEvent) {

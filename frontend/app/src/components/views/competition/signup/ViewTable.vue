@@ -191,7 +191,7 @@ const route = useRoute()
 const isLoggedIn = inject("loggedIn", ref(false))
 const { data: canEdit } = getCanEdit(<string>route.params.tourId, isLoggedIn)
 
-const { data: competition } = getCompetitionDetails(route, t, toast, {})
+const { data: competition } = getCompetitionDetails(route, t, toast)
 const { data: signedUp } = getSignedUpSepByComp(route, t, toast)
 
 function deletePlayer(player: Player) {

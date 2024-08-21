@@ -6,14 +6,14 @@
 					v-if="!competition || isUpdating"
 					:competition="CompetitionDefault"
 					:disabled="true"
-					@submit="save"
+					@submit="submit"
 				/>
 				<FormCompetition
 					v-else
 					ref="form"
 					:competition="competition"
 					:disabled="false"
-					@submit="save"
+					@submit="submit"
 				/>
 			</template>
 		</Card>
@@ -26,9 +26,12 @@ import { useRoute } from "vue-router"
 import FormCompetition from "@/components/views/competitions/FormCompetition.vue"
 import { useI18n } from "vue-i18n"
 import { CompetitionDefault, CompetitionServer } from "@/interfaces/competition"
-import { getCompetitionDetails, updateCompetition } from "@/backend/competition"
+import {
+	getCompetitionDetails,
+	useUpdateCompetition,
+} from "@/backend/competition"
 import { useToast } from "primevue/usetoast"
-import { ref } from "vue"
+import { ref, watch } from "vue"
 
 const { t } = useI18n({ inheritLocale: true })
 const toast = useToast()
@@ -42,19 +45,28 @@ function sleep(milliseconds: number) {
 	return new Promise((resolve) => setTimeout(resolve, milliseconds))
 }
 
-const { data: competition } = getCompetitionDetails(route, t, toast, {
-	suc: async () => {
-		isUpdating.value = true
-		await sleep(100)
-		isUpdating.value = false
-	},
-	err: () => {
-		router.back()
+const { data: competition } = getCompetitionDetails(route, t, toast)
+watch(competition, async () => {
+	isUpdating.value = true
+	await sleep(100)
+	isUpdating.value = false
+})
+
+const { mutate } = useUpdateCompetition(route, t, toast, {
+	suc(competition) {
+		router.replace({
+			name: "settings",
+			params: { tourId: route.params.tourid, compId: competition.name },
+		})
 	},
 })
 
-function save(server_data: CompetitionServer) {
-	updateCompetition(server_data, <string>route.params.tourId, t, toast, {})
+function save() {
+	form.value?.onSubmit()
+}
+
+function submit(server_data: CompetitionServer) {
+	mutate(server_data)
 }
 
 function nextPage() {

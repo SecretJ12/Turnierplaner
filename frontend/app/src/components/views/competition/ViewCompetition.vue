@@ -71,9 +71,8 @@ const { data: tournament, isSuccess: tournamentSuc } = getTournamentDetails(
 	route,
 	t,
 	toast,
-	{},
 )
-const { data: competition } = getCompetitionDetails(route, t, toast, {})
+const { data: competition } = getCompetitionDetails(route, t, toast)
 
 function settings() {
 	router.push({

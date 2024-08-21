@@ -1,13 +1,14 @@
 import { Ref } from "vue"
 import { auth } from "@/security/AuthService"
 import axios from "axios"
-import { useQuery } from "vue-query/esm"
+import { useQuery } from "@tanstack/vue-query"
 
 export function getCanCreate(isLoggedIn: Ref<boolean>) {
-	return useQuery(["can_create", isLoggedIn], fetchCanCreate, {
+	return useQuery({
+		queryKey: ["can_create", isLoggedIn],
+		queryFn: fetchCanCreate,
 		placeholderData: false,
 		staleTime: 0,
-		keepPreviousData: false,
 	})
 }
 
@@ -26,15 +27,12 @@ async function fetchCanCreate() {
 }
 
 export function getCanEdit(tourId: string, isLoggedIn: Ref<boolean>) {
-	return useQuery(
-		["can_edit", tourId, isLoggedIn],
-		() => fetchCanEdit(tourId),
-		{
-			placeholderData: false,
-			staleTime: 0,
-			keepPreviousData: false,
-		},
-	)
+	return useQuery({
+		queryKey: ["can_edit", tourId, isLoggedIn],
+		queryFn: () => fetchCanEdit(tourId),
+		placeholderData: false,
+		staleTime: 0,
+	})
 }
 
 async function fetchCanEdit(tourId: string) {

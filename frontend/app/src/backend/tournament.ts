@@ -6,73 +6,64 @@ import {
 	tournamentServerToClient,
 } from "@/interfaces/tournament"
 import { ToastServiceMethods } from "primevue/toastservice"
-import { useQuery } from "vue-query/esm"
 import { RouteLocationNormalizedLoaded } from "vue-router"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query"
 
 export function getTournamentList(
 	isLoggedIn: Ref<boolean>,
 	t: (s: string) => string,
 	toast: ToastServiceMethods,
 ) {
-	return useQuery(
-		["tournamentList", isLoggedIn],
-		async () => {
+	return useQuery({
+		queryKey: ["tournamentList", isLoggedIn],
+		queryFn: async () => {
 			return axios
 				.get<TournamentServer[]>("/tournament/list")
 				.then<Tournament[]>((response) => {
 					return response.data.map(tournamentServerToClient)
 				})
-		},
-		{
-			onError(error) {
-				toast.add({
-					severity: "error",
-					summary: t("ViewTournaments.loadingFailed"),
-					detail: error,
-					life: 3000,
+				.catch((error) => {
+					toast.add({
+						severity: "error",
+						summary: t("ViewTournaments.loadingFailed"),
+						detail: error,
+						life: 3000,
+					})
+					console.log(error)
+					throw error
 				})
-				console.log(error)
-			},
 		},
-	)
+	})
 }
 
 export function getTournamentDetails(
 	route: RouteLocationNormalizedLoaded,
 	t: (s: string) => string,
 	toast: ToastServiceMethods,
-	handler: {
-		suc?: () => void
-		err?: () => void
-	},
 ) {
-	return useQuery(
-		["tournament", computed(() => route.params.tourId)],
-		async () => {
+	return useQuery({
+		queryKey: ["tournament", computed(() => route.params.tourId)],
+		queryFn: async () => {
 			return axios
 				.get<TournamentServer>(`/tournament/${route.params.tourId}/details`)
 				.then<Tournament>((response) => {
 					return tournamentServerToClient(response.data)
 				})
-		},
-		{
-			onError(error) {
-				toast.add({
-					severity: "error",
-					summary: t("ViewEditTournament.loadingDetailsFailed"),
-					detail: error,
-					life: 3000,
+				.catch((error) => {
+					toast.add({
+						severity: "error",
+						summary: t("ViewEditTournament.loadingDetailsFailed"),
+						detail: error,
+						life: 3000,
+					})
+					console.log(error)
+					throw error
 				})
-				console.log(error)
-				if (handler.err) handler.err()
-			},
-			onSuccess: handler.suc,
 		},
-	)
+	})
 }
 
-export function updateTournament(
-	tournament: TournamentServer,
+export function useUpdateTournament(
 	t: (s: string) => string,
 	toast: ToastServiceMethods,
 	handler: {
@@ -80,18 +71,31 @@ export function updateTournament(
 		err?: () => void
 	},
 ) {
-	axios
-		.post("/tournament/update", tournament)
-		.then(() => {
+	const queryClient = useQueryClient()
+	return useMutation({
+		mutationFn: (tournament: TournamentServer) =>
+			axios.post("/tournament/update", tournament),
+		onSuccess(__, tournament) {
 			toast.add({
 				severity: "success",
 				summary: t("ViewEditTournament.tournamentUpdating"),
 				detail: t("ViewEditTournament.tournamentUpdated"),
 				life: 3000,
 			})
-			if (handler.suc) handler.suc()
-		})
-		.catch((error) => {
+			Promise.all([
+				queryClient.invalidateQueries({
+					queryKey: ["tournamentList"],
+					refetchType: "all",
+				}),
+				queryClient.invalidateQueries({
+					queryKey: ["tournament", tournament.name],
+					refetchType: "all",
+				}),
+			]).then(() => {
+				if (handler.suc) handler.suc()
+			})
+		},
+		onError(error) {
 			toast.add({
 				severity: "error",
 				summary: t("ViewEditTournament.tournamentUpdateFailed"),
@@ -99,11 +103,11 @@ export function updateTournament(
 				life: 3000,
 			})
 			if (handler.err) handler.err()
-		})
+		},
+	})
 }
 
-export function addTournament(
-	tournament: TournamentServer,
+export function useAddTournament(
 	t: (s: string) => string,
 	toast: ToastServiceMethods,
 	handler: {
@@ -111,9 +115,16 @@ export function addTournament(
 		err?: () => void
 	},
 ) {
-	axios
-		.post("/tournament/add", tournament)
-		.then(() => {
+	const queryClient = useQueryClient()
+	return useMutation({
+		mutationFn: (tournament: TournamentServer) =>
+			axios.post("/tournament/add", tournament),
+
+		onSuccess() {
+			queryClient.invalidateQueries({
+				queryKey: ["tournamentList"],
+				refetchType: "all",
+			})
 			toast.add({
 				severity: "success",
 				summary: t("ViewCreateTournament.tournamentCreating"),
@@ -122,8 +133,8 @@ export function addTournament(
 				closable: false,
 			})
 			if (handler.suc) handler.suc()
-		})
-		.catch(() => {
+		},
+		onError() {
 			toast.add({
 				severity: "error",
 				summary: t("ViewCreateTournament.tournamentCreating"),
@@ -132,5 +143,6 @@ export function addTournament(
 				closable: false,
 			})
 			if (handler.err) handler.err()
-		})
+		},
+	})
 }

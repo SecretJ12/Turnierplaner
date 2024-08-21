@@ -102,17 +102,7 @@ const route = useRoute()
 
 const isLoggedIn = inject("loggedIn", ref(false))
 const { data: canEdit } = getCanEdit(<string>route.params.tourId, isLoggedIn)
-const { data: competitions } = getCompetitionsList(
-	route,
-	isLoggedIn,
-	t,
-	toast,
-	{
-		err: () => {
-			router.push({ name: "Tournaments" })
-		},
-	},
-)
+const { data: competitions } = getCompetitionsList(route, isLoggedIn, t, toast)
 
 const options: Intl.DateTimeFormatOptions = {
 	weekday: "long",
@@ -137,7 +127,7 @@ const status = ref([
 ])
 
 const openRegistration = ref(false)
-const { data, isLoading } = getTournamentDetails(route, t, toast, {})
+const { data, isLoading } = getTournamentDetails(route, t, toast)
 
 watch(data, () => {
 	if (data.value === undefined) return

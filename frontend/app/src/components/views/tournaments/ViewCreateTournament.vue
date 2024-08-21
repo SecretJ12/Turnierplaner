@@ -13,20 +13,25 @@ import { useToast } from "primevue/usetoast"
 import FormTournament from "@/components/views/tournaments/FormTournament.vue"
 import { TournamentServer } from "@/interfaces/tournament"
 import { useI18n } from "vue-i18n"
-import { addTournament } from "@/backend/tournament"
+import { useAddTournament } from "@/backend/tournament"
 
 const { t } = useI18n({ inheritLocale: true })
 const toast = useToast()
 
+let tourName: string | null = null
+const { mutate } = useAddTournament(t, toast, {
+	suc: () => {
+		if (!tourName) return
+		router.push({
+			name: "Competitions",
+			params: { tourId: tourName },
+		})
+	},
+})
+
 function submit(server_data: TournamentServer) {
-	addTournament(server_data, t, toast, {
-		suc: () => {
-			router.push({
-				name: "Competitions",
-				params: { tourId: server_data.name },
-			})
-		},
-	})
+	tourName = server_data.name
+	mutate(server_data)
 }
 </script>
 

@@ -101,25 +101,13 @@ const isUpdating = ref(false)
 const curPrepStep = ref<InstanceType<typeof ViewEditTeams> | null>()
 
 const isLoggedIn = inject("loggedIn", ref(false))
-const { data: competitions } = getCompetitionsList(
-	route,
-	isLoggedIn,
-	t,
-	toast,
-	{
-		err: () => {
-			router.push({
-				name: "Tournaments",
-			})
-		},
-	},
-)
+const { data: competitions } = getCompetitionsList(route, isLoggedIn, t, toast)
 const activeTab = ref<number>(0)
 watch([competitions, route], () => updateRoute())
 updateRoute()
 
 function updateRoute(compId?: string) {
-	if (!competitions.value) return
+	if (!competitions.value || competitions.value.length === 0) return
 
 	if (!compId) compId = <string>route.params.compId
 	if (compId === "" || !competitions.value.find((c) => c.name === compId))

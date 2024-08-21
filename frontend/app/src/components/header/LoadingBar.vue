@@ -7,7 +7,7 @@
 <script lang="ts" setup>
 import { ref } from "vue"
 import axios from "axios"
-import { useIsFetching } from "vue-query"
+import { useIsFetching } from "@tanstack/vue-query"
 
 const isFetching = useIsFetching()
 
