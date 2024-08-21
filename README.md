@@ -23,8 +23,8 @@ set up the admin username and password. For this create a `.env` file under the 
 KEYCLOAK_ADMIN_USER=${ your keycloak admin user }
 KEYCLOAK_ADMIN_PASS=${ your keycloak admin password }
 
-KC_DB_USERNAME=${the username for the keycloak database}
-KC_DB_PASSWORD=${the password for the keycloak database}
+KC_DB_USERNAME=${ the username for the keycloak database }
+KC_DB_PASSWORD=${ the password for the keycloak database }
 ```
 
 # Starting the application in development mode
