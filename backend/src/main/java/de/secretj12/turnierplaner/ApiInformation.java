@@ -9,11 +9,11 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 @OpenAPIDefinition(
         tags = {
-                @Tag(name="widget", description="Widget operations."),
-                @Tag(name="gasket", description="Operations related to gaskets")
+                @Tag(name = "widget", description = "Widget operations."),
+                @Tag(name = "gasket", description = "Operations related to gaskets")
         },
         info = @Info(
-                title="Tournament planer backend API",
+                title = "Tournament planer backend API",
                 version = "1.0.0",
                 contact = @Contact(
                         name = "Jonas and Oliver",
