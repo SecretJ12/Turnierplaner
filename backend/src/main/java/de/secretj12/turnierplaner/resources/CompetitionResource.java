@@ -423,7 +423,7 @@ public class CompetitionResource {
 
         Match finale = matches.getFinal(competition);
         Match thirdPlace = matches.getThirdPlace(competition);
-        if (finale == null || thirdPlace == null)
+        if (finale == null || (groups.size() > 2 && thirdPlace == null))
             throw new InternalServerErrorException("Finale or thirdPlace is null");
         return new jUserGroupSystem(groups, finale, thirdPlace);
     }
