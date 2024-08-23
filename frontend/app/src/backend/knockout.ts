@@ -1,5 +1,5 @@
 import { RouteLocationNormalizedLoaded } from "vue-router"
-import { computed } from "vue"
+import { computed, ref, Ref } from "vue"
 import axios from "axios"
 import {
 	KnockoutMatch,
@@ -10,8 +10,12 @@ import {
 import { ToastServiceMethods } from "primevue/toastservice"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query"
 
-export function getKnockout(route: RouteLocationNormalizedLoaded) {
+export function getKnockout(
+	route: RouteLocationNormalizedLoaded,
+	load: Ref<boolean> = ref(true),
+) {
 	return useQuery({
+		enabled: load,
 		queryKey: [
 			"knockout",
 			computed(() => route.params.tourId),

@@ -10,15 +10,33 @@
 		:sticky-split-labels="true"
 		:min-split-width="150"
 		:snap-to-time="15"
+		editable-events
+		@event-drop="onEventDrop"
 	/>
 </template>
 
 <script setup lang="ts">
+import { KnockoutMatch } from "@/interfaces/knockoutSystem"
 // @ts-expect-error vue-cal does not have proper typescript support
 import VueCal from "vue-cal"
 import "vue-cal/dist/vuecal.css"
 import { Court } from "@/interfaces/court"
 import { computed } from "vue"
+
+const emit = defineEmits<{ removeId: [id: string] }>()
+
+function onEventDrop({
+	originalEvent,
+	external,
+}: {
+	originalEvent: { match: KnockoutMatch }
+	external: boolean
+}) {
+	if (external) {
+		if (originalEvent.match.id) emit("removeId", originalEvent.match.id)
+		else throw "Match id is missing"
+	}
+}
 
 const props = defineProps<{
 	courts: Court[]

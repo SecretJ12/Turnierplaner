@@ -22,12 +22,28 @@
 			</Card>
 			<Card>
 				<template #title> Matches</template>
-				<template #content><MatchesContainerDraggable :isUpdating="isUpdating" /></template>
+				<template #content>
+					<MatchesContainerDraggable
+						v-model="matches"
+						:is-updating="isUpdating"
+					/>
+				</template>
 			</Card>
 		</div>
 		<div class="col-8">
 			<div class="flex flex-column gap-3">
-				<SchedulingCalendar :courts="selectedCourts" />
+				<SchedulingCalendar
+					:courts="selectedCourts"
+					@remove-id="
+						(id) => {
+							const extEventToDeletePos = matches.findIndex(
+								(match) => id === match.id,
+							)
+							if (extEventToDeletePos > -1)
+								matches.splice(extEventToDeletePos, 1)
+						}
+					"
+				/>
 			</div>
 		</div>
 	</div>
@@ -42,6 +58,7 @@ import { ref, watch } from "vue"
 import { Court } from "@/interfaces/court"
 import ViewCreateCourtSmall from "@/components/views/court/ViewCreateCourtSmall.vue"
 import MatchesContainerDraggable from "@/components/views/prepare/scheduleMatches/MatchesContainerDraggable.vue"
+import { Match } from "@/interfaces/match"
 
 const route = useRoute()
 const router = useRouter()
@@ -50,6 +67,8 @@ const toast = useToast()
 const isUpdating = defineModel<boolean>("isUpdating", { default: false })
 
 const { data: courts } = getCourts()
+
+const matches = ref<Match[]>([])
 
 const selectedCourts = ref<Court[]>([])
 watch(selectedCourts, () => {

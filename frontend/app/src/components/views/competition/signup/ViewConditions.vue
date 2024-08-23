@@ -46,7 +46,6 @@ import { computed } from "vue"
 
 const { t } = useI18n({ inheritLocale: true })
 const toast = useToast()
-
 const route = useRoute()
 
 const { data: competition } = getCompetitionDetails(route, t, toast)
