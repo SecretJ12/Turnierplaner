@@ -53,37 +53,44 @@ const { data: groups } = getGroup(
 )
 
 const matches = defineModel<Match[]>({ default: [] })
-watch([knockout, groups], () => {
-	matches.value.splice(0, matches.value.length)
-	if (competition.value?.tourType === TourType.KNOCKOUT && knockout.value) {
-		const queue: KnockoutMatch[] = []
-		if (knockout.value?.finale) queue.push(knockout.value.finale)
-		if (knockout.value?.thirdPlace) queue.push(knockout.value.thirdPlace)
-		while (queue.length > 0) {
-			matches.value.push(queue[0])
-			if (queue[0].prevMatch) {
-				queue.push(queue[0].prevMatch.a)
-				queue.push(queue[0].prevMatch.b)
+watch(
+	[knockout, groups],
+	() => {
+		matches.value.splice(0, matches.value.length)
+		if (competition.value?.tourType === TourType.KNOCKOUT && knockout.value) {
+			const queue: KnockoutMatch[] = []
+			if (knockout.value?.finale) queue.push(knockout.value.finale)
+			if (knockout.value?.thirdPlace) queue.push(knockout.value.thirdPlace)
+			while (queue.length > 0) {
+				matches.value.push(queue[0])
+				if (queue[0].prevMatch) {
+					queue.push(queue[0].prevMatch.a)
+					queue.push(queue[0].prevMatch.b)
+				}
+				queue.splice(0, 1)
 			}
-			queue.splice(0, 1)
-		}
-	} else if (competition.value?.tourType === TourType.GROUPS && groups.value) {
-		const queue: GroupMatch[] = []
-		if (groups.value?.finale) queue.push(groups.value.finale)
-		if (groups.value?.thirdPlace) queue.push(groups.value.thirdPlace)
-		while (queue.length > 0) {
-			matches.value.push(queue[0])
-			if (queue[0].prevMatch) {
-				queue.push(queue[0].prevMatch.a)
-				queue.push(queue[0].prevMatch.b)
+		} else if (
+			competition.value?.tourType === TourType.GROUPS &&
+			groups.value
+		) {
+			const queue: GroupMatch[] = []
+			if (groups.value?.finale) queue.push(groups.value.finale)
+			if (groups.value?.thirdPlace) queue.push(groups.value.thirdPlace)
+			while (queue.length > 0) {
+				matches.value.push(queue[0])
+				if (queue[0].prevMatch) {
+					queue.push(queue[0].prevMatch.a)
+					queue.push(queue[0].prevMatch.b)
+				}
+				queue.splice(0, 1)
 			}
-			queue.splice(0, 1)
+			groups.value?.groups.forEach((group) =>
+				matches.value.push(...group.matches),
+			)
 		}
-		groups.value?.groups.forEach((group) =>
-			matches.value.push(...group.matches),
-		)
-	}
-})
+	},
+	{ immediate: true },
+)
 
 const props = withDefaults(
 	defineProps<{
