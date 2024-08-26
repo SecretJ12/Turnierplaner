@@ -1,23 +1,45 @@
 <template>
 	<vue-cal
 		v-if="tournament"
+		:key="calid"
 		active-view="week"
-		hide-view-selector
-		:disable-views="['years', 'year', 'month', 'day']"
+		:disable-views="['years', 'year', 'month']"
 		:locale="$i18n.locale"
 		:time-from="8 * 60"
 		:time-to="20 * 60"
 		:split-days="splitDays"
 		:sticky-split-labels="true"
-		:min-split-width="150"
+		:min-event-width="80"
+		:min-split-width="200"
 		:snap-to-time="15"
-		editable-events
+		:editable-events="!!props.courts.length"
 		:events="events"
 		@event-drop="onEventDrop"
+		@event-change="onEventChange"
 	>
 		<template #event="{ event }">
-			<div class="w-full flex flex-column">
-				<p>test</p>
+			<div class="w-full flex flex-column p-1 text-left">
+				<div>{{ event.data.title }}</div>
+				<div class="grid">
+					<div class="col-6" style="font-size: 0.5rem">
+						<template v-if="event.data.teamA">
+							{{ event.data.teamA.playerA.name }}<br />
+							<template v-if="event.data.teamA.playerB">
+								{{ event.data.teamA.playerB.name }}
+							</template>
+						</template>
+						<template v-else> N.A. </template>
+					</div>
+					<div class="col-6" style="font-size: 0.5rem">
+						<template v-if="event.data.teamB">
+							{{ event.data.teamB.playerA.name }}<br />
+							<template v-if="event.data.teamB.playerB">
+								{{ event.data.teamB.playerB.name }}
+							</template>
+						</template>
+						<template v-else> N.A. </template>
+					</div>
+				</div>
 			</div>
 		</template>
 	</vue-cal>
@@ -29,7 +51,6 @@ import VueCal from "vue-cal"
 import "vue-cal/dist/vuecal.css"
 import { Court } from "@/interfaces/court"
 import { computed, ref, watch } from "vue"
-import { KnockoutMatch } from "@/interfaces/knockoutSystem"
 import { getTournamentDetails } from "@/backend/tournament"
 import { useRoute } from "vue-router"
 import { useToast } from "primevue/usetoast"
@@ -45,7 +66,16 @@ import {
 	extractKnockoutMatches,
 } from "@/components/views/prepare/scheduleMatches/ScheduleMatchesHelper"
 
+const calid = ref<number>(0)
+function reload() {
+	calid.value++
+}
+
 const emit = defineEmits<{ removeId: [id: string] }>()
+const props = defineProps<{
+	courts: Court[]
+}>()
+watch(() => props.courts, reload)
 
 const { t } = useI18n({ inheritLocale: true })
 const route = useRoute()
@@ -100,26 +130,61 @@ function addMatch(match: Match, title: string) {
 		})
 }
 
+interface Event {
+	start: Date
+	end: Date
+	split: string
+	data: EventMatch
+}
+
 function onEventDrop({
 	event,
 	originalEvent,
 	external,
 }: {
-	originalEvent: { data: KnockoutMatch }
+	event: Event
+	originalEvent: Event
 	external: boolean
 }) {
 	if (external) {
 		if (originalEvent.data.id) emit("removeId", originalEvent.data.id)
 		else throw "Match id is missing"
 
-		console.log(event)
-		console.log(originalEvent)
+		events.value.push({
+			start: event.start,
+			end: event.end,
+			split: event.split,
+			data: {
+				...originalEvent.data,
+				court: event.split,
+			},
+		})
 	}
 }
 
-const props = defineProps<{
-	courts: Court[]
-}>()
+function onEventChange({
+	event,
+	originalEvent,
+}: {
+	event: Event
+	originalEvent: Event
+}) {
+	if (!originalEvent) return
+
+	events.value.splice(
+		events.value.findIndex((e) => e.data.id === originalEvent.data.id),
+		1,
+	)
+	events.value.push({
+		start: event.start,
+		end: event.end,
+		split: event.split,
+		data: {
+			...originalEvent.data,
+			court: event.split,
+		},
+	})
+}
 
 const splitDays = computed(() => {
 	return props.courts.map((court, index) => {
