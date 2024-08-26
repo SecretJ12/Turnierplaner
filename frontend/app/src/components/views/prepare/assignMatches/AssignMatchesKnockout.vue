@@ -39,6 +39,7 @@
 							:third-place="thirdPlace ?? undefined"
 							:border-thickness="2"
 							:border-radius="0"
+							:titles="knockoutTitle(t)"
 						>
 							<template
 								#match="{
@@ -86,6 +87,7 @@ import {
 	selectRandomElement,
 } from "@/components/views/prepare/assignMatches/AssginMatchesHelper"
 import { sleep, track } from "@/backend/Tracker"
+import { knockoutTitle } from "@/components/views/competition/knockoutSystem/KnockoutTitleGenerator"
 
 const route = useRoute()
 const toast = useToast()
