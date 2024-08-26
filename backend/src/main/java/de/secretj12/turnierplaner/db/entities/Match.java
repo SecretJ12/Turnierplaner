@@ -9,7 +9,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -48,9 +48,9 @@ public class Match {
     private Court court;
 
     @Column(name = "begin_time")
-    private LocalDateTime begin;
+    private Instant begin;
     @Column(name = "end_time")
-    private LocalDateTime end;
+    private Instant end;
 
     @Column(name = "finished")
     private Boolean finished;
@@ -111,19 +111,19 @@ public class Match {
         this.court = courts;
     }
 
-    public LocalDateTime getBegin() {
+    public Instant getBegin() {
         return begin;
     }
 
-    public void setBegin(LocalDateTime begin) {
+    public void setBegin(Instant begin) {
         this.begin = begin;
     }
 
-    public LocalDateTime getEnd() {
+    public Instant getEnd() {
         return end;
     }
 
-    public void setEnd(LocalDateTime end) {
+    public void setEnd(Instant end) {
         this.end = end;
     }
 

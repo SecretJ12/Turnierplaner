@@ -4,7 +4,7 @@ import de.secretj12.turnierplaner.db.entities.Match;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,8 +13,8 @@ public class jUserMatch {
     private static final Logger log = LoggerFactory.getLogger(jUserMatch.class);
     private UUID id;
     private String court;
-    private LocalDateTime begin;
-    private LocalDateTime end;
+    private Instant begin;
+    private Instant end;
 
     private Boolean finished;
     private Boolean winner;
@@ -60,19 +60,19 @@ public class jUserMatch {
         this.court = court;
     }
 
-    public LocalDateTime getBegin() {
+    public Instant getBegin() {
         return begin;
     }
 
-    public void setBegin(LocalDateTime begin) {
+    public void setBegin(Instant begin) {
         this.begin = begin;
     }
 
-    public LocalDateTime getEnd() {
+    public Instant getEnd() {
         return end;
     }
 
-    public void setEnd(LocalDateTime end) {
+    public void setEnd(Instant end) {
         this.end = end;
     }
 

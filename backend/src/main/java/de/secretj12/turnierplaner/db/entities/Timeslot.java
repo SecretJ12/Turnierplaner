@@ -4,7 +4,7 @@ import de.secretj12.turnierplaner.db.entities.competition.Competition;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 @Entity
@@ -16,9 +16,9 @@ public class Timeslot {
     private UUID id;
 
     @Column(name = "begin_time")
-    private LocalDateTime begin;
+    private Instant begin;
     @Column(name = "end_time")
-    private LocalDateTime end;
+    private Instant end;
     @ManyToOne
     @JoinColumns(@JoinColumn(name = "competition_id"))
     private Competition competition;
@@ -35,19 +35,19 @@ public class Timeslot {
         this.id = id;
     }
 
-    public LocalDateTime getBegin() {
+    public Instant getBegin() {
         return begin;
     }
 
-    public void setBegin(LocalDateTime begin) {
+    public void setBegin(Instant begin) {
         this.begin = begin;
     }
 
-    public LocalDateTime getEnd() {
+    public Instant getEnd() {
         return end;
     }
 
-    public void setEnd(LocalDateTime end) {
+    public void setEnd(Instant end) {
         this.end = end;
     }
 
