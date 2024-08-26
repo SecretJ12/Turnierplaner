@@ -1,6 +1,8 @@
 package de.secretj12.turnierplaner.resources.jsonEntities.user;
 
 import de.secretj12.turnierplaner.db.entities.Match;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -8,6 +10,7 @@ import java.util.UUID;
 
 public class jUserMatch {
 
+    private static final Logger log = LoggerFactory.getLogger(jUserMatch.class);
     private UUID id;
     private String court;
     private LocalDateTime begin;

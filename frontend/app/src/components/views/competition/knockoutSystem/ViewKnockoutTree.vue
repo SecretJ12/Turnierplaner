@@ -28,7 +28,6 @@
 								:index="index"
 								@update:teamA="
 									(team: Team | null) => {
-										console.log('update teamA')
 										getMatch(level, index).teamA = team
 									}
 								"

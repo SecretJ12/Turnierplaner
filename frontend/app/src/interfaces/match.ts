@@ -27,8 +27,8 @@ export interface Match {
 export interface MatchServer {
 	id?: string
 	court: string | undefined
-	begin: string | undefined
-	end: string | undefined
+	begin: Date | undefined
+	end: Date | undefined
 	finished: boolean | undefined
 	winner: boolean | undefined
 	teamA: string | null
@@ -74,5 +74,19 @@ export function matchServerToClient(
 		teamB: teamB,
 		sets: sets,
 		curGame: null,
+	}
+}
+
+export function matchClientToServer(match: Match): MatchServer {
+	return {
+		id: match.id,
+		court: match.court ?? undefined,
+		begin: match.begin ?? undefined,
+		end: match.end ?? undefined,
+		finished: match.finished,
+		winner: match.winner ?? undefined,
+		teamA: match.teamA?.id ?? null,
+		teamB: match.teamB?.id ?? null,
+		sets: match.sets ?? [],
 	}
 }

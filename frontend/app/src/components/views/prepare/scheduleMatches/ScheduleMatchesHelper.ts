@@ -7,6 +7,13 @@ export interface EventMatch extends Match {
 	title: string
 }
 
+export interface CalEvent {
+	start: Date
+	end: Date
+	split: string
+	data: EventMatch
+}
+
 export function extractKnockoutMatches(
 	knockout: KnockoutSystem,
 	t: (_: string) => string,

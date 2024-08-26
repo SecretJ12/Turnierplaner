@@ -33,6 +33,7 @@
 		<div class="col-8">
 			<div class="flex flex-column gap-3">
 				<SchedulingCalendar
+					v-model="scheduledMatches"
 					:courts="selectedCourts"
 					@remove-id="
 						(id) => {
@@ -58,17 +59,26 @@ import { ref, watch } from "vue"
 import { Court } from "@/interfaces/court"
 import ViewCreateCourtSmall from "@/components/views/court/ViewCreateCourtSmall.vue"
 import MatchesContainerDraggable from "@/components/views/prepare/scheduleMatches/MatchesContainerDraggable.vue"
-import { Match } from "@/interfaces/match"
+import {
+	CalEvent,
+	EventMatch,
+} from "@/components/views/prepare/scheduleMatches/ScheduleMatchesHelper"
+import { useUpdateMatches } from "@/backend/match"
+import { useI18n } from "vue-i18n"
 
 const route = useRoute()
 const router = useRouter()
+const { t } = useI18n({ inheritLocale: true })
 const toast = useToast()
 
 const isUpdating = defineModel<boolean>("isUpdating", { default: false })
 
 const { data: courts } = getCourts()
 
-const matches = ref<Match[]>([])
+const matches = ref<EventMatch[]>([])
+const scheduledMatches = ref<CalEvent[]>([])
+
+const { mutate: updateMatches } = useUpdateMatches(route, t, toast)
 
 const selectedCourts = ref<Court[]>([])
 watch(selectedCourts, () => {
@@ -97,12 +107,7 @@ function nextPage() {
 function save() {
 	// TODO
 	isUpdating.value = true
-	toast.add({
-		severity: "success",
-		summary: "Scheduling saved",
-		detail: "TODO",
-		life: 3000,
-	})
+	updateMatches(scheduledMatches.value.map((event) => event.data))
 	isUpdating.value = false
 }
 

@@ -28,7 +28,7 @@
 								{{ event.data.teamA.playerB.name }}
 							</template>
 						</template>
-						<template v-else> N.A. </template>
+						<template v-else> N.A.</template>
 					</div>
 					<div class="col-6" style="font-size: 0.5rem">
 						<template v-if="event.data.teamB">
@@ -37,7 +37,7 @@
 								{{ event.data.teamB.playerB.name }}
 							</template>
 						</template>
-						<template v-else> N.A. </template>
+						<template v-else> N.A.</template>
 					</div>
 				</div>
 			</div>
@@ -61,12 +61,13 @@ import { TourType } from "@/interfaces/competition"
 import { getGroup } from "@/backend/group"
 import { Match } from "@/interfaces/match"
 import {
-	EventMatch,
+	CalEvent,
 	extractGroupMatches,
 	extractKnockoutMatches,
 } from "@/components/views/prepare/scheduleMatches/ScheduleMatchesHelper"
 
 const calid = ref<number>(0)
+
 function reload() {
 	calid.value++
 }
@@ -91,14 +92,7 @@ const { data: groups } = getGroup(
 	computed(() => competition.value?.tourType === TourType.GROUPS),
 )
 
-const events = ref<
-	{
-		start: Date
-		end: Date
-		split: string
-		data: EventMatch
-	}[]
->([])
+const events = defineModel<CalEvent[]>({ default: [] })
 watch(
 	[knockout, groups],
 	() => {
@@ -130,20 +124,13 @@ function addMatch(match: Match, title: string) {
 		})
 }
 
-interface Event {
-	start: Date
-	end: Date
-	split: string
-	data: EventMatch
-}
-
 function onEventDrop({
 	event,
 	originalEvent,
 	external,
 }: {
-	event: Event
-	originalEvent: Event
+	event: CalEvent
+	originalEvent: CalEvent
 	external: boolean
 }) {
 	if (external) {
@@ -166,8 +153,8 @@ function onEventChange({
 	event,
 	originalEvent,
 }: {
-	event: Event
-	originalEvent: Event
+	event: CalEvent
+	originalEvent: CalEvent
 }) {
 	if (!originalEvent) return
 
@@ -181,6 +168,8 @@ function onEventChange({
 		split: event.split,
 		data: {
 			...originalEvent.data,
+			begin: event.start,
+			end: event.end,
 			court: event.split,
 		},
 	})
