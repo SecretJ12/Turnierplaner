@@ -1,5 +1,5 @@
 import { Match, MatchServer, matchServerToClient } from "@/interfaces/match"
-import { Team } from "@/interfaces/team"
+import { Team, TeamServer, teamServerToClient } from "@/interfaces/team"
 import { KnockoutMatch } from "@/interfaces/knockoutSystem"
 
 export interface GroupSystem {
@@ -16,7 +16,7 @@ export interface Group {
 }
 
 export interface GroupSystemServer {
-	teams: Team[]
+	teams: TeamServer[]
 	groups: GroupServer[]
 	finale: GroupMatchServer
 	thirdPlace: GroupMatchServer
@@ -48,23 +48,24 @@ export interface GroupMatch extends KnockoutMatch {
 export function groupSystemServerToClient(
 	groupSystem: GroupSystemServer,
 ): GroupSystem {
-	const teams = new Map<string, Team>()
-	groupSystem.teams.forEach((team) => {
+	const teams = groupSystem.teams.map((team) => teamServerToClient(team))
+	const teamMap = new Map<string, Team>()
+	teams.forEach((team) => {
 		if (!team.id) {
 			console.error("Team without id:", team)
 			return
 		}
-		teams.set(team.id, team)
+		teamMap.set(team.id, team)
 	})
 
 	return {
-		teams: groupSystem.teams,
+		teams: teams,
 		groups: groupSystem.groups.map((group) =>
-			groupServerToClient(group, teams),
+			groupServerToClient(group, teamMap),
 		),
-		finale: groupMatchServerToClient(groupSystem.finale, teams),
+		finale: groupMatchServerToClient(groupSystem.finale, teamMap),
 		thirdPlace: groupSystem.thirdPlace
-			? groupMatchServerToClient(groupSystem.thirdPlace, teams)
+			? groupMatchServerToClient(groupSystem.thirdPlace, teamMap)
 			: null,
 	}
 }
