@@ -5,7 +5,7 @@ export interface GroupSystem {
 	teams: Team[]
 	groups: Group[]
 	finale: GroupMatch
-	thirdPlace: GroupMatch
+	thirdPlace?: GroupMatch
 }
 
 export interface Group {
@@ -67,7 +67,9 @@ export function groupSystemServerToClient(
 			groupServerToClient(group, teams),
 		),
 		finale: groupMatchServerToClient(groupSystem.finale, teams),
-		thirdPlace: groupMatchServerToClient(groupSystem.thirdPlace, teams),
+		thirdPlace: groupSystem.thirdPlace
+			? groupMatchServerToClient(groupSystem.thirdPlace, teams)
+			: undefined,
 	}
 }
 
