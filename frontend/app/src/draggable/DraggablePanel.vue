@@ -133,7 +133,8 @@ function create() {
 			if (from !== to) return
 			if (oldIndex === undefined || newIndex === undefined) return
 
-			props.list.splice(newIndex, 0, props.list.splice(oldIndex, 1)[0])
+			const el = props.list.splice(oldIndex, 1)[0]
+			if (el) props.list.splice(newIndex, 0, el)
 			reload()
 		},
 		removeOnSpill: false,
