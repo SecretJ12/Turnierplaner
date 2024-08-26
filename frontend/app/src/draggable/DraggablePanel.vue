@@ -82,7 +82,7 @@ function create() {
 		sort: props.sort,
 		revertOnSpill: true,
 		setData(dataTransfer) {
-			dataTransfer.setData("event", JSON.stringify({ match: selectedElement }))
+			dataTransfer.setData("event", JSON.stringify({ data: selectedElement }))
 		},
 		onChoose: (event: Sortable.SortableEvent) => {
 			if (event.oldIndex === undefined) return

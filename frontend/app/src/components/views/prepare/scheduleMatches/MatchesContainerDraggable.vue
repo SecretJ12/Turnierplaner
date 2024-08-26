@@ -18,7 +18,7 @@
 				v-if="item"
 				class="bg-primary-400 text-black border-round select-none cursor-pointer pl-3 pr-3 h-3rem inline text-50 flex align-items-center justify-content-center"
 			>
-				<span>{{ item.id }}</span>
+				<span>{{ item.title }}</span>
 			</div>
 		</template>
 	</DraggablePanel>
@@ -35,8 +35,11 @@ import { useI18n } from "vue-i18n"
 import { useToast } from "primevue/usetoast"
 import { getGroup } from "@/backend/group"
 import { TourType } from "@/interfaces/competition"
-import { KnockoutMatch } from "@/interfaces/knockoutSystem"
-import { GroupMatch } from "@/interfaces/groupSystem"
+import {
+	EventMatch,
+	extractGroupMatches,
+	extractKnockoutMatches,
+} from "@/components/views/prepare/scheduleMatches/ScheduleMatchesHelper"
 
 const route = useRoute()
 const { t } = useI18n({ inheritLocale: true })
@@ -52,45 +55,32 @@ const { data: groups } = getGroup(
 	computed(() => competition.value?.tourType === TourType.GROUPS),
 )
 
-const matches = defineModel<Match[]>({ default: [] })
+const matches = defineModel<EventMatch[]>({ default: [] })
 watch(
 	[knockout, groups],
 	() => {
 		matches.value.splice(0, matches.value.length)
 		if (competition.value?.tourType === TourType.KNOCKOUT && knockout.value) {
-			const queue: KnockoutMatch[] = []
-			if (knockout.value?.finale) queue.push(knockout.value.finale)
-			if (knockout.value?.thirdPlace) queue.push(knockout.value.thirdPlace)
-			while (queue.length > 0) {
-				matches.value.push(queue[0])
-				if (queue[0].prevMatch) {
-					queue.push(queue[0].prevMatch.a)
-					queue.push(queue[0].prevMatch.b)
-				}
-				queue.splice(0, 1)
-			}
+			extractKnockoutMatches(knockout.value, t, addMatch)
 		} else if (
 			competition.value?.tourType === TourType.GROUPS &&
 			groups.value
 		) {
-			const queue: GroupMatch[] = []
-			if (groups.value?.finale) queue.push(groups.value.finale)
-			if (groups.value?.thirdPlace) queue.push(groups.value.thirdPlace)
-			while (queue.length > 0) {
-				matches.value.push(queue[0])
-				if (queue[0].prevMatch) {
-					queue.push(queue[0].prevMatch.a)
-					queue.push(queue[0].prevMatch.b)
-				}
-				queue.splice(0, 1)
-			}
-			groups.value?.groups.forEach((group) =>
-				matches.value.push(...group.matches),
-			)
+			extractGroupMatches(groups.value, t, addMatch)
 		}
 	},
-	{ immediate: true },
+	{
+		immediate: true,
+	},
 )
+
+function addMatch(match: Match, title: string) {
+	if (!match.begin)
+		matches.value.push({
+			title,
+			...match,
+		})
+}
 
 const props = withDefaults(
 	defineProps<{

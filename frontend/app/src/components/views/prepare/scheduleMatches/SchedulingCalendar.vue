@@ -1,5 +1,6 @@
 <template>
 	<vue-cal
+		v-if="tournament"
 		active-view="week"
 		hide-view-selector
 		:disable-views="['years', 'year', 'month', 'day']"
@@ -11,30 +12,108 @@
 		:min-split-width="150"
 		:snap-to-time="15"
 		editable-events
+		:events="events"
 		@event-drop="onEventDrop"
-	/>
+	>
+		<template #event="{ event }">
+			<div class="w-full flex flex-column">
+				<p>test</p>
+			</div>
+		</template>
+	</vue-cal>
 </template>
 
 <script setup lang="ts">
-import { KnockoutMatch } from "@/interfaces/knockoutSystem"
 // @ts-expect-error vue-cal does not have proper typescript support
 import VueCal from "vue-cal"
 import "vue-cal/dist/vuecal.css"
 import { Court } from "@/interfaces/court"
-import { computed } from "vue"
+import { computed, ref, watch } from "vue"
+import { KnockoutMatch } from "@/interfaces/knockoutSystem"
+import { getTournamentDetails } from "@/backend/tournament"
+import { useRoute } from "vue-router"
+import { useToast } from "primevue/usetoast"
+import { useI18n } from "vue-i18n"
+import { getCompetitionDetails } from "@/backend/competition"
+import { getKnockout } from "@/backend/knockout"
+import { TourType } from "@/interfaces/competition"
+import { getGroup } from "@/backend/group"
+import { Match } from "@/interfaces/match"
+import {
+	EventMatch,
+	extractGroupMatches,
+	extractKnockoutMatches,
+} from "@/components/views/prepare/scheduleMatches/ScheduleMatchesHelper"
 
 const emit = defineEmits<{ removeId: [id: string] }>()
 
+const { t } = useI18n({ inheritLocale: true })
+const route = useRoute()
+const toast = useToast()
+const { data: tournament } = getTournamentDetails(route, t, toast)
+const { data: competition } = getCompetitionDetails(route, t, toast)
+const { data: knockout } = getKnockout(
+	route,
+	computed(() => competition.value?.tourType === TourType.KNOCKOUT),
+)
+const { data: groups } = getGroup(
+	route,
+	computed(() => competition.value?.tourType === TourType.GROUPS),
+)
+
+const events = ref<
+	{
+		start: Date
+		end: Date
+		split: string
+		data: EventMatch
+	}[]
+>([])
+watch(
+	[knockout, groups],
+	() => {
+		if (events.value.length) return
+
+		events.value.splice(0, events.value.length)
+		if (competition.value?.tourType === TourType.KNOCKOUT && knockout.value) {
+			extractKnockoutMatches(knockout.value, t, addMatch)
+		} else if (
+			competition.value?.tourType === TourType.GROUPS &&
+			groups.value
+		) {
+			extractGroupMatches(groups.value, t, addMatch)
+		}
+	},
+	{ immediate: true },
+)
+
+function addMatch(match: Match, title: string) {
+	if (match.begin && match.end && match.court)
+		events.value.push({
+			start: match.begin,
+			end: match.end,
+			split: match.court,
+			data: {
+				title,
+				...match,
+			},
+		})
+}
+
 function onEventDrop({
+	event,
 	originalEvent,
 	external,
 }: {
-	originalEvent: { match: KnockoutMatch }
+	originalEvent: { data: KnockoutMatch }
 	external: boolean
 }) {
 	if (external) {
-		if (originalEvent.match.id) emit("removeId", originalEvent.match.id)
+		if (originalEvent.data.id) emit("removeId", originalEvent.data.id)
 		else throw "Match id is missing"
+
+		console.log(event)
+		console.log(originalEvent)
 	}
 }
 
@@ -45,7 +124,7 @@ const props = defineProps<{
 const splitDays = computed(() => {
 	return props.courts.map((court, index) => {
 		return {
-			id: index + 1,
+			id: court.name,
 			label: court.name,
 			class: "court" + (index + 1),
 		}
@@ -86,5 +165,9 @@ const splitDays = computed(() => {
 
 .vuecal__no-event {
 	display: none;
+}
+
+.vuecal__event {
+	background-color: rgba(164, 230, 210, 0.9);
 }
 </style>

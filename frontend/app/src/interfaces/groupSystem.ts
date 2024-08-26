@@ -1,11 +1,12 @@
 import { Match, MatchServer, matchServerToClient } from "@/interfaces/match"
 import { Team } from "@/interfaces/team"
+import { KnockoutMatch } from "@/interfaces/knockoutSystem"
 
 export interface GroupSystem {
 	teams: Team[]
 	groups: Group[]
 	finale: GroupMatch
-	thirdPlace?: GroupMatch
+	thirdPlace: GroupMatch | null
 }
 
 export interface Group {
@@ -36,16 +37,11 @@ export interface GroupMatchServer extends MatchServer {
 	previousB?: GroupMatchServer
 }
 
-export interface GroupMatch extends Match {
+export interface GroupMatch extends KnockoutMatch {
 	prevGroups?: {
 		pos: number
 		a: number
 		b: number
-	}
-	prevMatch?: {
-		winner: boolean
-		a: GroupMatch
-		b: GroupMatch
 	}
 }
 
@@ -69,7 +65,7 @@ export function groupSystemServerToClient(
 		finale: groupMatchServerToClient(groupSystem.finale, teams),
 		thirdPlace: groupSystem.thirdPlace
 			? groupMatchServerToClient(groupSystem.thirdPlace, teams)
-			: undefined,
+			: null,
 	}
 }
 
