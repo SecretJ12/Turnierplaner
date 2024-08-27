@@ -1,6 +1,6 @@
 <template>
 	<!-- TODO optimize mobile -->
-	<div class="sticky top-0">
+	<div id="head" class="sticky top-0">
 		<header>
 			<HeaderLeft />
 			<HeaderRight />
@@ -27,7 +27,11 @@ header {
 	left: 0;
 	right: 0;
 	top: 0;
-	z-index: 10;
 	background-color: white;
+}
+
+#head {
+	z-index: 10;
+	box-shadow: 0 10px 15px rgb(0, 0, 0, 0.2);
 }
 </style>
