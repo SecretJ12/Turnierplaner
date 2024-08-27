@@ -3,6 +3,7 @@ package de.secretj12.turnierplaner.resources;
 import de.secretj12.turnierplaner.db.entities.Court;
 import de.secretj12.turnierplaner.db.repositories.CourtRepositiory;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserCourt;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
@@ -11,6 +12,7 @@ import jakarta.ws.rs.core.Response;
 import java.util.List;
 
 @Path("/court")
+@RolesAllowed("director")
 public class CourtResource {
 
     @Inject
