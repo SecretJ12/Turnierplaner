@@ -1,9 +1,12 @@
 package de.secretj12.turnierplaner.resources;
 
+import de.secretj12.turnierplaner.db.entities.Court;
 import de.secretj12.turnierplaner.db.entities.Tournament;
+import de.secretj12.turnierplaner.db.repositories.CourtRepositiory;
 import de.secretj12.turnierplaner.db.repositories.TournamentRepository;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.jDirectorTournamentAdd;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.jDirectorTournamentUpdate;
+import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserCourt;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserTournament;
 import io.quarkus.security.UnauthorizedException;
 import io.quarkus.security.identity.SecurityIdentity;
@@ -16,12 +19,16 @@ import jakarta.ws.rs.core.Response;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Path("/tournament")
 public class TournamentResource {
 
     @Inject
     TournamentRepository tournaments;
+    @Inject
+    CourtRepositiory courts;
     @Inject
     SecurityIdentity securityIdentity;
 
@@ -61,6 +68,34 @@ public class TournamentResource {
             return new jDirectorTournamentUpdate(tournament);
         else
             return new jUserTournament(tournament);
+    }
+
+    @POST
+    @Path("/{tourName}/updateCourts")
+    @Transactional
+    @RolesAllowed("director")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public String setCourts(@PathParam("tourName") String tourName, Set<jUserCourt> tCourts) {
+        Tournament tournament = tournaments.getByName(tourName);
+
+        tournament.setCourts(tCourts.stream().map(court -> {
+            Court dbCourt = courts.findByName(court.getName());
+            if (dbCourt == null)
+                throw new NotFoundException("Could not find court " + court.getName());
+            return dbCourt;
+        }).collect(Collectors.toSet()));
+        tournaments.persist(tournament);
+        return "Courts updated";
+    }
+
+    @GET
+    @Path("/{tourName}/courts")
+    @RolesAllowed("director")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Set<jUserCourt> getCourts(@PathParam("tourName") String tourName) {
+        Tournament tournament = tournaments.getByName(tourName);
+
+        return tournament.getCourts().stream().map(jUserCourt::new).collect(Collectors.toSet());
     }
 
     private void checkDates(jDirectorTournamentAdd tournament) {

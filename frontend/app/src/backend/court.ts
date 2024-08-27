@@ -1,6 +1,9 @@
 import axios from "axios"
 import { Court } from "@/interfaces/court"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query"
+import { Tournament } from "@/interfaces/tournament"
+import { RouteLocationNormalizedLoaded } from "vue-router"
+import { computed, Ref } from "vue"
 
 export function getCourts() {
 	return useQuery({
@@ -45,6 +48,38 @@ export function useDeleteCourt() {
 				queryKey: ["courts"],
 				refetchType: "all",
 			})
+		},
+	})
+}
+
+export function getTournamentCourts(route: RouteLocationNormalizedLoaded) {
+	return useQuery({
+		queryKey: ["tournamentCourts", computed(() => route.params.tourId)],
+		queryFn: () =>
+			axios
+				.get(`/tournament/${route.params.tourId}/courts`)
+				.then<Court[]>((response) => response.data),
+	})
+}
+
+export function useUpdateTournamentCourts(
+	tournament: Ref<Tournament> | Ref<undefined>,
+) {
+	const queryClient = useQueryClient()
+	return useMutation({
+		mutationFn: (courts: Court[]) => {
+			if (!tournament.value) throw Error("Tournament is null")
+			return axios.post(
+				`/tournament/${tournament.value.name}/updateCourts`,
+				courts,
+			)
+		},
+		onSuccess() {
+			if (tournament.value)
+				queryClient.invalidateQueries({
+					queryKey: ["tournamentCourts", tournament.value.name],
+					refetchType: "all",
+				})
 		},
 	})
 }

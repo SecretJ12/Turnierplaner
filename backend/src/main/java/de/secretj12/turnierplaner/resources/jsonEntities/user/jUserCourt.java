@@ -16,7 +16,7 @@ public class jUserCourt {
         this.courtType = court.getCourtType();
     }
 
-    public Court toCourt() {
+    public Court toDB() {
         Court court = new Court();
         court.setName(name);
         court.setCourtType(courtType);

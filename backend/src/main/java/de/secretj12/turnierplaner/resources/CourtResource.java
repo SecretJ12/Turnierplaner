@@ -30,7 +30,7 @@ public class CourtResource {
         if (exCourt != null)
             throw new WebApplicationException("Court already exists", Response.Status.CONFLICT);
 
-        courtRepositiory.persist(court.toCourt());
+        courtRepositiory.persist(court.toDB());
         return "Created";
     }
 

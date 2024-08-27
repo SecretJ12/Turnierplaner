@@ -4,20 +4,7 @@
 			<Card>
 				<template #title>Options</template>
 				<template #content>
-					<MultiSelect
-						v-model="selectedCourts"
-						:loading="!courts || !selectedCourts"
-						:options="courts"
-						option-label="name"
-						placeholder="Select courts"
-						class="w-full"
-					>
-						<template #footer>
-							<div class="w-full flex align-items-center p-2">
-								<ViewCreateCourtSmall />
-							</div>
-						</template>
-					</MultiSelect>
+					<CourtChooser v-if="selectedCourts" v-model="selectedCourts" />
 				</template>
 			</Card>
 			<Card>
@@ -54,10 +41,8 @@
 import { useRoute, useRouter } from "vue-router"
 import { useToast } from "primevue/usetoast"
 import SchedulingCalendar from "@/components/views/prepare/scheduleMatches/SchedulingCalendar.vue"
-import { getCourts } from "@/backend/court"
 import { ref, watch } from "vue"
 import { Court } from "@/interfaces/court"
-import ViewCreateCourtSmall from "@/components/views/court/ViewCreateCourtSmall.vue"
 import MatchesContainerDraggable from "@/components/views/prepare/scheduleMatches/MatchesContainerDraggable.vue"
 import {
 	CalEvent,
@@ -65,6 +50,9 @@ import {
 } from "@/components/views/prepare/scheduleMatches/ScheduleMatchesHelper"
 import { useUpdateMatches } from "@/backend/match"
 import { useI18n } from "vue-i18n"
+import CourtChooser from "@/components/views/prepare/scheduleMatches/CourtChooser.vue"
+import { getTournamentCourts, useUpdateTournamentCourts } from "@/backend/court"
+import { getTournamentDetails } from "@/backend/tournament"
 
 const route = useRoute()
 const router = useRouter()
@@ -73,19 +61,24 @@ const toast = useToast()
 
 const isUpdating = defineModel<boolean>("isUpdating", { default: false })
 
-const { data: courts } = getCourts()
-
 const matches = ref<EventMatch[]>([])
 const scheduledMatches = ref<CalEvent[]>([])
 
+const { data: tournament } = getTournamentDetails(route, t, toast)
+const { data: tournamentCourts } = getTournamentCourts(route)
 const { mutate: updateMatches } = useUpdateMatches(route, t, toast)
+const { mutate: updateCourts } = useUpdateTournamentCourts(tournament)
 
 const selectedCourts = ref<Court[]>([])
-watch(selectedCourts, () => {
-	selectedCourts.value = selectedCourts.value.sort((a, b) =>
-		a.name < b.name ? -1 : 1,
-	)
-})
+watch(
+	tournamentCourts,
+	() => {
+		if (!tournamentCourts.value) return
+
+		selectedCourts.value = tournamentCourts.value
+	},
+	{ immediate: true },
+)
 
 function prevPage() {
 	router.replace({
@@ -108,6 +101,7 @@ function save() {
 	// TODO
 	isUpdating.value = true
 	updateMatches(scheduledMatches.value.map((event) => event.data))
+	updateCourts(selectedCourts.value)
 	isUpdating.value = false
 }
 
