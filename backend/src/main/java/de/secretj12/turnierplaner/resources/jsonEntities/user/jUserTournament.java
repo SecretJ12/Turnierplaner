@@ -2,15 +2,15 @@ package de.secretj12.turnierplaner.resources.jsonEntities.user;
 
 import de.secretj12.turnierplaner.db.entities.Tournament;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public class jUserTournament {
     private String name;
     private String description;
-    private LocalDateTime beginRegistration;
-    private LocalDateTime endRegistration;
-    private LocalDateTime beginGamePhase;
-    private LocalDateTime endGamePhase;
+    private Instant beginRegistration;
+    private Instant endRegistration;
+    private Instant beginGamePhase;
+    private Instant endGamePhase;
 
     public jUserTournament() {
     }
@@ -40,35 +40,35 @@ public class jUserTournament {
         this.description = description;
     }
 
-    public LocalDateTime getBeginRegistration() {
+    public Instant getBeginRegistration() {
         return beginRegistration;
     }
 
-    public void setBeginRegistration(LocalDateTime beginRegistration) {
+    public void setBeginRegistration(Instant beginRegistration) {
         this.beginRegistration = beginRegistration;
     }
 
-    public LocalDateTime getEndRegistration() {
+    public Instant getEndRegistration() {
         return endRegistration;
     }
 
-    public void setEndRegistration(LocalDateTime endRegistration) {
+    public void setEndRegistration(Instant endRegistration) {
         this.endRegistration = endRegistration;
     }
 
-    public LocalDateTime getBeginGamePhase() {
+    public Instant getBeginGamePhase() {
         return beginGamePhase;
     }
 
-    public void setBeginGamePhase(LocalDateTime beginGamePhase) {
+    public void setBeginGamePhase(Instant beginGamePhase) {
         this.beginGamePhase = beginGamePhase;
     }
 
-    public LocalDateTime getEndGamePhase() {
+    public Instant getEndGamePhase() {
         return endGamePhase;
     }
 
-    public void setEndGamePhase(LocalDateTime endGamePhase) {
+    public void setEndGamePhase(Instant endGamePhase) {
         this.endGamePhase = endGamePhase;
     }
 }

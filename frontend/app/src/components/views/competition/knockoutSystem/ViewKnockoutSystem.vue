@@ -8,6 +8,7 @@
 			:border-thickness="2"
 			:margin-small="30"
 			:margin-big="40"
+			:titles="knockoutTitle(t)"
 		>
 			<template #match="{ match }">
 				<ViewMatch v-if="match" :match="match" :mode="props.mode" />
@@ -26,6 +27,10 @@ import { Mode } from "@/interfaces/competition"
 import { getKnockout } from "@/backend/knockout"
 import ViewMatch from "@/components/views/competition/knockoutSystem/ViewMatch.vue"
 import ViewMatchDate from "@/components/views/competition/knockoutSystem/ViewMatchDate.vue"
+import { knockoutTitle } from "@/components/views/competition/knockoutSystem/KnockoutTitleGenerator"
+import { useI18n } from "vue-i18n"
+
+const { t } = useI18n({ inheritLocale: true })
 
 const props = defineProps<{
 	mode: Mode

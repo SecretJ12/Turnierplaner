@@ -1,78 +1,80 @@
 <template>
-	<Card class="w-full m-2" style="margin-top: -10px !important">
-		<template #header>
-			<TabMenu
-				:active-index="activeTab"
-				:model="competitions || []"
-				@tab-change="tabChange"
-			>
-				<template #item="{ item, props }">
-					<div v-bind="props.action" class="cursor-pointer">
-						<span v-bind="props.label">{{ item.name }}</span>
-					</div>
-				</template>
-			</TabMenu>
-			<Steps
-				:active-step="<number>route.meta.step - 1"
-				:model="stepList"
-				:readonly="true"
-				class="mt-5"
-			>
-			</Steps>
-		</template>
-		<template #content>
-			<router-view v-slot="{ Component }">
-				<component
-					:is="Component"
-					ref="curPrepStep"
-					v-model:is-updating="isUpdating"
-				/>
-			</router-view>
+	<div class="w-full p-2">
+		<Card style="margin-top: -10px !important">
+			<template #header>
+				<TabMenu
+					:active-index="activeTab"
+					:model="competitions || []"
+					@tab-change="tabChange"
+				>
+					<template #item="{ item, props }">
+						<div v-bind="props.action" class="cursor-pointer">
+							<span v-bind="props.label">{{ item.name }}</span>
+						</div>
+					</template>
+				</TabMenu>
+				<Steps
+					:active-step="<number>route.meta.step - 1"
+					:model="stepList"
+					:readonly="true"
+					class="mt-5"
+				>
+				</Steps>
+			</template>
+			<template #content>
+				<router-view v-slot="{ Component }">
+					<component
+						:is="Component"
+						ref="curPrepStep"
+						v-model:is-updating="isUpdating"
+					/>
+				</router-view>
 
-			<div class="mt-2 grid grid-nogutter justify-content-between">
-				<Button
-					:style="{
-						visibility: route.meta.step !== 1 ? 'visible' : 'hidden',
-					}"
-					:disabled="route.meta.step === 1 || isUpdating"
-					:label="t('general.back')"
-					icon="pi pi-angle-left"
-					icon-pos="left"
-					@click="prevPage"
-				/>
-				<Button
-					v-if="route.meta.reset"
-					:disabled="isUpdating"
-					:label="t('general.reset')"
-					severity="danger"
-					@click="reset"
-				/>
-				<Button
-					:disabled="isUpdating"
-					:label="t('general.save')"
-					severity="success"
-					@click="save"
-				/>
-				<Button
-					v-if="route.meta.step !== 4"
-					:disabled="isUpdating"
-					icon="pi pi-angle-right"
-					icon-pos="right"
-					:label="t('general.next')"
-					@click="nextPage"
-				/>
-				<Button
-					v-else
-					:disabled="isUpdating"
-					label="Complete"
-					icon="pi pi-check"
-					icon-pos="right"
-					class="p-button-success"
-					@click="nextPage"
-				/>
-			</div>
-		</template>
-	</Card>
+				<div class="mt-2 grid grid-nogutter justify-content-between">
+					<Button
+						:style="{
+							visibility: route.meta.step !== 1 ? 'visible' : 'hidden',
+						}"
+						:disabled="route.meta.step === 1 || isUpdating"
+						:label="t('general.back')"
+						icon="pi pi-angle-left"
+						icon-pos="left"
+						@click="prevPage"
+					/>
+					<Button
+						v-if="route.meta.reset"
+						:disabled="isUpdating"
+						:label="t('general.reset')"
+						severity="danger"
+						@click="reset"
+					/>
+					<Button
+						:disabled="isUpdating"
+						:label="t('general.save')"
+						severity="success"
+						@click="save"
+					/>
+					<Button
+						v-if="route.meta.step !== 4"
+						:disabled="isUpdating"
+						icon="pi pi-angle-right"
+						icon-pos="right"
+						:label="t('general.next')"
+						@click="nextPage"
+					/>
+					<Button
+						v-else
+						:disabled="isUpdating"
+						label="Complete"
+						icon="pi pi-check"
+						icon-pos="right"
+						class="p-button-success"
+						@click="nextPage"
+					/>
+				</div>
+			</template>
+		</Card>
+	</div>
 </template>
 
 <script setup lang="ts">

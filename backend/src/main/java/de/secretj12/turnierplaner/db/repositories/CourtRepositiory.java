@@ -7,4 +7,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class CourtRepositiory implements PanacheRepository<Court> {
+
+    public Court findByName(String name) {
+        return find("name", name).firstResult();
+    }
 }

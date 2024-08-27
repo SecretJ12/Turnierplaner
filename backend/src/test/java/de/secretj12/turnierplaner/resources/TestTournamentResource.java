@@ -14,7 +14,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
@@ -34,19 +37,19 @@ public class TestTournamentResource {
         Tournament tour = new Tournament();
         tour.setName("Clubmeisterschaft");
         tour.setDescription("Anmeldung ausstehend");
-        tour.setBeginRegistration(LocalDateTime.now().plusDays(10));
-        tour.setEndRegistration(LocalDateTime.now().plusDays(11));
-        tour.setBeginGamePhase(LocalDateTime.now().plusDays(12));
-        tour.setEndGamePhase(LocalDateTime.now().plusDays(13));
+        tour.setBeginRegistration(Instant.now().plus(10, ChronoUnit.DAYS));
+        tour.setEndRegistration(Instant.now().plus(11, ChronoUnit.DAYS));
+        tour.setBeginGamePhase(Instant.now().plus(12, ChronoUnit.DAYS));
+        tour.setEndGamePhase(Instant.now().plus(13, ChronoUnit.DAYS));
         tour.setVisible(true);
         tournamentRepository.persist(tour);
         Tournament tour2 = new Tournament();
         tour2.setName("Clubmeisterschaft2");
         tour2.setDescription("Anmeldung ausstehend");
-        tour2.setBeginRegistration(LocalDateTime.now().plusDays(10));
-        tour2.setEndRegistration(LocalDateTime.now().plusDays(11));
-        tour2.setBeginGamePhase(LocalDateTime.now().plusDays(12));
-        tour2.setEndGamePhase(LocalDateTime.now().plusDays(13));
+        tour2.setBeginRegistration(Instant.now().plus(10, ChronoUnit.DAYS));
+        tour2.setEndRegistration(Instant.now().plus(11, ChronoUnit.DAYS));
+        tour2.setBeginGamePhase(Instant.now().plus(12, ChronoUnit.DAYS));
+        tour2.setEndGamePhase(Instant.now().plus(13, ChronoUnit.DAYS));
         tour2.setVisible(false);
         tournamentRepository.persist(tour2);
     }
@@ -183,7 +186,7 @@ public class TestTournamentResource {
         Tournament tour = tournamentRepository.getByName("Clubmeisterschaft 2024");
         assertNotNull(tour);
         assertEquals(tour.getDescription(), "Anmeldephase offen");
-        assertEquals(tour.getBeginRegistration(), LocalDateTime.of(2024, 4, 1, 23, 15, 30));
+        assertEquals(tour.getBeginRegistration(), LocalDateTime.of(2024, 4, 1, 23, 15, 30).toInstant(ZoneOffset.UTC));
     }
 
     @Test
@@ -314,7 +317,7 @@ public class TestTournamentResource {
         Tournament tour = tournamentRepository.getByName("Clubmeisterschaft 2024");
         assertNotNull(tour);
         assertEquals(tour.getDescription(), "Anmeldephase offen");
-        assertEquals(tour.getBeginRegistration(), LocalDateTime.of(2024, 4, 1, 23, 15, 30));
+        assertEquals(tour.getBeginRegistration(), LocalDateTime.of(2024, 4, 1, 23, 15, 30).toInstant(ZoneOffset.UTC));
     }
 
     @Test

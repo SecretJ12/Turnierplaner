@@ -28,10 +28,12 @@ public class jUserGroupSystem {
             this.finale = new jUserGroupMatchAfterGroup(finale);
         else
             this.finale = new jUserGroupMatchAfterMatch(finale, finale.getDependentOn().isWinner());
-        if (thirdPlace.getFinalOfGroup() != null)
-            this.thirdPlace = new jUserGroupMatchAfterGroup(thirdPlace);
-        else
-            this.thirdPlace = new jUserGroupMatchAfterMatch(thirdPlace, thirdPlace.getDependentOn().isWinner(), false);
+        if (thirdPlace != null)
+            if (thirdPlace.getFinalOfGroup() != null)
+                this.thirdPlace = new jUserGroupMatchAfterGroup(thirdPlace);
+            else
+                this.thirdPlace = new jUserGroupMatchAfterMatch(thirdPlace, thirdPlace.getDependentOn()
+                    .isWinner(), false);
     }
 
     public List<jUserTeam> getTeams() {

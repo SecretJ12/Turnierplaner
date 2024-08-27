@@ -20,7 +20,8 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 
@@ -89,7 +90,7 @@ public class PlayerResource {
 
         VerificationCode verificationCode = new VerificationCode();
         verificationCode.setPlayer(newPlayer);
-        verificationCode.setExpirationDate(LocalDateTime.now().plusMinutes(30));
+        verificationCode.setExpirationDate(Instant.now().plus(30, ChronoUnit.MINUTES));
         verificationCodeRepository.persist(verificationCode);
 
         // TODO check for valid mail

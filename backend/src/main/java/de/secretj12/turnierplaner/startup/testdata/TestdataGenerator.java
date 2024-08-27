@@ -13,8 +13,9 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import net.datafaker.Faker;
 
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -91,34 +92,34 @@ public class TestdataGenerator {
         tournament.setVisible(visible);
         switch (tDate) {
             case BEFORE_REGISTRATION -> {
-                tournament.setBeginRegistration(LocalDateTime.now().plusDays(10));
-                tournament.setEndRegistration(LocalDateTime.now().plusDays(11));
-                tournament.setBeginGamePhase(LocalDateTime.now().plusDays(12));
-                tournament.setEndGamePhase(LocalDateTime.now().plusDays(13));
+                tournament.setBeginRegistration(Instant.now().plus(10, ChronoUnit.DAYS));
+                tournament.setEndRegistration(Instant.now().plus(11, ChronoUnit.DAYS));
+                tournament.setBeginGamePhase(Instant.now().plus(12, ChronoUnit.DAYS));
+                tournament.setEndGamePhase(Instant.now().plus(13, ChronoUnit.DAYS));
             }
             case REGISTRATION_OPEN -> {
-                tournament.setBeginRegistration(LocalDateTime.now().minusDays(1));
-                tournament.setEndRegistration(LocalDateTime.now().plusDays(10));
-                tournament.setBeginGamePhase(LocalDateTime.now().plusDays(11));
-                tournament.setEndGamePhase(LocalDateTime.now().plusDays(12));
+                tournament.setBeginRegistration(Instant.now().minus(1, ChronoUnit.DAYS));
+                tournament.setEndRegistration(Instant.now().plus(10, ChronoUnit.DAYS));
+                tournament.setBeginGamePhase(Instant.now().plus(11, ChronoUnit.DAYS));
+                tournament.setEndGamePhase(Instant.now().plus(12, ChronoUnit.DAYS));
             }
             case BEFORE_GAMEPHASE -> {
-                tournament.setBeginRegistration(LocalDateTime.now().minusDays(2));
-                tournament.setEndRegistration(LocalDateTime.now().minusDays(1));
-                tournament.setBeginGamePhase(LocalDateTime.now().plusDays(10));
-                tournament.setEndGamePhase(LocalDateTime.now().plusDays(11));
+                tournament.setBeginRegistration(Instant.now().minus(2, ChronoUnit.DAYS));
+                tournament.setEndRegistration(Instant.now().minus(1, ChronoUnit.DAYS));
+                tournament.setBeginGamePhase(Instant.now().plus(10, ChronoUnit.DAYS));
+                tournament.setEndGamePhase(Instant.now().plus(11, ChronoUnit.DAYS));
             }
             case GAMEPHASE_OPEN -> {
-                tournament.setBeginRegistration(LocalDateTime.now().minusDays(3));
-                tournament.setEndRegistration(LocalDateTime.now().minusDays(2));
-                tournament.setBeginGamePhase(LocalDateTime.now().minusDays(1));
-                tournament.setEndGamePhase(LocalDateTime.now().plusDays(10));
+                tournament.setBeginRegistration(Instant.now().minus(3, ChronoUnit.DAYS));
+                tournament.setEndRegistration(Instant.now().minus(2, ChronoUnit.DAYS));
+                tournament.setBeginGamePhase(Instant.now().minus(1, ChronoUnit.DAYS));
+                tournament.setEndGamePhase(Instant.now().plus(10, ChronoUnit.DAYS));
             }
             case AFTER_GAMEPHASE -> {
-                tournament.setBeginRegistration(LocalDateTime.now().minusDays(4));
-                tournament.setEndRegistration(LocalDateTime.now().minusDays(3));
-                tournament.setBeginGamePhase(LocalDateTime.now().minusDays(2));
-                tournament.setEndGamePhase(LocalDateTime.now().minusDays(1));
+                tournament.setBeginRegistration(Instant.now().minus(4, ChronoUnit.DAYS));
+                tournament.setEndRegistration(Instant.now().minus(3, ChronoUnit.DAYS));
+                tournament.setBeginGamePhase(Instant.now().minus(2, ChronoUnit.DAYS));
+                tournament.setEndGamePhase(Instant.now().minus(1, ChronoUnit.DAYS));
             }
         }
         tournament.setDescription(description);
@@ -135,7 +136,8 @@ public class TestdataGenerator {
         int numberOfSets = 2;
         int winDif = 0;
         List<Tuple2<Integer, Integer>> possibleResults = List.of(Tuple2.of(6, 0), Tuple2.of(6, 1), Tuple2.of(6, 2),
-            Tuple2.of(6, 3), Tuple2.of(6, 4), Tuple2.of(6, 5), Tuple2.of(7, 5), Tuple2.of(7, 6));
+            Tuple2.of(6, 3), Tuple2.of(6, 4), Tuple2.of(6, 5), Tuple2.of(7, 5),
+            Tuple2.of(7, 6));
         for (int i = 0; i < numberOfSets; i++) {
             Set.SetKey setKey = new Set.SetKey();
             setKey.setMatch(match);
@@ -273,12 +275,12 @@ public class TestdataGenerator {
                     match.setTeamB(groupTeams[j]);
                     int matchBegin = random.nextInt(3);
                     if (matchBegin != 0) {
-                        match.setBegin(LocalDateTime.now());
-                        match.setEnd(LocalDateTime.now().plusHours(1));
+                        match.setBegin(Instant.now());
+                        match.setEnd(Instant.now().plus(1, ChronoUnit.HOURS));
                         createSets(match);
                     } else {
-                        match.setBegin(LocalDateTime.now().plusMinutes(random.nextInt(60)));
-                        match.setEnd(LocalDateTime.now().plusHours(2));
+                        match.setBegin(Instant.now().plus(random.nextInt(60), ChronoUnit.MINUTES));
+                        match.setEnd(Instant.now().plus(2, ChronoUnit.HOURS));
                     }
                     matchRepository.persist(match);
                     MatchOfGroup matchOfGroup = new MatchOfGroup();
@@ -387,8 +389,8 @@ public class TestdataGenerator {
         Match match = new Match();
         match.setCompetition(competition);
         match.setCourt(c);
-        match.setBegin(LocalDateTime.now());
-        match.setEnd(LocalDateTime.now().plusDays(1));
+        match.setBegin(Instant.now());
+        match.setEnd(Instant.now().plus(2, ChronoUnit.HOURS));
         match.setFinished(false);
         matchRepository.persist(match);
         return match;

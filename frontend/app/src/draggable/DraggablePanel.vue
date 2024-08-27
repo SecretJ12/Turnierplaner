@@ -81,6 +81,9 @@ function create() {
 		disabled: props.disabled,
 		sort: props.sort,
 		revertOnSpill: true,
+		setData(dataTransfer) {
+			dataTransfer.setData("event", JSON.stringify({ data: selectedElement }))
+		},
 		onChoose: (event: Sortable.SortableEvent) => {
 			if (event.oldIndex === undefined) return
 			selectedElement = props.list[event.oldIndex]
@@ -130,7 +133,8 @@ function create() {
 			if (from !== to) return
 			if (oldIndex === undefined || newIndex === undefined) return
 
-			props.list.splice(newIndex, 0, props.list.splice(oldIndex, 1)[0])
+			const el = props.list.splice(oldIndex, 1)[0]
+			if (el) props.list.splice(newIndex, 0, el)
 			reload()
 		},
 		removeOnSpill: false,
@@ -160,6 +164,7 @@ watch(
 )
 
 watch(() => [props.ghost, props.single, props.list], setGhost)
+
 function setGhost() {
 	if (!sortable.value) return
 	sortable.value?.option(
@@ -179,7 +184,7 @@ function reload() {
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 // eslint-disable-next-line
-let selectedElement: T = null
+let selectedElement: T | null = null
 let targetSingle = false
 </script>
 

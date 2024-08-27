@@ -14,7 +14,8 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 @QuarkusTest
 public class TestKnockoutTools {
@@ -34,10 +35,10 @@ public class TestKnockoutTools {
         Tournament tour = new Tournament();
         tour.setName("Clubmeisterschaft");
         tour.setDescription("Anmeldung abgeschlossen");
-        tour.setBeginRegistration(LocalDateTime.now().minusDays(10));
-        tour.setEndRegistration(LocalDateTime.now().minusDays(5));
-        tour.setBeginGamePhase(LocalDateTime.now().plusDays(5));
-        tour.setEndGamePhase(LocalDateTime.now().plusDays(10));
+        tour.setBeginRegistration(Instant.now().minus(10, ChronoUnit.DAYS));
+        tour.setEndRegistration(Instant.now().minus(5, ChronoUnit.DAYS));
+        tour.setBeginGamePhase(Instant.now().plus(5, ChronoUnit.DAYS));
+        tour.setEndGamePhase(Instant.now().plus(10, ChronoUnit.DAYS));
         tour.setVisible(true);
         tournamentRepository.persist(tour);
 

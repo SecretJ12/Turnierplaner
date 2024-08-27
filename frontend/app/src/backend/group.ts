@@ -1,7 +1,8 @@
 import { RouteLocationNormalizedLoaded } from "vue-router"
-import { computed } from "vue"
+import { computed, ref, Ref } from "vue"
 import axios from "axios"
 import {
+	GroupSystem,
 	GroupSystemServer,
 	groupSystemServerToClient,
 } from "@/interfaces/groupSystem"
@@ -10,8 +11,12 @@ import { GroupsDivision } from "@/interfaces/competition"
 import { Team, teamClientToServer, teamServerToClient } from "@/interfaces/team"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query"
 
-export function getGroup(route: RouteLocationNormalizedLoaded) {
+export function getGroup(
+	route: RouteLocationNormalizedLoaded,
+	load: Ref<boolean> = ref(true),
+) {
 	return useQuery({
+		enabled: load,
 		queryKey: [
 			"group",
 			computed(() => route.params.tourId),
@@ -22,7 +27,9 @@ export function getGroup(route: RouteLocationNormalizedLoaded) {
 				.get<GroupSystemServer>(
 					`tournament/${route.params.tourId}/competition/${route.params.compId}/groupMatches`,
 				)
-				.then((response) => groupSystemServerToClient(response.data)),
+				.then<GroupSystem>((response) =>
+					groupSystemServerToClient(response.data),
+				),
 	})
 }
 

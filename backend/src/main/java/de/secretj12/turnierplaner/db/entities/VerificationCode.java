@@ -2,7 +2,7 @@ package de.secretj12.turnierplaner.db.entities;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 @Entity
@@ -18,7 +18,7 @@ public class VerificationCode {
     private Player player;
 
     @Column(name = "expiration_date")
-    private LocalDateTime expiration_date;
+    private Instant expiration_date;
 
     public UUID getId() {
         return id;
@@ -36,11 +36,11 @@ public class VerificationCode {
         this.player = player;
     }
 
-    public LocalDateTime getExpirationDate() {
+    public Instant getExpirationDate() {
         return expiration_date;
     }
 
-    public void setExpirationDate(LocalDateTime expiration_date) {
+    public void setExpirationDate(Instant expiration_date) {
         this.expiration_date = expiration_date;
     }
 }

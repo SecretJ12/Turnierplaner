@@ -39,6 +39,7 @@
 							:third-place="thirdPlace ?? undefined"
 							:border-thickness="2"
 							:border-radius="0"
+							:titles="knockoutTitle(t)"
 						>
 							<template
 								#match="{
@@ -86,6 +87,7 @@ import {
 	selectRandomElement,
 } from "@/components/views/prepare/assignMatches/AssginMatchesHelper"
 import { sleep, track } from "@/backend/Tracker"
+import { knockoutTitle } from "@/components/views/competition/knockoutSystem/KnockoutTitleGenerator"
 
 const route = useRoute()
 const toast = useToast()
@@ -239,7 +241,7 @@ function getMatches(tree?: KnockoutMatch, treeDepth?: number): Match[] {
 }
 
 function genTree(height: number, tree: KnockoutMatch | null): KnockoutMatch {
-	const default_game = {
+	const default_game: KnockoutMatch = {
 		court: null,
 		begin: null,
 		end: null,

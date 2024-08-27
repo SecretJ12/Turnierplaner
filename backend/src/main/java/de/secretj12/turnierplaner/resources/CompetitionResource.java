@@ -29,7 +29,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -162,8 +162,8 @@ public class CompetitionResource {
         if (competition == null) throw new NotFoundException("Competition was not found");
 
         if (!securityIdentity.hasRole("director")
-            && (competition.getTournament().getBeginRegistration().isAfter(LocalDateTime.now())
-                || competition.getTournament().getBeginGamePhase().isBefore(LocalDateTime.now())))
+            && (competition.getTournament().getBeginRegistration().isAfter(Instant.now())
+                || competition.getTournament().getBeginGamePhase().isBefore(Instant.now())))
             throw new NotAuthorizedException("Registration phase is not active");
 
         return competition.getTeams().stream().map(jUserTeam::new).toList();
@@ -185,8 +185,8 @@ public class CompetitionResource {
         if (competition == null) throw new BadRequestException("Competition doesn't exist");
 
         if (!securityIdentity.hasRole("director") && // or registration phase
-            (competition.getTournament().getBeginRegistration().isAfter(LocalDateTime.now())
-                || competition.getTournament().getEndRegistration().isBefore(LocalDateTime.now())))
+            (competition.getTournament().getBeginRegistration().isAfter(Instant.now())
+                || competition.getTournament().getEndRegistration().isBefore(Instant.now())))
             throw new NotAuthorizedException("Registration phase is not active");
 
         if (competition.getMode() == CompetitionMode.SINGLES
@@ -423,7 +423,7 @@ public class CompetitionResource {
 
         Match finale = matches.getFinal(competition);
         Match thirdPlace = matches.getThirdPlace(competition);
-        if (finale == null || thirdPlace == null)
+        if (finale == null || (groups.size() > 2 && thirdPlace == null))
             throw new InternalServerErrorException("Finale or thirdPlace is null");
         return new jUserGroupSystem(groups, finale, thirdPlace);
     }
