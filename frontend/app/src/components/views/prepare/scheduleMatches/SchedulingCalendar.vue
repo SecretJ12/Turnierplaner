@@ -10,7 +10,9 @@
 		:split-days="splitDays"
 		:sticky-split-labels="true"
 		:min-event-width="80"
-		:min-split-width="200"
+		:min-split-width="250"
+		:min-cell-width="250"
+		:time-cell-height="100"
 		:snap-to-time="15"
 		:editable-events="!!props.courts.length"
 		:events="events"
@@ -18,29 +20,7 @@
 		@event-change="onEventChange"
 	>
 		<template #event="{ event }">
-			<div class="w-full flex flex-column p-1 text-left">
-				<div>{{ event.data.title }}</div>
-				<div class="grid">
-					<div class="col-6" style="font-size: 0.5rem">
-						<template v-if="event.data.teamA">
-							{{ event.data.teamA.playerA.name }}<br />
-							<template v-if="event.data.teamA.playerB">
-								{{ event.data.teamA.playerB.name }}
-							</template>
-						</template>
-						<template v-else> N.A.</template>
-					</div>
-					<div class="col-6" style="font-size: 0.5rem">
-						<template v-if="event.data.teamB">
-							{{ event.data.teamB.playerA.name }}<br />
-							<template v-if="event.data.teamB.playerB">
-								{{ event.data.teamB.playerB.name }}
-							</template>
-						</template>
-						<template v-else> N.A.</template>
-					</div>
-				</div>
-			</div>
+			<EventMatch :match="event.data" :competition="competition" />
 		</template>
 	</vue-cal>
 </template>
@@ -65,6 +45,7 @@ import {
 	extractGroupMatches,
 	extractKnockoutMatches,
 } from "@/components/views/prepare/scheduleMatches/ScheduleMatchesHelper"
+import EventMatch from "@/components/views/prepare/scheduleMatches/MatchEvent.vue"
 
 const calid = ref<number>(0)
 
@@ -137,6 +118,9 @@ function onEventDrop({
 		if (originalEvent.data.id) emit("removeId", originalEvent.data.id)
 		else throw "Match id is missing"
 
+		event.end = new Date(event.start)
+		event.end.setHours(event.end.getHours() + 1)
+		event.end.setMinutes(event.end.getMinutes() + 30)
 		events.value.push({
 			start: event.start,
 			end: event.end,

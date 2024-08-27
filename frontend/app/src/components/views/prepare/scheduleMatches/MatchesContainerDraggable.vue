@@ -14,11 +14,8 @@
 		style="box-sizing: content-box; width: calc(100% - 6px)"
 	>
 		<template #default="{ item }">
-			<div
-				v-if="item"
-				class="bg-primary-400 text-black border-round select-none cursor-pointer pl-3 pr-3 h-3rem inline text-50 flex align-items-center justify-content-center"
-			>
-				<span>{{ item.title }}</span>
+			<div style="background-color: rgba(164, 230, 210, 0.9); width: 200px">
+				<MatchEvent :match="item" :competition="competition" />
 			</div>
 		</template>
 	</DraggablePanel>
@@ -40,6 +37,7 @@ import {
 	extractGroupMatches,
 	extractKnockoutMatches,
 } from "@/components/views/prepare/scheduleMatches/ScheduleMatchesHelper"
+import MatchEvent from "@/components/views/prepare/scheduleMatches/MatchEvent.vue"
 
 const route = useRoute()
 const { t } = useI18n({ inheritLocale: true })
