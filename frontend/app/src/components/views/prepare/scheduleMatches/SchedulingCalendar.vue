@@ -1,12 +1,13 @@
 <template>
 	<vue-cal
 		v-if="tournament"
+		style="height: 1000px"
 		:key="calid"
 		active-view="week"
 		:disable-views="['years', 'year', 'month']"
 		:locale="$i18n.locale"
 		:time-from="8 * 60"
-		:time-to="20 * 60"
+		:time-to="24 * 60"
 		:split-days="splitDays"
 		:sticky-split-labels="true"
 		:min-event-width="80"
