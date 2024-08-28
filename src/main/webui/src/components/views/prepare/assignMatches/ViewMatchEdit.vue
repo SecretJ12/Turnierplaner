@@ -77,8 +77,10 @@ function removeB() {
 }
 
 watch(props, () => {
+	// eslint-disable-next-line no-constant-binary-expression
 	if (teamA.value !== (props.match.teamA ? [props.match.teamA] : []))
 		teamA.value = props.match.teamA ? [props.match.teamA] : []
+	// eslint-disable-next-line no-constant-binary-expression
 	if (teamB.value !== (props.match.teamB ? [props.match.teamB] : []))
 		teamB.value = props.match.teamB ? [props.match.teamB] : []
 })

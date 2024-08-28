@@ -79,10 +79,8 @@ axios.interceptors.request.use(
 
 const messages = languages
 
-export type MessageSchema = (typeof messages)["de"]
-
 declare module "vue-i18n" {
-	export interface DefineLocaleMessage extends MessageSchema {}
+	export type DefineLocaleMessage = (typeof messages)["de"]
 }
 
 const options: I18nOptions = {
@@ -91,7 +89,6 @@ const options: I18nOptions = {
 	warnHtmlMessage: false,
 	missingWarn: false,
 	fallbackWarn: false,
-	// @ts-expect-error "Not a fix datatype"
 	messages,
 	legacy: false,
 }
