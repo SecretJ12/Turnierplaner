@@ -7,7 +7,7 @@ import java.io.File;
 
 public class MailTemplates {
     //    TODO internationalization
-    String url = "http://localhost:3000";
+    String url = "http://localhost:8080";
 
     public Mail verificationMail(String recipient, String verificationcode) {
         return Mail
