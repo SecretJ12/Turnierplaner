@@ -689,14 +689,14 @@
     {
       "id": "b2d33df3-d90c-4674-ad81-060b801ddb7e",
       "clientId": "backend-quarkus",
-      "rootUrl": "http://localhost:2000",
+      "rootUrl": "http://localhost:8080",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "secret": "**********",
       "redirectUris": [
-        "http://localhost:2000/*"
+        "http://localhost:8080/*"
       ],
       "webOrigins": [],
       "notBefore": 0,
@@ -796,18 +796,18 @@
     {
       "id": "1e8a4f16-0566-482b-b408-334e30656203",
       "clientId": "frontend-vue",
-      "rootUrl": "http://localhost:3000/*",
-      "adminUrl": "http://localhost:3000/*",
-      "baseUrl": "http://localhost:3000/*",
+      "rootUrl": "http://localhost:8080/*",
+      "adminUrl": "http://localhost:8080/*",
+      "baseUrl": "http://localhost:8080/*",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "http://localhost:3000/*"
+        "http://localhost:8080/*"
       ],
       "webOrigins": [
-        "http://localhost:3000"
+        "http://localhost:8080"
       ],
       "notBefore": 0,
       "bearerOnly": false,
@@ -867,19 +867,19 @@
     {
       "id": "1e8a4f16-0566-482b-b408-334e30656204",
       "clientId": "frontend-swagger",
-      "rootUrl": "http://localhost:2000/q/swagger-ui",
-      "adminUrl": "http://localhost:2000/q/swagger-ui",
-      "baseUrl": "http://localhost:2000/q/swagger-ui",
+      "rootUrl": "http://localhost:8080/q/swagger-ui",
+      "adminUrl": "http://localhost:8080/q/swagger-ui",
+      "baseUrl": "http://localhost:8080/q/swagger-ui",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "http://localhost:2000/q/swagger-ui/oauth2-redirect.html",
-        "http://localhost:2000/q/swagger-ui/oauth2-redirect.html"
+        "http://localhost:8080/q/swagger-ui/oauth2-redirect.html",
+        "http://localhost:8080/q/swagger-ui/oauth2-redirect.html"
       ],
       "webOrigins": [
-        "http://localhost:3000"
+        "http://localhost:8080"
       ],
       "notBefore": 0,
       "bearerOnly": false,

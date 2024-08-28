@@ -38,9 +38,12 @@ nb-configuration.xml
 # Local environment
 .env
 
-# Frontend
-node_modules/**
-package-lock.json
-
 keycloak-19.0.1/**
-backend/.mvn
+
+package-lock.json
+node_modules/**
+node/**
+/auto-imports.d.ts
+/components.d.ts
+
+bun.lockb

@@ -8,7 +8,6 @@ import Components from "unplugin-vue-components/vite"
 export default defineConfig({
 	server: {
 		host: true,
-		port: 3000,
 	},
 	plugins: [
 		vue(),
