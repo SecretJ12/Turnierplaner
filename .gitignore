@@ -40,10 +40,8 @@ nb-configuration.xml
 
 keycloak-19.0.1/**
 
-package-lock.json
-node_modules/**
-node/**
-/auto-imports.d.ts
-/components.d.ts
+**/node_modules/**
+auto-imports.d.ts
+components.d.ts
 
 bun.lockb
