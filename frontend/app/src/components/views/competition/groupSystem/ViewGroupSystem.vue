@@ -2,12 +2,7 @@
 	<!-- TODO show on card -->
 	<!-- TODO add toggle to show as list? -->
 	<template v-if="groupSystem">
-		<ViewGroupTable
-			v-for="group in groupSystem.groups"
-			:key="group.index"
-			:group="group"
-			style="width: 1000px"
-		/>
+		<ViewGroupTable v-for="group in groupSystem.groups" :group="group" />
 	</template>
 
 	<!-- TODO show finals -->

@@ -32,6 +32,7 @@ import {
 	Competition,
 	CompetitionServer,
 	Mode,
+	NumberSets,
 	Progress,
 	Sex,
 	SignUp,
@@ -52,6 +53,7 @@ const competition = reactive<Competition>({
 	tourType: CompType.KNOCKOUT,
 	mode: Mode.SINGLE,
 	signUp: SignUp.INDIVIDUAL,
+	numberSets: NumberSets.THREE,
 	playerA: {
 		sex: Sex.ANY,
 		hasMinAge: false,

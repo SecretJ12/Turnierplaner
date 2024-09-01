@@ -42,6 +42,7 @@
 					v-if="competition"
 					:tour-type="competition.tourType"
 					:mode="competition.mode"
+					:number-sets="competition.numberSets"
 				/>
 			</template>
 		</template>

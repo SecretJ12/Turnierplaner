@@ -39,7 +39,9 @@
 		"any": "Any",
 		"filter_by_name": "Filter by name",
 		"from": "From",
-		"to": "To"
+		"to": "To",
+		"tournament_tree": "Tournament tree",
+		"update_score": "Update the score for the game"
 	},
 	"ViewPlayerRegistration": {
 		"headline": "Player Registration",
@@ -143,7 +145,8 @@
 		"maxAge": "Maximum age",
 		"missingAge": "Please choose a date",
 		"playerA": "Player 1",
-		"playerB": "Player 2"
+		"playerB": "Player 2",
+		"numberSets": "Choose the number of sets"
 	},
 	"ViewSignUp": {
 		"atLeastOneLetter": "Please type at least one letter",

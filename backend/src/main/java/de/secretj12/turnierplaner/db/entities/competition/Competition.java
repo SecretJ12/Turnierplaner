@@ -1,6 +1,7 @@
 package de.secretj12.turnierplaner.db.entities.competition;
 
 import de.secretj12.turnierplaner.db.entities.Match;
+import de.secretj12.turnierplaner.db.entities.NumberSets;
 import de.secretj12.turnierplaner.db.entities.Tournament;
 import de.secretj12.turnierplaner.db.entities.groups.Group;
 import jakarta.persistence.*;
@@ -47,6 +48,9 @@ public class Competition {
     private CompetitionMode mode;
     @Column(name = "signup", nullable = false)
     private CompetitionSignUp signup;
+
+    @Column(name = "number_sets", nullable = false)
+    private NumberSets numberSets;
 
     @Column(name = "playerA_sex", nullable = false)
     private Sex playerASex;
@@ -293,5 +297,13 @@ public class Competition {
 
     public void setTotal(int total) {
         this.total = total;
+    }
+
+    public NumberSets getNumberSets() {
+        return numberSets;
+    }
+
+    public void setNumberSets(NumberSets numberSets) {
+        this.numberSets = numberSets;
     }
 }

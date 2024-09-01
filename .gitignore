@@ -44,3 +44,4 @@ package-lock.json
 
 keycloak-19.0.1/**
 backend/.mvn
+/src/main/webui/node_modules/*

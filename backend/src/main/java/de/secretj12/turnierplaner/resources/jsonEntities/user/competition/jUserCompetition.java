@@ -5,6 +5,7 @@ import de.secretj12.turnierplaner.db.entities.competition.CreationProgress;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorMode;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorSignUp;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorValidSex;
+import de.secretj12.turnierplaner.resources.jsonEntities.user.jNumberSets;
 import jakarta.ws.rs.NotFoundException;
 
 public class jUserCompetition {
@@ -13,6 +14,7 @@ public class jUserCompetition {
     private jUserCompetitionType type;
     private jDirectorMode mode;
     private jDirectorSignUp signUp;
+    private jNumberSets numberSets;
     private jUserConfigPlayerA playerA;
     private jUserConfigPlayerB playerB;
     private CreationProgress cProgress;
@@ -37,6 +39,10 @@ public class jUserCompetition {
         this.signUp = switch (competition.getSignup()) {
             case INDIVIDUAL -> jDirectorSignUp.INDIVIDUAL;
             case TOGETHER -> jDirectorSignUp.TOGETHER;
+        };
+        this.numberSets = switch (competition.getNumberSets()) {
+            case THREE -> jNumberSets.THREE;
+            case FIVE -> jNumberSets.FIVE;
         };
         this.playerA = new jUserConfigPlayerA();
         this.playerA.setSex(switch (competition.getPlayerASex()) {
@@ -127,5 +133,13 @@ public class jUserCompetition {
 
     public void setcProgress(CreationProgress cProgress) {
         this.cProgress = cProgress;
+    }
+
+    public jNumberSets getNumberSets() {
+        return numberSets;
+    }
+
+    public void setNumberSets(jNumberSets numberSets) {
+        this.numberSets = numberSets;
     }
 }

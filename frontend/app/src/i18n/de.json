@@ -39,7 +39,9 @@
 		"any": "Beliebig",
 		"filter_by_name": "Nach Name filtern",
 		"from": "Von",
-		"to": "Bis"
+		"to": "Bis",
+		"tournament_tree": "Turnierbaum",
+		"update_score": "Aktualisieren Sie die Punkte für das Spiel"
 	},
 	"ViewPlayerRegistration": {
 		"headline": "Spielerregistrierung",
@@ -140,7 +142,8 @@
 		"maxAge": "Maximalalter",
 		"missingAge": "Bitte wähle ein Datum",
 		"playerA": "Spieler 1",
-		"playerB": "Spieler 2"
+		"playerB": "Spieler 2",
+		"numberSets": "Anzahl der Sätze"
 	},
 	"ViewSignUp": {
 		"atLeastOneLetter": "Bitte tippe mindestens einen Buchstaben ein",
