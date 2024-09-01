@@ -16,6 +16,11 @@ export enum Mode {
 	DOUBLE = "DOUBLE",
 }
 
+export enum NumberSets {
+	THREE = "THREE",
+	FIVE = "FIVE",
+}
+
 export enum SignUp {
 	INDIVIDUAL = "INDIVIDUAL",
 	TOGETHER = "TOGETHER",
@@ -45,6 +50,7 @@ export interface Competition {
 	tourType: CompType
 	mode: Mode
 	signUp: SignUp
+	numberSets: NumberSets
 	playerA: settingsPlayer
 	playerB: settingsPlayerB
 	cProgress: Progress
@@ -57,6 +63,7 @@ export const CompetitionDefault: Competition = {
 	tourType: CompType.KNOCKOUT,
 	mode: Mode.SINGLE,
 	signUp: SignUp.INDIVIDUAL,
+	numberSets: NumberSets.THREE,
 	playerA: {
 		sex: Sex.ANY,
 		hasMinAge: false,
@@ -82,6 +89,7 @@ export interface CompetitionServer {
 	type: CompType
 	mode: Mode
 	signUp: SignUp
+	numberSets: NumberSets
 	playerA: {
 		sex: Sex
 		hasMinAge: boolean
@@ -114,6 +122,7 @@ export interface CompetitionForm {
 	tourType: CompType
 	mode: Mode
 	signUp: SignUp
+	numberSets: NumberSets
 	playerA_Sex: Sex
 	playerA_hasMinAge: boolean
 	playerA_minAge: Date | undefined
@@ -142,6 +151,7 @@ export function competitionFormToServer(
 		type: form.tourType,
 		mode: form.mode,
 		signUp: form.signUp,
+		numberSets: form.numberSets,
 		playerA: {
 			sex: form.playerA_Sex,
 			hasMinAge: form.playerA_hasMinAge,
@@ -170,6 +180,7 @@ export function competitionClientToServer(
 		type: competition.tourType,
 		mode: competition.mode,
 		signUp: competition.signUp,
+		numberSets: competition.numberSets,
 		playerA: {
 			sex: competition.playerA.sex,
 			hasMinAge: competition.playerA.hasMinAge,
@@ -206,6 +217,7 @@ export function competitionServerToClient(
 		tourType: competition.type,
 		mode: competition.mode,
 		signUp: competition.signUp,
+		numberSets: competition.numberSets,
 		playerA: {
 			sex: competition.playerA.sex,
 			hasMinAge: competition.playerA.hasMinAge,

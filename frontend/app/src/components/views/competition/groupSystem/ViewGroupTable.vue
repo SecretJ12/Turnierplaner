@@ -49,13 +49,17 @@
 						@mouseleave="hoverLeave()"
 					>
 						<div>
-							<ViewMatch :match="findMatch(team, teamB)" />
+							<ViewMatch
+								:match="findMatch(team)"
+								@click="showPopUp(findMatch(teamA, teamB))"
+							/>
 						</div>
 					</td>
 				</template>
 			</tr>
 		</template>
 	</table>
+	<UpdatePointsDialog ref="dialog" />
 </template>
 
 <script setup lang="ts">
@@ -65,6 +69,7 @@ import { useI18n } from "vue-i18n"
 import ViewMatch from "@/components/views/competition/groupSystem/ViewMatch.vue"
 import { Match } from "@/interfaces/match"
 import { Team } from "@/interfaces/team"
+import UpdatePointsDialog from "@/components/items/UpdatePointsDialog.vue"
 import ViewTeamNames from "@/components/links/LinkTeamNames.vue"
 
 const { t } = useI18n({ inheritLocale: true })
@@ -103,6 +108,11 @@ function hoverLeave() {
 	hoverIdA.value = null
 	hoverIdB.value = null
 	hoverTeam.value = null
+}
+
+const dialog = ref()
+const showPopUp = function (match: Match) {
+	dialog.value.showPopUp(match)
 }
 </script>
 

@@ -9,7 +9,8 @@
 				class="w-full"
 				maxlength="30"
 				type="text"
-				v-bind="name"
+				v-model="name"
+				v-bind="nameAttrs"
 			/>
 			<InlineMessage v-if="errors.name" class="mt-2"
 				>{{ t(errors.name || "") }}
@@ -23,7 +24,8 @@
 				class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
 				rows="4"
 				type="text"
-				v-bind="description"
+				v-model="description"
+				v-bind="descriptionAttrs"
 			></textarea>
 		</div>
 		<Divider align="left">
@@ -47,7 +49,8 @@
 				class="w-full"
 				option-label="name"
 				option-value="value"
-				v-bind="selectedTourType"
+				v-model="selectedTourType"
+				v-bind="selectedTourTypeAttrs"
 			>
 				<template #value="slotProps">
 					<div v-if="slotProps.value" class="flex align-items-center">
@@ -94,7 +97,8 @@
 				class="w-full"
 				option-label="name"
 				option-value="value"
-				v-bind="selectedTourMode"
+				v-model="selectedTourMode"
+				v-bind="selectedTourModeAttrs"
 			>
 				<template #value="slotProps">
 					<div v-if="slotProps.value" class="flex align-items-center">
@@ -151,7 +155,8 @@
 				class="w-full"
 				option-label="name"
 				option-value="value"
-				v-bind="signUp"
+				v-model="signUp"
+				v-bind="signUpAttrs"
 			>
 				<template #value="slotProps">
 					<div v-if="slotProps.value" class="flex align-items-center">
@@ -191,6 +196,19 @@
 			</Dropdown>
 		</div>
 
+		<div class="field col-12 md:col-6 md:mr-8">
+			<label for="numberSets">{{ t("CompetitionSettings.numberSets") }}</label>
+			<Dropdown
+				v-model="numberSets"
+				v-bind="numberSetsAtrrs"
+				:options="numberSetsOptions"
+				optionLabel="name"
+				option-value="value"
+				:placeholder="t('CompetitionSettings.numberSets')"
+				class="w-full"
+			/>
+		</div>
+
 		<Divider align="left">
 			<b>{{ t("CompetitionSettings.player") }}</b>
 		</Divider>
@@ -200,7 +218,8 @@
 				:binary="true"
 				:disabled="disabled"
 				input-id="playerB_different_input"
-				v-bind="playerB_different"
+				v-model="playerB_different"
+				v-bind="playerB_differentAttrs"
 			/>
 			<label class="ml-2 mb-0 mt-1" for="playerB_different_input">{{
 				t("CompetitionSettings.differentB")
@@ -239,7 +258,8 @@
 				class="w-full"
 				option-label="name"
 				option-value="value"
-				v-bind="playerASex"
+				v-model="playerASex"
+				v-bind="playerASexAttrs"
 			>
 				<template #option="slotProps">
 					<div>
@@ -283,20 +303,22 @@
 			}}</label>
 			<div class="flex flex-row align-items-center gap-2">
 				<Checkbox
-					id="minAge"
+					id="minAgeA"
 					:binary="true"
 					:disabled="disabled"
-					v-bind="playerAHasMinAge"
+					v-model="playerAHasMinAge"
+					v-bind="playerAHasMinAgeAttrs"
 				/>
 
 				<Calendar
-					id="minAge"
+					id="minAgeA"
 					:date-format="t('date_format')"
-					:disabled="!playerAHasMinAge.modelValue || disabled"
+					:disabled="!playerAHasMinAge || disabled"
 					:manual-input="false"
 					class="w-full"
 					show-icon
-					v-bind="playerAMinAge"
+					v-model="playerAMinAge"
+					v-bind="playerAMinAgeAttrs"
 				/>
 			</div>
 		</div>
@@ -305,16 +327,21 @@
 				t("CompetitionSettings.minAge")
 			}}</label>
 			<div class="flex flex-row align-items-center gap-2">
-				<Checkbox id="minAge" :binary="true" v-bind="playerBHasMinAge" />
-
+				<Checkbox
+					id="minAgeB"
+					:binary="true"
+					v-model="playerBHasMinAge"
+					v-bind="playerBHasMinAgeAttrs"
+				/>
 				<Calendar
-					id="minAge"
+					id="minAgeB"
 					:date-format="t('date_format')"
-					:disabled="!playerBHasMinAge.modelValue || disabled"
+					:disabled="!playerBHasMinAge || disabled"
 					:manual-input="false"
 					class="w-full"
 					show-icon
-					v-bind="playerBMinAge"
+					v-model="playerBMinAge"
+					v-bind="playerBMinAgeAttrs"
 				/>
 			</div>
 		</div>
@@ -331,20 +358,22 @@
 			}}</label>
 			<div class="flex flex-row align-items-center gap-2">
 				<Checkbox
-					id="minAge"
+					id="maxAgeA"
 					:binary="true"
 					:disabled="disabled"
-					v-bind="playerAHasMaxAge"
+					v-model="playerAHasMaxAge"
+					v-bind="playerAHasMaxAgeAttrs"
 				/>
 
 				<Calendar
-					id="minAge"
+					id="maxAgeA"
 					:date-format="t('date_format')"
-					:disabled="!playerAHasMaxAge.modelValue || disabled"
+					:disabled="!playerAHasMaxAge || disabled"
 					:manual-input="false"
 					class="w-full"
 					show-icon
-					v-bind="playerAMaxAge"
+					v-model="playerAMaxAge"
+					v-bind="playerAMaxAgeAttrs"
 				/>
 			</div>
 		</div>
@@ -354,20 +383,22 @@
 			}}</label>
 			<div class="flex flex-row align-items-center gap-2">
 				<Checkbox
-					id="minAge"
+					id="maxAgeB"
 					:binary="true"
 					:disabled="disabled"
-					v-bind="playerBHasMaxAge"
+					v-model="playerBHasMaxAge"
+					v-bind="playerBHasMaxAgeAttrs"
 				/>
 
 				<Calendar
-					id="minAge"
+					id="maxAgeB"
 					:date-format="t('date_format')"
-					:disabled="!playerBHasMaxAge.modelValue || disabled"
+					:disabled="!playerBHasMaxAge || disabled"
 					:manual-input="false"
 					class="w-full"
 					show-icon
-					v-bind="playerBMaxAge"
+					v-model="playerBMaxAge"
+					v-bind="playerBMaxAgeAttrs"
 				/>
 			</div>
 		</div>
@@ -375,12 +406,14 @@
 </template>
 
 <script lang="ts" setup>
+import { ref } from "vue"
 import { useI18n } from "vue-i18n"
 import {
 	Competition,
 	CompetitionForm,
 	competitionFormToServer,
 	Mode,
+	NumberSets,
 	Sex,
 	SignUp,
 	CompType,
@@ -403,74 +436,89 @@ const props = withDefaults(
 	},
 )
 
-const { values, defineInputBinds, errors, defineComponentBinds, handleSubmit } =
-	useForm<CompetitionForm>({
-		validationSchema: toTypedSchema(
-			object({
-				name: string().min(4).max(40).required(),
-				description: string().max(50),
-				tourType: mixed().oneOf(Object.values(CompType)).required(),
-				mode: mixed().oneOf(Object.values(Mode)).required(),
-				signUp: mixed().oneOf(Object.values(SignUp)).required(),
+const { values, defineField, errors, handleSubmit } = useForm<CompetitionForm>({
+	validationSchema: toTypedSchema(
+		object({
+			name: string().min(4).max(40).required(),
+			description: string().max(50),
+			tourType: mixed().oneOf(Object.values(CompType)).required(),
+			mode: mixed().oneOf(Object.values(Mode)).required(),
+			signUp: mixed().oneOf(Object.values(SignUp)).required(),
+			numberSets: mixed().oneOf(Object.values(NumberSets)).required(),
 
-				playerA_Sex: mixed().oneOf(Object.values(Sex)).required(),
-				playerA_hasMinAge: boolean(),
-				playerA_minAge: date(),
-				playerA_hasMaxAge: boolean(),
-				playerA_maxAge: date(),
+			playerA_Sex: mixed().oneOf(Object.values(Sex)).required(),
+			playerA_hasMinAge: boolean(),
+			playerA_minAge: date(),
+			playerA_hasMaxAge: boolean(),
+			playerA_maxAge: date(),
 
-				playerB_different: boolean(),
-				playerB_Sex: mixed().oneOf(Object.values(Sex)),
-				playerB_hasMinAge: boolean(),
-				playerB_minAge: date(),
-				playerB_hasMaxAge: boolean(),
-				playerB_maxAge: date(),
-			}),
-		),
-		initialValues: {
-			name: props.competition.name ? props.competition.name : undefined,
-			description: props.competition.description,
-			tourType: props.competition.tourType,
-			mode: props.competition.mode,
-			signUp: props.competition.signUp,
-			playerA_Sex: props.competition.playerA.sex,
-			playerA_hasMinAge: props.competition.playerA.hasMinAge,
-			playerA_minAge: props.competition.playerA.minAge
-				? props.competition.playerA.minAge
-				: new Date(),
-			playerA_hasMaxAge: props.competition.playerA.hasMaxAge,
-			playerA_maxAge: props.competition.playerA.maxAge
-				? props.competition.playerA.maxAge
-				: new Date(),
-			playerB_different: props.competition.playerB.different,
-			playerB_Sex: props.competition.playerB.sex,
-			playerB_hasMinAge: props.competition.playerB.hasMinAge,
-			playerB_minAge: props.competition.playerB.minAge
-				? props.competition.playerB.minAge
-				: new Date(),
-			playerB_hasMaxAge: props.competition.playerB.hasMaxAge,
-			playerB_maxAge: props.competition.playerB.maxAge
-				? props.competition.playerB.maxAge
-				: new Date(),
-		},
-	})
+			playerB_different: boolean(),
+			playerB_Sex: mixed().oneOf(Object.values(Sex)),
+			playerB_hasMinAge: boolean(),
+			playerB_minAge: date(),
+			playerB_hasMaxAge: boolean(),
+			playerB_maxAge: date(),
+		}),
+	),
+	initialValues: {
+		name: props.competition.name ? props.competition.name : undefined,
+		description: props.competition.description,
+		tourType: props.competition.tourType,
+		mode: props.competition.mode,
+		signUp: props.competition.signUp,
+		numberSets: props.competition.numberSets,
 
-const name = defineInputBinds("name")
-const description = defineInputBinds("description")
-const selectedTourType = defineComponentBinds("tourType")
-const selectedTourMode = defineComponentBinds("mode")
-const signUp = defineComponentBinds("signUp")
-const playerB_different = defineComponentBinds("playerB_different")
-const playerASex = defineComponentBinds("playerA_Sex")
-const playerBSex = defineComponentBinds("playerB_Sex")
-const playerAHasMinAge = defineComponentBinds("playerA_hasMinAge")
-const playerBHasMinAge = defineComponentBinds("playerB_hasMinAge")
-const playerAHasMaxAge = defineComponentBinds("playerA_hasMaxAge")
-const playerBHasMaxAge = defineComponentBinds("playerB_hasMaxAge")
-const playerAMinAge = defineComponentBinds("playerA_minAge")
-const playerAMaxAge = defineComponentBinds("playerA_maxAge")
-const playerBMinAge = defineComponentBinds("playerB_minAge")
-const playerBMaxAge = defineComponentBinds("playerB_maxAge")
+		playerA_Sex: props.competition.playerA.sex,
+		playerA_hasMinAge: props.competition.playerA.hasMinAge,
+		playerA_minAge: props.competition.playerA.minAge
+			? props.competition.playerA.minAge
+			: new Date(),
+		playerA_hasMaxAge: props.competition.playerA.hasMaxAge,
+		playerA_maxAge: props.competition.playerA.maxAge
+			? props.competition.playerA.maxAge
+			: new Date(),
+
+		playerB_different: props.competition.playerB.different,
+		playerB_Sex: props.competition.playerB.sex,
+		playerB_hasMinAge: props.competition.playerB.hasMinAge,
+		playerB_minAge: props.competition.playerB.minAge
+			? props.competition.playerB.minAge
+			: new Date(),
+		playerB_hasMaxAge: props.competition.playerB.hasMaxAge,
+		playerB_maxAge: props.competition.playerB.maxAge
+			? props.competition.playerB.maxAge
+			: new Date(),
+	},
+})
+console.log(values)
+
+const [name, nameAttrs] = defineField("name")
+const [description, descriptionAttrs] = defineField("description")
+const [selectedTourType, selectedTourTypeAttrs] = defineField("tourType")
+const [selectedTourMode, selectedTourModeAttrs] = defineField("mode")
+const [signUp, signUpAttrs] = defineField("signUp")
+const [numberSets, numberSetsAtrrs] = defineField("numberSets")
+const [playerB_different, playerB_differentAttrs] =
+	defineField("playerB_different")
+const [playerASex, playerASexAttrs] = defineField("playerA_Sex")
+const [playerBSex, playerBSexAttrs] = defineField("playerB_Sex")
+const [playerAHasMinAge, playerAHasMinAgeAttrs] =
+	defineField("playerA_hasMinAge")
+const [playerBHasMinAge, playerBHasMinAgeAttrs] =
+	defineField("playerB_hasMinAge")
+const [playerAHasMaxAge, playerAHasMaxAgeAttrs] =
+	defineField("playerA_hasMaxAge")
+const [playerBHasMaxAge, playerBHasMaxAgeAttrs] =
+	defineField("playerB_hasMaxAge")
+const [playerAMinAge, playerAMinAgeAttrs] = defineField("playerA_minAge")
+const [playerAMaxAge, playerAMaxAgeAttrs] = defineField("playerA_maxAge")
+const [playerBMinAge, playerBMinAgeAttrs] = defineField("playerB_minAge")
+const [playerBMaxAge, playerBMaxAgeAttrs] = defineField("playerB_maxAge")
+
+const numberSetsOptions = ref([
+	{ name: "3", value: NumberSets.THREE },
+	{ name: "5", value: NumberSets.FIVE },
+])
 
 const onSubmit = handleSubmit((values) => {
 	emit(

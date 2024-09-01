@@ -16,7 +16,7 @@
 	"dependencies": {
 		"@tanstack/vue-query": "^5.52.0",
 		"@tanstack/vue-query-devtools": "^5.52.0",
-		"@vee-validate/yup": "^4.12.3",
+		"@vee-validate/yup": "^4.13.2",
 		"@vue/cli": "^5.0.8",
 		"axios": "^1.6.2",
 		"keycloak-js": "^23.0.3",

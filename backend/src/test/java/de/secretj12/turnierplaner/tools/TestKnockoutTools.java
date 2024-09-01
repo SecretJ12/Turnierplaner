@@ -1,4 +1,4 @@
-package de.secretj12.turnierplaner.modifier;
+package de.secretj12.turnierplaner.tools;
 
 import de.secretj12.turnierplaner.db.entities.Match;
 import de.secretj12.turnierplaner.db.entities.Player;
