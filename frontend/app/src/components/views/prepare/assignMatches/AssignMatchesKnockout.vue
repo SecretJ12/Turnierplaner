@@ -121,7 +121,7 @@ const { data, reload } = track(
 	400,
 )
 const thirdPlace = computed(() => {
-	if (signedUpTeams.value && signedUpTeams.value.length > 2)
+	if (signedUpTeams.value && signedUpTeams.value.length > 3)
 		return genTree(0, null)
 	else return null
 })

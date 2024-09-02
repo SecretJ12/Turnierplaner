@@ -450,6 +450,7 @@ public class CompetitionResource {
         knockoutTools.updateKnockoutTree(competition, tree, finale);
         knockoutTools.updateThirdPlace(competition, finale);
 
+        // TODO only set progress if everything is assigned
         competition.setcProgress(CreationProgress.SCHEDULING);
         competitions.persist(competition);
         return true;
@@ -470,7 +471,7 @@ public class CompetitionResource {
         // @formatter:off
         List<Set<Team>> groups = division.getGroups().stream()
             .map(group -> group.stream()
-                .map(t -> teams.getById(t.getId()))
+                .map(t -> teams.findById(t.getId()))
                 .collect(Collectors.toCollection(HashSet::new)))
             .collect(Collectors.toList());
         // @formatter:on
