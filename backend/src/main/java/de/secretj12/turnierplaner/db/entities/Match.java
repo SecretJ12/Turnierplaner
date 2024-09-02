@@ -5,6 +5,7 @@ import de.secretj12.turnierplaner.db.entities.competition.Team;
 import de.secretj12.turnierplaner.db.entities.groups.FinalOfGroup;
 import de.secretj12.turnierplaner.db.entities.groups.MatchOfGroup;
 import de.secretj12.turnierplaner.db.entities.knockout.NextMatch;
+import io.smallrye.common.constraint.NotNull;
 import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -40,6 +41,7 @@ public class Match {
     @Column(name = "id")
     private UUID id;
 
+    @NotNull
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumns(@JoinColumn(name = "competition_id"))
     private Competition competition;

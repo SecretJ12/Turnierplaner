@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 @QuarkusTest
-public class TestCourtPlayerResource {
+public class TestCourtResource {
 
     @Inject
     CourtRepositiory courts;
