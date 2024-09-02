@@ -77,6 +77,8 @@ public class TournamentResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public String setCourts(@PathParam("tourName") String tourName, Set<jUserCourt> tCourts) {
         Tournament tournament = tournaments.getByName(tourName);
+        if (tournament == null)
+            throw new NotFoundException("Could not find tournament");
 
         tournament.setCourts(tCourts.stream().map(court -> {
             Court dbCourt = courts.findByName(court.getName());
@@ -94,6 +96,8 @@ public class TournamentResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Set<jUserCourt> getCourts(@PathParam("tourName") String tourName) {
         Tournament tournament = tournaments.getByName(tourName);
+        if (tournament == null)
+            throw new NotFoundException("Could not find tournament");
 
         return tournament.getCourts().stream().map(jUserCourt::new).collect(Collectors.toSet());
     }

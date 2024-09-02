@@ -1,13 +1,17 @@
 package de.secretj12.turnierplaner.resources;
 
+import de.secretj12.turnierplaner.db.entities.Court;
+import de.secretj12.turnierplaner.db.entities.CourtType;
 import de.secretj12.turnierplaner.db.entities.Tournament;
+import de.secretj12.turnierplaner.db.repositories.CourtRepositiory;
 import de.secretj12.turnierplaner.db.repositories.TournamentRepository;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.jDirectorTournamentUpdate;
+import io.quarkus.hibernate.orm.panache.Panache;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.security.TestSecurity;
 import io.restassured.http.ContentType;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
+import jakarta.transaction.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.AfterEach;
@@ -18,6 +22,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
+import java.util.Set;
 import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
@@ -29,7 +34,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class TestTournamentResource {
 
     @Inject
-    TournamentRepository tournamentRepository;
+    TournamentRepository tournaments;
+    @Inject
+    CourtRepositiory courts;
 
     @BeforeEach
     @Transactional
@@ -42,7 +49,7 @@ public class TestTournamentResource {
         tour.setBeginGamePhase(Instant.now().plus(12, ChronoUnit.DAYS));
         tour.setEndGamePhase(Instant.now().plus(13, ChronoUnit.DAYS));
         tour.setVisible(true);
-        tournamentRepository.persist(tour);
+        tournaments.persist(tour);
         Tournament tour2 = new Tournament();
         tour2.setName("Clubmeisterschaft2");
         tour2.setDescription("Anmeldung ausstehend");
@@ -51,13 +58,21 @@ public class TestTournamentResource {
         tour2.setBeginGamePhase(Instant.now().plus(12, ChronoUnit.DAYS));
         tour2.setEndGamePhase(Instant.now().plus(13, ChronoUnit.DAYS));
         tour2.setVisible(false);
-        tournamentRepository.persist(tour2);
+        tournaments.persist(tour2);
+
+        for (int i = 0; i < 5; i++) {
+            Court court = new Court();
+            court.setCourtType(CourtType.CLAY);
+            court.setName("Court " + i);
+            courts.persist(court);
+        }
     }
 
     @AfterEach
     @Transactional
     public void clearData() {
-        tournamentRepository.deleteAll();
+        tournaments.deleteAll();
+        courts.deleteAll();
     }
 
     @Test
@@ -183,7 +198,7 @@ public class TestTournamentResource {
             .then().assertThat()
             .statusCode(Response.Status.OK.getStatusCode());
 
-        Tournament tour = tournamentRepository.getByName("Clubmeisterschaft 2024");
+        Tournament tour = tournaments.getByName("Clubmeisterschaft 2024");
         assertNotNull(tour);
         assertEquals(tour.getDescription(), "Anmeldephase offen");
         assertEquals(tour.getBeginRegistration(), LocalDateTime.of(2024, 4, 1, 23, 15, 30).toInstant(ZoneOffset.UTC));
@@ -314,7 +329,7 @@ public class TestTournamentResource {
             .then().assertThat()
             .statusCode(Response.Status.OK.getStatusCode());
 
-        Tournament tour = tournamentRepository.getByName("Clubmeisterschaft 2024");
+        Tournament tour = tournaments.getByName("Clubmeisterschaft 2024");
         assertNotNull(tour);
         assertEquals(tour.getDescription(), "Anmeldephase offen");
         assertEquals(tour.getBeginRegistration(), LocalDateTime.of(2024, 4, 1, 23, 15, 30).toInstant(ZoneOffset.UTC));
@@ -369,5 +384,125 @@ public class TestTournamentResource {
             .post("/tournament/update")
             .then().assertThat()
             .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+    }
+
+    @Test
+    @TestSecurity(user = "testUser", roles = {"director"})
+    public void updateCourts() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+        given()
+            .contentType(ContentType.JSON)
+            .body("""
+                [
+                  {
+                    "name": "Court 1"
+                  },
+                  {
+                    "name": "Court 2"
+                  }
+                ]
+                """)
+            .post("/tournament/Clubmeisterschaft/updateCourts")
+            .then().assertThat()
+            .statusCode(Response.Status.OK.getStatusCode());
+
+        Panache.getTransactionManager().begin();
+        Tournament tournament = tournaments.getByName("Clubmeisterschaft");
+        assertEquals(tournament.getCourts().size(), 2);
+        assertEquals(tournament.getCourts(), Set.of(courts.findByName("Court 1"), courts.findByName("Court 2")));
+        Panache.getTransactionManager().commit();
+    }
+
+    @Test
+    public void updateCourtsUnauthorized() {
+        given()
+            .contentType(ContentType.JSON)
+            .body("""
+                [
+                  {
+                    "name": "Court 1"
+                  },
+                  {
+                    "name": "Court 2"
+                  }
+                ]
+                """)
+            .post("/tournament/Clubmeisterschaft/updateCourts")
+            .then().assertThat()
+            .statusCode(Response.Status.UNAUTHORIZED.getStatusCode());
+    }
+
+    @Test
+    @TestSecurity(user = "testUser", roles = {"director"})
+    public void updateCourtsUnkownCourt() {
+        given()
+            .contentType(ContentType.JSON)
+            .body("""
+                [
+                  {
+                    "name": "Court 7"
+                  },
+                  {
+                    "name": "Court 2"
+                  }
+                ]
+                """)
+            .post("/tournament/Clubmeisterschaft/updateCourts")
+            .then().assertThat()
+            .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+    }
+
+    @Test
+    @TestSecurity(user = "testUser", roles = {"director"})
+    public void updateCourtsUnknownTour() {
+        given()
+            .contentType(ContentType.JSON)
+            .body("""
+                [
+                  {
+                    "name": "Court 7"
+                  },
+                  {
+                    "name": "Court 2"
+                  }
+                ]
+                """)
+            .post("/tournament/Clubmeisterschaft2/updateCourts")
+            .then().assertThat()
+            .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+    }
+
+    @Test
+    @TestSecurity(user = "testUser", roles = {"director"})
+    public void getCourts() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+        Panache.getTransactionManager().begin();
+        Tournament tournament = tournaments.getByName("Clubmeisterschaft");
+        tournament.setCourts(Set.of(courts.findByName("Court 1"), courts.findByName("Court 2")));
+        tournaments.persist(tournament);
+        Panache.getTransactionManager().commit();
+
+        given()
+            .get("/tournament/Clubmeisterschaft/courts")
+            .then().assertThat()
+            .statusCode(Response.Status.OK.getStatusCode())
+            .body("size()", is(2))
+            .body("[0].name", is(oneOf("Court 1", "Court 2")))
+            .body("[1].name", is(oneOf("Court 1", "Court 2")));
+    }
+
+    @Test
+    @TestSecurity(user = "testUser", roles = {"director"})
+    public void getCourtsUnknownTour() {
+        given()
+            .get("/tournament/Random Clubmeisterschaft/courts")
+            .then().assertThat()
+            .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+    }
+
+    @Test
+    public void getCourtsUnauthorized() {
+        given()
+            .get("/tournament/Clubmeisterschaft/courts")
+            .then().assertThat()
+            .statusCode(Response.Status.UNAUTHORIZED.getStatusCode());
     }
 }
