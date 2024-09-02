@@ -305,21 +305,15 @@ public class CompetitionResource {
     }
 
     @POST
+    @Transactional
     @RolesAllowed("director")
     @Path("/{compName}/updateTeams")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public List<jUserTeam> updateTeams(@PathParam("tourName") String tourName, @PathParam("compName") String compName,
-                                       List<jUserTeam> teams) {
+    public String updateTeams(@PathParam("tourName") String tourName, @PathParam("compName") String compName,
+                              List<jUserTeam> teams) {
         checkTournamentAccessibility(tourName);
 
-        updateTeamsHelper(teams, tourName, compName);
-
-        return competitions.getByName(tourName, compName).getTeams().stream().map(jUserTeam::new).toList();
-    }
-
-    @Transactional
-    protected void updateTeamsHelper(List<jUserTeam> teams, String tourName, String compName) {
         Competition competition = competitions.getByName(tourName, compName);
         if (competition == null) throw new BadRequestException("Competition doesn't exist");
 
@@ -348,6 +342,11 @@ public class CompetitionResource {
                 this.teams.persist(cTeam);
             }
         }
+
+        competition.setcProgress(CreationProgress.GAMES);
+        competitions.persist(competition);
+
+        return "Teams updated";
     }
 
     @POST
@@ -451,7 +450,7 @@ public class CompetitionResource {
         knockoutTools.updateKnockoutTree(competition, tree, finale);
         knockoutTools.updateThirdPlace(competition, finale);
 
-        competition.setcProgress(CreationProgress.GAMES);
+        competition.setcProgress(CreationProgress.SCHEDULING);
         competitions.persist(competition);
         return true;
     }
@@ -485,7 +484,7 @@ public class CompetitionResource {
 
         groupTools.generateMatches(competition, groups);
 
-        competition.setcProgress(CreationProgress.GAMES);
+        competition.setcProgress(CreationProgress.SCHEDULING);
         competitions.persist(competition);
         return true;
     }

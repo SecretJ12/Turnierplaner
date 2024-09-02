@@ -1,8 +1,8 @@
 <template>
 	<vue-cal
 		v-if="tournament"
-		style="height: 1000px"
 		:key="calid"
+		style="height: 1000px"
 		active-view="week"
 		:disable-views="['years', 'year', 'month']"
 		:locale="$i18n.locale"
