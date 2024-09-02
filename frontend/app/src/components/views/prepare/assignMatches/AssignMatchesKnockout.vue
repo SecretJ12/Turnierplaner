@@ -162,27 +162,53 @@ const delay = computed(() =>
 )
 const delayBetween = computed(() => delay.value / 2)
 
+function range(n: number) {
+	return [...Array(n)].map((_, i) => i)
+}
+
 async function randomize() {
 	isUpdating.value = true
-	let knockOutListIndex = 0
 	const matches = getMatches()
-	while (data.value.teams.length && knockOutListIndex < matches.length) {
-		if (!matches[knockOutListIndex].teamA) {
+
+	const noBye =
+		matches.length * 2 -
+		data.value.teams.length -
+		matches
+			.map((m) => (m.teamA ? 1 : 0) + (m.teamB ? 1 : 0))
+			.reduce((a, b) => a + b)
+	console.log(noBye)
+	let pos = range(matches.length).filter(
+		(i) => !matches[i].teamA || !matches[i].teamB,
+	)
+	let byes = []
+	for (let i = 0; i < noBye; i++) byes.push(selectRandomElement(pos))
+
+	for (
+		let knockOutListIndex = 0;
+		data.value.teams.length && knockOutListIndex < matches.length;
+		knockOutListIndex++
+	) {
+		const match = matches[knockOutListIndex]
+
+		let bye = byes.includes(knockOutListIndex)
+		if (bye && (match.teamA || match.teamB)) continue
+
+		if (!match.teamA) {
 			const teamA = selectRandomElement(data.value.teams)
 			await sleep(delayBetween.value)
 
-			matches[knockOutListIndex].teamA = teamA
+			match.teamA = teamA
 			await sleep(delay.value)
 		}
+		if (bye) continue
 
-		if (!matches[knockOutListIndex].teamB) {
+		if (!match.teamB) {
 			const teamB = selectRandomElement(data.value.teams)
 			if (!teamB) break
-			matches[knockOutListIndex].teamB = teamB
+			match.teamB = teamB
 			await sleep(delayBetween.value)
 		}
 
-		knockOutListIndex++
 		await sleep(delay.value)
 	}
 	isUpdating.value = false
@@ -206,7 +232,7 @@ async function reroll() {
 }
 
 function save() {
-	if (!knockoutTreeCompletelyAssigned()) {
+	if (!allPlayersAssigned()) {
 		toast.add({
 			severity: "error",
 			summary: t("general.failure"),
@@ -220,14 +246,15 @@ function save() {
 	initKnockout(data.value.tree)
 }
 
-function knockoutTreeCompletelyAssigned(): boolean {
-	// check that tree is completely assigned
-	const check = (m: KnockoutMatch): boolean => {
+function allPlayersAssigned(): boolean {
+	// check that tree is correctly assigned
+	function checkTree(m: KnockoutMatch): boolean {
 		if (m.prevMatch) {
-			return check(m.prevMatch.a) && check(m.prevMatch.b)
-		} else return m.teamA !== null && m.teamB !== null
+			return checkTree(m.prevMatch.a) && checkTree(m.prevMatch.b)
+		} else return m.teamA !== null || m.teamB !== null
 	}
-	return check(data.value.tree)
+
+	return checkTree(data.value.tree) && data.value.teams.length === 0
 }
 
 function getMatches(tree?: KnockoutMatch, treeDepth?: number): Match[] {

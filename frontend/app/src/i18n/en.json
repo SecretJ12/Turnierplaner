@@ -206,7 +206,7 @@
 			"emptyGroupDet": "Every group needs at least 2 teams",
 			"teams": "Teams",
 			"ranking": "Ranking",
-			"knockout_not_assigned": "Not all games have been assigned yet"
+			"knockout_not_assigned": "Not all players have been assigned yet"
 		}
 	},
 	"validation": {
