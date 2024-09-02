@@ -33,7 +33,9 @@ export function getCompetitionsList(
 					`/tournament/${route.params.tourId}/competition/list`,
 				)
 				.then((response) => {
-					return response.data.map(competitionServerToClient)
+					return response.data
+						.map(competitionServerToClient)
+						.sort((comp1, comp2) => comp1.name.localeCompare(comp2.name))
 				})
 				.catch((error) => {
 					toast.add({

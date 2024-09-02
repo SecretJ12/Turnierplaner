@@ -118,15 +118,12 @@ watch([competitions, route], () => updateRoute(), { immediate: true })
 const menuComps = computed(() => {
 	if (!competitions.value) return []
 
-	return competitions.value
-		.map((competition) => {
-			return {
-				disabled:
-					progressOrder(competition.cProgress) < <number>route.meta.step,
-				...competition,
-			}
-		})
-		.sort((comp1, comp2) => comp1.name.localeCompare(comp2.name))
+	return competitions.value.map((competition) => {
+		return {
+			disabled: progressOrder(competition.cProgress) < <number>route.meta.step,
+			...competition,
+		}
+	})
 })
 
 function updateRoute(compId?: string) {
