@@ -133,7 +133,6 @@ function selectRandomElement<T>(players: Ref<T[]>) {
 	const r = Math.floor(Math.random() * players.value.length)
 	const element = players.value[r]
 	players.value.splice(r, 1)
-	//players.value = players.value.filter((v, i) => i !== r)
 	return element
 }
 
@@ -250,8 +249,7 @@ async function reset() {
 }
 
 function save() {
-	// TODO warning if a step further was already executed
-	if (competition.value?.cProgress !== Progress.TEAMS) {
+	if (competition.value?.cProgress === Progress.SCHEDULING) {
 		toast.add({
 			severity: "error",
 			summary: "Matches already assigned",
