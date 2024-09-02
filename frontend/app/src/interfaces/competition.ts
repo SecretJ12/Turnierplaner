@@ -27,6 +27,17 @@ export enum Progress {
 	SCHEDULING = "SCHEDULING",
 }
 
+export function progressOrder(progress: Progress) {
+	switch (progress) {
+		case Progress.TEAMS:
+			return 2
+		case Progress.GAMES:
+			return 3
+		case Progress.SCHEDULING:
+			return 4
+	}
+}
+
 export interface Competition {
 	id?: null | string
 	name: string
