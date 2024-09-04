@@ -3,6 +3,7 @@
 		v-if="tournament"
 		ref="vuecal"
 		:key="calid"
+		:selected-date="tournament.game_phase.begin"
 		style="height: 1000px"
 		active-view="day"
 		:min-date="tournament.game_phase.begin"
@@ -75,17 +76,6 @@ const { data: knockout } = getKnockout(
 const { data: groups } = getGroup(
 	route,
 	computed(() => competition.value?.tourType === TourType.GROUPS),
-)
-
-const vuecal = ref()
-watch(
-	[tournament, vuecal],
-	async () => {
-		if (tournament.value && vuecal.value) {
-			vuecal.value.switchView("day", tournament.value.game_phase.begin)
-		}
-	},
-	{ immediate: true },
 )
 
 const events = defineModel<CalEvent[]>({ default: [] })
