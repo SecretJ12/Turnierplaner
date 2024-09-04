@@ -15,6 +15,7 @@
 		"success": "Success!",
 		"failure": "Failure!",
 		"loading": "Loading...",
+		"error_saving": "Error while saving",
 		"save": "Save",
 		"reset": "Reset",
 		"back": "Back",
@@ -227,6 +228,7 @@
 			"HARD": "Hard",
 			"CLAY": "Sand",
 			"GRASS": "Grass"
-		}
+		},
+		"not_selected": "All fields need to be filled"
 	}
 }
