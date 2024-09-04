@@ -191,7 +191,11 @@
 			"assignMatches": "Assign matches",
 			"scheduleMatches": "Schedule matches",
 			"previous": "Previous",
-			"next": "Next"
+			"next": "Next",
+			"invalid_step": {
+				"summary": "Invalid step",
+				"detail": "Previous steps need to be fulfilled first"
+			}
 		},
 		"editTeams": {
 			"deleteBox": "Drop to delete",

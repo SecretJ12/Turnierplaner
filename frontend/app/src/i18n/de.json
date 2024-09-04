@@ -189,7 +189,11 @@
 			"assignMatches": "Spiele auslosen",
 			"scheduleMatches": "Zeiteinteilung",
 			"previous": "Zurück",
-			"next": "Weiter"
+			"next": "Weiter",
+			"invalid_step": {
+				"summary": "Ungültiger Schritt",
+				"detail": "Vorherige Schritte wurden noch nicht erledigt"
+			}
 		},
 		"editTeams": {
 			"deleteBox": "Löschen",

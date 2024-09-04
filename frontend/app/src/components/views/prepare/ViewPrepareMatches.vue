@@ -136,6 +136,18 @@ function updateRoute(compId?: string) {
 	activeTab.value = competitions.value.findIndex((c) => c.name === compId)
 
 	let step = route.name
+	if (
+		competition.value &&
+		<number>route.meta.step > progressOrder(competition.value.cProgress)
+	) {
+		toast.add({
+			severity: "error",
+			summary: t("ViewPrepare.steps.invalid_step.summary"),
+			detail: t("ViewPrepare.steps.invalid_step.detail"),
+			life: 3000,
+		})
+		step = undefined
+	}
 	if (route.meta.step === undefined || !step) {
 		switch (competitions.value[activeTab.value].cProgress) {
 			case Progress.TEAMS:
