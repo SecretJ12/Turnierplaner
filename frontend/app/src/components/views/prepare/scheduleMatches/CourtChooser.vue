@@ -24,11 +24,15 @@ import { watch } from "vue"
 const selectedCourts = defineModel<Court[]>({ default: [] })
 const { data: courts } = getCourts()
 
-watch(selectedCourts, () => {
-	selectedCourts.value = selectedCourts.value.sort((a, b) =>
-		a.name < b.name ? -1 : 1,
-	)
-})
+watch(
+	selectedCourts,
+	() => {
+		selectedCourts.value = selectedCourts.value.sort((a, b) =>
+			a.name < b.name ? -1 : 1,
+		)
+	},
+	{ immediate: true },
+)
 </script>
 
 <style scoped></style>

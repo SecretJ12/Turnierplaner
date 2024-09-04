@@ -1,9 +1,12 @@
 <template>
 	<vue-cal
 		v-if="tournament"
+		ref="vuecal"
 		:key="calid"
 		style="height: 1000px"
 		active-view="week"
+		:min-date="tournament.game_phase.begin"
+		:max-date="tournament.game_phase.end"
 		:disable-views="['years', 'year', 'month']"
 		:locale="$i18n.locale"
 		:time-from="8 * 60"
@@ -72,6 +75,17 @@ const { data: knockout } = getKnockout(
 const { data: groups } = getGroup(
 	route,
 	computed(() => competition.value?.tourType === TourType.GROUPS),
+)
+
+const vuecal = ref()
+watch(
+	[tournament, vuecal],
+	async () => {
+		if (tournament.value && vuecal.value) {
+			vuecal.value.switchView("week", tournament.value.game_phase.begin)
+		}
+	},
+	{ immediate: true },
 )
 
 const events = defineModel<CalEvent[]>({ default: [] })
@@ -208,5 +222,10 @@ const splitDays = computed(() => {
 
 .vuecal__event {
 	background-color: rgba(164, 230, 210, 0.9);
+}
+
+.vuecal__cell--disabled {
+	background-color: #a0a0a0 !important; /* Light grey background */
+	color: #a0a0a0 !important; /* Grey text */
 }
 </style>
