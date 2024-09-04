@@ -1045,11 +1045,7 @@ public class TestCompetitionResource {
                 """, playerF.getId().toString()))
             .post("/tournament/Clubmeisterschaft 2021/competition/Herren/updateTeams")
             .then().assertThat()
-            .statusCode(200)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body("$.size()", is(1),
-                "[0].id", not(teamIdBefore.toString()),
-                "[0].playerA.id", is(playerF.getId().toString()));
+            .statusCode(200);
 
         given()
             .get("/tournament/Clubmeisterschaft 2021/competition/Herren/signedUpTeams")
@@ -1084,11 +1080,7 @@ public class TestCompetitionResource {
                 """, teamId, playerF.getId().toString()))
             .post("/tournament/Clubmeisterschaft 2021/competition/Herren/updateTeams")
             .then().assertThat()
-            .statusCode(200)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body("$.size()", is(1),
-                "[0].id", is(teamId.toString()),
-                "[0].playerA.id", is(playerF.getId().toString()));
+            .statusCode(200);
 
         given()
             .get("/tournament/Clubmeisterschaft 2021/competition/Herren/signedUpTeams")

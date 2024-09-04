@@ -6,6 +6,7 @@ import de.secretj12.turnierplaner.db.entities.competition.Team;
 import de.secretj12.turnierplaner.db.entities.knockout.NextMatch;
 import de.secretj12.turnierplaner.db.repositories.MatchRepository;
 import de.secretj12.turnierplaner.db.repositories.NextMatchRepository;
+import de.secretj12.turnierplaner.db.repositories.TeamRepository;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.knockout.jUserKnockoutMatch;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -17,52 +18,68 @@ public class KnockoutTools {
     MatchRepository matches;
     @Inject
     NextMatchRepository nextMatches;
+    @Inject
+    TeamRepository teams;
 
     public Match updateKnockoutTree(Competition competition, jUserKnockoutMatch tree, Match match) {
-        if (tree == null) {
+        if (tree == null)
             return null;
-        }
-        match.setTeamA(Team.findById(tree.getTeamA()));
-        match.setTeamB(Team.findById(tree.getTeamB()));
 
-        match.setFinished(false);
-        match.setCompetition(competition);
-        match.setWinner(true);
-        matches.persist(match);
-
-        if (tree.getPreviousA() == null || tree.getPreviousB() == null) {
+        if (tree.getPreviousA() == null || tree.getPreviousB() == null)
             deletePrevious(match);
-        }
 
+        Match a, b;
         if (match.getDependentOn() != null) {
-            Match a = match.getDependentOn().getPreviousA();
+            a = match.getDependentOn().getPreviousA();
             updateKnockoutTree(competition, tree.getPreviousA(), a);
-            Match b = match.getDependentOn().getPreviousB();
+            b = match.getDependentOn().getPreviousB();
             updateKnockoutTree(competition, tree.getPreviousB(), b);
         } else if (tree.getPreviousA() != null && tree.getPreviousB() != null) {
             NextMatch nMatch = new NextMatch();
-            Match a = updateKnockoutTree(competition, tree.getPreviousA(), new Match());
-            Match b = updateKnockoutTree(competition, tree.getPreviousB(), new Match());
+            a = updateKnockoutTree(competition, tree.getPreviousA(), new Match());
+            b = updateKnockoutTree(competition, tree.getPreviousB(), new Match());
             nMatch.setPreviousA(a);
             nMatch.setPreviousB(b);
             nMatch.setNextMatch(match);
             nextMatches.persist(nMatch);
             match.setDependentOn(nMatch);
+        } else
+            a = b = null;
+
+        if (tree.getPreviousA() == null) {
+            match.setTeamA(tree.getTeamA() == null ? null : teams.findById(tree.getTeamA()));
+            match.setTeamB(tree.getTeamB() == null ? null : teams.findById(tree.getTeamB()));
+        } else if (tree.getPreviousA().getPreviousA() == null) {
+            match.setTeamA(selectTeam(a));
+            match.setTeamB(selectTeam(b));
         }
+        match.setCompetition(competition);
+        match.setFinished(false);
+        match.setWinner(true);
+        matches.persist(match);
 
         return match;
+    }
+
+    private Team selectTeam(Match match) {
+        if (match == null)
+            return null;
+        if (match.getTeamA() == null && match.getTeamB() != null)
+            return match.getTeamB();
+        if (match.getTeamB() == null && match.getTeamA() != null)
+            return match.getTeamA();
+        return null;
     }
 
     public void updateThirdPlace(Competition competition, Match finale) {
         Match thirdPlace = matches.getThirdPlace(competition);
 
         // cover deletion of third place
-        if (finale.getDependentOn() == null) {
+        if (competition.getTeams().size() <= 3) {
             if (thirdPlace != null) {
                 nextMatches.delete(thirdPlace.getDependentOn());
                 matches.delete(thirdPlace);
             }
-
             return;
         }
 

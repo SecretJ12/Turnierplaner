@@ -48,6 +48,18 @@ export function useInitKnockout(
 						queryKey: ["knockout", route.params.tourId, route.params.compId],
 						refetchType: "all",
 					})
+					queryClient.invalidateQueries({
+						queryKey: ["competitionList", route.params.tourId],
+						refetchType: "all",
+					})
+					queryClient.invalidateQueries({
+						queryKey: [
+							"competitionDetails",
+							route.params.tourId,
+							route.params.compId,
+						],
+						refetchType: "all",
+					})
 					toast.add({
 						severity: "success",
 						summary: t("general.success"),

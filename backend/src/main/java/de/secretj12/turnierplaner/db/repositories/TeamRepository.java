@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class TeamRepository implements PanacheRepository<Team> {
-    public Team getById(UUID uuid) {
+    public Team findById(UUID uuid) {
         return find("id", uuid).firstResultOptional().orElse(null);
     }
 

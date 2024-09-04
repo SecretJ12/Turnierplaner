@@ -4,7 +4,7 @@
 			<template #header>
 				<TabMenu
 					:active-index="activeTab"
-					:model="competitions || []"
+					:model="menuComps"
 					@tab-change="tabChange"
 				>
 					<template #item="{ item, props }">
@@ -56,7 +56,11 @@
 					/>
 					<Button
 						v-if="route.meta.step !== 4"
-						:disabled="isUpdating"
+						:disabled="
+							isUpdating ||
+							!competition ||
+							<number>route.meta.step >= progressOrder(competition.cProgress)
+						"
 						icon="pi pi-angle-right"
 						icon-pos="right"
 						:label="t('general.next')"
@@ -83,9 +87,12 @@ import { computed, inject, ref, watch } from "vue"
 import { useI18n } from "vue-i18n"
 import { useToast } from "primevue/usetoast"
 import { TabMenuChangeEvent } from "primevue/tabmenu"
-import { getCompetitionsList } from "@/backend/competition"
+import {
+	getCompetitionDetails,
+	getCompetitionsList,
+} from "@/backend/competition"
 import Steps from "primevue/steps"
-import { Progress } from "@/interfaces/competition"
+import { Progress, progressOrder } from "@/interfaces/competition"
 import Button from "primevue/button"
 import ViewEditTeams from "@/components/views/prepare/editTeams/ViewEditTeams.vue"
 
@@ -104,9 +111,20 @@ const curPrepStep = ref<InstanceType<typeof ViewEditTeams> | null>()
 
 const isLoggedIn = inject("loggedIn", ref(false))
 const { data: competitions } = getCompetitionsList(route, isLoggedIn, t, toast)
+const { data: competition } = getCompetitionDetails(route, t, toast)
 const activeTab = ref<number>(0)
-watch([competitions, route], () => updateRoute())
-updateRoute()
+watch([competitions, route], () => updateRoute(), { immediate: true })
+
+const menuComps = computed(() => {
+	if (!competitions.value) return []
+
+	return competitions.value.map((competition) => {
+		return {
+			disabled: progressOrder(competition.cProgress) < <number>route.meta.step,
+			...competition,
+		}
+	})
+})
 
 function updateRoute(compId?: string) {
 	if (!competitions.value || competitions.value.length === 0) return

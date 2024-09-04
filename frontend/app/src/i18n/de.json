@@ -204,7 +204,7 @@
 			"emptyGroupDet": "Jede Gruppe benötigt mindestens 2 Teams",
 			"teams": "Teams",
 			"ranking": "Rangliste",
-			"knockout_not_assigned": "Es wurden noch nicht alle Spiele ausgelost"
+			"knockout_not_assigned": "Es wurden noch nicht alle Spieler zugeteilt"
 		}
 	},
 	"validation": {

@@ -173,8 +173,20 @@ export function useUpdateTeams(
 			)
 		},
 		onSuccess() {
-			return queryClient.invalidateQueries({
+			queryClient.invalidateQueries({
 				queryKey: ["signedUp", route.params.tourId, route.params.compId],
+				refetchType: "all",
+			})
+			queryClient.invalidateQueries({
+				queryKey: ["competitionList", route.params.tourId],
+				refetchType: "all",
+			})
+			queryClient.invalidateQueries({
+				queryKey: [
+					"competitionDetails",
+					route.params.tourId,
+					route.params.compId,
+				],
 				refetchType: "all",
 			})
 		},

@@ -39,7 +39,8 @@ export function extractKnockoutMatches(
 
 	rounds.toReversed().forEach((round, i) => {
 		round.forEach((match) => {
-			add(match, knockoutTitle(t)(i, rounds.length + 1))
+			if (i > 0 || (match.teamA && match.teamB))
+				add(match, knockoutTitle(t)(i, rounds.length + 1))
 		})
 	})
 	if (knockout.thirdPlace)
