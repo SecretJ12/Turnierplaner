@@ -4,7 +4,7 @@
 		ref="vuecal"
 		:key="calid"
 		style="height: 1000px"
-		active-view="week"
+		active-view="day"
 		:min-date="tournament.game_phase.begin"
 		:max-date="tournament.game_phase.end"
 		:disable-views="['years', 'year', 'month']"
@@ -82,7 +82,7 @@ watch(
 	[tournament, vuecal],
 	async () => {
 		if (tournament.value && vuecal.value) {
-			vuecal.value.switchView("week", tournament.value.game_phase.begin)
+			vuecal.value.switchView("day", tournament.value.game_phase.begin)
 		}
 	},
 	{ immediate: true },

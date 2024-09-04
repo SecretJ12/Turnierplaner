@@ -75,7 +75,7 @@ watch(
 	() => {
 		if (!tournamentCourts.value) return
 
-		selectedCourts.value = tournamentCourts.value
+		selectedCourts.value = JSON.parse(JSON.stringify(tournamentCourts.value))
 	},
 	{ immediate: true },
 )
