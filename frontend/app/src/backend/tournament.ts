@@ -8,6 +8,7 @@ import {
 import { ToastServiceMethods } from "primevue/toastservice"
 import { RouteLocationNormalizedLoaded } from "vue-router"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query"
+import { Court } from "@/interfaces/court"
 
 export function getTournamentList(
 	isLoggedIn: Ref<boolean>,
@@ -144,5 +145,33 @@ export function useAddTournament(
 			})
 			if (handler.err) handler.err()
 		},
+	})
+}
+
+export function getTournamentMatchEvents(
+	route: RouteLocationNormalizedLoaded,
+	from: Ref<Date | undefined>,
+	to: Ref<Date | undefined>,
+	courts: Ref<Court[]>,
+) {
+	return useQuery({
+		queryKey: [
+			"tournamentCourts",
+			computed(() => route.params.tourId),
+			from,
+			to,
+			courts,
+		],
+		queryFn: () =>
+			axios.get(`/tournament/${route.params.tourId}/matches`, {
+				params: {
+					from: from.value,
+					to: to.value,
+					courts:
+						courts.value.length > 0
+							? courts.value.map((c) => c.name).join(",")
+							: undefined,
+				},
+			}),
 	})
 }

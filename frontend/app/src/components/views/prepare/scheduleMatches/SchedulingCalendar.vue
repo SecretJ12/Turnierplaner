@@ -23,6 +23,7 @@
 		:events="events"
 		@event-drop="onEventDrop"
 		@event-change="onEventChange"
+		@view-change="onViewChange"
 	>
 		<template #event="{ event }">
 			<EventMatch :match="event.data" :competition="competition" />
@@ -36,7 +37,10 @@ import VueCal from "vue-cal"
 import "vue-cal/dist/vuecal.css"
 import { Court } from "@/interfaces/court"
 import { computed, ref, watch } from "vue"
-import { getTournamentDetails } from "@/backend/tournament"
+import {
+	getTournamentDetails,
+	getTournamentMatchEvents,
+} from "@/backend/tournament"
 import { useRoute } from "vue-router"
 import { useToast } from "primevue/usetoast"
 import { useI18n } from "vue-i18n"
@@ -78,6 +82,15 @@ const { data: groups } = getGroup(
 	computed(() => competition.value?.tourType === TourType.GROUPS),
 )
 
+const curStart = ref<Date | undefined>(undefined)
+const curEnd = ref<Date | undefined>(undefined)
+const { data: exMatches } = getTournamentMatchEvents(
+	route,
+	curStart,
+	curEnd,
+	computed(() => props.courts),
+)
+
 const events = defineModel<CalEvent[]>({ default: [] })
 watch(
 	[knockout, groups],
@@ -96,6 +109,19 @@ watch(
 	},
 	{ immediate: true },
 )
+
+// on onViewChange: load events from begin to end for courts
+// -> display as unchangable event
+function onViewChange({
+	startDate,
+	endDate,
+}: {
+	startDate: Date
+	endDate: Date
+}) {
+	curStart.value = startDate
+	curEnd.value = endDate
+}
 
 function addMatch(match: Match, title: string) {
 	if (match.begin && match.end && match.court)

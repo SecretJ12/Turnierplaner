@@ -8,6 +8,7 @@ import io.quarkus.panache.common.Parameters;
 
 import jakarta.enterprise.context.ApplicationScoped;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,6 +45,4 @@ public class MatchRepository implements PanacheRepository<Match> {
     public List<Match> nonGroupMatches(Competition competition) {
         return find("#nonGroupMatches", Parameters.with("comp", competition)).list();
     }
-
-
 }
