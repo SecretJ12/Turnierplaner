@@ -2,6 +2,8 @@ import { ToastServiceMethods } from "primevue/toastservice"
 import { computed, Ref } from "vue"
 import axios from "axios"
 import {
+	Competition,
+	CompetitionDefault,
 	CompetitionServer,
 	competitionServerToClient,
 } from "@/interfaces/competition"
@@ -62,7 +64,10 @@ export function getCompetitionDetails(
 			computed(() => route.params.tourId),
 			computed(() => route.params.compId),
 		],
-		queryFn: async () => {
+		queryFn: async (): Promise<Competition> => {
+			if (!route.params.tourId || !route.params.compId)
+				return CompetitionDefault
+
 			return axios
 				.get<CompetitionServer>(
 					`/tournament/${route.params.tourId}/competition/${route.params.compId}/details`,
