@@ -12,8 +12,8 @@
 		"name_missing": "Please input a name",
 		"signUp": "Sign up",
 		"register": "Register",
-		"success": "Success!",
-		"failure": "Failure!",
+		"success": "Success",
+		"failure": "Failure",
 		"loading": "Loading...",
 		"error_saving": "Error while saving",
 		"save": "Save",
@@ -23,7 +23,8 @@
 		"saved": "Changes saved",
 		"save_failed": "Something went wrong while saving",
 		"loading_failed": "Something went wrong while loading",
-		"tournament_tree": "Tournament tree"
+		"tournament_tree": "Tournament tree",
+		"successful": "Successful"
 	},
 	"ViewPlayerRegistration": {
 		"headline": "Player Registration",

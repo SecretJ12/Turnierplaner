@@ -12,7 +12,7 @@
 		"name_missing": "Bitte gib einen Namen ein",
 		"signUp": "Anmelden",
 		"register": "Registrieren",
-		"success": "Erfolg",
+		"success": "Erfolgreich",
 		"failure": "Fehler",
 		"loading": "Lädt...",
 		"error_saving": "Fehler beim Speichern",
@@ -20,7 +20,7 @@
 		"reset": "Zurücksetzen",
 		"back": "Zurück",
 		"next": "Weiter",
-		"saved": "Konkurrenz wurde gespeichert",
+		"saved": "Änderungen gespeichert",
 		"save_failed": "Während dem Speichern ist etwas schiefgelaufen",
 		"loading_failed": "Während dem Laden ist etwas schiefgelaufen",
 		"tournament_tree": "Turnierbaum"

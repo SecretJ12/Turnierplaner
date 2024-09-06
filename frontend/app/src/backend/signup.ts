@@ -189,6 +189,13 @@ export function useUpdateTeams(
 				],
 				refetchType: "all",
 			})
+			toast.add({
+				severity: "success",
+				summary: t("general.success"),
+				detail: t("general.saved"),
+				life: 3000,
+				closable: false,
+			})
 		},
 		onError() {
 			toast.add({

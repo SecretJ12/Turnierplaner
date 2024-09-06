@@ -16,20 +16,18 @@ export function useUpdateMatches(
 				matches.map(matchClientToServer),
 			),
 		onSuccess() {
-			// TODO internalization
 			toast.add({
 				severity: "success",
-				summary: "Scheduling saved",
-				detail: "saved all the matches",
+				summary: t("general.success"),
+				detail: t("general.saved"),
 				life: 3000,
 			})
 		},
 		onError(error) {
-			// TODO internalization
 			toast.add({
 				severity: "error",
-				summary: "Saving failed",
-				detail: "error saving matches",
+				summary: t("general.failure"),
+				detail: t("general.error_saving"),
 				life: 3000,
 			})
 			console.log(error)
