@@ -13,12 +13,13 @@
 		:time-from="8 * 60"
 		:time-to="24 * 60"
 		:split-days="splitDays"
-		:sticky-split-labels="true"
+		sticky-split-labels
 		:min-event-width="80"
 		:min-split-width="250"
 		:min-cell-width="250"
-		:time-cell-height="100"
+		:time-cell-height="25"
 		:snap-to-time="15"
+		:time-step="15"
 		:editable-events="!!props.courts.length"
 		:events="events"
 		@event-drop="onEventDrop"
@@ -27,6 +28,21 @@
 	>
 		<template #event="{ event }">
 			<EventMatch :match="event.data" :competition="competition" />
+		</template>
+		<template #time-cell="{ hours, minutes }">
+			<div :class="{ 'vuecal__time-cell-line': true, hours: !minutes }">
+				<strong v-if="!minutes" style="font-size: 15px">{{ hours }}</strong>
+				<span v-else style="font-size: 11px">{{ minutes }}</span>
+			</div>
+		</template>
+		<template #split-label="{ split }">
+			<strong
+				style="height: 24px"
+				:style="{
+					color: split.color,
+				}"
+				>{{ split.label }}</strong
+			>
 		</template>
 	</vue-cal>
 </template>
@@ -234,32 +250,26 @@ const splitDays = computed(() => {
 <style>
 .court1 {
 	background-color: rgba(221, 238, 255, 0.5);
-	border-width: 2px 0;
 }
 
 .court2 {
 	background-color: rgba(255, 232, 251, 0.5);
-	border-width: 2px 0;
 }
 
 .court3 {
 	background-color: rgba(221, 255, 239, 0.5);
-	border-width: 2px 0;
 }
 
 .court4 {
 	background-color: rgba(255, 250, 196, 0.5);
-	border-width: 2px 0;
 }
 
 .court5 {
 	background-color: rgba(255, 206, 178, 0.5);
-	border-width: 2px 0;
 }
 
 .court6 {
 	background-color: rgba(0, 0, 0, 0.1);
-	border-width: 2px 0;
 }
 
 .vuecal__no-event {
@@ -268,6 +278,7 @@ const splitDays = computed(() => {
 
 .vuecal__event {
 	background-color: rgba(164, 230, 210, 0.9);
+	border-radius: var(--border-radius);
 }
 
 .vuecal__event.extern {
