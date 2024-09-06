@@ -57,6 +57,7 @@ import {
 import EventMatch from "@/components/views/prepare/scheduleMatches/MatchEvent.vue"
 
 const calid = ref<number>(0)
+const vuecal = ref()
 
 function reload() {
 	calid.value++
@@ -82,19 +83,27 @@ const { data: groups } = getGroup(
 	computed(() => competition.value?.tourType === CompType.GROUPS),
 )
 
-const curStart = ref<Date | undefined>(undefined)
-const curEnd = ref<Date | undefined>(undefined)
+watch([vuecal, tournament], () => {
+	if (!vuecal.value || !tournament.value) return
+	// needed to always trigger the onViewChange
+	vuecal.value.previous()
+	vuecal.value.switchView("day", tournament.value.game_phase.begin)
+})
+
+const curStart = ref<Date | undefined>()
+const curEnd = ref<Date | undefined>()
 const { data: exMatches } = getTournamentMatchEvents(
 	route,
 	t,
 	curStart,
 	curEnd,
 	computed(() => props.courts),
+	computed(() => !!curStart.value && !!curEnd.value && !!props.courts),
 )
 
-const events = ref<CalEvent[]>([])
+const events = defineModel<CalEvent[]>({ default: [] })
 watch(
-	[knockout, groups, exMatches],
+	[knockout, groups],
 	() => {
 		events.value.splice(0, events.value.length)
 		if (competition.value?.tourType === CompType.KNOCKOUT && knockout.value) {
@@ -106,20 +115,29 @@ watch(
 			extractGroupMatches(groups.value, t, addMatch)
 		}
 
-		if (exMatches.value) {
-			exMatches.value.forEach((match) => {
-				events.value.push({
-					draggable: false,
-					resizable: false,
-					deletable: false,
-					class: "extern",
-					...match,
-				})
-			})
-		}
+		addExisting()
 	},
 	{ immediate: true },
 )
+
+watch(exMatches, addExisting)
+
+function addExisting() {
+	for (let i = events.value.length - 1; i >= 0; i--)
+		if (events.value[i].draggable === false) events.value.splice(i, 1)
+
+	if (exMatches.value) {
+		exMatches.value.forEach((match) => {
+			events.value.push({
+				draggable: false,
+				resizable: false,
+				deletable: false,
+				class: "extern",
+				...match,
+			})
+		})
+	}
+}
 
 // on onViewChange: load events from begin to end for courts
 // -> display as unchangeable event

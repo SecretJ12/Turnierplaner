@@ -97,7 +97,11 @@ function nextPage() {
 
 function save() {
 	isUpdating.value = true
-	updateMatches(scheduledMatches.value.map((event) => event.data))
+	updateMatches(
+		scheduledMatches.value
+			.filter((event) => event.draggable !== false)
+			.map((event) => event.data),
+	)
 	updateCourts(selectedCourts.value)
 	isUpdating.value = false
 }

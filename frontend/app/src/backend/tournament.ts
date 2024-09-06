@@ -158,18 +158,21 @@ export function getTournamentMatchEvents(
 	from: Ref<Date | undefined>,
 	to: Ref<Date | undefined>,
 	courts: Ref<Court[]>,
+	enabled: Ref<boolean>,
 ) {
 	return useQuery({
+		enabled,
 		queryKey: [
-			"tournamentCourts",
+			"tournamentMatches",
 			computed(() => route.params.tourId),
 			computed(() => route.params.compId),
 			from,
 			to,
-			courts,
+			computed(() => courts.value.map((court) => court.name)),
 		],
-		queryFn: () =>
-			axios
+		queryFn: () => {
+			if (!from.value || !to.value) return []
+			return axios
 				.get(`/tournament/${route.params.tourId}/matches`, {
 					params: {
 						from: from.value,
@@ -197,7 +200,8 @@ export function getTournamentMatchEvents(
 								},
 							}
 						})
-				}),
+				})
+		},
 	})
 }
 
