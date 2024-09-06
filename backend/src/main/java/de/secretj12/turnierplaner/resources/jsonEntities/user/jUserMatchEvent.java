@@ -18,7 +18,7 @@ public class jUserMatchEvent extends jUserMatch {
      * For knockout: round number
      * For group: group number
      */
-    public long number;
+    public int number;
     /**
      * Only set for knockout
      * Total number of rounds
@@ -54,11 +54,11 @@ public class jUserMatchEvent extends jUserMatch {
         this.type = type;
     }
 
-    public long getNumber() {
+    public int getNumber() {
         return number;
     }
 
-    public void setNumber(long number) {
+    public void setNumber(int number) {
         this.number = number;
     }
 
