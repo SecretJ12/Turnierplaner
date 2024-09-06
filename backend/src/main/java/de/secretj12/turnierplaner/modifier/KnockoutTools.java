@@ -47,8 +47,8 @@ public class KnockoutTools {
             a = b = null;
 
         if (tree.getPreviousA() == null) {
-            match.setTeamA(tree.getTeamA() == null ? null : teams.findById(tree.getTeamA()));
-            match.setTeamB(tree.getTeamB() == null ? null : teams.findById(tree.getTeamB()));
+            match.setTeamA(tree.getTeamA() == null ? null : teams.findById(tree.getTeamA().getId()));
+            match.setTeamB(tree.getTeamB() == null ? null : teams.findById(tree.getTeamB().getId()));
         } else if (tree.getPreviousA().getPreviousA() == null) {
             match.setTeamA(selectTeam(a));
             match.setTeamB(selectTeam(b));

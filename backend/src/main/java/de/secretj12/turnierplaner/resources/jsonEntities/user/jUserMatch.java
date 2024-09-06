@@ -19,8 +19,8 @@ public class jUserMatch {
     private Boolean finished;
     private Boolean winner;
 
-    private UUID teamA;
-    private UUID teamB;
+    private jUserTeam teamA;
+    private jUserTeam teamB;
 
     private List<jUserSet> sets;
 
@@ -37,9 +37,9 @@ public class jUserMatch {
         this.winner = match.getWinner();
 
         if (match.getTeamA() != null)
-            this.teamA = match.getTeamA().getId();
+            this.teamA = new jUserTeam(match.getTeamA());
         if (match.getTeamB() != null)
-            this.teamB = match.getTeamB().getId();
+            this.teamB = new jUserTeam(match.getTeamB());
 
         this.sets = match.getSets().stream().map(jUserSet::new).toList();
     }
@@ -92,19 +92,19 @@ public class jUserMatch {
         this.winner = winner;
     }
 
-    public UUID getTeamA() {
+    public jUserTeam getTeamA() {
         return teamA;
     }
 
-    public void setTeamA(UUID teamA) {
+    public void setTeamA(jUserTeam teamA) {
         this.teamA = teamA;
     }
 
-    public UUID getTeamB() {
+    public jUserTeam getTeamB() {
         return teamB;
     }
 
-    public void setTeamB(UUID teamB) {
+    public void setTeamB(jUserTeam teamB) {
         this.teamB = teamB;
     }
 

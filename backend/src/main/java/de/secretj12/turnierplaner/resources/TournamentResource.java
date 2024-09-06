@@ -255,6 +255,7 @@ public class TournamentResource {
                 }
             }
             queue = newQueue;
+            newQueue = new ArrayList<>();
         }
         return matchRounds.reversed();
     }
