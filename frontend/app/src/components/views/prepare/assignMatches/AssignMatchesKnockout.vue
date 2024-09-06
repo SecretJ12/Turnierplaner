@@ -176,7 +176,6 @@ async function randomize() {
 		matches
 			.map((m) => (m.teamA ? 1 : 0) + (m.teamB ? 1 : 0))
 			.reduce((a, b) => a + b)
-	console.log(noBye)
 	let pos = range(matches.length).filter(
 		(i) => !matches[i].teamA || !matches[i].teamB,
 	)

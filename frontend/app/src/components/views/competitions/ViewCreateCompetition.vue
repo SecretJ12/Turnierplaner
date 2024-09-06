@@ -35,7 +35,7 @@ import {
 	Progress,
 	Sex,
 	SignUp,
-	TourType,
+	CompType,
 } from "@/interfaces/competition"
 import { useToast } from "primevue/usetoast"
 import { useAddCompetition } from "@/backend/competition"
@@ -49,7 +49,7 @@ const form = ref<InstanceType<typeof FormCompetition> | null>(null)
 const competition = reactive<Competition>({
 	name: "",
 	description: "",
-	tourType: TourType.KNOCKOUT,
+	tourType: CompType.KNOCKOUT,
 	mode: Mode.SINGLE,
 	signUp: SignUp.INDIVIDUAL,
 	playerA: {

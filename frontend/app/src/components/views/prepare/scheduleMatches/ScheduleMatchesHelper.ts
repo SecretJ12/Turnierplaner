@@ -1,16 +1,16 @@
-import { Match } from "@/interfaces/match"
+import { EventMatch } from "@/interfaces/match"
 import { KnockoutMatch, KnockoutSystem } from "@/interfaces/knockoutSystem"
 import { knockoutTitle } from "@/components/views/competition/knockoutSystem/KnockoutTitleGenerator"
 import { GroupMatch, GroupSystem } from "@/interfaces/groupSystem"
-
-export interface EventMatch extends Match {
-	title: string
-}
 
 export interface CalEvent {
 	start: Date
 	end: Date
 	split: string
+	draggable?: boolean
+	resizable?: boolean
+	deletable?: boolean
+	class?: string
 	data: EventMatch
 }
 

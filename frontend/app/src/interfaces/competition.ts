@@ -6,7 +6,7 @@ export enum Sex {
 	ANY = "ANY",
 }
 
-export enum TourType {
+export enum CompType {
 	KNOCKOUT = "KNOCKOUT",
 	GROUPS = "GROUPS",
 }
@@ -42,7 +42,7 @@ export interface Competition {
 	id?: null | string
 	name: string
 	description: string
-	tourType: TourType
+	tourType: CompType
 	mode: Mode
 	signUp: SignUp
 	playerA: settingsPlayer
@@ -54,7 +54,7 @@ export const CompetitionDefault: Competition = {
 	id: null,
 	name: "",
 	description: "",
-	tourType: TourType.KNOCKOUT,
+	tourType: CompType.KNOCKOUT,
 	mode: Mode.SINGLE,
 	signUp: SignUp.INDIVIDUAL,
 	playerA: {
@@ -79,7 +79,7 @@ export interface CompetitionServer {
 	id?: null | string
 	name: string
 	description: string
-	type: TourType
+	type: CompType
 	mode: Mode
 	signUp: SignUp
 	playerA: {
@@ -111,7 +111,7 @@ export interface settingsPlayer {
 export interface CompetitionForm {
 	name: string
 	description: string
-	tourType: TourType
+	tourType: CompType
 	mode: Mode
 	signUp: SignUp
 	playerA_Sex: Sex

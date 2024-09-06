@@ -2,7 +2,7 @@
 	<div class="flex flex-column gap-1">
 		<Transition v-if="competition">
 			<Groups
-				v-if="competition.tourType === TourType.GROUPS"
+				v-if="competition.tourType === CompType.GROUPS"
 				ref="groupsRef"
 				v-model:is-updating="isUpdating"
 			/>
@@ -15,7 +15,7 @@
 import { useRoute, useRouter } from "vue-router"
 import { useI18n } from "vue-i18n"
 import { useToast } from "primevue/usetoast"
-import { TourType } from "@/interfaces/competition"
+import { CompType } from "@/interfaces/competition"
 import Groups from "@/components/views/prepare/assignMatches/AssignMatchesGroups.vue"
 import AssignMatchesGroups from "@/components/views/prepare/assignMatches/AssignMatchesGroups.vue"
 import Knockout from "@/components/views/prepare/assignMatches/AssignMatchesKnockout.vue"
@@ -49,7 +49,7 @@ function nextPage() {
 }
 
 function save() {
-	if (competition.value?.tourType === TourType.GROUPS) {
+	if (competition.value?.tourType === CompType.GROUPS) {
 		if (groupsRef.value === null) return
 		groupsRef.value.save()
 	} else {
@@ -59,7 +59,7 @@ function save() {
 }
 
 function reset() {
-	if (competition.value?.tourType === TourType.GROUPS) {
+	if (competition.value?.tourType === CompType.GROUPS) {
 		if (groupsRef.value === null) return
 		groupsRef.value.reload()
 	} else {

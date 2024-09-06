@@ -9,6 +9,10 @@ import { ToastServiceMethods } from "primevue/toastservice"
 import { RouteLocationNormalizedLoaded } from "vue-router"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query"
 import { Court } from "@/interfaces/court"
+import { MatchEventServer, matchServerToClient } from "@/interfaces/match"
+import { CalEvent } from "@/components/views/prepare/scheduleMatches/ScheduleMatchesHelper"
+import { CompType } from "@/interfaces/competition"
+import { knockoutTitle } from "@/components/views/competition/knockoutSystem/KnockoutTitleGenerator"
 
 export function getTournamentList(
 	isLoggedIn: Ref<boolean>,
@@ -150,6 +154,7 @@ export function useAddTournament(
 
 export function getTournamentMatchEvents(
 	route: RouteLocationNormalizedLoaded,
+	t: (_: string) => string,
 	from: Ref<Date | undefined>,
 	to: Ref<Date | undefined>,
 	courts: Ref<Court[]>,
@@ -158,20 +163,50 @@ export function getTournamentMatchEvents(
 		queryKey: [
 			"tournamentCourts",
 			computed(() => route.params.tourId),
+			computed(() => route.params.compId),
 			from,
 			to,
 			courts,
 		],
 		queryFn: () =>
-			axios.get(`/tournament/${route.params.tourId}/matches`, {
-				params: {
-					from: from.value,
-					to: to.value,
-					courts:
-						courts.value.length > 0
-							? courts.value.map((c) => c.name).join(",")
-							: undefined,
-				},
-			}),
+			axios
+				.get(`/tournament/${route.params.tourId}/matches`, {
+					params: {
+						from: from.value,
+						to: to.value,
+						courts:
+							courts.value.length > 0
+								? courts.value.map((c) => c.name).join(",")
+								: undefined,
+					},
+				})
+				.then<MatchEventServer[]>((data) => data.data)
+				.then<CalEvent[]>((events) => {
+					return events
+						.filter((match) => match.compName !== route.params.compId)
+						.map((matchServer) => {
+							const match = matchServerToClient(matchServer)
+							return {
+								start: match.begin ?? new Date(),
+								end: match.end ?? new Date(),
+								split: match.court ?? "undefined court",
+								data: {
+									title: genTitle(matchServer, t),
+									compName: matchServer.compName,
+									...match,
+								},
+							}
+						})
+				}),
 	})
+}
+
+function genTitle(match: MatchEventServer, t: (_: string) => string) {
+	switch (match.type) {
+		case CompType.GROUPS:
+			return t("ViewGroupSystem.group") + " " + (match.number + 1)
+		case CompType.KNOCKOUT:
+			if (!match.isFinal) return t("ViewKnockout.thirdPlace")
+			else return knockoutTitle(t)(match.number, match.total)
+	}
 }

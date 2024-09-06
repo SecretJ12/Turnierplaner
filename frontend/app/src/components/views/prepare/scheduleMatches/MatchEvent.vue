@@ -1,8 +1,8 @@
 <template>
 	<div class="w-full flex flex-column p-1 text-left">
 		<strong>{{ props.match.title }}</strong>
-		<i v-if="competition">
-			{{ competition.name }}
+		<i>
+			{{ props.match.compName }}
 		</i>
 		<ul class="mt-1 pt-0 pl-4">
 			<li v-if="props.match.teamA">
@@ -28,8 +28,8 @@
 </template>
 
 <script setup lang="ts">
-import { EventMatch } from "@/components/views/prepare/scheduleMatches/ScheduleMatchesHelper"
 import { Competition } from "@/interfaces/competition"
+import { EventMatch } from "@/interfaces/match"
 
 const props = defineProps<{
 	match: EventMatch

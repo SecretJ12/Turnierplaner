@@ -46,7 +46,7 @@ import { useToast } from "primevue/usetoast"
 import { useI18n } from "vue-i18n"
 import { getCompetitionDetails } from "@/backend/competition"
 import { getKnockout } from "@/backend/knockout"
-import { TourType } from "@/interfaces/competition"
+import { CompType } from "@/interfaces/competition"
 import { getGroup } from "@/backend/group"
 import { Match } from "@/interfaces/match"
 import {
@@ -75,43 +75,54 @@ const { data: tournament } = getTournamentDetails(route, t, toast)
 const { data: competition } = getCompetitionDetails(route, t, toast)
 const { data: knockout } = getKnockout(
 	route,
-	computed(() => competition.value?.tourType === TourType.KNOCKOUT),
+	computed(() => competition.value?.tourType === CompType.KNOCKOUT),
 )
 const { data: groups } = getGroup(
 	route,
-	computed(() => competition.value?.tourType === TourType.GROUPS),
+	computed(() => competition.value?.tourType === CompType.GROUPS),
 )
 
 const curStart = ref<Date | undefined>(undefined)
 const curEnd = ref<Date | undefined>(undefined)
 const { data: exMatches } = getTournamentMatchEvents(
 	route,
+	t,
 	curStart,
 	curEnd,
 	computed(() => props.courts),
 )
 
-const events = defineModel<CalEvent[]>({ default: [] })
+const events = ref<CalEvent[]>([])
 watch(
-	[knockout, groups],
+	[knockout, groups, exMatches],
 	() => {
-		if (events.value.length) return
-
 		events.value.splice(0, events.value.length)
-		if (competition.value?.tourType === TourType.KNOCKOUT && knockout.value) {
+		if (competition.value?.tourType === CompType.KNOCKOUT && knockout.value) {
 			extractKnockoutMatches(knockout.value, t, addMatch)
 		} else if (
-			competition.value?.tourType === TourType.GROUPS &&
+			competition.value?.tourType === CompType.GROUPS &&
 			groups.value
 		) {
 			extractGroupMatches(groups.value, t, addMatch)
+		}
+
+		if (exMatches.value) {
+			exMatches.value.forEach((match) => {
+				events.value.push({
+					draggable: false,
+					resizable: false,
+					deletable: false,
+					class: "extern",
+					...match,
+				})
+			})
 		}
 	},
 	{ immediate: true },
 )
 
 // on onViewChange: load events from begin to end for courts
-// -> display as unchangable event
+// -> display as unchangeable event
 function onViewChange({
 	startDate,
 	endDate,
@@ -131,6 +142,7 @@ function addMatch(match: Match, title: string) {
 			split: match.court,
 			data: {
 				title,
+				compName: <string>route.params.compId,
 				...match,
 			},
 		})
@@ -238,6 +250,10 @@ const splitDays = computed(() => {
 
 .vuecal__event {
 	background-color: rgba(164, 230, 210, 0.9);
+}
+
+.vuecal__event.extern {
+	background-color: #fd9c42b9 !important;
 }
 
 .vuecal__cell--disabled {

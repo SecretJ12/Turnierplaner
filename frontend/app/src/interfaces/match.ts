@@ -1,4 +1,10 @@
-import { Team } from "@/interfaces/team"
+import {
+	Team,
+	teamClientToServer,
+	TeamServer,
+	teamServerToClient,
+} from "@/interfaces/team"
+import { CompType } from "@/interfaces/competition"
 
 export interface Game {
 	scoreA: number
@@ -31,32 +37,28 @@ export interface MatchServer {
 	end: string | undefined
 	finished: boolean | undefined
 	winner: boolean | undefined
-	teamA: string | null
-	teamB: string | null
+	teamA: TeamServer | null
+	teamB: TeamServer | null
 	// TODO add result
 	sets: Array<Set>
 }
 
-export function matchServerToClient(
-	match: MatchServer,
-	teams: Map<string, Team>,
-): Match {
-	let teamA = null
-	if (match.teamA !== null) {
-		teamA = teams.get(match.teamA)
-		if (teamA === undefined) {
-			console.error("Team A is undefined")
-			throw new Error("Team A is undefined")
-		}
-	}
-	let teamB = null
-	if (match.teamB !== null) {
-		teamB = teams.get(match.teamB)
-		if (teamB === undefined) {
-			console.error("Team B is undefined")
-			throw new Error("Team B is undefined")
-		}
-	}
+export interface MatchEventServer extends MatchServer {
+	compName: string
+	type: CompType
+	number: number
+	total: number
+	isFinal: number
+}
+
+export interface EventMatch extends Match {
+	title: string
+	compName: string
+}
+
+export function matchServerToClient(match: MatchServer): Match {
+	const teamA = match.teamA === null ? null : teamServerToClient(match.teamA)
+	const teamB = match.teamB === null ? null : teamServerToClient(match.teamB)
 
 	let sets: Set[] = []
 	if (match.sets !== null) {
@@ -85,8 +87,8 @@ export function matchClientToServer(match: Match): MatchServer {
 		end: match.end?.toISOString() ?? undefined,
 		finished: match.finished,
 		winner: match.winner ?? undefined,
-		teamA: match.teamA?.id ?? null,
-		teamB: match.teamB?.id ?? null,
+		teamA: match.teamA === null ? null : teamClientToServer(match.teamA),
+		teamB: match.teamB === null ? null : teamClientToServer(match.teamB),
 		sets: match.sets ?? [],
 	}
 }
