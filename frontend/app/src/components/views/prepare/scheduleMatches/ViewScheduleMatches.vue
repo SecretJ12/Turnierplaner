@@ -44,15 +44,13 @@ import SchedulingCalendar from "@/components/views/prepare/scheduleMatches/Sched
 import { ref, watch } from "vue"
 import { Court } from "@/interfaces/court"
 import MatchesContainerDraggable from "@/components/views/prepare/scheduleMatches/MatchesContainerDraggable.vue"
-import {
-	CalEvent,
-	EventMatch,
-} from "@/components/views/prepare/scheduleMatches/ScheduleMatchesHelper"
+import { CalEvent } from "@/components/views/prepare/scheduleMatches/ScheduleMatchesHelper"
 import { useUpdateMatches } from "@/backend/match"
 import { useI18n } from "vue-i18n"
 import CourtChooser from "@/components/views/prepare/scheduleMatches/CourtChooser.vue"
 import { getTournamentCourts, useUpdateTournamentCourts } from "@/backend/court"
 import { getTournamentDetails } from "@/backend/tournament"
+import { EventMatch } from "@/interfaces/match"
 
 const route = useRoute()
 const router = useRouter()
@@ -75,7 +73,7 @@ watch(
 	() => {
 		if (!tournamentCourts.value) return
 
-		selectedCourts.value = tournamentCourts.value
+		selectedCourts.value = JSON.parse(JSON.stringify(tournamentCourts.value))
 	},
 	{ immediate: true },
 )
@@ -98,9 +96,12 @@ function nextPage() {
 }
 
 function save() {
-	// TODO
 	isUpdating.value = true
-	updateMatches(scheduledMatches.value.map((event) => event.data))
+	updateMatches(
+		scheduledMatches.value
+			.filter((event) => event.draggable !== false)
+			.map((event) => event.data),
+	)
 	updateCourts(selectedCourts.value)
 	isUpdating.value = false
 }

@@ -1,10 +1,11 @@
 package de.secretj12.turnierplaner.db.entities;
 
+import de.secretj12.turnierplaner.db.entities.competition.Competition;
 import jakarta.persistence.*;
 
 import java.time.Instant;
-import java.util.UUID;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(name = "tournaments")
@@ -39,6 +40,9 @@ public class Tournament {
                inverseJoinColumns = {@JoinColumn(name = "name")}
     )
     private Set<Court> courts;
+
+    @OneToMany(mappedBy = "tournament", fetch = FetchType.LAZY)
+    private Set<Competition> competitions;
 
     public UUID getId() {
         return id;
@@ -110,5 +114,13 @@ public class Tournament {
 
     public void setCourts(Set<Court> courts) {
         this.courts = courts;
+    }
+
+    public Set<Competition> getCompetitions() {
+        return competitions;
+    }
+
+    public void setCompetitions(Set<Competition> competitions) {
+        this.competitions = competitions;
     }
 }

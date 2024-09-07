@@ -13,6 +13,10 @@ export function getCourts() {
 	})
 }
 
+export function courtComp(a: Court, b: Court) {
+	return a.name.localeCompare(b.name)
+}
+
 export function useCreateCourt() {
 	const queryClient = useQueryClient()
 	return useMutation({

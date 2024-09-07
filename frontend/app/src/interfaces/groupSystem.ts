@@ -1,9 +1,7 @@
 import { Match, MatchServer, matchServerToClient } from "@/interfaces/match"
-import { Team, TeamServer, teamServerToClient } from "@/interfaces/team"
 import { KnockoutMatch } from "@/interfaces/knockoutSystem"
 
 export interface GroupSystem {
-	teams: Team[]
 	groups: Group[]
 	finale: GroupMatch
 	thirdPlace: GroupMatch | null
@@ -11,12 +9,10 @@ export interface GroupSystem {
 
 export interface Group {
 	index: number
-	teams: Team[]
 	matches: Match[]
 }
 
 export interface GroupSystemServer {
-	teams: TeamServer[]
 	groups: GroupServer[]
 	finale: GroupMatchServer
 	thirdPlace: GroupMatchServer
@@ -24,7 +20,6 @@ export interface GroupSystemServer {
 
 export interface GroupServer {
 	index: number
-	teams: string[]
 	matches: MatchServer[]
 }
 
@@ -48,51 +43,24 @@ export interface GroupMatch extends KnockoutMatch {
 export function groupSystemServerToClient(
 	groupSystem: GroupSystemServer,
 ): GroupSystem {
-	const teams = groupSystem.teams.map((team) => teamServerToClient(team))
-	const teamMap = new Map<string, Team>()
-	teams.forEach((team) => {
-		if (!team.id) {
-			console.error("Team without id:", team)
-			return
-		}
-		teamMap.set(team.id, team)
-	})
-
 	return {
-		teams: teams,
-		groups: groupSystem.groups.map((group) =>
-			groupServerToClient(group, teamMap),
-		),
-		finale: groupMatchServerToClient(groupSystem.finale, teamMap),
+		groups: groupSystem.groups.map((group) => groupServerToClient(group)),
+		finale: groupMatchServerToClient(groupSystem.finale),
 		thirdPlace: groupSystem.thirdPlace
-			? groupMatchServerToClient(groupSystem.thirdPlace, teamMap)
+			? groupMatchServerToClient(groupSystem.thirdPlace)
 			: null,
 	}
 }
 
-function groupServerToClient(
-	group: GroupServer,
-	teams: Map<string, Team>,
-): Group {
+function groupServerToClient(group: GroupServer): Group {
 	return {
 		index: group.index,
-		teams: group.teams.map((team) => {
-			const t = teams.get(team)
-			if (t === undefined) {
-				console.error("Team is undefined")
-				throw new Error("Team is undefined")
-			}
-			return t
-		}),
-		matches: group.matches.map((match) => matchServerToClient(match, teams)),
+		matches: group.matches.map((match) => matchServerToClient(match)),
 	}
 }
 
-function groupMatchServerToClient(
-	matchServer: GroupMatchServer,
-	teams: Map<string, Team>,
-): GroupMatch {
-	const match: GroupMatch = matchServerToClient(matchServer, teams)
+function groupMatchServerToClient(matchServer: GroupMatchServer): GroupMatch {
+	const match: GroupMatch = matchServerToClient(matchServer)
 	if (
 		matchServer.pos !== undefined &&
 		matchServer.groupA !== undefined &&
@@ -127,8 +95,8 @@ function groupMatchServerToClient(
 		}
 		match.prevMatch = {
 			winner: matchServer.winningPlayer,
-			a: groupMatchServerToClient(matchServer.previousA, teams),
-			b: groupMatchServerToClient(matchServer.previousB, teams),
+			a: groupMatchServerToClient(matchServer.previousA),
+			b: groupMatchServerToClient(matchServer.previousB),
 		}
 	}
 	return match

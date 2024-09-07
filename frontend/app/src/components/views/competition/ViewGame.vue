@@ -1,8 +1,8 @@
 <template>
 	<Suspense>
-		<ViewGroupSystem v-if="props.tourType === TourType.GROUPS" />
+		<ViewGroupSystem v-if="props.tourType === CompType.GROUPS" />
 		<ViewKnockoutSystem
-			v-else-if="props.tourType === TourType.KNOCKOUT"
+			v-else-if="props.tourType === CompType.KNOCKOUT"
 			:mode="props.mode"
 		/>
 		<p v-else>Invalid type</p>
@@ -12,10 +12,10 @@
 <script lang="ts" setup>
 import ViewGroupSystem from "@/components/views/competition/groupSystem/ViewGroupSystem.vue"
 import ViewKnockoutSystem from "@/components/views/competition/knockoutSystem/ViewKnockoutSystem.vue"
-import { Mode, TourType } from "@/interfaces/competition"
+import { Mode, CompType } from "@/interfaces/competition"
 
 const props = defineProps<{
-	tourType: TourType
+	tourType: CompType
 	mode: Mode
 }>()
 </script>

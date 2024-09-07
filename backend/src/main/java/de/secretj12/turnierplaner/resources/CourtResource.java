@@ -30,6 +30,10 @@ public class CourtResource {
         if (exCourt != null)
             throw new WebApplicationException("Court already exists", Response.Status.CONFLICT);
 
+        if (court.getName() == null || court.getName().isEmpty())
+            throw new BadRequestException("Court name is required");
+        if (court.getCourtType() == null)
+            throw new BadRequestException("Court type is required");
         courtRepositiory.persist(court.toDB());
         return "Created";
     }
@@ -41,6 +45,10 @@ public class CourtResource {
         if (exCourt == null)
             throw new NotFoundException("Court not found");
 
+        if (court.getName() == null || court.getName().isEmpty())
+            throw new BadRequestException("Court name is required");
+        if (court.getCourtType() == null)
+            throw new BadRequestException("Court type is required");
         exCourt.setName(court.getName());
         exCourt.setCourtType(court.getCourtType());
         courtRepositiory.persist(exCourt);

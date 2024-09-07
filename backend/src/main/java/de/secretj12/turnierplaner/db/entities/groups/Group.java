@@ -24,7 +24,7 @@ public class Group {
     @OneToMany(mappedBy = "group", fetch = FetchType.EAGER)
     private Set<MatchOfGroup> matchesOfGroup;
     @Column(name = "index")
-    private long index;
+    private int index;
     @ManyToOne
     @JoinColumns(@JoinColumn(name = "competition_id"))
     private Competition competition;
@@ -52,11 +52,11 @@ public class Group {
         this.competition = competition;
     }
 
-    public long getIndex() {
+    public int getIndex() {
         return index;
     }
 
-    public void setIndex(long index) {
+    public void setIndex(int index) {
         this.index = index;
     }
 

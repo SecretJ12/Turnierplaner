@@ -3,6 +3,7 @@
 		<InputText v-model="name" size="small" />
 		<Dropdown
 			v-model="type"
+			option-value="id"
 			:options="options"
 			option-label="name"
 			placeholder="Platztyp"
@@ -15,13 +16,14 @@
 import { ref } from "vue"
 import { useCreateCourt } from "@/backend/court"
 import { useI18n } from "vue-i18n"
-import { courttype } from "@/interfaces/court"
+import { useToast } from "primevue/usetoast"
 
 const { t } = useI18n({ inheritLocale: true })
+const toast = useToast()
 const { mutate: addCourt } = useCreateCourt()
 
 const name = ref("")
-const type = ref("HARD")
+const type = ref(null)
 
 const options = [
 	{ id: "HARD", name: t("court.courtTypes.HARD") },
@@ -30,10 +32,18 @@ const options = [
 ]
 
 function add() {
-	addCourt({
-		name: name.value,
-		type: courttype.HARD,
-	})
+	if (name.value && type.value)
+		addCourt({
+			name: name.value,
+			type: type.value,
+		})
+	else
+		toast.add({
+			severity: "error",
+			summary: t("general.error_saving"),
+			detail: t("court.not_selected"),
+			life: 3000,
+		})
 }
 </script>
 

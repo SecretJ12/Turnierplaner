@@ -26,14 +26,13 @@ import { computed, TransitionGroup, watch } from "vue"
 import DraggablePanel from "@/draggable/DraggablePanel.vue"
 import { getKnockout } from "@/backend/knockout"
 import { useRoute } from "vue-router"
-import { Match } from "@/interfaces/match"
+import { EventMatch, Match } from "@/interfaces/match"
 import { getCompetitionDetails } from "@/backend/competition"
 import { useI18n } from "vue-i18n"
 import { useToast } from "primevue/usetoast"
 import { getGroup } from "@/backend/group"
-import { TourType } from "@/interfaces/competition"
+import { CompType } from "@/interfaces/competition"
 import {
-	EventMatch,
 	extractGroupMatches,
 	extractKnockoutMatches,
 } from "@/components/views/prepare/scheduleMatches/ScheduleMatchesHelper"
@@ -46,11 +45,11 @@ const toast = useToast()
 const { data: competition } = getCompetitionDetails(route, t, toast)
 const { data: knockout } = getKnockout(
 	route,
-	computed(() => competition.value?.tourType === TourType.KNOCKOUT),
+	computed(() => competition.value?.tourType === CompType.KNOCKOUT),
 )
 const { data: groups } = getGroup(
 	route,
-	computed(() => competition.value?.tourType === TourType.GROUPS),
+	computed(() => competition.value?.tourType === CompType.GROUPS),
 )
 
 const matches = defineModel<EventMatch[]>({ default: [] })
@@ -58,10 +57,10 @@ watch(
 	[knockout, groups],
 	() => {
 		matches.value.splice(0, matches.value.length)
-		if (competition.value?.tourType === TourType.KNOCKOUT && knockout.value) {
+		if (competition.value?.tourType === CompType.KNOCKOUT && knockout.value) {
 			extractKnockoutMatches(knockout.value, t, addMatch)
 		} else if (
-			competition.value?.tourType === TourType.GROUPS &&
+			competition.value?.tourType === CompType.GROUPS &&
 			groups.value
 		) {
 			extractGroupMatches(groups.value, t, addMatch)
@@ -76,6 +75,7 @@ function addMatch(match: Match, title: string) {
 	if (!match.begin)
 		matches.value.push({
 			title,
+			compName: <string>route.params.compId,
 			...match,
 		})
 }

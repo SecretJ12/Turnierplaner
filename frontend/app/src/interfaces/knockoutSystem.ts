@@ -1,5 +1,5 @@
 import { Match, MatchServer, matchServerToClient } from "@/interfaces/match"
-import { Team, TeamServer, teamServerToClient } from "@/interfaces/team"
+import { teamClientToServer } from "@/interfaces/team"
 
 export interface KnockoutSystem {
 	finale: KnockoutMatch | null
@@ -7,7 +7,6 @@ export interface KnockoutSystem {
 }
 
 export interface KnockoutSystemServer {
-	teams: TeamServer[]
 	finale: KnockoutMatchServer
 	thirdPlace: KnockoutMatchServer
 }
@@ -29,34 +28,25 @@ export interface KnockoutMatchServer extends MatchServer {
 export function knockoutSystemServerToClient(
 	knockoutSystem: KnockoutSystemServer,
 ): KnockoutSystem {
-	const teams = new Map<string, Team>()
-	knockoutSystem.teams.forEach((team) => {
-		if (!team.id) {
-			console.error("Team without id:", team)
-			return
-		}
-		teams.set(team.id, teamServerToClient(team))
-	})
 	return {
 		finale: knockoutSystem.finale
-			? knockoutMatchServerToClient(knockoutSystem.finale, teams)
+			? knockoutMatchServerToClient(knockoutSystem.finale)
 			: null,
 		thirdPlace: knockoutSystem.thirdPlace
-			? knockoutMatchServerToClient(knockoutSystem.thirdPlace, teams)
+			? knockoutMatchServerToClient(knockoutSystem.thirdPlace)
 			: null,
 	}
 }
 
 function knockoutMatchServerToClient(
 	matchServer: KnockoutMatchServer,
-	teams: Map<string, Team>,
 ): KnockoutMatch {
-	const match: KnockoutMatch = matchServerToClient(matchServer, teams)
+	const match: KnockoutMatch = matchServerToClient(matchServer)
 	if (matchServer.previousA && matchServer.previousB) {
 		match.prevMatch = {
 			winner: matchServer.winningPlayer,
-			a: knockoutMatchServerToClient(matchServer.previousA, teams),
-			b: knockoutMatchServerToClient(matchServer.previousB, teams),
+			a: knockoutMatchServerToClient(matchServer.previousA),
+			b: knockoutMatchServerToClient(matchServer.previousB),
 		}
 	}
 	return match
@@ -71,8 +61,8 @@ export function knockoutMatchClientToServer(
 		end: match.end ? match.end.toISOString() : undefined,
 		finished: match.finished,
 		winner: match.winner ? match.winner : undefined,
-		teamA: match.teamA && match.teamA.id ? match.teamA.id : null,
-		teamB: match.teamB && match.teamB.id ? match.teamB.id : null,
+		teamA: match.teamA === null ? null : teamClientToServer(match.teamA),
+		teamB: match.teamB === null ? null : teamClientToServer(match.teamB),
 		sets: match.sets ? match.sets : [],
 
 		winningPlayer: match.prevMatch?.winner ?? false,

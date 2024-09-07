@@ -12,14 +12,15 @@
 		"name_missing": "Bitte gib einen Namen ein",
 		"signUp": "Anmelden",
 		"register": "Registrieren",
-		"success": "Erfolg",
+		"success": "Erfolgreich",
 		"failure": "Fehler",
 		"loading": "Lädt...",
+		"error_saving": "Fehler beim Speichern",
 		"save": "Speichern",
 		"reset": "Zurücksetzen",
 		"back": "Zurück",
 		"next": "Weiter",
-		"saved": "Konkurrenz wurde gespeichert",
+		"saved": "Änderungen gespeichert",
 		"save_failed": "Während dem Speichern ist etwas schiefgelaufen",
 		"loading_failed": "Während dem Laden ist etwas schiefgelaufen",
 		"tournament_tree": "Turnierbaum"
@@ -188,7 +189,11 @@
 			"assignMatches": "Spiele auslosen",
 			"scheduleMatches": "Zeiteinteilung",
 			"previous": "Zurück",
-			"next": "Weiter"
+			"next": "Weiter",
+			"invalid_step": {
+				"summary": "Ungültiger Schritt",
+				"detail": "Vorherige Schritte wurden noch nicht erledigt"
+			}
 		},
 		"editTeams": {
 			"deleteBox": "Löschen",
@@ -225,6 +230,7 @@
 			"HARD": "Hart",
 			"CLAY": "Sand",
 			"GRASS": "Gras"
-		}
+		},
+		"not_selected": "Alle Felder müssen ausgefüllt werden"
 	}
 }

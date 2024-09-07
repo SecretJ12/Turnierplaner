@@ -1,11 +1,10 @@
 package de.secretj12.turnierplaner.db.repositories;
 
-import de.secretj12.turnierplaner.db.entities.competition.Competition;
 import de.secretj12.turnierplaner.db.entities.Match;
+import de.secretj12.turnierplaner.db.entities.competition.Competition;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import io.quarkus.panache.common.Parameters;
-
 import jakarta.enterprise.context.ApplicationScoped;
 
 import java.util.List;
@@ -44,6 +43,4 @@ public class MatchRepository implements PanacheRepository<Match> {
     public List<Match> nonGroupMatches(Competition competition) {
         return find("#nonGroupMatches", Parameters.with("comp", competition)).list();
     }
-
-
 }

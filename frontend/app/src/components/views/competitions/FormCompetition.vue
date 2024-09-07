@@ -36,11 +36,11 @@
 				:options="[
 					{
 						name: t('CompetitionSettings.knockout'),
-						value: TourType.KNOCKOUT,
+						value: CompType.KNOCKOUT,
 					},
 					{
 						name: t('CompetitionSettings.groups'),
-						value: TourType.GROUPS,
+						value: CompType.GROUPS,
 					},
 				]"
 				:placeholder="t(`CompetitionSettings.type`)"
@@ -383,7 +383,7 @@ import {
 	Mode,
 	Sex,
 	SignUp,
-	TourType,
+	CompType,
 } from "@/interfaces/competition"
 
 import { useForm } from "vee-validate"
@@ -409,7 +409,7 @@ const { values, defineInputBinds, errors, defineComponentBinds, handleSubmit } =
 			object({
 				name: string().min(4).max(40).required(),
 				description: string().max(50),
-				tourType: mixed().oneOf(Object.values(TourType)).required(),
+				tourType: mixed().oneOf(Object.values(CompType)).required(),
 				mode: mixed().oneOf(Object.values(Mode)).required(),
 				signUp: mixed().oneOf(Object.values(SignUp)).required(),
 
