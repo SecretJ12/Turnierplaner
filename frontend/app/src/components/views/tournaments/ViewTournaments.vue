@@ -7,7 +7,7 @@
 			v-for="tournament in tournaments"
 			v-else-if="isSuccess"
 			:key="tournament.name"
-			:can-create="canCreate"
+			:can-create="canCreate || false"
 			:tournament="tournament"
 			@selected="selected"
 			@settings="settingsItem"

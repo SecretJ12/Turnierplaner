@@ -31,7 +31,7 @@
 					v-if="props.canCreate"
 					outlined
 					rounded
-					class="icon"
+					class="settings"
 					@click="settings"
 					@click.stop
 				>
@@ -68,9 +68,17 @@ function settings() {
 	word-break: break-word;
 }
 
-.icon {
+.settings {
 	position: absolute;
 	right: 1.25rem;
 	bottom: 1.25rem;
+}
+
+.settings:hover {
+	filter: drop-shadow(0 0 6px #808080);
+}
+
+.settings:active {
+	color: #505050;
 }
 </style>

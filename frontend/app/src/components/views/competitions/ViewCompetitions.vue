@@ -198,19 +198,6 @@ function addCompetition() {
 </script>
 
 <style scoped>
-#settings {
-	color: #303030;
-	margin-right: 5px;
-}
-
-#settings:hover {
-	filter: drop-shadow(0 0 6px #808080);
-}
-
-#settings:active {
-	color: #505050;
-}
-
 #competitions {
 	margin: 10px;
 	display: flex;
