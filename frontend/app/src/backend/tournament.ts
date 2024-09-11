@@ -10,9 +10,10 @@ import { RouteLocationNormalizedLoaded } from "vue-router"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query"
 import { Court } from "@/interfaces/court"
 import { AnnotatedMatchServer, matchServerToClient } from "@/interfaces/match"
-import { CalEvent } from "@/components/views/prepare/scheduleMatches/ScheduleMatchesHelper"
+import { MatchCalEvent } from "@/components/views/prepare/scheduleMatches/ScheduleMatchesHelper"
 import { CompType } from "@/interfaces/competition"
 import { knockoutTitle } from "@/components/views/competition/knockoutSystem/KnockoutTitleGenerator"
+import { v4 as uuidv4 } from "uuid"
 
 export function getTournamentList(
 	isLoggedIn: Ref<boolean>,
@@ -157,21 +158,20 @@ export function getTournamentMatchEvents(
 	t: (_: string) => string,
 	from: Ref<Date | undefined>,
 	to: Ref<Date | undefined>,
-	courts: Ref<Court[]>,
-	enabled: Ref<boolean>,
+	courts: Ref<Court[] | undefined>,
 ) {
 	return useQuery({
-		enabled,
+		enabled: computed(() => !!from.value && !!to.value && !!courts.value),
 		queryKey: [
 			"tournamentMatches",
 			computed(() => route.params.tourId),
 			computed(() => route.params.compId),
 			from,
 			to,
-			computed(() => courts.value.map((court) => court.name)),
+			computed(() => courts.value?.map((court) => court.name)),
 		],
 		queryFn: () => {
-			if (!from.value || !to.value) return []
+			if (!from.value || !to.value || !courts.value) return []
 			return axios
 				.get(`/tournament/${route.params.tourId}/matches`, {
 					params: {
@@ -184,12 +184,13 @@ export function getTournamentMatchEvents(
 					},
 				})
 				.then<AnnotatedMatchServer[]>((data) => data.data)
-				.then<CalEvent[]>((events) => {
+				.then<MatchCalEvent[]>((events) => {
 					return events
 						.filter((match) => match.compName !== route.params.compId)
 						.map((matchServer) => {
 							const match = matchServerToClient(matchServer)
 							return {
+								id: matchServer.id || uuidv4(),
 								start: match.begin ?? new Date(),
 								end: match.end ?? new Date(),
 								split: match.court ?? "undefined court",

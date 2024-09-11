@@ -2,6 +2,7 @@
 	<vue-cal
 		ref="vuecal"
 		:key="calid"
+		:events="events"
 		:selected-date="props.selectedDate"
 		:time-from="props.timeFrom"
 		:time-to="props.timeTo"
@@ -32,8 +33,17 @@
 				v-bind="{ hours: <number>hours, minutes: <number>minutes }"
 			/>
 		</template>
+		<template v-else #time-cell="{ hours, minutes }">
+			<div class="vuecal__time-cell-line" :class="{ hours: !minutes }">
+				<strong v-if="!minutes" style="font-size: 15px">{{ hours }}</strong>
+				<span v-else style="font-size: 11px">{{ minutes }}</span>
+			</div>
+		</template>
 		<template v-if="$slots.splitLabel" #split-label="{ split }">
 			<slot name="splitLabel" v-bind="{ split: <DaySplit>split }" />
+		</template>
+		<template v-else #split-label="{ split }">
+			<strong style="height: 24px">{{ split.label }}</strong>
 		</template>
 	</vue-cal>
 </template>
@@ -122,15 +132,25 @@ function reload() {
 
 defineExpose({ previous, next, switchView, reload })
 
-function onEventDrop(
-	event: CalEvent<T>,
-	originalEvent: CalEvent<T>,
-	external: boolean,
-) {
+function onEventDrop({
+	event,
+	originalEvent,
+	external,
+}: {
+	event: CalEvent<T>
+	originalEvent: CalEvent<T>
+	external: boolean
+}) {
 	emit("onEventDrop", event, originalEvent, external)
 }
 
-function onEventChange(event: CalEvent<T>, originalEvent: CalEvent<T>) {
+function onEventChange({
+	event,
+	originalEvent,
+}: {
+	event: CalEvent<T>
+	originalEvent: CalEvent<T>
+}) {
 	if (props.automaticEvent && originalEvent) {
 		events.value.splice(
 			events.value.findIndex((e) => e.id === originalEvent.id),

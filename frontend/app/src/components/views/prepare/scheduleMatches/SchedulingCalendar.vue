@@ -14,23 +14,14 @@
 		:min-cell-width="250"
 		:time-cell-height="25"
 		:editable-events="!!props.courts.length"
-		@event-drop="onEventDrop"
-		@view-change="onViewChange"
+		@on-event-drop="onEventDrop"
+		@on-view-change="onViewChange"
 	>
 		<template #event="{ event }">
 			<EventMatch
 				:match="<AnnotatedMatch>event.data"
 				:competition="competition"
 			/>
-		</template>
-		<template #timeCell="{ hours, minutes }">
-			<div class="vuecal__time-cell-line" :class="{ hours: !minutes }">
-				<strong v-if="!minutes" style="font-size: 15px">{{ hours }}</strong>
-				<span v-else style="font-size: 11px">{{ minutes }}</span>
-			</div>
-		</template>
-		<template #splitLabel="{ split }">
-			<strong style="height: 24px">{{ split.label }}</strong>
 		</template>
 	</ViewCalendar>
 </template>
@@ -94,7 +85,6 @@ const { data: exMatches } = getTournamentMatchEvents(
 	curStart,
 	curEnd,
 	computed(() => props.courts),
-	computed(() => !!curStart.value && !!curEnd.value && !!props.courts),
 )
 
 const events = defineModel<MatchCalEvent[]>({ default: [] })
@@ -139,13 +129,7 @@ function updateExisting() {
 
 // on onViewChange: load events from begin to end for courts
 // -> display as unchangeable event
-function onViewChange({
-	startDate,
-	endDate,
-}: {
-	startDate: Date
-	endDate: Date
-}) {
+function onViewChange(startDate: Date, endDate: Date) {
 	curStart.value = startDate
 	curEnd.value = endDate
 }
@@ -165,15 +149,11 @@ function addMatch(match: Match, title: string) {
 		})
 }
 
-function onEventDrop({
-	event,
-	originalEvent,
-	external,
-}: {
-	event: MatchCalEvent
-	originalEvent: MatchCalEvent
-	external: boolean
-}) {
+function onEventDrop(
+	event: MatchCalEvent,
+	originalEvent: MatchCalEvent,
+	external: boolean,
+) {
 	if (external) {
 		if (originalEvent.data.id) emit("removeId", originalEvent.data.id)
 		else throw "Match id is missing"
