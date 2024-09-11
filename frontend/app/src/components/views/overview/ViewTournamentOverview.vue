@@ -1,5 +1,86 @@
-<template>Hello there's some overview</template>
+<template>
+	<div class="w-full p-2">
+		<Card style="margin-top: -10px !important">
+			<template #content>
+				<ViewCalendar
+					v-if="tournament"
+					v-model:events="events"
+					style="height: 800px"
+					:selected-date="tournament.game_phase.begin"
+					:min-date="tournament.game_phase.begin"
+					:max-date="tournament.game_phase.end"
+					:split-days="splitDays"
+					@on-view-change="onViewChange"
+				>
+					<template #event="{ event }">
+						<MatchEvent :match="<AnnotatedMatch>event.data" />
+					</template>
+				</ViewCalendar>
+			</template>
+		</Card>
+	</div>
+</template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import ViewCalendar from "@/calendar/ViewCalendar.vue"
+import { getTournamentCourts } from "@/backend/court"
+import { useRoute } from "vue-router"
+import { useI18n } from "vue-i18n"
+import { computed, ref, watch } from "vue"
+import {
+	getTournamentDetails,
+	getTournamentMatchEvents,
+} from "@/backend/tournament"
+import { MatchCalEvent } from "@/components/views/prepare/scheduleMatches/ScheduleMatchesHelper"
+import { useToast } from "primevue/usetoast"
+import MatchEvent from "@/components/views/prepare/scheduleMatches/MatchEvent.vue"
+import { AnnotatedMatch } from "@/interfaces/match"
+
+const route = useRoute()
+const { t } = useI18n({ inheritLocale: true })
+const toast = useToast()
+
+const curStart = ref<Date | undefined>()
+const curEnd = ref<Date | undefined>()
+
+const { data: courts } = getTournamentCourts(route)
+const { data: tournament } = getTournamentDetails(route, t, toast)
+const { data: matches } = getTournamentMatchEvents(
+	route,
+	t,
+	curStart,
+	curEnd,
+	courts,
+)
+
+function onViewChange(startDate: Date, endDate: Date) {
+	curStart.value = startDate
+	curEnd.value = endDate
+}
+
+const events = ref<MatchCalEvent[]>([])
+
+watch(matches, () => {
+	events.value.splice(0, events.value.length)
+
+	if (!matches.value) return
+
+	matches.value.forEach((match) => {
+		events.value.push(match)
+	})
+})
+
+const splitDays = computed(() => {
+	if (!courts.value) return []
+
+	return courts.value.map((court, index) => {
+		return {
+			id: court.name,
+			label: court.name,
+			class: "court" + (index + 1),
+		}
+	})
+})
+</script>
 
 <style scoped></style>

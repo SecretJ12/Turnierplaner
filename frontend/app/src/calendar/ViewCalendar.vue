@@ -89,10 +89,10 @@ const props = withDefaults(
 		minDate: undefined,
 		maxDate: undefined,
 		splitDays: undefined,
-		minEventWidth: undefined,
-		minSplitWidth: undefined,
-		minCellWidth: undefined,
-		timeCellHeight: undefined,
+		minEventWidth: 80,
+		minSplitWidth: 250,
+		minCellWidth: 250,
+		timeCellHeight: 25,
 	},
 )
 
