@@ -29,10 +29,10 @@
 
 <script setup lang="ts">
 import { Competition } from "@/interfaces/competition"
-import { EventMatch } from "@/interfaces/match"
+import { AnnotatedMatch } from "@/interfaces/match"
 
 const props = defineProps<{
-	match: EventMatch
+	match: AnnotatedMatch
 	competition?: Competition
 }>()
 </script>

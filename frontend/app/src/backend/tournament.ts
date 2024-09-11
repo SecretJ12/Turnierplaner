@@ -9,7 +9,7 @@ import { ToastServiceMethods } from "primevue/toastservice"
 import { RouteLocationNormalizedLoaded } from "vue-router"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query"
 import { Court } from "@/interfaces/court"
-import { MatchEventServer, matchServerToClient } from "@/interfaces/match"
+import { AnnotatedMatchServer, matchServerToClient } from "@/interfaces/match"
 import { CalEvent } from "@/components/views/prepare/scheduleMatches/ScheduleMatchesHelper"
 import { CompType } from "@/interfaces/competition"
 import { knockoutTitle } from "@/components/views/competition/knockoutSystem/KnockoutTitleGenerator"
@@ -183,7 +183,7 @@ export function getTournamentMatchEvents(
 								: undefined,
 					},
 				})
-				.then<MatchEventServer[]>((data) => data.data)
+				.then<AnnotatedMatchServer[]>((data) => data.data)
 				.then<CalEvent[]>((events) => {
 					return events
 						.filter((match) => match.compName !== route.params.compId)
@@ -205,7 +205,7 @@ export function getTournamentMatchEvents(
 	})
 }
 
-function genTitle(match: MatchEventServer, t: (_: string) => string) {
+function genTitle(match: AnnotatedMatchServer, t: (_: string) => string) {
 	switch (match.type) {
 		case CompType.GROUPS:
 			return t("ViewGroupSystem.group") + " " + (match.number + 1)

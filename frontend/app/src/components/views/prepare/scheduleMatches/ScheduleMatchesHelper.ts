@@ -1,18 +1,10 @@
-import { EventMatch } from "@/interfaces/match"
+import { AnnotatedMatch } from "@/interfaces/match"
 import { KnockoutMatch, KnockoutSystem } from "@/interfaces/knockoutSystem"
 import { knockoutTitle } from "@/components/views/competition/knockoutSystem/KnockoutTitleGenerator"
 import { GroupMatch, GroupSystem } from "@/interfaces/groupSystem"
+import { CalEvent } from "@/calendar/CalendarInterfaces"
 
-export interface CalEvent {
-	start: Date
-	end: Date
-	split: string
-	draggable?: boolean
-	resizable?: boolean
-	deletable?: boolean
-	class?: string
-	data: EventMatch
-}
+export type MatchCalEvent = CalEvent<AnnotatedMatch>
 
 export function extractKnockoutMatches(
 	knockout: KnockoutSystem,

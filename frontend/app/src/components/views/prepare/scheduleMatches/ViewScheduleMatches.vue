@@ -44,13 +44,13 @@ import SchedulingCalendar from "@/components/views/prepare/scheduleMatches/Sched
 import { ref, watch } from "vue"
 import { Court } from "@/interfaces/court"
 import MatchesContainerDraggable from "@/components/views/prepare/scheduleMatches/MatchesContainerDraggable.vue"
-import { CalEvent } from "@/components/views/prepare/scheduleMatches/ScheduleMatchesHelper"
+import { MatchCalEvent } from "@/components/views/prepare/scheduleMatches/ScheduleMatchesHelper"
 import { useUpdateMatches } from "@/backend/match"
 import { useI18n } from "vue-i18n"
 import CourtChooser from "@/components/views/prepare/scheduleMatches/CourtChooser.vue"
 import { getTournamentCourts, useUpdateTournamentCourts } from "@/backend/court"
 import { getTournamentDetails } from "@/backend/tournament"
-import { EventMatch } from "@/interfaces/match"
+import { AnnotatedMatch } from "@/interfaces/match"
 
 const route = useRoute()
 const router = useRouter()
@@ -59,8 +59,8 @@ const toast = useToast()
 
 const isUpdating = defineModel<boolean>("isUpdating", { default: false })
 
-const matches = ref<EventMatch[]>([])
-const scheduledMatches = ref<CalEvent[]>([])
+const matches = ref<AnnotatedMatch[]>([])
+const scheduledMatches = ref<MatchCalEvent[]>([])
 
 const { data: tournament } = getTournamentDetails(route, t, toast)
 const { data: tournamentCourts } = getTournamentCourts(route)
@@ -99,8 +99,15 @@ function save() {
 	isUpdating.value = true
 	updateMatches(
 		scheduledMatches.value
-			.filter((event) => event.draggable !== false)
-			.map((event) => event.data),
+			.filter((event) => !event.secondary)
+			.map((event) => {
+				return {
+					...event.data,
+					begin: event.start,
+					end: event.end,
+					court: event.split,
+				}
+			}),
 	)
 	updateCourts(selectedCourts.value)
 	isUpdating.value = false

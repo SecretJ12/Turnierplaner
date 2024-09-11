@@ -26,7 +26,7 @@ import { computed, TransitionGroup, watch } from "vue"
 import DraggablePanel from "@/draggable/DraggablePanel.vue"
 import { getKnockout } from "@/backend/knockout"
 import { useRoute } from "vue-router"
-import { EventMatch, Match } from "@/interfaces/match"
+import { AnnotatedMatch, Match } from "@/interfaces/match"
 import { getCompetitionDetails } from "@/backend/competition"
 import { useI18n } from "vue-i18n"
 import { useToast } from "primevue/usetoast"
@@ -52,7 +52,7 @@ const { data: groups } = getGroup(
 	computed(() => competition.value?.tourType === CompType.GROUPS),
 )
 
-const matches = defineModel<EventMatch[]>({ default: [] })
+const matches = defineModel<AnnotatedMatch[]>({ default: [] })
 watch(
 	[knockout, groups],
 	() => {

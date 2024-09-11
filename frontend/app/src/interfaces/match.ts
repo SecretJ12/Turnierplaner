@@ -43,7 +43,7 @@ export interface MatchServer {
 	sets: Array<Set>
 }
 
-export interface MatchEventServer extends MatchServer {
+export interface AnnotatedMatchServer extends MatchServer {
 	compName: string
 	type: CompType
 	number: number
@@ -51,7 +51,7 @@ export interface MatchEventServer extends MatchServer {
 	isFinal: number
 }
 
-export interface EventMatch extends Match {
+export interface AnnotatedMatch extends Match {
 	title: string
 	compName: string
 }
