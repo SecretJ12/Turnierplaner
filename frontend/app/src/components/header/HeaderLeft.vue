@@ -1,17 +1,21 @@
 <template>
-	<div
-		id="header"
-		class="flex flex-row pl-3 align-items-center gap-3 cursor-pointer"
-	>
-		<span class="material-icons" style="font-size: 3rem" @click="toHome"
+	<div id="header" class="flex flex-row pl-3 align-items-center gap-3">
+		<span
+			class="material-icons cursor-pointer"
+			style="font-size: 3rem"
+			@click="toHome"
 			>sports_tennis</span
 		>
 		<div class="flex flex-row align-items-baseline gap-3">
-			<h1 id="colorHeadLine" class="m-0 title" @click="toHome">
+			<h1 id="colorHeadLine" class="m-0 cursor-pointer title" @click="toHome">
 				{{ t("title") }}
 			</h1>
-			<h2 class="m-0" @click="toTournament">{{ route.params.tourId }}</h2>
-			<h3 class="m-0" @click="toCompetition">{{ route.params.compId }}</h3>
+			<h2 class="m-0 cursor-pointer" @click="toTournament">
+				{{ route.params.tourId }}
+			</h2>
+			<h3 class="m-0 cursor-pointer" @click="toCompetition">
+				{{ route.params.compId }}
+			</h3>
 		</div>
 	</div>
 </template>
