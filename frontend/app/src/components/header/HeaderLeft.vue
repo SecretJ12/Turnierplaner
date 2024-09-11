@@ -1,45 +1,71 @@
 <template>
-	<div id="headerLeft" @click="home">
-		<span class="material-icons" style="font-size: 3rem">sports_tennis</span>
-		<h1 id="colorHeadLine">{{ t("title") }}</h1>
+	<div
+		id="header"
+		class="flex flex-row pl-3 align-items-center gap-3 cursor-pointer"
+	>
+		<span class="material-icons" style="font-size: 3rem" @click="toHome"
+			>sports_tennis</span
+		>
+		<div class="flex flex-row align-items-baseline gap-3">
+			<h1 id="colorHeadLine" class="m-0 title" @click="toHome">
+				{{ t("title") }}
+			</h1>
+			<h2 class="m-0" @click="toTournament">{{ route.params.tourId }}</h2>
+			<h3 class="m-0" @click="toCompetition">{{ route.params.compId }}</h3>
+		</div>
 	</div>
 </template>
 
 <script lang="ts" setup>
 import { router } from "@/main"
 import { useI18n } from "vue-i18n"
+import { useRoute } from "vue-router"
 
+const route = useRoute()
 const { t } = useI18n({ inheritLocale: true })
 
-function home() {
+function toHome() {
 	router.push({ name: "Tournaments" })
+}
+
+function toTournament() {
+	router.push({
+		name: "Competitions",
+	})
+}
+
+function toCompetition() {
+	router.push({
+		name: "Competition",
+	})
 }
 </script>
 
 <style scoped>
-#headerLeft {
-	padding-left: 10px;
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	cursor: pointer;
-}
-
 #colorHeadLine {
 	color: #044154;
-}
-
-#headerLeft > * {
-	margin-left: 20px;
 }
 
 h1 {
 	font-weight: 900;
 }
 
+h1,
+h2,
+h3 {
+	line-height: 1;
+}
+
 @media only screen and (max-width: 750px) {
 	h1 {
 		font-size: 1em;
 	}
+}
+
+span:hover,
+h1:hover,
+h2:hover,
+h3:hover {
+	filter: drop-shadow(0 0 6px #808080);
 }
 </style>
