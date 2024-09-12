@@ -85,7 +85,7 @@ const props = withDefaults(
 		disabledViews: () => [View.years, View.year, View.month],
 		locale: "en",
 		editableEvents: false,
-		automaticEvents: true,
+		automaticEvent: true,
 		minDate: undefined,
 		maxDate: undefined,
 		splitDays: undefined,

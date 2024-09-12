@@ -1,8 +1,8 @@
 <template>
 	<ViewCalendar
 		v-if="tournament"
-		ref="vuecal"
-		v-model:events="events"
+		ref="calendar"
+		v-model="events"
 		style="height: 1000px"
 		:selected-date="tournament.game_phase.begin"
 		:min-date="tournament.game_phase.begin"
@@ -46,10 +46,10 @@ import ViewCalendar from "@/calendar/ViewCalendar.vue"
 import { v4 as uuidv4 } from "uuid"
 import { ComponentExposed } from "vue-component-type-helpers"
 
-const vuecal = ref<ComponentExposed<typeof ViewCalendar> | null>(null)
+const calendar = ref<ComponentExposed<typeof ViewCalendar> | null>(null)
 
 function reload() {
-	if (vuecal.value) vuecal.value.reload()
+	if (calendar.value) calendar.value.reload()
 }
 
 const emit = defineEmits<{ removeId: [id: string] }>()
