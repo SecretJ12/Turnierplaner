@@ -88,12 +88,12 @@ watch(
 	() => {
 		events.value.splice(0, events.value.length)
 		if (competition.value?.tourType === CompType.KNOCKOUT && knockout.value) {
-			extractKnockoutMatches(knockout.value, t, addMatch)
+			extractKnockoutMatches(knockout.value, addMatch)
 		} else if (
 			competition.value?.tourType === CompType.GROUPS &&
 			groups.value
 		) {
-			extractGroupMatches(groups.value, t, addMatch)
+			extractGroupMatches(groups.value, addMatch)
 		}
 
 		updateExisting()
@@ -129,7 +129,7 @@ function onViewChange(startDate: Date, endDate: Date) {
 	curEnd.value = endDate
 }
 
-function addMatch(match: Match, title: string) {
+function addMatch(match: Match, title: AnnotatedMatch["title"]) {
 	if (match.begin && match.end && match.court)
 		events.value.push({
 			id: match.id || uuidv4(),

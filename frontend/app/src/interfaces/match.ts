@@ -48,11 +48,16 @@ export interface AnnotatedMatchServer extends MatchServer {
 	type: CompType
 	number: number
 	total: number
-	isFinal: number
+	isFinal: boolean
 }
 
 export interface AnnotatedMatch extends Match {
-	title: string
+	title: {
+		isFinal: boolean
+		type: CompType
+		number: number
+		total: number
+	}
 	compName: string
 }
 

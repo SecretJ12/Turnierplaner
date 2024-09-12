@@ -191,8 +191,13 @@ export function getTournamentMatches(
 					return matches.map((matchServer) => {
 						const match = matchServerToClient(matchServer)
 						return {
-							title: genTitle(matchServer, t),
 							compName: matchServer.compName,
+							title: {
+								type: matchServer.type,
+								number: matchServer.number,
+								isFinal: matchServer.isFinal,
+								total: matchServer.total,
+							},
 							...match,
 						}
 					})
@@ -229,12 +234,15 @@ export function getTournamentMatchEvents(
 	}
 }
 
-function genTitle(match: AnnotatedMatchServer, t: (_: string) => string) {
-	switch (match.type) {
+export function genTitle(
+	title: AnnotatedMatch["title"],
+	t: (_: string) => string,
+) {
+	switch (title.type) {
 		case CompType.GROUPS:
-			return t("ViewGroupSystem.group") + " " + (match.number + 1)
+			return t("ViewGroupSystem.group") + " " + (title.number + 1)
 		case CompType.KNOCKOUT:
-			if (!match.isFinal) return t("ViewKnockout.thirdPlace")
-			else return knockoutTitle(t)(match.number, match.total)
+			if (!title.isFinal) return t("ViewKnockout.thirdPlace")
+			else return knockoutTitle(t)(title.number, title.total)
 	}
 }

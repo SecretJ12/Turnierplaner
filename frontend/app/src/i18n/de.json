@@ -24,7 +24,17 @@
 		"save_failed": "Während dem Speichern ist etwas schiefgelaufen",
 		"loading_failed": "Während dem Laden ist etwas schiefgelaufen",
 		"tournament_tree": "Turnierbaum",
-		"matches": "Spiele"
+		"matches": "Spiele",
+		"calendar": "Kalender",
+		"list": "Liste",
+		"title": "Titel",
+		"competition": "Konkurrenz",
+		"court": "Platz",
+		"begin": "Beginn",
+		"team": "Team",
+		"result": "Ergebnis",
+		"options": "Optionen",
+		"courts": "Plätze"
 	},
 	"ViewPlayerRegistration": {
 		"headline": "Spielerregistrierung",

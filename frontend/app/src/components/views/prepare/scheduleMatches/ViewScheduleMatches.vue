@@ -2,13 +2,13 @@
 	<div class="grid">
 		<div class="col-4 flex flex-column gap-3">
 			<Card>
-				<template #title>Options</template>
+				<template #title>{{ t("general.courts") }}</template>
 				<template #content>
 					<CourtChooser v-if="selectedCourts" v-model="selectedCourts" />
 				</template>
 			</Card>
 			<Card>
-				<template #title> Matches</template>
+				<template #title>{{ t("general.matches") }}</template>
 				<template #content>
 					<MatchesContainerDraggable
 						v-model="matches"

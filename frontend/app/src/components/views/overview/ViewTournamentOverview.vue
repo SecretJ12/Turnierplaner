@@ -2,12 +2,11 @@
 	<div class="w-full p-2">
 		<Card style="margin-top: -10px !important">
 			<template #content>
-				<SelectButton
-					v-model="calendarView"
-					class="pb-2"
-					:options="views"
-					option-label="label"
-				/>
+				<SelectButton v-model="calendarView" class="pb-2" :options="views">
+					<template #option="{ option }">
+						{{ t(option.label) }}
+					</template>
+				</SelectButton>
 				<OverviewCalendar v-if="calendarView.id === 'calendar'" />
 				<OverviewList v-else-if="calendarView.id === 'list'" />
 			</template>
@@ -19,15 +18,18 @@
 import { ref } from "vue"
 import OverviewCalendar from "@/components/views/overview/OverviewCalendar.vue"
 import OverviewList from "@/components/views/overview/OverviewList.vue"
+import { useI18n } from "vue-i18n"
+
+const { t } = useI18n({ inheritLocale: true })
 
 const views = [
 	{
 		id: "calendar",
-		label: "Calendar",
+		label: "general.calendar",
 	},
 	{
 		id: "list",
-		label: "List",
+		label: "general.list",
 	},
 ]
 
