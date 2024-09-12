@@ -43,16 +43,21 @@ export interface MatchServer {
 	sets: Array<Set>
 }
 
-export interface MatchEventServer extends MatchServer {
+export interface AnnotatedMatchServer extends MatchServer {
 	compName: string
 	type: CompType
 	number: number
 	total: number
-	isFinal: number
+	isFinal: boolean
 }
 
-export interface EventMatch extends Match {
-	title: string
+export interface AnnotatedMatch extends Match {
+	title: {
+		isFinal: boolean
+		type: CompType
+		number: number
+		total: number
+	}
 	compName: string
 }
 

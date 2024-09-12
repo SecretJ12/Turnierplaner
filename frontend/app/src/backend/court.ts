@@ -62,7 +62,8 @@ export function getTournamentCourts(route: RouteLocationNormalizedLoaded) {
 		queryFn: () =>
 			axios
 				.get(`/tournament/${route.params.tourId}/courts`)
-				.then<Court[]>((response) => response.data),
+				.then<Court[]>((response) => response.data)
+				.then<Court[]>((data) => data.sort(courtComp)),
 	})
 }
 

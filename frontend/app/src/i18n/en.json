@@ -24,7 +24,17 @@
 		"save_failed": "Something went wrong while saving",
 		"loading_failed": "Something went wrong while loading",
 		"tournament_tree": "Tournament tree",
-		"successful": "Successful"
+		"successful": "Successful",
+		"matches": "Matches",
+		"calendar": "Calendar",
+		"list": "List",
+		"title": "Title",
+		"competition": "Competition",
+		"court": "Court",
+		"begin": "Begin",
+		"team": "Team",
+		"result": "Result",
+		"courts": "Courts"
 	},
 	"ViewPlayerRegistration": {
 		"headline": "Player Registration",

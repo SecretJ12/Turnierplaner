@@ -17,7 +17,6 @@ import { ref, watch } from "vue"
 
 const props = withDefaults(
 	defineProps<{
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		list: T[]
 		itemKey: string
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any

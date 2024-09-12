@@ -66,15 +66,20 @@
 				</Timeline>
 				<Button
 					v-if="isLoggedIn"
-					id="button"
+					class="button"
 					:label="t('ViewCompetition.prepare') + ' >>'"
 					@click="prepare"
 				/>
 				<Button
 					v-if="openRegistration"
-					id="button"
+					class="button"
 					:label="t('general.register') + ' >>'"
 					@click="router.push({ name: 'Player registration' })"
+				/>
+				<Button
+					class="button"
+					:label="t('general.matches') + ' >>'"
+					@click="router.push({ name: 'Matches overview' })"
 				/>
 			</div>
 		</div>
@@ -193,19 +198,6 @@ function addCompetition() {
 </script>
 
 <style scoped>
-#settings {
-	color: #303030;
-	margin-right: 5px;
-}
-
-#settings:hover {
-	filter: drop-shadow(0 0 6px #808080);
-}
-
-#settings:active {
-	color: #505050;
-}
-
 #competitions {
 	margin: 10px;
 	display: flex;
@@ -245,7 +237,7 @@ function addCompetition() {
 	height: fit-content;
 }
 
-#button {
+.button {
 	margin-top: 20px;
 	width: min(100%, 30rem);
 }

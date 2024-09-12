@@ -3,7 +3,6 @@ import App from "./App.vue"
 import { createI18n, I18nOptions } from "vue-i18n"
 import * as VueRouter from "vue-router"
 
-/* import the fontawesome core */
 import { settings } from "@/settings"
 
 /* https request */

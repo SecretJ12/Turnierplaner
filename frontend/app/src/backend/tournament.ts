@@ -9,10 +9,14 @@ import { ToastServiceMethods } from "primevue/toastservice"
 import { RouteLocationNormalizedLoaded } from "vue-router"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query"
 import { Court } from "@/interfaces/court"
-import { MatchEventServer, matchServerToClient } from "@/interfaces/match"
-import { CalEvent } from "@/components/views/prepare/scheduleMatches/ScheduleMatchesHelper"
+import {
+	AnnotatedMatch,
+	AnnotatedMatchServer,
+	matchServerToClient,
+} from "@/interfaces/match"
 import { CompType } from "@/interfaces/competition"
 import { knockoutTitle } from "@/components/views/competition/knockoutSystem/KnockoutTitleGenerator"
+import { v4 as uuidv4 } from "uuid"
 
 export function getTournamentList(
 	isLoggedIn: Ref<boolean>,
@@ -152,26 +156,25 @@ export function useAddTournament(
 	})
 }
 
-export function getTournamentMatchEvents(
+export function getTournamentMatches(
 	route: RouteLocationNormalizedLoaded,
 	t: (_: string) => string,
 	from: Ref<Date | undefined>,
 	to: Ref<Date | undefined>,
-	courts: Ref<Court[]>,
-	enabled: Ref<boolean>,
+	courts: Ref<Court[] | undefined>,
 ) {
 	return useQuery({
-		enabled,
+		enabled: computed(() => !!from.value && !!to.value && !!courts.value),
 		queryKey: [
 			"tournamentMatches",
 			computed(() => route.params.tourId),
 			computed(() => route.params.compId),
 			from,
 			to,
-			computed(() => courts.value.map((court) => court.name)),
+			computed(() => courts.value?.map((court) => court.name)),
 		],
 		queryFn: () => {
-			if (!from.value || !to.value) return []
+			if (!from.value || !to.value || !courts.value) return []
 			return axios
 				.get(`/tournament/${route.params.tourId}/matches`, {
 					params: {
@@ -183,34 +186,63 @@ export function getTournamentMatchEvents(
 								: undefined,
 					},
 				})
-				.then<MatchEventServer[]>((data) => data.data)
-				.then<CalEvent[]>((events) => {
-					return events
-						.filter((match) => match.compName !== route.params.compId)
-						.map((matchServer) => {
-							const match = matchServerToClient(matchServer)
-							return {
-								start: match.begin ?? new Date(),
-								end: match.end ?? new Date(),
-								split: match.court ?? "undefined court",
-								data: {
-									title: genTitle(matchServer, t),
-									compName: matchServer.compName,
-									...match,
-								},
-							}
-						})
+				.then<AnnotatedMatchServer[]>((data) => data.data)
+				.then<AnnotatedMatch[]>((matches) => {
+					return matches.map((matchServer) => {
+						const match = matchServerToClient(matchServer)
+						return {
+							compName: matchServer.compName,
+							title: {
+								type: matchServer.type,
+								number: matchServer.number,
+								isFinal: matchServer.isFinal,
+								total: matchServer.total,
+							},
+							...match,
+						}
+					})
 				})
 		},
 	})
 }
 
-function genTitle(match: MatchEventServer, t: (_: string) => string) {
-	switch (match.type) {
+export function getTournamentMatchEvents(
+	route: RouteLocationNormalizedLoaded,
+	t: (_: string) => string,
+	from: Ref<Date | undefined>,
+	to: Ref<Date | undefined>,
+	courts: Ref<Court[] | undefined>,
+) {
+	const matches = getTournamentMatches(route, t, from, to, courts)
+
+	return {
+		...matches,
+		data: computed(() => {
+			if (!matches.data.value) return undefined
+			return matches.data.value
+				.filter((match) => match.compName !== route.params.compId)
+				.map((match) => {
+					return {
+						id: match.id || uuidv4(),
+						start: match.begin ?? new Date(),
+						end: match.end ?? new Date(),
+						split: match.court ?? "undefined court",
+						data: match,
+					}
+				})
+		}),
+	}
+}
+
+export function genTitle(
+	title: AnnotatedMatch["title"],
+	t: (_: string) => string,
+) {
+	switch (title.type) {
 		case CompType.GROUPS:
-			return t("ViewGroupSystem.group") + " " + (match.number + 1)
+			return t("ViewGroupSystem.group") + " " + (title.number + 1)
 		case CompType.KNOCKOUT:
-			if (!match.isFinal) return t("ViewKnockout.thirdPlace")
-			else return knockoutTitle(t)(match.number, match.total)
+			if (!title.isFinal) return t("ViewKnockout.thirdPlace")
+			else return knockoutTitle(t)(title.number, title.total)
 	}
 }

@@ -1,6 +1,6 @@
 <template>
 	<div class="w-full flex flex-column p-1 text-left">
-		<strong>{{ props.match.title }}</strong>
+		<strong>{{ genTitle(props.match.title, t) }}</strong>
 		<i>
 			{{ props.match.compName }}
 		</i>
@@ -29,10 +29,14 @@
 
 <script setup lang="ts">
 import { Competition } from "@/interfaces/competition"
-import { EventMatch } from "@/interfaces/match"
+import { AnnotatedMatch } from "@/interfaces/match"
+import { genTitle } from "@/backend/tournament"
+import { useI18n } from "vue-i18n"
+
+const { t } = useI18n({ inheritLocale: true })
 
 const props = defineProps<{
-	match: EventMatch
+	match: AnnotatedMatch
 	competition?: Competition
 }>()
 </script>

@@ -1,23 +1,14 @@
-import { EventMatch } from "@/interfaces/match"
+import { AnnotatedMatch } from "@/interfaces/match"
 import { KnockoutMatch, KnockoutSystem } from "@/interfaces/knockoutSystem"
-import { knockoutTitle } from "@/components/views/competition/knockoutSystem/KnockoutTitleGenerator"
 import { GroupMatch, GroupSystem } from "@/interfaces/groupSystem"
+import { CalEvent } from "@/calendar/CalendarInterfaces"
+import { CompType } from "@/interfaces/competition"
 
-export interface CalEvent {
-	start: Date
-	end: Date
-	split: string
-	draggable?: boolean
-	resizable?: boolean
-	deletable?: boolean
-	class?: string
-	data: EventMatch
-}
+export type MatchCalEvent = CalEvent<AnnotatedMatch>
 
 export function extractKnockoutMatches(
 	knockout: KnockoutSystem,
-	t: (_: string) => string,
-	add: (match: KnockoutMatch, title: string) => void,
+	add: (match: KnockoutMatch, title: AnnotatedMatch["title"]) => void,
 ) {
 	const rounds: KnockoutMatch[][] = []
 	let queue: KnockoutMatch[] = []
@@ -40,27 +31,46 @@ export function extractKnockoutMatches(
 	rounds.toReversed().forEach((round, i) => {
 		round.forEach((match) => {
 			if (i > 0 || (match.teamA && match.teamB))
-				add(match, knockoutTitle(t)(i, rounds.length + 1))
+				add(match, {
+					isFinal: true,
+					type: CompType.KNOCKOUT,
+					number: i,
+					total: rounds.length + 1,
+				})
 		})
 	})
 	if (knockout.thirdPlace)
-		add(knockout.thirdPlace, t("ViewKnockout.thirdPlace"))
-	if (knockout.finale) add(knockout.finale, t("ViewKnockout.finale"))
+		add(knockout.thirdPlace, {
+			isFinal: false,
+			type: CompType.KNOCKOUT,
+			number: rounds.length,
+			total: rounds.length + 1,
+		})
+	if (knockout.finale)
+		add(knockout.finale, {
+			isFinal: true,
+			type: CompType.KNOCKOUT,
+			number: rounds.length,
+			total: rounds.length + 1,
+		})
 }
 
 export function extractGroupMatches(
 	groupSystem: GroupSystem,
-	t: (_: string) => string,
-	add: (match: GroupMatch, title: string) => void,
+	add: (match: GroupMatch, title: AnnotatedMatch["title"]) => void,
 ) {
 	groupSystem.groups.forEach((group, i) => {
 		group.matches.forEach((match) => {
-			add(match, t("ViewGroupSystem.group") + " " + (i + 1))
+			add(match, {
+				type: CompType.GROUPS,
+				number: i,
+				total: i,
+				isFinal: true,
+			})
 		})
 	})
 	extractKnockoutMatches(
 		{ finale: groupSystem.finale, thirdPlace: groupSystem.thirdPlace },
-		t,
 		add,
 	)
 }

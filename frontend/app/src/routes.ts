@@ -1,10 +1,5 @@
 import viewTournaments from "@/components/views/tournaments/ViewTournaments.vue"
 import viewCompetition from "@/components/views/competition/ViewCompetition.vue"
-import viewPrepareMatches from "@/components/views/prepare/ViewPrepareMatches.vue"
-import ViewAssignMatches from "@/components/views/prepare/assignMatches/ViewAssignMatches.vue"
-import ViewScheduleMatches from "@/components/views/prepare/scheduleMatches/ViewScheduleMatches.vue"
-import ViewEditTeams from "@/components/views/prepare/editTeams/ViewEditTeams.vue"
-import ViewEditCompetition from "@/components/views/prepare/ViewEditCompetition.vue"
 
 export default [
 	{
@@ -37,6 +32,12 @@ export default [
 			import("@/components/views/competitions/ViewCreateCompetition.vue"),
 	},
 	{
+		path: "/tournament/:tourId/overview",
+		name: "Matches overview",
+		component: () =>
+			import("@/components/views/overview/ViewTournamentOverview.vue"),
+	},
+	{
 		path: "/tournament/:tourId/competition/:compId",
 		name: "Competition",
 		component: viewCompetition,
@@ -44,30 +45,39 @@ export default [
 	{
 		path: "/tournament/:tourId/prepare/:compId?",
 		name: "Edit competition",
-		component: viewPrepareMatches,
+		component: () =>
+			import("@/components/views/prepare/ViewPrepareMatches.vue"),
 		children: [
 			{
 				path: "settings",
 				name: "settings",
-				component: ViewEditCompetition,
+				component: () =>
+					import("@/components/views/prepare/ViewEditCompetition.vue"),
 				meta: { step: 1, reset: false },
 			},
 			{
 				path: "editTeams",
 				name: "editTeams",
-				component: ViewEditTeams,
+				component: () =>
+					import("@/components/views/prepare/editTeams/ViewEditTeams.vue"),
 				meta: { step: 2, reset: true },
 			},
 			{
 				path: "assignMatches",
 				name: "assignMatches",
-				component: ViewAssignMatches,
+				component: () =>
+					import(
+						"@/components/views/prepare/assignMatches/ViewAssignMatches.vue"
+					),
 				meta: { step: 3, reset: true },
 			},
 			{
 				path: "scheduleMatches",
 				name: "scheduleMatches",
-				component: ViewScheduleMatches,
+				component: () =>
+					import(
+						"@/components/views/prepare/scheduleMatches/ViewScheduleMatches.vue"
+					),
 				meta: { step: 4, reset: false },
 			},
 		],
