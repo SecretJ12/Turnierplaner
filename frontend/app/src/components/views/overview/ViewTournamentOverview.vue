@@ -9,7 +9,7 @@
 					option-label="label"
 				/>
 				<OverviewCalendar v-if="calendarView.id === 'calendar'" />
-				<div v-else-if="calendarView.id === 'list'">test</div>
+				<OverviewList v-else-if="calendarView.id === 'list'" />
 			</template>
 		</Card>
 	</div>
@@ -18,6 +18,7 @@
 <script setup lang="ts">
 import { ref } from "vue"
 import OverviewCalendar from "@/components/views/overview/OverviewCalendar.vue"
+import OverviewList from "@/components/views/overview/OverviewList.vue"
 
 const views = [
 	{

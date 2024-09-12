@@ -9,8 +9,11 @@ import { ToastServiceMethods } from "primevue/toastservice"
 import { RouteLocationNormalizedLoaded } from "vue-router"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query"
 import { Court } from "@/interfaces/court"
-import { AnnotatedMatchServer, matchServerToClient } from "@/interfaces/match"
-import { MatchCalEvent } from "@/components/views/prepare/scheduleMatches/ScheduleMatchesHelper"
+import {
+	AnnotatedMatch,
+	AnnotatedMatchServer,
+	matchServerToClient,
+} from "@/interfaces/match"
 import { CompType } from "@/interfaces/competition"
 import { knockoutTitle } from "@/components/views/competition/knockoutSystem/KnockoutTitleGenerator"
 import { v4 as uuidv4 } from "uuid"
@@ -153,7 +156,7 @@ export function useAddTournament(
 	})
 }
 
-export function getTournamentMatchEvents(
+export function getTournamentMatches(
 	route: RouteLocationNormalizedLoaded,
 	t: (_: string) => string,
 	from: Ref<Date | undefined>,
@@ -184,26 +187,46 @@ export function getTournamentMatchEvents(
 					},
 				})
 				.then<AnnotatedMatchServer[]>((data) => data.data)
-				.then<MatchCalEvent[]>((events) => {
-					return events
-						.filter((match) => match.compName !== route.params.compId)
-						.map((matchServer) => {
-							const match = matchServerToClient(matchServer)
-							return {
-								id: matchServer.id || uuidv4(),
-								start: match.begin ?? new Date(),
-								end: match.end ?? new Date(),
-								split: match.court ?? "undefined court",
-								data: {
-									title: genTitle(matchServer, t),
-									compName: matchServer.compName,
-									...match,
-								},
-							}
-						})
+				.then<AnnotatedMatch[]>((matches) => {
+					return matches.map((matchServer) => {
+						const match = matchServerToClient(matchServer)
+						return {
+							title: genTitle(matchServer, t),
+							compName: matchServer.compName,
+							...match,
+						}
+					})
 				})
 		},
 	})
+}
+
+export function getTournamentMatchEvents(
+	route: RouteLocationNormalizedLoaded,
+	t: (_: string) => string,
+	from: Ref<Date | undefined>,
+	to: Ref<Date | undefined>,
+	courts: Ref<Court[] | undefined>,
+) {
+	const matches = getTournamentMatches(route, t, from, to, courts)
+
+	return {
+		...matches,
+		data: computed(() => {
+			if (!matches.data.value) return undefined
+			return matches.data.value
+				.filter((match) => match.compName !== route.params.compId)
+				.map((match) => {
+					return {
+						id: match.id || uuidv4(),
+						start: match.begin ?? new Date(),
+						end: match.end ?? new Date(),
+						split: match.court ?? "undefined court",
+						data: match,
+					}
+				})
+		}),
+	}
 }
 
 function genTitle(match: AnnotatedMatchServer, t: (_: string) => string) {

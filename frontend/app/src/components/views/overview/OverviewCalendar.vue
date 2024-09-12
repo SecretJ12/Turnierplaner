@@ -1,4 +1,5 @@
 <template>
+	<!-- TODO add report and rescheduling -->
 	<ViewCalendar
 		v-if="tournament"
 		v-model:events="events"
