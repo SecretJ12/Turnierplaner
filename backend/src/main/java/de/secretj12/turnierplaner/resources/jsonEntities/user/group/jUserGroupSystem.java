@@ -15,10 +15,11 @@ public class jUserGroupSystem {
     public jUserGroupSystem(List<Group> groups, Match finale, Match thirdPlace) {
         this.groups = groups.stream().map(jUserGroup::new).toList();
 
-        if (finale.getFinalOfGroup() != null)
-            this.finale = new jUserGroupMatchAfterGroup(finale);
-        else
-            this.finale = new jUserGroupMatchAfterMatch(finale, finale.getDependentOn().isWinner());
+        if (finale != null)
+            if (finale.getFinalOfGroup() != null)
+                this.finale = new jUserGroupMatchAfterGroup(finale);
+            else
+                this.finale = new jUserGroupMatchAfterMatch(finale, finale.getDependentOn().isWinner());
         if (thirdPlace != null)
             if (thirdPlace.getFinalOfGroup() != null)
                 this.thirdPlace = new jUserGroupMatchAfterGroup(thirdPlace);

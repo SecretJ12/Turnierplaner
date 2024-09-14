@@ -4,6 +4,7 @@ import de.secretj12.turnierplaner.db.entities.Match;
 import de.secretj12.turnierplaner.db.entities.competition.Competition;
 import de.secretj12.turnierplaner.db.entities.competition.Team;
 import de.secretj12.turnierplaner.db.entities.knockout.NextMatch;
+import de.secretj12.turnierplaner.db.repositories.CompetitionRepository;
 import de.secretj12.turnierplaner.db.repositories.MatchRepository;
 import de.secretj12.turnierplaner.db.repositories.NextMatchRepository;
 import de.secretj12.turnierplaner.db.repositories.TeamRepository;
@@ -20,6 +21,8 @@ public class KnockoutTools {
     NextMatchRepository nextMatches;
     @Inject
     TeamRepository teams;
+    @Inject
+    CompetitionRepository competitions;
 
     public Match updateKnockoutTree(Competition competition, jUserKnockoutMatch tree, Match match) {
         if (tree == null)
@@ -72,7 +75,7 @@ public class KnockoutTools {
     }
 
     public void updateThirdPlace(Competition competition, Match finale) {
-        Match thirdPlace = matches.getThirdPlace(competition);
+        Match thirdPlace = competition.getThirdPlace();
 
         // cover deletion of third place
         if (competition.getTeams().size() <= 3) {
@@ -96,6 +99,8 @@ public class KnockoutTools {
 
             matches.persist(thirdPlace);
             nextMatches.persist(nMatch);
+            competition.setThirdPlace(thirdPlace);
+            competitions.persist(competition);
         } else {
             // update third place if already existing
             NextMatch nMatch = thirdPlace.getDependentOn();

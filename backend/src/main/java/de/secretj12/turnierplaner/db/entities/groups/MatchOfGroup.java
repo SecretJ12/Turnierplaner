@@ -1,10 +1,7 @@
 package de.secretj12.turnierplaner.db.entities.groups;
 
 import de.secretj12.turnierplaner.db.entities.Match;
-
 import jakarta.persistence.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.UUID;
 
@@ -20,8 +17,7 @@ public class MatchOfGroup {
     private Group group;
 
     @MapsId
-    @OneToOne
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JoinColumn(name = "match", referencedColumnName = "id", nullable = false)
     private Match match;
 

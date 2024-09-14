@@ -47,23 +47,23 @@
 			<div class="flex flex-row gap-2">
 				<Button
 					:label="t('ViewPrepare.assignMatches.remove')"
-					:disabled="noGroups <= 2 || isUpdating"
+					:disabled="data.noGroups <= 1 || isUpdating"
 					severity="danger"
 					@click="
 						() => {
-							noGroups /= 2
-							adjustSize(noGroups)
+							data.noGroups /= 2
+							adjustSize(data.noGroups)
 						}
 					"
 				></Button>
 				<Button
 					:label="t('ViewPrepare.assignMatches.add')"
-					:disabled="noGroups >= 64 || isUpdating"
+					:disabled="data.noGroups >= 64 || isUpdating"
 					severity="success"
 					@click="
 						() => {
-							noGroups *= 2
-							adjustSize(noGroups)
+							data.noGroups *= 2
+							adjustSize(data.noGroups)
 						}
 					"
 				></Button>
@@ -76,7 +76,7 @@
 import { useRoute } from "vue-router"
 import { useI18n } from "vue-i18n"
 import { useToast } from "primevue/usetoast"
-import { Ref, ref } from "vue"
+import { Ref } from "vue"
 import { Team } from "@/interfaces/team"
 import { getCompetitionDetails } from "@/backend/competition"
 import { getSignedUp } from "@/backend/signup"
@@ -109,13 +109,13 @@ const { data: groupsServer, isLoading: groupsLoading } = getGroupsDivision(
 )
 const { mutate: initGroups } = useInitGroups(route, t, toast)
 
-const noGroups = ref<number>(2)
 const { data, reload } = track(
 	loadFromServer,
 	{
 		teams: [],
 		groups: [[], []],
 		teamCount: 0,
+		noGroups: 2
 	},
 	{ signedUpTeams, groupsServer },
 	[signedUpTeams, groupsServer],
@@ -143,6 +143,7 @@ function loadFromServer({
 		teams,
 		groups,
 		teamCount: signedUpTeams.value.length,
+		noGroups: groups.length
 	}
 }
 

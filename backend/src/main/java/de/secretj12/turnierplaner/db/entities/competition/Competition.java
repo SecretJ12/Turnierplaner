@@ -29,7 +29,7 @@ public class Competition {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tournament_id", nullable = false)
     private Tournament tournament;
 
@@ -68,6 +68,13 @@ public class Competition {
     private LocalDate playerBmaxAge;
     @Column(name = "creation_progess", nullable = false)
     private CreationProgress cProgress;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "finale_id")
+    private Match finale;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "thirdPlace_id")
+    private Match thirdPlace;
 
     @OneToMany(mappedBy = "competition")
     private List<Team> teams;
@@ -252,5 +259,21 @@ public class Competition {
 
     public void setcProgress(CreationProgress cProgress) {
         this.cProgress = cProgress;
+    }
+
+    public Match getThirdPlace() {
+        return thirdPlace;
+    }
+
+    public void setThirdPlace(Match thirdPlace) {
+        this.thirdPlace = thirdPlace;
+    }
+
+    public Match getFinale() {
+        return finale;
+    }
+
+    public void setFinale(Match finale) {
+        this.finale = finale;
     }
 }

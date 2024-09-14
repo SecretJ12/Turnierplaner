@@ -3,7 +3,7 @@ import { KnockoutMatch } from "@/interfaces/knockoutSystem"
 
 export interface GroupSystem {
 	groups: Group[]
-	finale: GroupMatch
+	finale: GroupMatch | null
 	thirdPlace: GroupMatch | null
 }
 
@@ -45,7 +45,9 @@ export function groupSystemServerToClient(
 ): GroupSystem {
 	return {
 		groups: groupSystem.groups.map((group) => groupServerToClient(group)),
-		finale: groupMatchServerToClient(groupSystem.finale),
+		finale: groupSystem.finale
+			? groupMatchServerToClient(groupSystem.finale)
+		  : null,
 		thirdPlace: groupSystem.thirdPlace
 			? groupMatchServerToClient(groupSystem.thirdPlace)
 			: null,
