@@ -80,7 +80,6 @@ public class KnockoutTools {
         // cover deletion of third place
         if (competition.getTeams().size() <= 3) {
             if (thirdPlace != null) {
-                nextMatches.delete(thirdPlace.getDependentOn());
                 matches.delete(thirdPlace);
             }
             return;

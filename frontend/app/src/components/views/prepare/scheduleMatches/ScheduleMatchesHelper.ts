@@ -9,6 +9,7 @@ export type MatchCalEvent = CalEvent<AnnotatedMatch>
 export function extractKnockoutMatches(
 	knockout: KnockoutSystem,
 	add: (match: KnockoutMatch, title: AnnotatedMatch["title"]) => void,
+	group = false,
 ) {
 	const rounds: KnockoutMatch[][] = []
 	let queue: KnockoutMatch[] = []
@@ -30,12 +31,13 @@ export function extractKnockoutMatches(
 
 	rounds.toReversed().forEach((round, i) => {
 		round.forEach((match) => {
-			add(match, {
-				isFinal: true,
-				type: CompType.KNOCKOUT,
-				number: i,
-				total: rounds.length + 1,
-			})
+			if (i > 0 || (match.teamA && match.teamB) || group)
+				add(match, {
+					isFinal: true,
+					type: CompType.KNOCKOUT,
+					number: i,
+					total: rounds.length + 1,
+				})
 		})
 	})
 	if (knockout.thirdPlace)
@@ -71,5 +73,6 @@ export function extractGroupMatches(
 	extractKnockoutMatches(
 		{ finale: groupSystem.finale, thirdPlace: groupSystem.thirdPlace },
 		add,
+		true,
 	)
 }
