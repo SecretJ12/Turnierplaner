@@ -115,7 +115,7 @@ const { data, reload } = track(
 		teams: [],
 		groups: [[], []],
 		teamCount: 0,
-		noGroups: 2
+		noGroups: 2,
 	},
 	{ signedUpTeams, groupsServer },
 	[signedUpTeams, groupsServer],
@@ -143,7 +143,7 @@ function loadFromServer({
 		teams,
 		groups,
 		teamCount: signedUpTeams.value.length,
-		noGroups: groups.length
+		noGroups: groups.length,
 	}
 }
 

@@ -30,13 +30,12 @@ export function extractKnockoutMatches(
 
 	rounds.toReversed().forEach((round, i) => {
 		round.forEach((match) => {
-			if (i > 0 || (match.teamA && match.teamB))
-				add(match, {
-					isFinal: true,
-					type: CompType.KNOCKOUT,
-					number: i,
-					total: rounds.length + 1,
-				})
+			add(match, {
+				isFinal: true,
+				type: CompType.KNOCKOUT,
+				number: i,
+				total: rounds.length + 1,
+			})
 		})
 	})
 	if (knockout.thirdPlace)

@@ -105,12 +105,8 @@ export function useInitGroups(
 				refetchType: "all",
 			})
 			queryClient.invalidateQueries({
-				queryKey: [
-					"group",
-					route.params.tourId,
-					route.params.compId,
-				],
-				refetchType: "all"
+				queryKey: ["group", route.params.tourId, route.params.compId],
+				refetchType: "all",
 			})
 			toast.add({
 				severity: "success",
