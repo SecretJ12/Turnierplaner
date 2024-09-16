@@ -12,13 +12,14 @@ public class jUserGroupMatchAfterMatch extends jUserMatch {
     public jUserGroupMatchAfterMatch(Match match, boolean winner, boolean dependant) {
         super(match);
 
+        this.winningPlayer = winner;
         if (dependant) {
             if (match.getDependentOn().getPreviousA().getFinalOfGroup() != null)
                 this.previousA = new jUserGroupMatchAfterGroup(match.getDependentOn().getPreviousA());
             else
                 this.previousA = new jUserGroupMatchAfterMatch(match.getDependentOn().getPreviousA(), match
                     .getDependentOn().isWinner());
-            if (match.getFinalOfGroup() != null)
+            if (match.getDependentOn().getPreviousB().getFinalOfGroup() != null)
                 this.previousB = new jUserGroupMatchAfterGroup(match.getDependentOn().getPreviousB());
             else
                 this.previousB = new jUserGroupMatchAfterMatch(match.getDependentOn().getPreviousB(), match

@@ -1,11 +1,8 @@
 package de.secretj12.turnierplaner.db.entities.groups;
 
-import de.secretj12.turnierplaner.db.entities.competition.Competition;
 import de.secretj12.turnierplaner.db.entities.Match;
-
+import de.secretj12.turnierplaner.db.entities.competition.Competition;
 import jakarta.persistence.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -20,20 +17,17 @@ public class Group {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     private UUID id;
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @OneToMany(mappedBy = "group", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "group", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Set<MatchOfGroup> matchesOfGroup;
     @Column(name = "index")
     private int index;
     @ManyToOne
-    @JoinColumns(@JoinColumn(name = "competition_id"))
+    @JoinColumn(name = "competition_id")
     private Competition competition;
 
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @OneToMany(mappedBy = "groupA")
+    @OneToMany(mappedBy = "groupA", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Set<FinalOfGroup> finalOfGroupA;
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @OneToMany(mappedBy = "groupB")
+    @OneToMany(mappedBy = "groupB", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Set<FinalOfGroup> finalOfGroupB;
 
     public UUID getId() {
@@ -73,5 +67,21 @@ public class Group {
             return Set.of();
 
         return matchesOfGroup.stream().map(MatchOfGroup::getMatch).collect(Collectors.toCollection(HashSet::new));
+    }
+
+    public Set<FinalOfGroup> getFinalOfGroupA() {
+        return finalOfGroupA;
+    }
+
+    public void setFinalOfGroupA(Set<FinalOfGroup> finalOfGroupA) {
+        this.finalOfGroupA = finalOfGroupA;
+    }
+
+    public Set<FinalOfGroup> getFinalOfGroupB() {
+        return finalOfGroupB;
+    }
+
+    public void setFinalOfGroupB(Set<FinalOfGroup> finalOfGroupB) {
+        this.finalOfGroupB = finalOfGroupB;
     }
 }

@@ -33,7 +33,7 @@ public class Tournament {
     @Column(name = "visible")
     private boolean visible;
 
-    @ManyToMany(cascade = {CascadeType.ALL})
+    @ManyToMany
     @JoinTable(
                name = "court_of_tournament",
                joinColumns = {@JoinColumn(name = "id")},

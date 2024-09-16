@@ -182,7 +182,7 @@ public class TournamentResource {
         for (var comp : tournament.getCompetitions()) {
             var rounds = getMatchRounds(comp);
 
-            var thirdPlace = matches.getThirdPlace(comp);
+            var thirdPlace = comp.getThirdPlace();
             if (thirdPlace != null) {
                 jUserMatchEvent matchEvent = new jUserMatchEvent(thirdPlace);
                 matchEvent.setCompName(comp.getName());
@@ -239,7 +239,7 @@ public class TournamentResource {
     }
 
     private List<List<Match>> getMatchRounds(Competition competition) {
-        Match finale = matches.getFinal(competition);
+        Match finale = competition.getFinale();
         if (finale == null)
             return List.of();
 

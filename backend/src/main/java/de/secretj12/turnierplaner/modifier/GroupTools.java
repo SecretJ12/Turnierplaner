@@ -28,7 +28,10 @@ public class GroupTools {
     FinalOfGroupRepository finalOfGroupRepository;
     @Inject
     NextMatchRepository nextMatchRepository;
+    @Inject
+    CompetitionRepository competitions;
 
+    // TODO please add tests for me
     public void generateMatches(Competition competition, List<Set<Team>> nGroups) {
         List<Group> groups = competition.getGroups();
         int prevGroupsSize = groups.size();
@@ -37,6 +40,11 @@ public class GroupTools {
     }
 
     private void createGroups(Competition competition, List<Group> exGroups, List<Set<Team>> nGroups) {
+        // delete all groups no longer existing
+        while (exGroups.size() > nGroups.size()) {
+            groupsRepository.delete(exGroups.removeLast());
+        }
+
         for (int index = 0; index < nGroups.size(); index++) {
             Set<Team> nGroup = nGroups.get(index);
 
@@ -81,36 +89,20 @@ public class GroupTools {
                 }
             }
         }
-
-        // delete all groups no longer existing
-        while (exGroups.size() > nGroups.size()) {
-            exGroups.getLast().getMatches().forEach(matchRepository::delete);
-            groupsRepository.delete(exGroups.getLast());
-            exGroups.removeLast();
-        }
     }
 
     private void createKnockoutTree(Competition competition, int prevGroupsSize, List<Group> groups) {
-        List<Match> nonGroupMatches = matchRepository.nonGroupMatches(competition);
-        if (groups.size() == 1) { // no finale needed
-            // delete all matches not belonging to a group
-            nonGroupMatches.forEach(matchRepository::delete);
-        } else if (groups.size() == 2) { // finale and game for third place needed
-            if (prevGroupsSize == 2) // matches already correct
-                return;
+        if (groups.size() == 2) { // finale and game for third place needed
+            Match finale = finaleOfGroups(competition, groups.get(0), groups.get(1), 1);
+            competition.setFinale(finale);
 
-            // delete all non finals of deleted groups and further matches
-            nonGroupMatches.stream().filter(m -> m.getFinalOfGroup() == null).forEach(matchRepository::delete);
-
-            if (prevGroupsSize == 1) // create new finale
-                finaleOfGroups(competition, groups.get(0), groups.get(1), 1);
             // create third place match
-            finaleOfGroups(competition, groups.get(0), groups.get(1), 2);
-        } else { // knockout tree needed
-            if (prevGroupsSize == 2) // delete third place match
-                nonGroupMatches.stream()
-                    .filter(m -> m.getFinalOfGroup() != null && m.getFinalOfGroup().getPos() == 2)
-                    .forEach(matchRepository::delete); // should only find one
+            Match thirdPlace = finaleOfGroups(competition, groups.get(0), groups.get(1), 2);
+            competition.setThirdPlace(thirdPlace);
+            competitions.persist(competition);
+        } else if (groups.size() > 2) { // knockout tree needed
+            if (prevGroupsSize == 2) // delete previous game for third place
+                matchRepository.delete(finaleOfGroups(competition, groups.get(0), groups.get(1), 2));
 
             List<Match> matches = new ArrayList<>();
             for (int i = 0; i < groups.size() / 2; i++)
@@ -119,48 +111,77 @@ public class GroupTools {
             do {
                 List<Match> newMatches = new ArrayList<>();
                 for (int i = 0; i < matches.size() / 2; i++) {
-                    Match m = new Match();
-                    m.setCompetition(competition);
-                    matchRepository.persist(m);
+                    Optional<NextMatch> exNext = matches.get(i).getPreviousOfA() == null ? Optional.empty() : matches
+                        .get(2 * i).getPreviousOfA()
+                        .stream().filter(NextMatch::isWinner)
+                        .findFirst();
+                    if (exNext.isEmpty()) {
+                        Match m = new Match();
+                        m.setCompetition(competition);
+                        matchRepository.persist(m);
+                        newMatches.add(m);
+                        if (matches.size() == 2)
+                            competition.setFinale(m);
 
-                    NextMatch nextMatch = new NextMatch();
-                    nextMatch.setPreviousA(matches.get(2 * i));
-                    nextMatch.setPreviousB(matches.get(2 * i + 1));
-                    nextMatch.setNextMatch(m);
-                    nextMatchRepository.persist(nextMatch);
+                        NextMatch nextMatch = new NextMatch();
+                        nextMatch.setPreviousA(matches.get(2 * i));
+                        nextMatch.setPreviousB(matches.get(2 * i + 1));
+                        nextMatch.setNextMatch(m);
+                        nextMatchRepository.persist(nextMatch);
+                    } else {
+                        newMatches.add(exNext.get().getNextMatch());
+                        if (matches.size() == 2)
+                            competition.setFinale(exNext.get().getNextMatch());
+                    }
                 }
 
                 if (matches.size() == 2) {
-                    Match m = new Match();
-                    m.setCompetition(competition);
-                    matchRepository.persist(m);
+                    Optional<NextMatch> exNext = matches.getFirst().getPreviousOfA() == null ? Optional
+                        .empty() : matches.getFirst().getPreviousOfA()
+                            .stream().filter(nm -> !nm.isWinner())
+                            .findAny();
+                    if (exNext.isEmpty()) {
+                        Match m = new Match();
+                        m.setCompetition(competition);
+                        matchRepository.persist(m);
+                        competition.setThirdPlace(m);
 
-                    NextMatch nextMatch = new NextMatch();
-                    nextMatch.setPreviousA(matches.get(0));
-                    nextMatch.setPreviousB(matches.get(1));
-                    nextMatch.setNextMatch(m);
-                    nextMatch.setWinner(false);
-                    nextMatchRepository.persist(nextMatch);
-                } else {
-                    matches = newMatches;
+                        NextMatch nextMatch = new NextMatch();
+                        nextMatch.setPreviousA(matches.get(0));
+                        nextMatch.setPreviousB(matches.get(1));
+                        nextMatch.setNextMatch(m);
+                        nextMatch.setWinner(false);
+                        nextMatchRepository.persist(nextMatch);
+                    } else {
+                        competition.setThirdPlace(exNext.get().getNextMatch());
+                    }
                 }
-            } while (matches.size() > 2);
+                matches = newMatches;
+            } while (matches.size() > 1);
+            competitions.persist(competition);
         }
     }
 
     private Match finaleOfGroups(Competition competition, Group g1, Group g2, int pos) {
-        Match finale = new Match();
-        finale.setCompetition(competition);
-        matchRepository.persist(finale);
+        Optional<FinalOfGroup> exFin = g1.getFinalOfGroupA() == null ? Optional.empty() : g1.getFinalOfGroupA().stream()
+            .filter(fog -> fog.getPos() == pos)
+            .findFirst();
+        if (exFin.isEmpty()) {
+            Match finale = new Match();
+            finale.setCompetition(competition);
+            matchRepository.persist(finale);
 
-        FinalOfGroup fog = new FinalOfGroup();
-        fog.setGroupA(g1);
-        fog.setGroupB(g2);
-        fog.setPos(1);
-        fog.setNextMatch(finale);
-        finalOfGroupRepository.persist(fog);
+            FinalOfGroup fog = new FinalOfGroup();
+            fog.setGroupA(g1);
+            fog.setGroupB(g2);
+            fog.setPos(pos);
+            fog.setNextMatch(finale);
+            finalOfGroupRepository.persist(fog);
 
-        return finale;
+            return finale;
+        } else {
+            return exFin.get().getNextMatch();
+        }
     }
 
     public Set<Team> teamsOfGroup(Group group) {

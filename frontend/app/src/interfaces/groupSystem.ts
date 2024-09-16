@@ -3,7 +3,7 @@ import { KnockoutMatch } from "@/interfaces/knockoutSystem"
 
 export interface GroupSystem {
 	groups: Group[]
-	finale: GroupMatch
+	finale: GroupMatch | null
 	thirdPlace: GroupMatch | null
 }
 
@@ -45,7 +45,9 @@ export function groupSystemServerToClient(
 ): GroupSystem {
 	return {
 		groups: groupSystem.groups.map((group) => groupServerToClient(group)),
-		finale: groupMatchServerToClient(groupSystem.finale),
+		finale: groupSystem.finale
+			? groupMatchServerToClient(groupSystem.finale)
+			: null,
 		thirdPlace: groupSystem.thirdPlace
 			? groupMatchServerToClient(groupSystem.thirdPlace)
 			: null,
@@ -61,15 +63,11 @@ function groupServerToClient(group: GroupServer): Group {
 
 function groupMatchServerToClient(matchServer: GroupMatchServer): GroupMatch {
 	const match: GroupMatch = matchServerToClient(matchServer)
-	if (
-		matchServer.pos !== undefined &&
-		matchServer.groupA !== undefined &&
-		matchServer.groupB !== undefined
-	) {
+	if (!!matchServer.pos && !!matchServer.groupA && !!matchServer.groupB) {
 		if (
-			matchServer.winningPlayer !== undefined ||
-			matchServer.previousA !== undefined ||
-			matchServer.previousB !== undefined
+			!!matchServer.winningPlayer ||
+			!!matchServer.previousA ||
+			!!matchServer.previousB
 		) {
 			console.error("Invalid state")
 			throw new Error("Invalid state")
@@ -81,15 +79,11 @@ function groupMatchServerToClient(matchServer: GroupMatchServer): GroupMatch {
 		}
 	}
 	if (
-		matchServer.winningPlayer !== undefined &&
-		matchServer.previousA !== undefined &&
-		matchServer.previousB !== undefined
+		!!matchServer.winningPlayer &&
+		!!matchServer.previousA &&
+		!!matchServer.previousB
 	) {
-		if (
-			matchServer.pos !== undefined ||
-			matchServer.groupA !== undefined ||
-			matchServer.groupB !== undefined
-		) {
+		if (!!matchServer.pos || !!matchServer.groupA || !!matchServer.groupB) {
 			console.error("Invalid state")
 			throw new Error("Invalid state")
 		}

@@ -400,8 +400,8 @@ public class CompetitionResource {
         if (competition.getType() != CompetitionType.KNOCKOUT)
             throw new WebApplicationException("Competition does not have type knockout", Response.Status.METHOD_NOT_ALLOWED);
 
-        Match finale = matches.getFinal(competition);
-        Match thirdPlace = matches.getThirdPlace(competition);
+        Match finale = competition.getFinale();
+        Match thirdPlace = competition.getThirdPlace();
         return new jUserKnockoutSystem(finale, thirdPlace, securityIdentity.hasRole("director"));
     }
 
@@ -420,9 +420,9 @@ public class CompetitionResource {
         List<Group> groups = competition.getGroups();
         if (groups == null) throw new NotFoundException("Found no groups");
 
-        Match finale = matches.getFinal(competition);
-        Match thirdPlace = matches.getThirdPlace(competition);
-        if (finale == null || (groups.size() > 2 && thirdPlace == null))
+        Match finale = competition.getFinale();
+        Match thirdPlace = competition.getThirdPlace();
+        if (groups.size() > 2 && (finale == null || thirdPlace == null))
             throw new InternalServerErrorException("Finale or thirdPlace is null");
         return new jUserGroupSystem(groups, finale, thirdPlace);
     }
@@ -444,7 +444,7 @@ public class CompetitionResource {
         checkTournamentAccessibility(tourName);
 
         Competition competition = competitions.getByName(tourName, compName);
-        Match finale = matches.getFinal(competition);
+        Match finale = competition.getFinale();
         if (finale == null)
             finale = new Match();
         knockoutTools.updateKnockoutTree(competition, tree, finale);
@@ -452,6 +452,7 @@ public class CompetitionResource {
 
         // TODO only set progress if everything is assigned
         competition.setcProgress(CreationProgress.SCHEDULING);
+        competition.setFinale(finale);
         competitions.persist(competition);
         return true;
     }
@@ -483,6 +484,8 @@ public class CompetitionResource {
 
         Competition competition = competitions.getByName(tourName, compName);
 
+        competition.setFinale(null);
+        competition.setThirdPlace(null);
         groupTools.generateMatches(competition, groups);
 
         competition.setcProgress(CreationProgress.SCHEDULING);

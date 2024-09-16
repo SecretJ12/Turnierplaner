@@ -43,7 +43,7 @@ public class Set {
 
     @Embeddable
     public static class SetKey implements Serializable {
-        @ManyToOne(cascade = CascadeType.ALL)
+        @ManyToOne
         @JoinColumn(name = "match_id")
         private Match match;
         @Column(name = "index")
