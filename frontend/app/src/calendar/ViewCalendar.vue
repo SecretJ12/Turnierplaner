@@ -151,7 +151,7 @@ function onEventChange({
 	event: CalEvent<T>
 	originalEvent: CalEvent<T>
 }) {
-	if (props.automaticEvent && originalEvent) {
+	if (props.automaticEvent && originalEvent && originalEvent.id) {
 		events.value.splice(
 			events.value.findIndex((e) => e.id === originalEvent.id),
 			1,
