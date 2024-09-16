@@ -94,10 +94,9 @@ export default [
 		component: () => import("@/components/views/player/ViewVerification.vue"),
 	},
 	{
-		path: "/player/overview/:id",
+		path: "/player/overview/:playerId",
 		name: "Player overview",
-		component: () =>
-			import("@/components/views/player/ViewPlayerOverview.vue"),
+		component: () => import("@/components/views/player/ViewPlayerOverview.vue"),
 	},
 	{
 		path: "/templates",

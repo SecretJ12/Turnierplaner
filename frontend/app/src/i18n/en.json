@@ -186,7 +186,8 @@
 		"register_success": "Successful registered",
 		"register_failed": "Registration failed",
 		"over": "O",
-		"under": "U"
+		"under": "U",
+		"player_not_found": "Player not found"
 	},
 	"ViewKnockout": {
 		"finale": "Finale",

@@ -39,7 +39,6 @@ public class PlayerResource {
     SecurityIdentity securityIdentity;
 
     @GET
-    @Transactional
     @Path("/find")
     @Produces(MediaType.APPLICATION_JSON)
     public List<jUserPlayer> listPlayer(@QueryParam("search") String search, @QueryParam("sex") jUserSex sex,
@@ -58,6 +57,16 @@ public class PlayerResource {
             return List.of();
         }
         return playerRepository.filter(search, dbSex, minAge, maxAge).map(jUserPlayer::new).toList();
+    }
+
+    @GET
+    @Path("/{playerId}/details")
+    @Produces(MediaType.APPLICATION_JSON)
+    public jUserPlayer getPlayer(@PathParam("playerId") UUID playerId) {
+        Player player = playerRepository.getById(playerId);
+        if (player == null)
+            throw new NotFoundException("Player not found");
+        return new jUserPlayer(player);
     }
 
     @POST
