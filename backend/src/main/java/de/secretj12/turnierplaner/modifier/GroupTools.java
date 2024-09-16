@@ -10,6 +10,7 @@ import de.secretj12.turnierplaner.db.entities.knockout.NextMatch;
 import de.secretj12.turnierplaner.db.repositories.*;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.BadRequestException;
 
 import java.util.*;
 
@@ -80,6 +81,7 @@ public class GroupTools {
                     m.setCompetition(competition);
                     m.setTeamA(nGroupList.get(i));
                     m.setTeamB(nGroupList.get(j));
+                    m.setNumber(index);
                     matchRepository.persist(m);
 
                     MatchOfGroup mog = new MatchOfGroup();
@@ -92,23 +94,30 @@ public class GroupTools {
     }
 
     private void createKnockoutTree(Competition competition, int prevGroupsSize, List<Group> groups) {
+        if (groups.size() == 1) {
+            competition.setTotal(0);
+            competitions.persist(competition);
+        }
         if (groups.size() == 2) { // finale and game for third place needed
-            Match finale = finaleOfGroups(competition, groups.get(0), groups.get(1), 1);
+            Match finale = finaleOfGroups(competition, groups.get(0), groups.get(1), 1, 0);
             competition.setFinale(finale);
 
             // create third place match
-            Match thirdPlace = finaleOfGroups(competition, groups.get(0), groups.get(1), 2);
+            Match thirdPlace = finaleOfGroups(competition, groups.get(0), groups.get(1), 2, 0);
             competition.setThirdPlace(thirdPlace);
+            competition.setTotal(1);
             competitions.persist(competition);
         } else if (groups.size() > 2) { // knockout tree needed
             if (prevGroupsSize == 2) // delete previous game for third place
-                matchRepository.delete(finaleOfGroups(competition, groups.get(0), groups.get(1), 2));
+                matchRepository.delete(finaleOfGroups(competition, groups.get(0), groups.get(1), 2, -1));
 
             List<Match> matches = new ArrayList<>();
             for (int i = 0; i < groups.size() / 2; i++)
-                matches.add(finaleOfGroups(competition, groups.get(2 * i), groups.get(2 * i + 1), 1));
+                matches.add(finaleOfGroups(competition, groups.get(2 * i), groups.get(2 * i + 1), 1, 0));
 
+            int counter = 0;
             do {
+                counter++;
                 List<Match> newMatches = new ArrayList<>();
                 for (int i = 0; i < matches.size() / 2; i++) {
                     Optional<NextMatch> exNext = matches.get(i).getPreviousOfA() == null ? Optional.empty() : matches
@@ -117,6 +126,7 @@ public class GroupTools {
                         .findFirst();
                     if (exNext.isEmpty()) {
                         Match m = new Match();
+                        m.setNumber(counter);
                         m.setCompetition(competition);
                         matchRepository.persist(m);
                         newMatches.add(m);
@@ -129,7 +139,10 @@ public class GroupTools {
                         nextMatch.setNextMatch(m);
                         nextMatchRepository.persist(nextMatch);
                     } else {
-                        newMatches.add(exNext.get().getNextMatch());
+                        Match m = exNext.get().getNextMatch();
+                        m.setNumber(counter);
+                        matchRepository.persist(m);
+                        newMatches.add(m);
                         if (matches.size() == 2)
                             competition.setFinale(exNext.get().getNextMatch());
                     }
@@ -142,6 +155,7 @@ public class GroupTools {
                             .findAny();
                     if (exNext.isEmpty()) {
                         Match m = new Match();
+                        m.setNumber(counter);
                         m.setCompetition(competition);
                         matchRepository.persist(m);
                         competition.setThirdPlace(m);
@@ -153,21 +167,28 @@ public class GroupTools {
                         nextMatch.setWinner(false);
                         nextMatchRepository.persist(nextMatch);
                     } else {
-                        competition.setThirdPlace(exNext.get().getNextMatch());
+                        Match m = exNext.get().getNextMatch();
+                        m.setNumber(counter);
+                        matchRepository.persist(m);
+                        competition.setThirdPlace(m);
                     }
                 }
                 matches = newMatches;
             } while (matches.size() > 1);
+            competition.setTotal(counter + 1);
             competitions.persist(competition);
+        } else {
+            throw new BadRequestException("Invalid group size");
         }
     }
 
-    private Match finaleOfGroups(Competition competition, Group g1, Group g2, int pos) {
+    private Match finaleOfGroups(Competition competition, Group g1, Group g2, int pos, int number) {
         Optional<FinalOfGroup> exFin = g1.getFinalOfGroupA() == null ? Optional.empty() : g1.getFinalOfGroupA().stream()
             .filter(fog -> fog.getPos() == pos)
             .findFirst();
         if (exFin.isEmpty()) {
             Match finale = new Match();
+            finale.setNumber(number);
             finale.setCompetition(competition);
             matchRepository.persist(finale);
 
@@ -180,7 +201,10 @@ public class GroupTools {
 
             return finale;
         } else {
-            return exFin.get().getNextMatch();
+            Match match = exFin.get().getNextMatch();
+            match.setNumber(number);
+            matchRepository.persist(match);
+            return match;
         }
     }
 

@@ -447,8 +447,18 @@ public class CompetitionResource {
         Match finale = competition.getFinale();
         if (finale == null)
             finale = new Match();
-        knockoutTools.updateKnockoutTree(competition, tree, finale);
-        knockoutTools.updateThirdPlace(competition, finale);
+
+
+        jUserKnockoutMatch curTree = tree;
+        int total = 1;
+        while (curTree.getPreviousA() != null) {
+            curTree = curTree.getPreviousA();
+            total++;
+        }
+        competition.setTotal(total);
+
+        knockoutTools.updateKnockoutTree(competition, tree, finale, total - 1);
+        knockoutTools.updateThirdPlace(competition, finale, total);
 
         // TODO only set progress if everything is assigned
         competition.setcProgress(CreationProgress.SCHEDULING);

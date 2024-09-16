@@ -6,6 +6,10 @@ import de.secretj12.turnierplaner.resources.jsonEntities.user.competition.jUserC
 public class jUserMatchEvent extends jUserMatch {
 
     /**
+     * Name of the tournament
+     */
+    public String tourName;
+    /**
      * Name of the competition
      */
     public String compName;
@@ -33,9 +37,31 @@ public class jUserMatchEvent extends jUserMatch {
 
     public jUserMatchEvent(Match match) {
         super(match);
+        this.tourName = match.getCompetition().getTournament().getName();
+        this.compName = match.getCompetition().getName();
+        this.type = match.getGroup() != null ? jUserCompetitionType.GROUPS : jUserCompetitionType.KNOCKOUT;
+        this.number = match.getNumber();
+        this.total = match.getCompetition().getTotal();
+        if (match.getDependentOn() == null) {
+            if (match.getFinalOfGroup() == null) {
+                this.isFinal = true;
+            } else {
+                this.isFinal = match.getFinalOfGroup().getPos() == 1;
+            }
+        } else {
+            this.isFinal = match.getDependentOn().isWinner();
+        }
     }
 
     public jUserMatchEvent() {
+    }
+
+    public String getTourName() {
+        return tourName;
+    }
+
+    public void setTourName(String tourName) {
+        this.tourName = tourName;
     }
 
     public String getCompName() {

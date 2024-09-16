@@ -69,6 +69,9 @@ public class Competition {
     @Column(name = "creation_progess", nullable = false)
     private CreationProgress cProgress;
 
+    @Column(name = "totalRounds")
+    private int total;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "finale_id")
     private Match finale;
@@ -275,5 +278,13 @@ public class Competition {
 
     public void setFinale(Match finale) {
         this.finale = finale;
+    }
+
+    public int getTotal() {
+        return total;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
     }
 }

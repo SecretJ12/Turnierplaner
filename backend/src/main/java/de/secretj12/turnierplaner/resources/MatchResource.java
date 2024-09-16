@@ -20,7 +20,7 @@ import java.util.List;
 
 @RolesAllowed("director")
 @Path("/tournament/{tourName}/competition/{compName}/match")
-public class MatchRessource {
+public class MatchResource {
 
     @Inject
     TournamentRepository tournaments;

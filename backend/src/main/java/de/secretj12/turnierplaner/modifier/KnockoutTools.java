@@ -24,7 +24,7 @@ public class KnockoutTools {
     @Inject
     CompetitionRepository competitions;
 
-    public Match updateKnockoutTree(Competition competition, jUserKnockoutMatch tree, Match match) {
+    public Match updateKnockoutTree(Competition competition, jUserKnockoutMatch tree, Match match, int number) {
         if (tree == null)
             return null;
 
@@ -34,13 +34,13 @@ public class KnockoutTools {
         Match a, b;
         if (match.getDependentOn() != null) {
             a = match.getDependentOn().getPreviousA();
-            updateKnockoutTree(competition, tree.getPreviousA(), a);
+            updateKnockoutTree(competition, tree.getPreviousA(), a, number - 1);
             b = match.getDependentOn().getPreviousB();
-            updateKnockoutTree(competition, tree.getPreviousB(), b);
+            updateKnockoutTree(competition, tree.getPreviousB(), b, number - 1);
         } else if (tree.getPreviousA() != null && tree.getPreviousB() != null) {
             NextMatch nMatch = new NextMatch();
-            a = updateKnockoutTree(competition, tree.getPreviousA(), new Match());
-            b = updateKnockoutTree(competition, tree.getPreviousB(), new Match());
+            a = updateKnockoutTree(competition, tree.getPreviousA(), new Match(), number - 1);
+            b = updateKnockoutTree(competition, tree.getPreviousB(), new Match(), number - 1);
             nMatch.setPreviousA(a);
             nMatch.setPreviousB(b);
             nMatch.setNextMatch(match);
@@ -59,6 +59,7 @@ public class KnockoutTools {
         match.setCompetition(competition);
         match.setFinished(false);
         match.setWinner(true);
+        match.setNumber(number);
         matches.persist(match);
 
         return match;
@@ -74,7 +75,7 @@ public class KnockoutTools {
         return null;
     }
 
-    public void updateThirdPlace(Competition competition, Match finale) {
+    public void updateThirdPlace(Competition competition, Match finale, int total) {
         Match thirdPlace = competition.getThirdPlace();
 
         // cover deletion of third place
@@ -88,6 +89,7 @@ public class KnockoutTools {
         if (thirdPlace == null) {
             // create third place if didn't exist before
             thirdPlace = new Match();
+            thirdPlace.setNumber(total - 1);
             thirdPlace.setCompetition(competition);
             NextMatch nMatch = new NextMatch();
             nMatch.setWinner(false);
@@ -108,6 +110,9 @@ public class KnockoutTools {
             nMatch.setPreviousB(finale.getDependentOn().getPreviousB());
 
             nextMatches.persist(nMatch);
+
+            thirdPlace.setNumber(total - 1);
+            matches.persist(thirdPlace);
         }
     }
 
