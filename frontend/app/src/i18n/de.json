@@ -184,7 +184,8 @@
 		"register_success": "Der Spieler wurde erfolgreich registriert",
 		"register_failed": "Fehler beim Hinzufügen des Spielers",
 		"over": "Ü",
-		"under": "U"
+		"under": "U",
+		"player_not_found": "Spieler nicht gefunden"
 	},
 	"ViewKnockout": {
 		"finale": "Finale",
