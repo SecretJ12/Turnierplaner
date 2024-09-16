@@ -55,6 +55,9 @@ public class Match {
     @JoinColumn(name = "team_b")
     private Team teamB;
 
+    @Column(name = "number")
+    private int number;
+
     @OneToOne(mappedBy = "nextMatch", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private NextMatch dependentOn;
 
@@ -195,5 +198,13 @@ public class Match {
 
     public void setSets(List<Set> sets) {
         this.sets = sets;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
     }
 }

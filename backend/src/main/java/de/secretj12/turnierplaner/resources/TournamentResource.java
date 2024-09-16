@@ -4,13 +4,11 @@ import de.secretj12.turnierplaner.db.entities.Court;
 import de.secretj12.turnierplaner.db.entities.Match;
 import de.secretj12.turnierplaner.db.entities.Tournament;
 import de.secretj12.turnierplaner.db.entities.competition.Competition;
-import de.secretj12.turnierplaner.db.entities.competition.CompetitionType;
 import de.secretj12.turnierplaner.db.repositories.CourtRepositiory;
 import de.secretj12.turnierplaner.db.repositories.MatchRepository;
 import de.secretj12.turnierplaner.db.repositories.TournamentRepository;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.jDirectorTournamentAdd;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.jDirectorTournamentUpdate;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.competition.jUserCompetitionType;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserCourt;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserMatchEvent;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserTournament;
@@ -178,51 +176,13 @@ public class TournamentResource {
     ) {
         Tournament tournament = tournaments.getByName(tourId);
 
-        var matchEvents = new ArrayList<jUserMatchEvent>();
-        for (var comp : tournament.getCompetitions()) {
-            var rounds = getMatchRounds(comp);
-
-            var thirdPlace = comp.getThirdPlace();
-            if (thirdPlace != null) {
-                jUserMatchEvent matchEvent = new jUserMatchEvent(thirdPlace);
-                matchEvent.setCompName(comp.getName());
-                matchEvent.setType(jUserCompetitionType.KNOCKOUT);
-                matchEvent.setNumber(rounds.size() - 1);
-                matchEvent.setTotal(rounds.size());
-                matchEvent.setFinal(false);
-                matchEvents.add(matchEvent);
-            }
-
-            for (int i = 0; i < rounds.size(); i++) {
-                for (var match : rounds.get(i)) {
-                    jUserMatchEvent matchEvent = new jUserMatchEvent(match);
-                    matchEvent.setCompName(comp.getName());
-                    matchEvent.setType(jUserCompetitionType.KNOCKOUT);
-                    matchEvent.setNumber(i);
-                    matchEvent.setTotal(rounds.size());
-                    matchEvent.setFinal(true);
-                    matchEvents.add(matchEvent);
-                }
-            }
-
-            if (comp.getType() == CompetitionType.GROUPS) {
-                for (var group : comp.getGroups()) {
-                    for (var match : group.getMatches()) {
-                        jUserMatchEvent matchEvent = new jUserMatchEvent(match);
-                        matchEvent.setCompName(comp.getName());
-                        matchEvent.setType(jUserCompetitionType.GROUPS);
-                        matchEvent.setNumber(group.getIndex());
-                        matchEvent.setFinal(false);
-                        matchEvents.add(matchEvent);
-                    }
-                }
-            }
-        }
-
         Instant fromD = from == null ? null : Instant.parse(from);
         Instant toD = to == null ? null : Instant.parse(to);
-        return matchEvents
-            .stream().filter(match -> {
+        return tournament
+            .getCompetitions()
+            .stream().flatMap(competition -> competition.getMatches().stream())
+            .map(jUserMatchEvent::new)
+            .filter(match -> {
                 if (courts != null
                     && (match.getCourt() == null || !courts.contains(match.getCourt())))
                     return false;
