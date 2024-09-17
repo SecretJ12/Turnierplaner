@@ -33,7 +33,7 @@
 <script setup lang="ts">
 import { KnockoutMatch } from "@/interfaces/knockoutSystem"
 import { Mode } from "@/interfaces/competition"
-import ViewTeamNames from "@/components/views/player/ViewTeamNames.vue"
+import ViewTeamNames from "@/components/links/LinkTeamNames.vue"
 
 const props = defineProps<{
 	match: KnockoutMatch

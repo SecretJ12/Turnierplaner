@@ -16,6 +16,9 @@
 			:header="t('general.tournament')"
 			:show-filter-menu="false"
 		>
+			<template #body="{ data }">
+				<LinkTournament :tournament="data.tourName" />
+			</template>
 			<template #filter="{ filterModel, filterCallback }">
 				<InputText
 					v-model="filterModel.value"
@@ -33,6 +36,12 @@
 			:header="t('general.competition')"
 			:show-filter-menu="false"
 		>
+			<template #body="{ data }">
+				<LinkCompetition
+					:tournament="data.tourName"
+					:competition="data.compName"
+				/>
+			</template>
 			<template #filter="{ filterModel, filterCallback }">
 				<InputText
 					v-model="filterModel.value"
@@ -184,7 +193,9 @@ import { Team } from "@/interfaces/team"
 import { AnnotatedMatch } from "@/interfaces/match"
 import { getFilteredMatches } from "@/backend/match"
 import { useToast } from "primevue/usetoast"
-import ViewTeamNames from "@/components/views/player/ViewTeamNames.vue"
+import ViewTeamNames from "@/components/links/LinkTeamNames.vue"
+import LinkTournament from "@/components/links/LinkTournament.vue"
+import LinkCompetition from "@/components/links/LinkCompetition.vue"
 
 const route = useRoute()
 const { t } = useI18n({ inheritLocale: true })

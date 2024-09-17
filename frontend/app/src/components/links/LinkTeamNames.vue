@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 import { Team } from "@/interfaces/team"
-import ViewPlayerName from "@/components/views/player/ViewPlayerName.vue"
+import ViewPlayerName from "@/components/links/LinkPlayerName.vue"
 
 const props = withDefaults(
 	defineProps<{
