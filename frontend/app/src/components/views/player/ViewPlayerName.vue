@@ -21,6 +21,7 @@ const props = withDefaults(
 		inverted: boolean
 	}>(),
 	{
+		player: null,
 		inverted: false,
 	},
 )

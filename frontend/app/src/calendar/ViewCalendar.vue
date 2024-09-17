@@ -1,5 +1,6 @@
 <template>
 	<vue-cal
+		id="vuecal"
 		ref="vuecal"
 		:key="calid"
 		:events="events"
@@ -14,7 +15,6 @@
 		:split-days="props.splitDays"
 		sticky-split-labels
 		:min-event-width="props.minEventWidth"
-		:min-split-width="props.minSplitWidth"
 		:min-cell-width="props.minCellWidth"
 		:time-cell-height="props.timeCellHeight"
 		:snap-to-time="props.snapToTime"
@@ -77,7 +77,7 @@ const props = withDefaults(
 	}>(),
 	{
 		selectedDate: () => new Date(),
-		timeFrom: 8 * 60,
+		timeFrom: 0,
 		timeTo: 24 * 60,
 		snapToTime: 15,
 		timeStep: 15,
@@ -112,6 +112,13 @@ watch([vuecal, () => props.selectedDate], () => {
 	// needed to always trigger the onViewChange
 	vuecal.value.previous()
 	vuecal.value.switchView("day", props.selectedDate)
+
+	const calendar = document.querySelector("#vuecal .vuecal__bg")
+	if (calendar)
+		calendar.scrollTo({
+			top: (60 / props.timeStep) * 8 * props.timeCellHeight,
+			behavior: "smooth",
+		})
 })
 
 function previous() {
