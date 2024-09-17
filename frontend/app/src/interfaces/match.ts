@@ -44,6 +44,7 @@ export interface MatchServer {
 }
 
 export interface AnnotatedMatchServer extends MatchServer {
+	tourName: string
 	compName: string
 	type: CompType
 	number: number
@@ -58,6 +59,7 @@ export interface AnnotatedMatch extends Match {
 		number: number
 		total: number
 	}
+	tourName: string
 	compName: string
 }
 
@@ -81,6 +83,23 @@ export function matchServerToClient(match: MatchServer): Match {
 		teamB: teamB,
 		sets: sets,
 		curGame: null,
+	}
+}
+
+export function annotatedMatchServerToClient(
+	matchServer: AnnotatedMatchServer,
+): AnnotatedMatch {
+	const match = matchServerToClient(matchServer)
+	return {
+		tourName: matchServer.tourName,
+		compName: matchServer.compName,
+		title: {
+			type: matchServer.type,
+			number: matchServer.number,
+			isFinal: matchServer.isFinal,
+			total: matchServer.total,
+		},
+		...match,
 	}
 }
 

@@ -23,6 +23,15 @@ import java.util.UUID;
                            query = """
                                FROM Match m WHERE m.competition = :comp
                                AND NOT EXISTS (FROM MatchOfGroup mog WHERE mog.match = m)
+                               """),
+               @NamedQuery(name = "filterMatches",
+                           query = """
+                               FROM Match m WHERE (:tour IS NULL OR m.competition.tournament = :tour)
+                               AND (:comp IS NULL OR  m.competition = :comp)
+                               AND (:player IS NULL OR m.teamA.playerA = :player OR m.teamA.playerB = :player
+                                           OR m.teamB.playerA = :player OR m.teamB.playerB = :player)
+                               AND :from <= m.begin
+                               AND m.end <= :to
                                """)})
 public class Match {
     @Id

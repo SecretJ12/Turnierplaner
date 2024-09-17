@@ -12,6 +12,7 @@ import de.secretj12.turnierplaner.modifier.KnockoutTools;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorCompetitionAdd;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorCompetitionUpdate;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorGroupsDivision;
+import de.secretj12.turnierplaner.resources.jsonEntities.director.jDirectorScheduleMatch;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.competition.jUserCompetition;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.group.jUserGroupSystem;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayer;
@@ -54,6 +55,8 @@ public class CompetitionResource {
     MatchRepository matches;
     @Inject
     TeamRepository teams;
+    @Inject
+    CourtRepositiory courts;
 
     @Inject
     KnockoutTools knockoutTools;
@@ -525,5 +528,30 @@ public class CompetitionResource {
         Competition competition = competitions.getByName(tourName, compName);
         List<Group> groups = competition.getGroups();
         return new jDirectorGroupsDivision(groups.stream().map(g -> groupTools.teamsOfGroup(g)).toList());
+    }
+
+    @POST
+    @Path("/{compName}/match")
+    @Transactional
+    @RolesAllowed("director")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public String updateMatches(@PathParam("tourName") String tourName, @PathParam("compName") String compName,
+                                List<jDirectorScheduleMatch> matches) {
+        Competition competition = competitions.getByName(tourName, compName);
+        if (competition == null) throw new NotFoundException("Competition could not be found");
+
+        for (var cMatch : matches) {
+            Match match = this.matches.findById(cMatch.getId());
+            if (match == null)
+                throw new NotFoundException("Could not find match");
+            if (match.getCompetition().getId() != competition.getId())
+                throw new BadRequestException("Match does not belong to specified competition");
+            match.setCourt(courts.findByName(cMatch.getCourt()));
+            match.setBegin(cMatch.getBegin());
+            match.setEnd(cMatch.getEnd());
+
+            this.matches.persist(match);
+        }
+        return "Updated matches";
     }
 }
