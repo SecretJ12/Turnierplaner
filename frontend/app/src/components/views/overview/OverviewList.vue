@@ -139,11 +139,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-	genTitle,
-	getTournamentDetails,
-	getTournamentMatches,
-} from "@/backend/tournament"
+import { genTitle, getTournamentDetails } from "@/backend/tournament"
 import { useRoute } from "vue-router"
 import { useI18n } from "vue-i18n"
 import { useToast } from "primevue/usetoast"
@@ -153,6 +149,7 @@ import { FilterMatchMode, FilterService } from "primevue/api"
 import { DataTableFilterMeta } from "primevue/datatable"
 import { Team } from "@/interfaces/team"
 import { AnnotatedMatch } from "@/interfaces/match"
+import { getFilteredMatches } from "@/backend/match"
 
 const route = useRoute()
 const { t } = useI18n({ inheritLocale: true })
@@ -190,7 +187,7 @@ function titleFilter(
 	return titleValue.toLowerCase().includes(filterValue)
 }
 
-const { data: matches } = getTournamentMatches(
+const { data: matches } = getFilteredMatches(
 	route,
 	t,
 	computed(() => tournament.value?.game_phase.begin),

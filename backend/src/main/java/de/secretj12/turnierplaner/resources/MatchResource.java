@@ -1,25 +1,21 @@
 package de.secretj12.turnierplaner.resources;
 
 
-import de.secretj12.turnierplaner.db.entities.Match;
+import de.secretj12.turnierplaner.db.entities.Player;
 import de.secretj12.turnierplaner.db.entities.Tournament;
 import de.secretj12.turnierplaner.db.entities.competition.Competition;
-import de.secretj12.turnierplaner.db.repositories.CompetitionRepository;
-import de.secretj12.turnierplaner.db.repositories.CourtRepositiory;
-import de.secretj12.turnierplaner.db.repositories.MatchRepository;
-import de.secretj12.turnierplaner.db.repositories.TournamentRepository;
-import de.secretj12.turnierplaner.resources.jsonEntities.director.jDirectorScheduleMatch;
+import de.secretj12.turnierplaner.db.repositories.*;
+import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserMatchEvent;
 import io.quarkus.security.identity.SecurityIdentity;
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 
+import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 
-@RolesAllowed("director")
-@Path("/tournament/{tourName}/competition/{compName}/match")
+@Path("/matches")
 public class MatchResource {
 
     @Inject
@@ -27,38 +23,34 @@ public class MatchResource {
     @Inject
     CompetitionRepository competitions;
     @Inject
-    MatchRepository matchRepository;
+    MatchRepository matches;
     @Inject
-    CourtRepositiory courtRepositiory;
+    CourtRepositiory courts;
+    @Inject
+    PlayerRepository players;
     @Inject
     SecurityIdentity securityIdentity;
 
-    @POST
-    @Transactional
-    @Consumes(MediaType.APPLICATION_JSON)
-    public String updateMatches(@PathParam("tourName") String tourName, @PathParam("compName") String compName,
-                                List<jDirectorScheduleMatch> matches) {
-        checkTournamentAccessibility(tourName);
-        Competition competition = competitions.getByName(tourName, compName);
-        if (competition == null) throw new NotFoundException("Competition could not be found");
-
-        for (var cMatch : matches) {
-            Match match = matchRepository.findById(cMatch.getId());
-            if (match == null)
-                throw new NotFoundException("Could not find match");
-            if (match.getCompetition().getId() != competition.getId())
-                throw new BadRequestException("Match does not belong to specified competition");
-            match.setCourt(courtRepositiory.findByName(cMatch.getCourt()));
-            match.setBegin(cMatch.getBegin());
-            match.setEnd(cMatch.getEnd());
-
-            matchRepository.persist(match);
-        }
-        return "Updated matches";
-    }
-
-    private void checkTournamentAccessibility(String tourName) {
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<jUserMatchEvent> getMatches(
+                                            @QueryParam("tour") String tourName,
+                                            @QueryParam("comp") String compName,
+                                            @QueryParam("player") String playerId,
+                                            @QueryParam("from") String from,
+                                            @QueryParam("to") String to
+    ) {
         Tournament tournament = tournaments.getByName(tourName);
-        if (tournament == null) throw new NotFoundException("Tournament could not be found");
+        Competition competition = competitions.getByName(tourName, compName);
+        Player player = playerId == null ? null : players.getById(UUID.fromString(playerId));
+        Instant fromD = from == null ? Instant.MIN : Instant.parse(from);
+        Instant toD = to == null ? Instant.MAX : Instant.parse(to);
+
+        if (player == null && tournament == null)
+            throw new BadRequestException("Need to specify at least a tournament or a player");
+
+        return this.matches.filterMatches(tournament, competition, player, fromD, toD).stream()
+            .map(jUserMatchEvent::new)
+            .toList();
     }
 }

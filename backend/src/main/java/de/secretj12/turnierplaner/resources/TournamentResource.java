@@ -1,9 +1,7 @@
 package de.secretj12.turnierplaner.resources;
 
 import de.secretj12.turnierplaner.db.entities.Court;
-import de.secretj12.turnierplaner.db.entities.Match;
 import de.secretj12.turnierplaner.db.entities.Tournament;
-import de.secretj12.turnierplaner.db.entities.competition.Competition;
 import de.secretj12.turnierplaner.db.repositories.CourtRepositiory;
 import de.secretj12.turnierplaner.db.repositories.MatchRepository;
 import de.secretj12.turnierplaner.db.repositories.TournamentRepository;
@@ -23,7 +21,6 @@ import jakarta.ws.rs.core.Response;
 import org.jboss.resteasy.reactive.Separator;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -196,28 +193,6 @@ public class TournamentResource {
                 return true;
             })
             .toList();
-    }
-
-    private List<List<Match>> getMatchRounds(Competition competition) {
-        Match finale = competition.getFinale();
-        if (finale == null)
-            return List.of();
-
-        List<List<Match>> matchRounds = new ArrayList<>();
-        List<Match> queue = List.of(finale);
-        List<Match> newQueue = new ArrayList<>();
-        while (!queue.isEmpty()) {
-            matchRounds.add(queue);
-            for (Match match : queue) {
-                if (match.getDependentOn() != null) {
-                    newQueue.add(match.getDependentOn().getPreviousA());
-                    newQueue.add(match.getDependentOn().getPreviousB());
-                }
-            }
-            queue = newQueue;
-            newQueue = new ArrayList<>();
-        }
-        return matchRounds.reversed();
     }
 
     private void checkTournamentAccessibility(Tournament tournament) {

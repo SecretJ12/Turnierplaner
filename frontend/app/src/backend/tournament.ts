@@ -8,15 +8,11 @@ import {
 import { ToastServiceMethods } from "primevue/toastservice"
 import { RouteLocationNormalizedLoaded } from "vue-router"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query"
-import { Court } from "@/interfaces/court"
-import {
-	AnnotatedMatch,
-	AnnotatedMatchServer,
-	matchServerToClient,
-} from "@/interfaces/match"
+import { AnnotatedMatch } from "@/interfaces/match"
 import { CompType } from "@/interfaces/competition"
 import { knockoutTitle } from "@/components/views/competition/knockoutSystem/KnockoutTitleGenerator"
 import { v4 as uuidv4 } from "uuid"
+import { getFilteredMatches } from "@/backend/match"
 
 export function getTournamentList(
 	isLoggedIn: Ref<boolean>,
@@ -156,64 +152,13 @@ export function useAddTournament(
 	})
 }
 
-export function getTournamentMatches(
-	route: RouteLocationNormalizedLoaded,
-	t: (_: string) => string,
-	from: Ref<Date | undefined>,
-	to: Ref<Date | undefined>,
-	courts: Ref<Court[] | undefined>,
-) {
-	return useQuery({
-		enabled: computed(() => !!from.value && !!to.value && !!courts.value),
-		queryKey: [
-			"tournamentMatches",
-			computed(() => route.params.tourId),
-			computed(() => route.params.compId),
-			from,
-			to,
-			computed(() => courts.value?.map((court) => court.name)),
-		],
-		queryFn: () => {
-			if (!from.value || !to.value || !courts.value) return []
-			return axios
-				.get(`/tournament/${route.params.tourId}/matches`, {
-					params: {
-						from: from.value,
-						to: to.value,
-						courts:
-							courts.value.length > 0
-								? courts.value.map((c) => c.name).join(",")
-								: undefined,
-					},
-				})
-				.then<AnnotatedMatchServer[]>((data) => data.data)
-				.then<AnnotatedMatch[]>((matches) => {
-					return matches.map((matchServer) => {
-						const match = matchServerToClient(matchServer)
-						return {
-							compName: matchServer.compName,
-							title: {
-								type: matchServer.type,
-								number: matchServer.number,
-								isFinal: matchServer.isFinal,
-								total: matchServer.total,
-							},
-							...match,
-						}
-					})
-				})
-		},
-	})
-}
-
 export function getTournamentMatchEvents(
 	route: RouteLocationNormalizedLoaded,
 	t: (_: string) => string,
 	from: Ref<Date | undefined>,
 	to: Ref<Date | undefined>,
-	courts: Ref<Court[] | undefined>,
 ) {
-	const matches = getTournamentMatches(route, t, from, to, courts)
+	const matches = getFilteredMatches(route, t, from, to)
 
 	return {
 		...matches,
