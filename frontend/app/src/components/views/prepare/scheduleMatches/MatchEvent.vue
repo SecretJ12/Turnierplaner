@@ -2,7 +2,10 @@
 	<div class="w-full flex flex-column p-1 text-left">
 		<strong>{{ genTitle(props.match.title, t) }}</strong>
 		<i>
-			{{ props.match.compName }}
+			<LinkCompetition
+				:tournament="props.match.tourName"
+				:competition="props.match.compName"
+			/>
 		</i>
 		<ul class="mt-1 pt-0 pl-4">
 			<li v-if="props.match.teamA">
@@ -24,7 +27,8 @@ import { Competition } from "@/interfaces/competition"
 import { AnnotatedMatch } from "@/interfaces/match"
 import { genTitle } from "@/backend/tournament"
 import { useI18n } from "vue-i18n"
-import ViewTeamNames from "@/components/views/player/ViewTeamNames.vue"
+import ViewTeamNames from "@/components/links/LinkTeamNames.vue"
+import LinkCompetition from "@/components/links/LinkCompetition.vue"
 
 const { t } = useI18n({ inheritLocale: true })
 

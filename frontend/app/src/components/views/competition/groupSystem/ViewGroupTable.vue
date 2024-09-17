@@ -65,7 +65,7 @@ import { useI18n } from "vue-i18n"
 import ViewMatch from "@/components/views/competition/groupSystem/ViewMatch.vue"
 import { Match } from "@/interfaces/match"
 import { Team } from "@/interfaces/team"
-import ViewTeamNames from "@/components/views/player/ViewTeamNames.vue"
+import ViewTeamNames from "@/components/links/LinkTeamNames.vue"
 
 const { t } = useI18n({ inheritLocale: true })
 

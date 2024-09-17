@@ -171,7 +171,7 @@ import { useToast } from "primevue/usetoast"
 import { getCanEdit } from "@/backend/security"
 import { getCompetitionDetails } from "@/backend/competition"
 import { getSignedUpSepByComp } from "@/backend/signup"
-import ViewPlayerName from "@/components/views/player/ViewPlayerName.vue"
+import ViewPlayerName from "@/components/links/LinkPlayerName.vue"
 
 const { t } = useI18n({ inheritLocale: true })
 const toast = useToast()
