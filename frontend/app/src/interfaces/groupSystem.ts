@@ -1,5 +1,6 @@
 import { Match, MatchServer, matchServerToClient } from "@/interfaces/match"
 import { KnockoutMatch } from "@/interfaces/knockoutSystem"
+import { Team } from "@/interfaces/team"
 
 export interface GroupSystem {
 	groups: Group[]
@@ -9,6 +10,7 @@ export interface GroupSystem {
 
 export interface Group {
 	index: number
+	teams: Team[]
 	matches: Match[]
 }
 
@@ -54,10 +56,24 @@ export function groupSystemServerToClient(
 	}
 }
 
+function uniqueBy<T>(arr: T[], compareFn: (a: T, b: T) => boolean): T[] {
+	return arr.filter(
+		(item, index, self) =>
+			index === self.findIndex((other) => compareFn(item, other)),
+	)
+}
+
 function groupServerToClient(group: GroupServer): Group {
+	const matches = group.matches.map((match) => matchServerToClient(match))
+	const teams: Team[] = []
+	matches.filter((m) => {
+		if (m.teamA) teams.push(m.teamA)
+		if (m.teamB) teams.push(m.teamB)
+	})
 	return {
 		index: group.index,
-		matches: group.matches.map((match) => matchServerToClient(match)),
+		matches,
+		teams: uniqueBy(teams, (t1, t2) => t1.id === t2.id),
 	}
 }
 

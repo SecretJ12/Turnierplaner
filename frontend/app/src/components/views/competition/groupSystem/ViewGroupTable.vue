@@ -15,18 +15,24 @@
 					@mouseover="headerHover(team.id)"
 					@mouseleave="hoverLeave()"
 				>
-					{{ team.playerA.lastName }}, {{ team.playerA.firstName }}
+					<ViewPlayerName :player="team.playerA" :inverted="true" />
+					<template v-if="team.playerB">
+						<ViewPlayerName :player="team.playerB" :inverted="true" />
+					</template>
 				</th>
 			</template>
 		</tr>
-		<template v-for="(teamA, indexA) in props.group.teams" :key="indexA">
-			<tr v-if="indexA !== props.group.teams.length - 1">
+		<template v-for="(team, index) in props.group.teams" :key="index">
+			<tr v-if="index !== props.group.teams.length - 1">
 				<th
-					:class="hoverIdA === indexA ? 'highlight ' : ''"
-					@mouseover="headerHover(teamA.id)"
+					:class="hoverIdA === index ? 'highlight ' : ''"
+					@mouseover="headerHover(team.id)"
 					@mouseleave="hoverLeave()"
 				>
-					{{ teamA.playerA.lastName }}, {{ teamA.playerA.firstName }}
+					<ViewPlayerName :player="team.playerA" :inverted="true" />
+					<template v-if="team.playerB">
+						<ViewPlayerName :player="team.playerB" :inverted="true" />
+					</template>
 				</th>
 				<template
 					v-for="(teamB, indexB) in props.group.teams.slice().reverse()"
@@ -35,19 +41,21 @@
 					<td
 						v-if="
 							indexB !== props.group.teams.length - 1 &&
-							indexA + indexB < props.group.teams.length - 1
+							index + indexB < props.group.teams.length - 1
 						"
 						:class="{
 							highlightLow:
-								(hoverIdA === indexA && indexB < hoverIdB) ||
-								(hoverIdB === indexB && indexA < hoverIdA),
-							highlight: hoverTeam === teamA.id || hoverTeam === teamB.id,
+								hoverIdA &&
+								hoverIdB &&
+								((hoverIdA === index && indexB < hoverIdB) ||
+									(hoverIdB === indexB && index < hoverIdA)),
+							highlight: hoverTeam === team.id || hoverTeam === teamB.id,
 						}"
-						@mouseover="matchHover(indexA, indexB)"
+						@mouseover="matchHover(index, indexB)"
 						@mouseleave="hoverLeave()"
 					>
 						<div>
-							<ViewMatch :match="findMatch(teamA, teamB)" />
+							<ViewMatch :match="findMatch(team, teamB)" />
 						</div>
 					</td>
 				</template>
@@ -63,6 +71,7 @@ import { useI18n } from "vue-i18n"
 import ViewMatch from "@/components/views/competition/groupSystem/ViewMatch.vue"
 import { Match } from "@/interfaces/match"
 import { Team } from "@/interfaces/team"
+import ViewPlayerName from "@/components/views/player/ViewPlayerName.vue"
 
 const { t } = useI18n({ inheritLocale: true })
 
@@ -92,8 +101,8 @@ function matchHover(indexA: number, indexB: number) {
 	hoverIdB.value = indexB
 }
 
-function headerHover(team: string) {
-	hoverTeam.value = team
+function headerHover(team: string | undefined) {
+	hoverTeam.value = team || ""
 }
 
 function hoverLeave() {

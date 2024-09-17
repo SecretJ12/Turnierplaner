@@ -7,19 +7,19 @@
 		<ul class="mt-1 pt-0 pl-4">
 			<li v-if="props.match.teamA">
 				<template v-if="props.match.teamA.playerA">
-					{{ props.match.teamA.playerA.name }}
+					<ViewPlayerName :player="props.match.teamA.playerA" />
 					<template v-if="props.match.teamA.playerB">
 						<br />
-						{{ props.match.teamA.playerB.name }}
+						<ViewPlayerName :player="props.match.teamA.playerB" />
 					</template>
 				</template>
 			</li>
 			<li v-if="props.match.teamB">
 				<template v-if="props.match.teamB.playerA">
-					{{ props.match.teamB.playerA.name }}
+					<ViewPlayerName :player="props.match.teamB.playerA" />
 					<template v-if="props.match.teamB.playerB">
 						<br />
-						{{ props.match.teamB.playerB.name }}
+						<ViewPlayerName :player="props.match.teamB.playerB" />
 					</template>
 				</template>
 			</li>
@@ -32,6 +32,7 @@ import { Competition } from "@/interfaces/competition"
 import { AnnotatedMatch } from "@/interfaces/match"
 import { genTitle } from "@/backend/tournament"
 import { useI18n } from "vue-i18n"
+import ViewPlayerName from "@/components/views/player/ViewPlayerName.vue"
 
 const { t } = useI18n({ inheritLocale: true })
 

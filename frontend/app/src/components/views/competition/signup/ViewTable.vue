@@ -12,10 +12,7 @@
 			<Column :header="t('general.name')" field="name" sortable>
 				<template #body="{ data }">
 					<div class="flex justify-content-between align-items-center">
-						{{
-							// @ts-ignore
-							data.name
-						}}
+						<ViewPlayerName :player="<Player>data" />
 						<Button
 							v-if="canEdit"
 							severity="danger"
@@ -46,7 +43,11 @@
 				sortable
 				field="playerA.name"
 				style="width: 50%"
-			/>
+			>
+				<template #body="{ data }">
+					<ViewPlayerName :player="<Player>data.playerA" />
+				</template>
+			</Column>
 			<Column
 				:header="t('ViewCompetition.playerB')"
 				sortable
@@ -55,10 +56,7 @@
 			>
 				<template #body="{ data }">
 					<div class="flex justify-content-between align-items-center">
-						{{
-							// @ts-ignore
-							data.playerB.name
-						}}
+						<ViewPlayerName :player="<Player>data.playerB" />
 						<Button
 							v-if="canEdit"
 							severity="danger"
@@ -86,10 +84,7 @@
 			<Column :header="t('general.name')" sortable field="name">
 				<template #body="{ data }">
 					<div class="flex justify-content-between align-items-center">
-						{{
-							// @ts-ignore
-							data.name
-						}}
+						<ViewPlayerName :player="<Player>data" />
 						<Button
 							v-if="canEdit"
 							severity="danger"
@@ -119,10 +114,7 @@
 				<Column :header="t('ViewCompetition.playerA')" sortable field="name">
 					<template #body="{ data }">
 						<div class="flex justify-content-between align-items-center">
-							{{
-								// @ts-ignore
-								data.name
-							}}
+							<ViewPlayerName :player="<Player>data" />
 							<Button
 								v-if="canEdit"
 								severity="danger"
@@ -149,10 +141,7 @@
 				<Column :header="t('ViewCompetition.playerB')" sortable field="name">
 					<template #body="{ data }">
 						<div class="flex justify-content-between align-items-center">
-							{{
-								// @ts-ignore
-								data.name
-							}}
+							<ViewPlayerName :player="<Player>data" />
 							<Button
 								v-if="canEdit"
 								severity="danger"
@@ -182,6 +171,7 @@ import { useToast } from "primevue/usetoast"
 import { getCanEdit } from "@/backend/security"
 import { getCompetitionDetails } from "@/backend/competition"
 import { getSignedUpSepByComp } from "@/backend/signup"
+import ViewPlayerName from "@/components/views/player/ViewPlayerName.vue"
 
 const { t } = useI18n({ inheritLocale: true })
 const toast = useToast()
