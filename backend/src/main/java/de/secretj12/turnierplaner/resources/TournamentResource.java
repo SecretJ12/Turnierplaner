@@ -98,7 +98,6 @@ public class TournamentResource {
 
     @GET
     @Path("/{tourName}/courts")
-    @RolesAllowed("director")
     @Produces(MediaType.APPLICATION_JSON)
     public Set<jUserCourt> getCourts(@PathParam("tourName") String tourName) {
         Tournament tournament = tournaments.getByName(tourName);

@@ -35,7 +35,7 @@ function add() {
 	if (name.value && type.value)
 		addCourt({
 			name: name.value,
-			type: type.value,
+			courtType: type.value,
 		})
 	else
 		toast.add({
