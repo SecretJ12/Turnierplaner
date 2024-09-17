@@ -3,7 +3,7 @@
 		v-model:filters="filters"
 		data-key="id"
 		resizable-columns
-		:loading="!tournament"
+		:loading="!matches"
 		:value="matches"
 		filter-display="row"
 		:global-filter-fields="['title']"
@@ -11,21 +11,19 @@
 		<template #empty> No matches found.</template>
 		<template #loading> Loading matches...</template>
 		<Column
+			v-if="!route.params.tourId"
 			sortable
-			field="title"
-			:header="t('general.title')"
+			field="tourName"
+			:header="t('general.tournament')"
 			:show-filter-menu="false"
 		>
-			<template #body="{ data }">
-				{{ genTitle(data.title, t) }}
-			</template>
 			<template #filter="{ filterModel, filterCallback }">
 				<InputText
 					v-model="filterModel.value"
 					size="small"
 					type="text"
 					class="p-column-filter"
-					placeholder="Search by name"
+					:placeholder="t('general.filter_by_name')"
 					@input="filterCallback()"
 				/>
 			</template>
@@ -42,7 +40,27 @@
 					size="small"
 					type="text"
 					class="p-column-filter"
-					placeholder="Search by name"
+					:placeholder="t('general.filter_by_name')"
+					@input="filterCallback()"
+				/>
+			</template>
+		</Column>
+		<Column
+			sortable
+			field="title"
+			:header="t('general.title')"
+			:show-filter-menu="false"
+		>
+			<template #body="{ data }">
+				{{ genTitle(data.title, t) }}
+			</template>
+			<template #filter="{ filterModel, filterCallback }">
+				<InputText
+					v-model="filterModel.value"
+					size="small"
+					type="text"
+					class="p-column-filter"
+					:placeholder="t('general.filter_by_name')"
 					@input="filterCallback()"
 				/>
 			</template>
@@ -57,7 +75,7 @@
 				<MultiSelect
 					v-model="filterModel.value"
 					:options="courts?.map((court) => court.name) || []"
-					placeholder="Any"
+					:placeholder="t('general.any')"
 					class="p-column-filter"
 					style="min-width: 14rem"
 					:max-selected-labels="3"
@@ -104,7 +122,7 @@
 					size="small"
 					type="text"
 					class="p-column-filter"
-					placeholder="Search by name"
+					:placeholder="t('general.filter_by_name')"
 					@input="filterCallback()"
 				/>
 			</template>
@@ -128,7 +146,7 @@
 					size="small"
 					type="text"
 					class="p-column-filter"
-					placeholder="Search by name"
+					:placeholder="t('general.filter_by_name')"
 					@input="filterCallback()"
 				/>
 			</template>
@@ -139,11 +157,10 @@
 </template>
 
 <script setup lang="ts">
-import { genTitle, getTournamentDetails } from "@/backend/tournament"
+import { genTitle } from "@/backend/tournament"
 import { useRoute } from "vue-router"
 import { useI18n } from "vue-i18n"
-import { useToast } from "primevue/usetoast"
-import { computed, ref } from "vue"
+import { ref } from "vue"
 import { getTournamentCourts } from "@/backend/court"
 import { FilterMatchMode, FilterService } from "primevue/api"
 import { DataTableFilterMeta } from "primevue/datatable"
@@ -153,8 +170,6 @@ import { getFilteredMatches } from "@/backend/match"
 
 const route = useRoute()
 const { t } = useI18n({ inheritLocale: true })
-const toast = useToast()
-const { data: tournament } = getTournamentDetails(route, t, toast)
 const { data: courts } = getTournamentCourts(route)
 
 const TEAMS_FILTER = "TEAMS_FILTER"
@@ -164,8 +179,9 @@ FilterService.register(TEAMS_FILTER, teamFilter)
 FilterService.register(TITLE_FILTER, titleFilter)
 
 const filters = ref<DataTableFilterMeta>({
-	title: { value: null, matchMode: TITLE_FILTER },
+	tourName: { value: null, matchMode: FilterMatchMode.CONTAINS },
 	compName: { value: null, matchMode: FilterMatchMode.CONTAINS },
+	title: { value: null, matchMode: TITLE_FILTER },
 	court: { value: null, matchMode: FilterMatchMode.IN },
 	begin: { value: null, matchMode: FilterMatchMode.DATE_AFTER },
 	teamA: { value: null, matchMode: TEAMS_FILTER },
@@ -190,9 +206,8 @@ function titleFilter(
 const { data: matches } = getFilteredMatches(
 	route,
 	t,
-	computed(() => tournament.value?.game_phase.begin),
-	computed(() => tournament.value?.game_phase.end),
-	courts,
+	ref(undefined),
+	ref(undefined),
 )
 
 const dateOptions: Intl.DateTimeFormatOptions = {

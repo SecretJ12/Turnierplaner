@@ -28,13 +28,16 @@
 		"calendar": "Kalender",
 		"list": "Liste",
 		"title": "Titel",
+		"tournament": "Turnier",
 		"competition": "Konkurrenz",
 		"court": "Platz",
 		"begin": "Beginn",
 		"team": "Team",
 		"result": "Ergebnis",
 		"options": "Optionen",
-		"courts": "Plätze"
+		"courts": "Plätze",
+		"any": "Beliebig",
+		"filter_by_name": "Nach Name filtern"
 	},
 	"ViewPlayerRegistration": {
 		"headline": "Spielerregistrierung",

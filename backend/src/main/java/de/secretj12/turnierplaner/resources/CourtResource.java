@@ -12,7 +12,6 @@ import jakarta.ws.rs.core.Response;
 import java.util.List;
 
 @Path("/court")
-@RolesAllowed("director")
 public class CourtResource {
 
     @Inject
@@ -25,6 +24,7 @@ public class CourtResource {
 
     @PUT
     @Transactional
+    @RolesAllowed("director")
     public String create(jUserCourt court) {
         Court exCourt = courtRepositiory.findByName(court.getName());
         if (exCourt != null)
@@ -40,6 +40,7 @@ public class CourtResource {
 
     @POST
     @Transactional
+    @RolesAllowed("director")
     public String update(jUserCourt court) {
         Court exCourt = courtRepositiory.findByName(court.getName());
         if (exCourt == null)
@@ -58,6 +59,7 @@ public class CourtResource {
     @DELETE
     @Path("/{name}")
     @Transactional
+    @RolesAllowed("director")
     public String delete(@PathParam("name") String courtName) {
         Court exCourt = courtRepositiory.findByName(courtName);
         if (exCourt == null)

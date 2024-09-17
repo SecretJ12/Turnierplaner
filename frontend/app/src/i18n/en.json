@@ -29,12 +29,15 @@
 		"calendar": "Calendar",
 		"list": "List",
 		"title": "Title",
+		"tournament": "Tournament",
 		"competition": "Competition",
 		"court": "Court",
 		"begin": "Begin",
 		"team": "Team",
 		"result": "Result",
-		"courts": "Courts"
+		"courts": "Courts",
+		"any": "Any",
+		"filter_by_name": "Filter by name"
 	},
 	"ViewPlayerRegistration": {
 		"headline": "Player Registration",
