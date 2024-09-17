@@ -74,6 +74,7 @@ function create() {
 		sortable.value = null
 	}
 
+	let offsetY = 0
 	sortable.value = Sortable.create(el, {
 		group: { name: props.group, pull: props.pull, put: props.put },
 		animation: props.animation,
@@ -82,10 +83,15 @@ function create() {
 		revertOnSpill: true,
 		setData(dataTransfer) {
 			dataTransfer.setData("event", JSON.stringify({ data: selectedElement }))
+			dataTransfer.setData("cursor-grab-at", offsetY.toString())
 		},
 		onChoose: (event: Sortable.SortableEvent) => {
 			if (event.oldIndex === undefined) return
 			selectedElement = props.list[event.oldIndex]
+			if (event.originalEvent) {
+				offsetY =
+					event.originalEvent.clientY - event.target.getBoundingClientRect().top
+			}
 		},
 		onRemove: (event: Sortable.SortableEvent) => {
 			if (event.oldIndex === undefined) return
