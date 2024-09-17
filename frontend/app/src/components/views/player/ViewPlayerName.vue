@@ -18,7 +18,7 @@ import { router } from "@/main"
 const props = withDefaults(
 	defineProps<{
 		player?: Player | null
-		inverted: boolean
+		inverted?: boolean
 	}>(),
 	{
 		player: null,

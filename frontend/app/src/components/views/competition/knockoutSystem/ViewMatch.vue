@@ -7,14 +7,7 @@
 	>
 		<tr :class="{ winner: props.match.finished && !props.match.winner }">
 			<td class="name">
-				<ViewPlayerName :player="props.match.teamA?.playerA" :inverted="true" />
-				<template v-if="props.mode === Mode.DOUBLE">
-					<br />
-					<ViewPlayerName
-						:player="props.match.teamA?.playerB"
-						:inverted="true"
-					/>
-				</template>
+				<ViewTeamNames :team="props.match.teamA" :inverted="true" />
 			</td>
 
 			<template v-if="props.match.sets !== null">
@@ -25,14 +18,7 @@
 		</tr>
 		<tr :class="{ winner: props.match.finished && props.match.winner }">
 			<td class="name">
-				<ViewPlayerName :player="props.match.teamB?.playerA" :inverted="true" />
-				<template v-if="props.mode === Mode.DOUBLE">
-					<br />
-					<ViewPlayerName
-						:player="props.match.teamB?.playerB"
-						:inverted="true"
-					/>
-				</template>
+				<ViewTeamNames :team="props.match.teamB" :inverted="true" />
 			</td>
 
 			<template v-if="props.match.sets !== null">
@@ -47,7 +33,7 @@
 <script setup lang="ts">
 import { KnockoutMatch } from "@/interfaces/knockoutSystem"
 import { Mode } from "@/interfaces/competition"
-import ViewPlayerName from "@/components/views/player/ViewPlayerName.vue"
+import ViewTeamNames from "@/components/views/player/ViewTeamNames.vue"
 
 const props = defineProps<{
 	match: KnockoutMatch

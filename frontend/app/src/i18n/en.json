@@ -37,7 +37,9 @@
 		"result": "Result",
 		"courts": "Courts",
 		"any": "Any",
-		"filter_by_name": "Filter by name"
+		"filter_by_name": "Filter by name",
+		"from": "From",
+		"to": "To"
 	},
 	"ViewPlayerRegistration": {
 		"headline": "Player Registration",

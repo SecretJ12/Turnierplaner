@@ -15,10 +15,7 @@
 					@mouseover="headerHover(team.id)"
 					@mouseleave="hoverLeave()"
 				>
-					<ViewPlayerName :player="team.playerA" :inverted="true" />
-					<template v-if="team.playerB">
-						<ViewPlayerName :player="team.playerB" :inverted="true" />
-					</template>
+					<ViewTeamNames :team="team" :inverted="true" />
 				</th>
 			</template>
 		</tr>
@@ -29,10 +26,7 @@
 					@mouseover="headerHover(team.id)"
 					@mouseleave="hoverLeave()"
 				>
-					<ViewPlayerName :player="team.playerA" :inverted="true" />
-					<template v-if="team.playerB">
-						<ViewPlayerName :player="team.playerB" :inverted="true" />
-					</template>
+					<ViewTeamNames :team="team" :inverted="true" />
 				</th>
 				<template
 					v-for="(teamB, indexB) in props.group.teams.slice().reverse()"
@@ -71,7 +65,7 @@ import { useI18n } from "vue-i18n"
 import ViewMatch from "@/components/views/competition/groupSystem/ViewMatch.vue"
 import { Match } from "@/interfaces/match"
 import { Team } from "@/interfaces/team"
-import ViewPlayerName from "@/components/views/player/ViewPlayerName.vue"
+import ViewTeamNames from "@/components/views/player/ViewTeamNames.vue"
 
 const { t } = useI18n({ inheritLocale: true })
 
