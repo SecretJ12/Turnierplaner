@@ -60,13 +60,11 @@ export function getFilteredMatches(
 			from,
 			to,
 		],
-		queryFn: () => {
-			if (!from.value || !to.value) return []
+		queryFn: async () => {
 			return axios
 				.get(`matches`, {
 					params: {
 						tour: route.params.tourId,
-						comp: route.params.compId,
 						player: route.params.playerId,
 						from: from.value,
 						to: to.value,
@@ -77,5 +75,6 @@ export function getFilteredMatches(
 					return matches.map(annotatedMatchServerToClient)
 				})
 		},
+		placeholderData: (data) => data,
 	})
 }

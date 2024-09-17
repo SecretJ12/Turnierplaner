@@ -37,13 +37,32 @@ public class MatchRepository implements PanacheRepository<Match> {
     public List<Match> filterMatches(Tournament tournament, Competition competition,
                                      Player player,
                                      Instant from, Instant to) {
-        return find("#filterMatches",
-            Parameters
-                .with("tour", tournament)
-                .and("comp", competition)
-                .and("player", player)
-                .and("from", from)
-                .and("to", to)
-        ).list();
+        StringBuilder query = new StringBuilder("FROM Match m WHERE TRUE");
+        Parameters pars = new Parameters();
+        if (tournament != null) {
+            query.append(" AND m.competition.tournament = :tour");
+            pars.and("tour", tournament);
+        }
+        if (competition != null) {
+            query.append(" AND m.competition = :comp");
+            pars.and("comp", competition);
+        }
+
+        if (player != null) {
+            query.append(" AND (m.teamA.playerA = :player OR m.teamA.playerB = :player");
+            query.append(" OR m.teamB.playerA = :player OR m.teamB.playerB = :player)");
+            pars.and("player", player);
+        }
+
+        if (from != null) {
+            query.append(" AND :from <= m.begin");
+            pars.and("from", from);
+        }
+        if (to != null) {
+            query.append(" AND m.end <= :to");
+            pars.and("to", to);
+        }
+
+        return find(query.toString(), pars).stream().toList();
     }
 }

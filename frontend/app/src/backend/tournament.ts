@@ -47,6 +47,7 @@ export function getTournamentDetails(
 	toast: ToastServiceMethods,
 ) {
 	return useQuery({
+		enabled: computed(() => !!route.params.tourId),
 		queryKey: ["tournament", computed(() => route.params.tourId)],
 		queryFn: async () => {
 			return axios
