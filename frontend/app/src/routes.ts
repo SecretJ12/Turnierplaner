@@ -1,11 +1,9 @@
-import viewTournaments from "@/components/views/tournaments/ViewTournaments.vue"
-import viewCompetition from "@/components/views/competition/ViewCompetition.vue"
-
 export default [
 	{
 		path: "/",
 		name: "Tournaments",
-		component: viewTournaments,
+		component: () =>
+			import("@/components/views/tournaments/ViewTournaments.vue"),
 	},
 	{
 		path: "/createTournament",
@@ -40,7 +38,8 @@ export default [
 	{
 		path: "/tournament/:tourId/competition/:compId",
 		name: "Competition",
-		component: viewCompetition,
+		component: () =>
+			import("@/components/views/competition/ViewCompetition.vue"),
 	},
 	{
 		path: "/tournament/:tourId/prepare/:compId?",
