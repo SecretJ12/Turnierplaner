@@ -144,11 +144,6 @@ public class TestCourtResource {
     @Test
     public void unauthorized() {
         given()
-            .get("/court")
-            .then().assertThat()
-            .statusCode(Response.Status.UNAUTHORIZED.getStatusCode());
-
-        given()
             .contentType(ContentType.JSON)
             .body("""
                 {

@@ -472,7 +472,6 @@ public class TestTournamentResource {
     }
 
     @Test
-    @TestSecurity(user = "testUser", roles = {"director"})
     public void getCourts() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
         Panache.getTransactionManager().begin();
         Tournament tournament = tournaments.getByName("Clubmeisterschaft");
@@ -490,19 +489,10 @@ public class TestTournamentResource {
     }
 
     @Test
-    @TestSecurity(user = "testUser", roles = {"director"})
     public void getCourtsUnknownTour() {
         given()
             .get("/tournament/Random Clubmeisterschaft/courts")
             .then().assertThat()
             .statusCode(Response.Status.NOT_FOUND.getStatusCode());
-    }
-
-    @Test
-    public void getCourtsUnauthorized() {
-        given()
-            .get("/tournament/Clubmeisterschaft/courts")
-            .then().assertThat()
-            .statusCode(Response.Status.UNAUTHORIZED.getStatusCode());
     }
 }
