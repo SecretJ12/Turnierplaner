@@ -27,7 +27,7 @@ import "primeicons/primeicons.css"
 import "./style.css"
 
 /* Icons */
-import "material-symbols"
+import "material-symbols/outlined.css"
 
 /* yup validation */
 import { setLocale } from "yup"
