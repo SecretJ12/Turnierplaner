@@ -4,7 +4,7 @@
 			<span
 				v-if="canEdit"
 				id="settings"
-				class="material-icons cursor-pointer"
+				class="material-symbols-outlined cursor-pointer"
 				style="font-size: 1.7rem"
 				@click="settings"
 				>settings</span

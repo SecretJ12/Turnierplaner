@@ -12,9 +12,12 @@
 							@click="randomize"
 						>
 							<template #icon>
-								<span class="material-icons mb-1" style="font-size: 1.2rem"
-									>casino</span
+								<span
+									class="material-symbols-outlined symbols-prep"
+									style="font-size: 1.2rem"
 								>
+									casino
+								</span>
 							</template>
 						</SplitButton>
 					</div>

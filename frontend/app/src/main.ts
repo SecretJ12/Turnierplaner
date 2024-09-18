@@ -27,7 +27,6 @@ import "primeicons/primeicons.css"
 import "./style.css"
 
 /* Icons */
-import "material-icons/iconfont/material-icons.css"
 import "material-symbols"
 
 /* yup validation */

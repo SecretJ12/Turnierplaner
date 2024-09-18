@@ -37,7 +37,7 @@
 				@click.stop
 			>
 				<template #icon>
-					<span class="material-icons">settings</span>
+					<span class="material-symbols-outlined">settings</span>
 				</template>
 			</Button>
 		</template>
