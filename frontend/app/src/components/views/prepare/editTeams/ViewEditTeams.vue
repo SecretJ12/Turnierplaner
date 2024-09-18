@@ -41,7 +41,9 @@
 					@click="randomize"
 				>
 					<template #icon>
-						<span class="material-icons mb-1" style="font-size: 1.2rem"
+						<span
+							class="material-symbols-outlined mb-1 symbols-prep"
+							style="font-size: 1.2rem"
 							>casino</span
 						>
 					</template>

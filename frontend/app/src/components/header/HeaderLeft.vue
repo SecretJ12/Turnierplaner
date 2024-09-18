@@ -1,7 +1,7 @@
 <template>
 	<div id="header" class="flex flex-row pl-3 align-items-center gap-3">
 		<span
-			class="material-icons cursor-pointer"
+			class="material-symbols-outlined cursor-pointer"
 			style="font-size: 3rem"
 			@click="toHome"
 			>sports_tennis</span

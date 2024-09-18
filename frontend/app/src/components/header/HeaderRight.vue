@@ -4,13 +4,13 @@
 
 		<span
 			v-if="!isLoggedIn"
-			class="material-icons clickable bigger"
+			class="material-symbols-outlined clickable bigger"
 			@click="login"
 			>login</span
 		>
 		<template v-else>
 			<span v-if="windowWidth > 600">{{ currentUser }}</span>
-			<span class="material-icons clickable bigger" @click="logout"
+			<span class="material-symbols-outlined clickable bigger" @click="logout"
 				>logout</span
 			>
 		</template>
