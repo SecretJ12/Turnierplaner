@@ -7,6 +7,11 @@ import de.secretj12.turnierplaner.db.entities.groups.MatchOfGroup;
 import de.secretj12.turnierplaner.db.entities.knockout.NextMatch;
 import io.smallrye.common.constraint.NotNull;
 import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.Table;
+import org.hibernate.annotations.*;
 
 import java.time.Instant;
 import java.util.Collection;
@@ -31,10 +36,11 @@ public class Match {
     private UUID id;
 
     @NotNull
-    @ManyToOne
+    @Fetch(FetchMode.SELECT)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "competition_id")
     private Competition competition;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "court")
     private Court court;
 
@@ -48,29 +54,34 @@ public class Match {
     @Column(name = "winner")
     private Boolean winner;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_a")
     private Team teamA;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_b")
     private Team teamB;
 
     @Column(name = "number")
     private int number;
 
-    @OneToOne(mappedBy = "nextMatch", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SELECT)
+    @OneToOne(mappedBy = "nextMatch", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private NextMatch dependentOn;
 
-    @OneToMany(mappedBy = "previousA", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SELECT)
+    @OneToMany(mappedBy = "previousA", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Collection<NextMatch> previousOfA;
 
-    @OneToMany(mappedBy = "previousB", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SELECT)
+    @OneToMany(mappedBy = "previousB", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Collection<NextMatch> previousOfB;
 
-    @OneToOne(mappedBy = "nextMatch", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SELECT)
+    @OneToOne(mappedBy = "nextMatch", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private FinalOfGroup finalOfGroup;
 
-    @OneToOne(mappedBy = "match", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SELECT)
+    @OneToOne(mappedBy = "match", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private MatchOfGroup group;
 
     @OneToMany(mappedBy = "key.match", cascade = CascadeType.REMOVE, orphanRemoval = true)
