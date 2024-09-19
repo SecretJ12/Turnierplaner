@@ -21,10 +21,10 @@ public class FinalOfGroup {
     @JoinColumn(name = "next_match", referencedColumnName = "id", nullable = false)
     private Match nextMatch;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_a", referencedColumnName = "id", nullable = false)
     private Group groupA;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_b", referencedColumnName = "id", nullable = false)
     private Group groupB;
 
