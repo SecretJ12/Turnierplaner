@@ -34,6 +34,9 @@ public class GroupTools {
 
     // TODO please add tests for me
     public void generateMatches(Competition competition, List<Set<Team>> nGroups) {
+        competition.setFinale(null);
+        competition.setThirdPlace(null);
+
         List<Group> groups = competition.getGroups();
         int prevGroupsSize = groups.size();
         createGroups(competition, groups, nGroups);
