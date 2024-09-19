@@ -24,7 +24,27 @@ public class KnockoutTools {
     @Inject
     CompetitionRepository competitions;
 
-    public Match updateKnockoutTree(Competition competition, jUserKnockoutMatch tree, Match match, int number) {
+    public void updateKnockoutTree(Competition competition, jUserKnockoutMatch tree) {
+        Match finale = competition.getFinale();
+        if (finale == null)
+            finale = new Match();
+
+        jUserKnockoutMatch curTree = tree;
+        int total = 1;
+        while (curTree.getPreviousA() != null) {
+            curTree = curTree.getPreviousA();
+            total++;
+        }
+        competition.setTotal(total);
+
+        updateKnockoutTree(competition, tree, finale, total - 1);
+        updateThirdPlace(competition, finale, total);
+
+        competition.setFinale(finale);
+        competitions.persist(competition);
+    }
+
+    private Match updateKnockoutTree(Competition competition, jUserKnockoutMatch tree, Match match, int number) {
         if (tree == null)
             return null;
 
@@ -75,7 +95,7 @@ public class KnockoutTools {
         return null;
     }
 
-    public void updateThirdPlace(Competition competition, Match finale, int total) {
+    private void updateThirdPlace(Competition competition, Match finale, int total) {
         Match thirdPlace = competition.getThirdPlace();
 
         // cover deletion of third place
