@@ -16,38 +16,9 @@ import routes from "./routes"
 /* Primevue components*/
 import PrimeVue from "primevue/config"
 import ToastService from "primevue/toastservice"
+import Toast from "primevue/toast"
 import Tooltip from "primevue/tooltip"
 import FocusTrap from "primevue/focustrap"
-import Steps from "primevue/steps"
-import TabView from "primevue/tabview"
-import TabPanel from "primevue/tabpanel"
-import TabMenu from "primevue/tabmenu"
-import Card from "primevue/card"
-import Button from "primevue/button"
-import Toolbar from "primevue/toolbar"
-import InputText from "primevue/inputtext"
-import Textarea from "primevue/textarea"
-import Calendar from "primevue/calendar"
-import InputSwitch from "primevue/inputswitch"
-import Dropdown from "primevue/dropdown"
-import Divider from "primevue/divider"
-import InlineMessage from "primevue/inlinemessage"
-import Toast from "primevue/toast"
-import SelectButton from "primevue/selectbutton"
-import Skeleton from "primevue/skeleton"
-import Panel from "primevue/panel"
-import ScrollPanel from "primevue/scrollpanel"
-import DataTable from "primevue/datatable"
-import Column from "primevue/column"
-import Tag from "primevue/tag"
-import AutoComplete from "primevue/autocomplete"
-import Checkbox from "primevue/checkbox"
-import Fieldset from "primevue/fieldset"
-import SplitButton from "primevue/splitbutton"
-import OverlayPanel from "primevue/overlaypanel"
-import Dialog from "primevue/dialog"
-import MultiSelect from "primevue/multiselect"
-import InputGroup from "primevue/inputgroup"
 
 /* Primevue styling */
 import "primeflex/primeflex.css"
@@ -56,8 +27,7 @@ import "primeicons/primeicons.css"
 import "./style.css"
 
 /* Icons */
-import "material-icons/iconfont/material-icons.css"
-import "material-symbols"
+import "material-symbols/outlined.css"
 
 /* yup validation */
 import { setLocale } from "yup"
@@ -139,39 +109,10 @@ app
 	/* Primevue */
 	.use(PrimeVue, { ripple: true })
 	.use(ToastService)
-	.use(VueQueryPlugin, vueQueryPluginOptions)
-	.component("Steps", Steps)
-	.component("TabView", TabView)
-	.component("TabMenu", TabMenu)
-	.component("TabPanel", TabPanel)
-	.component("Card", Card)
-	.component("MultiSelect", MultiSelect)
-	.component("Button", Button)
-	.component("Toolbar", Toolbar)
-	.component("InputText", InputText)
-	.component("Textarea", Textarea)
-	.component("Calendar", Calendar)
-	.component("InputSwitch", InputSwitch)
-	.component("Dropdown", Dropdown)
-	.component("Divider", Divider)
-	.component("InlineMessage", InlineMessage)
 	.component("Toast", Toast)
-	.component("SelectButton", SelectButton)
-	.component("Skeleton", Skeleton)
-	.component("Panel", Panel)
-	.component("ScrollPanel", ScrollPanel)
-	.component("InputGroup", InputGroup)
-	.component("DataTable", DataTable)
-	.component("Column", Column)
-	.component("Tag", Tag)
-	.component("AutoComplete", AutoComplete)
-	.component("Checkbox", Checkbox)
-	.component("Fieldset", Fieldset)
-	.component("SplitButton", SplitButton)
-	.component("OverlayPanel", OverlayPanel)
-	.component("Dialog", Dialog)
 	.directive("tooltip", Tooltip)
 	.directive("focustrap", FocusTrap)
+	.use(VueQueryPlugin, vueQueryPluginOptions)
 	.mount("#app")
 
 export { router }
