@@ -100,8 +100,7 @@ public class GroupTools {
         if (groups.size() == 1) {
             competition.setTotal(0);
             competitions.persist(competition);
-        }
-        if (groups.size() == 2) { // finale and game for third place needed
+        } else if (groups.size() == 2) { // finale and game for third place needed
             Match finale = finaleOfGroups(competition, groups.get(0), groups.get(1), 1, 0);
             competition.setFinale(finale);
 
