@@ -8,10 +8,7 @@ import de.secretj12.turnierplaner.db.repositories.*;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserMatch;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 
 import java.time.Instant;
@@ -51,14 +48,11 @@ public class MatchResource {
 
 
         System.out.println(competition);
-//        if (player == null && tournament == null)
-//            throw new BadRequestException("Need to specify at least a tournament or a player");
+        if (player == null && tournament == null)
+            throw new BadRequestException("Need to specify at least a tournament or a player");
 
         List<jUserMatch> matchList = matches.filterMatches(tournament, competition, player, fromD, toD);
         System.out.println(matchList.size());
         return matchList;
-//        return this.matches.filterMatches(tournament, competition, player, fromD, toD).stream()
-//            .map(jUserMatchEvent::new)
-//            .toList();
     }
 }
