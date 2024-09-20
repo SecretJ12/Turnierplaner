@@ -6,6 +6,8 @@ import de.secretj12.turnierplaner.db.entities.groups.Group;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -75,9 +77,11 @@ public class Competition {
     @Column(name = "totalRounds")
     private int total;
 
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "finale_id")
     private Match finale;
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "thirdPlace_id")
     private Match thirdPlace;
