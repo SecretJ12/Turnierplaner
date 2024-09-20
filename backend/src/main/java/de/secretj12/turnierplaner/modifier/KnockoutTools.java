@@ -11,6 +11,7 @@ import de.secretj12.turnierplaner.db.repositories.TeamRepository;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.knockout.jUserKnockoutMatch;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.BadRequestException;
 
 @ApplicationScoped
 public class KnockoutTools {
@@ -36,49 +37,67 @@ public class KnockoutTools {
             total++;
         }
         competition.setTotal(total);
+        int tCount = countTeams(tree, total);
 
-        updateKnockoutTree(competition, tree, finale, total - 1);
-        updateThirdPlace(competition, finale, total);
+        competition.setFinale(updateKnockoutTree(competition, tree, finale, total - 1));
+        competition.setThirdPlace(updateThirdPlace(competition, finale, total, tCount));
 
-        competition.setFinale(finale);
         competitions.persist(competition);
     }
 
+    private int countTeams(jUserKnockoutMatch tree, int total) {
+        int c = 0;
+        if (tree.getPreviousA() != null)
+            c += countTeams(tree.getPreviousA(), total - 1);
+        if (tree.getPreviousB() != null)
+            c += countTeams(tree.getPreviousB(), total - 1);
+
+        if (tree.getPreviousA() == null) {
+            if (total != 1)
+                throw new BadRequestException("Invalid tree");
+            if (tree.getTeamA() != null)
+                c++;
+            if (tree.getTeamB() != null)
+                c++;
+        }
+        return c;
+    }
+
     private Match updateKnockoutTree(Competition competition, jUserKnockoutMatch tree, Match match, int number) {
-        if (tree == null)
-            return null;
-
-        if (tree.getPreviousA() == null || tree.getPreviousB() == null)
-            deletePrevious(match);
-
-        Match a, b;
-        if (match.getDependentOn() != null) {
-            a = match.getDependentOn().getPreviousA();
-            updateKnockoutTree(competition, tree.getPreviousA(), a, number - 1);
-            b = match.getDependentOn().getPreviousB();
-            updateKnockoutTree(competition, tree.getPreviousB(), b, number - 1);
-        } else if (tree.getPreviousA() != null && tree.getPreviousB() != null) {
-            NextMatch nMatch = new NextMatch();
-            a = updateKnockoutTree(competition, tree.getPreviousA(), new Match(), number - 1);
-            b = updateKnockoutTree(competition, tree.getPreviousB(), new Match(), number - 1);
-            nMatch.setPreviousA(a);
-            nMatch.setPreviousB(b);
-            nMatch.setNextMatch(match);
-            nextMatches.persist(nMatch);
-            match.setDependentOn(nMatch);
-        } else
-            a = b = null;
-
         if (tree.getPreviousA() == null) {
             match.setTeamA(tree.getTeamA() == null ? null : teams.findById(tree.getTeamA().getId()));
             match.setTeamB(tree.getTeamB() == null ? null : teams.findById(tree.getTeamB().getId()));
-        } else if (tree.getPreviousA().getPreviousA() == null) {
-            match.setTeamA(selectTeam(a));
-            match.setTeamB(selectTeam(b));
+            matches.persist(match);
+            deletePrevious(match);
+        } else {
+            Match a, b;
+            if (match.getDependentOn() == null) {
+                NextMatch nMatch = new NextMatch();
+                a = updateKnockoutTree(competition, tree.getPreviousA(), new Match(), number - 1);
+                b = updateKnockoutTree(competition, tree.getPreviousB(), new Match(), number - 1);
+                nMatch.setPreviousA(a);
+                nMatch.setPreviousB(b);
+                nMatch.setNextMatch(match);
+                nextMatches.persist(nMatch);
+                match.setDependentOn(nMatch);
+            } else {
+                a = updateKnockoutTree(competition, tree.getPreviousA(), match.getDependentOn().getPreviousA(),
+                    number - 1);
+                b = updateKnockoutTree(competition, tree.getPreviousB(), match.getDependentOn().getPreviousB(),
+                    number - 1);
+            }
+
+            if (tree.getPreviousA().getPreviousA() == null) {
+                match.setTeamA(selectTeam(a));
+                match.setTeamB(selectTeam(b));
+            } else {
+                match.setTeamA(null);
+                match.setTeamB(null);
+            }
         }
+
         match.setCompetition(competition);
         match.setFinished(false);
-        match.setWinner(true);
         match.setNumber(number);
         matches.persist(match);
 
@@ -95,15 +114,18 @@ public class KnockoutTools {
         return null;
     }
 
-    private void updateThirdPlace(Competition competition, Match finale, int total) {
+    private Match updateThirdPlace(Competition competition, Match finale, int total, int tCount) {
         Match thirdPlace = competition.getThirdPlace();
 
         // cover deletion of third place
-        if (competition.getTeams().size() <= 3) {
-            if (thirdPlace != null) {
+        if (tCount <= 2) {
+            // third place will be deleted by deletePrevious
+            return null;
+        }
+        if (tCount == 3) {
+            if (thirdPlace != null)
                 matches.delete(thirdPlace);
-            }
-            return;
+            return null;
         }
 
         if (thirdPlace == null) {
@@ -120,8 +142,7 @@ public class KnockoutTools {
 
             matches.persist(thirdPlace);
             nextMatches.persist(nMatch);
-            competition.setThirdPlace(thirdPlace);
-            competitions.persist(competition);
+            return thirdPlace;
         } else {
             // update third place if already existing
             NextMatch nMatch = thirdPlace.getDependentOn();
@@ -132,17 +153,22 @@ public class KnockoutTools {
             nextMatches.persist(nMatch);
 
             thirdPlace.setNumber(total - 1);
-            matches.persist(thirdPlace);
+            return thirdPlace;
         }
     }
 
     private void deletePrevious(Match match) {
         if (match.getDependentOn() != null) {
-            deletePrevious(match.getDependentOn().getPreviousA());
-            matches.delete(match.getDependentOn().getPreviousA());
-            deletePrevious(match.getDependentOn().getPreviousB());
-            matches.delete(match.getDependentOn().getPreviousB());
-            nextMatches.delete(match.getDependentOn());
+            Match a = match.getDependentOn().getPreviousA();
+            Match b = match.getDependentOn().getPreviousB();
+            NextMatch nm = match.getDependentOn();
+
+            deletePrevious(a);
+            deletePrevious(b);
+            nm.setNextMatch(null);
+            match.setDependentOn(null);
+            matches.delete(a);
+            matches.delete(b);
         }
     }
 }
