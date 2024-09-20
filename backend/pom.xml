@@ -68,6 +68,13 @@
             <artifactId>quarkus-hibernate-orm-panache</artifactId>
         </dependency>
 
+        <!-- JPA Metamodel classes used for criteria api -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-jpamodelgen</artifactId>
+            <version>6.1.7.Final</version>
+        </dependency>
+
         <!-- JDBC driver dependencies -->
         <dependency>
             <groupId>io.quarkus</groupId>
