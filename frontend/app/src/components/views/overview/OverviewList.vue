@@ -120,7 +120,7 @@
 			:show-clear-button="false"
 		>
 			<template #body="{ data }">
-				{{ data.begin?.toLocaleString(t("lang"), dateOptions) }}
+				{{ data.end?.toLocaleString(t("lang"), dateOptions) }}
 			</template>
 			<template #filter="{ filterModel, filterCallback }">
 				<Calendar
