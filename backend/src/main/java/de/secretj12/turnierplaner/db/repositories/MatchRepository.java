@@ -7,18 +7,14 @@ import de.secretj12.turnierplaner.db.entities.Tournament;
 import de.secretj12.turnierplaner.db.entities.competition.Competition;
 import de.secretj12.turnierplaner.db.entities.competition.Competition_;
 import de.secretj12.turnierplaner.db.entities.competition.Team_;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserMatch;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserMatchEvent;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import io.quarkus.panache.common.Parameters;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
-import jakarta.transaction.Transactional;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -34,9 +30,6 @@ public class MatchRepository implements PanacheRepository<Match> {
     @Inject
     MatchOfGroupRepository matchOfGroups;
 
-    @Inject
-    EntityManager em;
-
 
     public Match findById(UUID id) {
         return find("id", id).firstResult();
@@ -50,22 +43,22 @@ public class MatchRepository implements PanacheRepository<Match> {
         return find("#nonGroupMatches", Parameters.with("comp", competition)).list();
     }
 
-    @Transactional
-    public List<jUserMatchEvent> filterMatches(Tournament tournament, Competition competition,
-                                               Player player,
-                                               Instant from, Instant to) {
-        CriteriaBuilder cb = em.getCriteriaBuilder();
+    public List<Match> filterMatches(Tournament tournament, Competition competition,
+                                     Player player,
+                                     Instant from, Instant to) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<Match> q = cb.createQuery(Match.class);
         Root<Match> root = q.from(Match.class);
         q.select(root);
-        Predicate predicate = applyAllValidPredicates(cb, root, q, tournament, competition, player, from, to);
+        Predicate predicate = applyAllValidPredicates(cb, root, tournament, competition, player, from, to);
         q.where(predicate);
 
-        List<Match> result = em.createQuery(q).getResultList();
-        return result.stream().map(jUserMatchEvent::new).toList();
+        return getEntityManager().createQuery(q).getResultList();
     }
 
-    private Predicate applyAllValidPredicates(CriteriaBuilder cb, Root<Match> root, CriteriaQuery<Match> query, Tournament tournament, Competition competition, Player player, Instant from, Instant to) {
+    private Predicate applyAllValidPredicates(CriteriaBuilder cb, Root<Match> root,
+                                              Tournament tournament, Competition competition, Player player,
+                                              Instant from, Instant to) {
         List<Predicate> predicates = new ArrayList<>();
         if (competition != null) {
             predicates.add(cb.equal(root.get(Match_.COMPETITION), competition));
@@ -75,11 +68,11 @@ public class MatchRepository implements PanacheRepository<Match> {
         }
         if (player != null) {
             predicates.add(cb.or(
-                    cb.equal(root.get(Match_.TEAM_A).get(Team_.PLAYER_A), player),
-                    cb.equal(root.get(Match_.TEAM_A).get(Team_.PLAYER_B), player),
-                    cb.equal(root.get(Match_.TEAM_B).get(Team_.PLAYER_A), player),
-                    cb.equal(root.get(Match_.TEAM_B).get(Team_.PLAYER_B), player)
-            ));
+                cb.equal(root.get(Match_.TEAM_A).get(Team_.PLAYER_A), player),
+                cb.equal(root.get(Match_.TEAM_A).get(Team_.PLAYER_B), player),
+                cb.equal(root.get(Match_.TEAM_B).get(Team_.PLAYER_A), player),
+                cb.equal(root.get(Match_.TEAM_B).get(Team_.PLAYER_B), player)
+                                ));
         }
         if (from != null) {
             predicates.add(cb.greaterThanOrEqualTo(root.get(Match_.BEGIN), from));
@@ -87,7 +80,6 @@ public class MatchRepository implements PanacheRepository<Match> {
         if (to != null) {
             predicates.add(cb.lessThanOrEqualTo(root.get(Match_.END), to));
         }
-        Predicate finalPredicate = cb.and(predicates.toArray(new Predicate[0]));
-        return finalPredicate;
+        return cb.and(predicates.toArray(new Predicate[0]));
     }
 }
