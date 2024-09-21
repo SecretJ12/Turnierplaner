@@ -228,6 +228,47 @@ public class TestGroupTools {
             .statusCode(401);
     }
 
+    @ParameterizedTest
+    @CsvSource({
+        "2, 1, 10, 1",
+        "7, 1, 2, 1"
+    })
+    @TestSecurity(user = "testuser", roles = "director")
+    public void genGroupsChange(int groupSizeFrom, int groupCountFrom, int groupSizeTo, int groupCountTo) {
+        genGroups(groupSizeFrom, groupCountFrom);
+
+        Panache.getEntityManager().clear();
+        Competition competition = competitionRepository.getByName("Clubmeisterschaft", "Herren");
+        List<Group> groups = competition.getGroups();
+        List<Set<Match>> matches = groups.stream().map(Group::getMatches).toList();
+        Match fin = competition.getFinale();
+        List<Match> firstMatches = flatMatches(List.of(fin));
+
+        Panache.getEntityManager().clear();
+        genGroups(groupSizeTo, groupCountTo);
+
+        Panache.getEntityManager().clear();
+        Competition newComp = competitionRepository.getByName("Clubmeisterschaft", "Herren");
+        List<Group> newGroups = newComp.getGroups();
+        Match newFin = newComp.getFinale();
+        List<Match> newFirstMatches = flatMatches(List.of(newFin));
+
+        for (int i = 0; i < Math.min(groupCountFrom, groupCountTo); i++) {
+            for (Match m : matches.get(i)) {
+                for (Match nm : newGroups.get(i).getMatches()) {
+                    if (checkTeams(m.getTeamA(), m.getTeamB(), nm))
+                        assertEquals(m.getId(), nm.getId());
+                }
+            }
+        }
+        for (int i = 0; i < Math.min(groupCountFrom, groupCountTo); i++) {
+            assertEquals(groups.get(i).getId(), newGroups.get(i).getId());
+        }
+        for (int i = 0; i < Math.min(groupCountFrom, groupCountTo)/2; i++) {
+            assertEquals(firstMatches.get(i).getId(), newFirstMatches.get(i).getId());
+        }
+    }
+
     private void checkGroup(List<Team> teams, Set<Match> matches) {
         for (Team t1 : teams) {
             for (Team t2 : teams) {
@@ -239,9 +280,9 @@ public class TestGroupTools {
         }
     }
 
-    private boolean checkTeams(Team t1, Team t2, Match m) {
-        return (m.getTeamA().getId().equals(t1.getId()) && m.getTeamB().getId().equals(t2.getId()))
-            || (m.getTeamA().getId().equals(t2.getId()) && m.getTeamB().getId().equals(t1.getId()));
+    private boolean checkTeams(Team tA, Team tB, Match m) {
+        return (m.getTeamA().getId().equals(tA.getId()) && m.getTeamB().getId().equals(tB.getId()))
+            || (m.getTeamA().getId().equals(tB.getId()) && m.getTeamB().getId().equals(tA.getId()));
     }
 
     private List<Match> flatMatches(List<Match> matches) {
