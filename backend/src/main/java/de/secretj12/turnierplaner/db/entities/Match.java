@@ -38,7 +38,7 @@ public class Match {
     @NotNull
     @Fetch(FetchMode.SELECT)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "competition_id")
+    @JoinColumn(name = "competition_id", nullable = false)
     private Competition competition;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "court")
