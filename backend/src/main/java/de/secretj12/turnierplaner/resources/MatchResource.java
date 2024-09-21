@@ -6,6 +6,7 @@ import de.secretj12.turnierplaner.db.entities.Tournament;
 import de.secretj12.turnierplaner.db.entities.competition.Competition;
 import de.secretj12.turnierplaner.db.repositories.*;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserMatch;
+import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserMatchEvent;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -33,7 +34,7 @@ public class MatchResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<jUserMatch> getMatches(
+    public List<jUserMatchEvent> getMatches(
             @QueryParam("tour") String tourName,
             @QueryParam("comp") String compName,
             @QueryParam("player") String playerId,
@@ -51,7 +52,7 @@ public class MatchResource {
         if (player == null && tournament == null)
             throw new BadRequestException("Need to specify at least a tournament or a player");
 
-        List<jUserMatch> matchList = matches.filterMatches(tournament, competition, player, fromD, toD);
+        List<jUserMatchEvent> matchList = matches.filterMatches(tournament, competition, player, fromD, toD);
         System.out.println(matchList.size());
         return matchList;
     }
