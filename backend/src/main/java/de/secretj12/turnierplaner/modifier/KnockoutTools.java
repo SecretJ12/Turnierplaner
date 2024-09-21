@@ -64,10 +64,14 @@ public class KnockoutTools {
     }
 
     private Match updateKnockoutTree(Competition competition, jUserKnockoutMatch tree, Match match, int number) {
+        match.setFinished(false);
+        match.setNumber(number);
+        match.setCompetition(competition);
+        matches.persist(match);
+
         if (tree.getPreviousA() == null) {
             match.setTeamA(tree.getTeamA() == null ? null : teams.findById(tree.getTeamA().getId()));
             match.setTeamB(tree.getTeamB() == null ? null : teams.findById(tree.getTeamB().getId()));
-            matches.persist(match);
             deletePrevious(match);
         } else {
             Match a, b;
@@ -96,11 +100,7 @@ public class KnockoutTools {
             }
         }
 
-        match.setCompetition(competition);
-        match.setFinished(false);
-        match.setNumber(number);
         matches.persist(match);
-
         return match;
     }
 
