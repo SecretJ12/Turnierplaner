@@ -15,18 +15,18 @@
 					@mouseover="headerHover(team.id)"
 					@mouseleave="hoverLeave()"
 				>
-					{{ team.playerA.lastName }}, {{ team.playerA.firstName }}
+					<ViewTeamNames :team="team" :inverted="true" />
 				</th>
 			</template>
 		</tr>
-		<template v-for="(teamA, indexA) in props.group.teams" :key="indexA">
-			<tr v-if="indexA !== props.group.teams.length - 1">
+		<template v-for="(team, index) in props.group.teams" :key="index">
+			<tr v-if="index !== props.group.teams.length - 1">
 				<th
-					:class="hoverIdA === indexA ? 'highlight ' : ''"
-					@mouseover="headerHover(teamA.id)"
+					:class="hoverIdA === index ? 'highlight ' : ''"
+					@mouseover="headerHover(team.id)"
 					@mouseleave="hoverLeave()"
 				>
-					{{ teamA.playerA.lastName }}, {{ teamA.playerA.firstName }}
+					<ViewTeamNames :team="team" :inverted="true" />
 				</th>
 				<template
 					v-for="(teamB, indexB) in props.group.teams.slice().reverse()"
@@ -35,19 +35,21 @@
 					<td
 						v-if="
 							indexB !== props.group.teams.length - 1 &&
-							indexA + indexB < props.group.teams.length - 1
+							index + indexB < props.group.teams.length - 1
 						"
 						:class="{
 							highlightLow:
-								(hoverIdA === indexA && indexB < hoverIdB) ||
-								(hoverIdB === indexB && indexA < hoverIdA),
-							highlight: hoverTeam === teamA.id || hoverTeam === teamB.id,
+								hoverIdA &&
+								hoverIdB &&
+								((hoverIdA === index && indexB < hoverIdB) ||
+									(hoverIdB === indexB && index < hoverIdA)),
+							highlight: hoverTeam === team.id || hoverTeam === teamB.id,
 						}"
-						@mouseover="matchHover(indexA, indexB)"
+						@mouseover="matchHover(index, indexB)"
 						@mouseleave="hoverLeave()"
 					>
 						<div>
-							<ViewMatch :match="findMatch(teamA, teamB)" />
+							<ViewMatch :match="findMatch(team, teamB)" />
 						</div>
 					</td>
 				</template>
@@ -63,6 +65,7 @@ import { useI18n } from "vue-i18n"
 import ViewMatch from "@/components/views/competition/groupSystem/ViewMatch.vue"
 import { Match } from "@/interfaces/match"
 import { Team } from "@/interfaces/team"
+import ViewTeamNames from "@/components/links/LinkTeamNames.vue"
 
 const { t } = useI18n({ inheritLocale: true })
 
@@ -92,8 +95,8 @@ function matchHover(indexA: number, indexB: number) {
 	hoverIdB.value = indexB
 }
 
-function headerHover(team: string) {
-	hoverTeam.value = team
+function headerHover(team: string | undefined) {
+	hoverTeam.value = team || ""
 }
 
 function hoverLeave() {

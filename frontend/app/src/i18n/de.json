@@ -28,13 +28,18 @@
 		"calendar": "Kalender",
 		"list": "Liste",
 		"title": "Titel",
+		"tournament": "Turnier",
 		"competition": "Konkurrenz",
 		"court": "Platz",
 		"begin": "Beginn",
 		"team": "Team",
 		"result": "Ergebnis",
 		"options": "Optionen",
-		"courts": "Plätze"
+		"courts": "Plätze",
+		"any": "Beliebig",
+		"filter_by_name": "Nach Name filtern",
+		"from": "Von",
+		"to": "Bis"
 	},
 	"ViewPlayerRegistration": {
 		"headline": "Spielerregistrierung",
@@ -184,7 +189,8 @@
 		"register_success": "Der Spieler wurde erfolgreich registriert",
 		"register_failed": "Fehler beim Hinzufügen des Spielers",
 		"over": "Ü",
-		"under": "U"
+		"under": "U",
+		"player_not_found": "Spieler nicht gefunden"
 	},
 	"ViewKnockout": {
 		"finale": "Finale",

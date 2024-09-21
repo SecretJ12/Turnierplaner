@@ -3,13 +3,56 @@
 		v-model:filters="filters"
 		data-key="id"
 		resizable-columns
-		:loading="!tournament"
+		:loading="!matches"
 		:value="matches"
 		filter-display="row"
-		:global-filter-fields="['title']"
 	>
 		<template #empty> No matches found.</template>
 		<template #loading> Loading matches...</template>
+		<Column
+			v-if="!route.params.tourId"
+			sortable
+			field="tourName"
+			:header="t('general.tournament')"
+			:show-filter-menu="false"
+		>
+			<template #body="{ data }">
+				<LinkTournament :tournament="data.tourName" />
+			</template>
+			<template #filter="{ filterModel, filterCallback }">
+				<InputText
+					v-model="filterModel.value"
+					size="small"
+					type="text"
+					class="p-column-filter"
+					:placeholder="t('general.filter_by_name')"
+					@input="filterCallback()"
+				/>
+			</template>
+		</Column>
+		<Column
+			sortable
+			field="compName"
+			:header="t('general.competition')"
+			:show-filter-menu="false"
+		>
+			<template #body="{ data }">
+				<LinkCompetition
+					:tournament="data.tourName"
+					:competition="data.compName"
+				/>
+			</template>
+			<template #filter="{ filterModel, filterCallback }">
+				<InputText
+					v-model="filterModel.value"
+					size="small"
+					type="text"
+					class="p-column-filter"
+					:placeholder="t('general.filter_by_name')"
+					@input="filterCallback()"
+				/>
+			</template>
+		</Column>
 		<Column
 			sortable
 			field="title"
@@ -25,24 +68,7 @@
 					size="small"
 					type="text"
 					class="p-column-filter"
-					placeholder="Search by name"
-					@input="filterCallback()"
-				/>
-			</template>
-		</Column>
-		<Column
-			sortable
-			field="compName"
-			:header="t('general.competition')"
-			:show-filter-menu="false"
-		>
-			<template #filter="{ filterModel, filterCallback }">
-				<InputText
-					v-model="filterModel.value"
-					size="small"
-					type="text"
-					class="p-column-filter"
-					placeholder="Search by name"
+					:placeholder="t('general.filter_by_name')"
 					@input="filterCallback()"
 				/>
 			</template>
@@ -57,7 +83,7 @@
 				<MultiSelect
 					v-model="filterModel.value"
 					:options="courts?.map((court) => court.name) || []"
-					placeholder="Any"
+					:placeholder="t('general.any')"
 					class="p-column-filter"
 					style="min-width: 14rem"
 					:max-selected-labels="3"
@@ -68,11 +94,33 @@
 		<Column
 			sortable
 			field="begin"
-			:header="t('general.begin')"
+			:header="t('general.from')"
 			data-type="date"
+			:show-clear-button="false"
 		>
 			<template #body="{ data }">
 				{{ data.begin?.toLocaleString(t("lang"), dateOptions) }}
+			</template>
+			<template #filter="{ filterModel, filterCallback }">
+				<Calendar
+					v-model="filterModel.value"
+					:date-format="t('date_format')"
+					:placeholder="t('date_format')"
+					:mask="t('date_format')"
+					show-time
+					@date-select="filterCallback()"
+				/>
+			</template>
+		</Column>
+		<Column
+			sortable
+			field="end"
+			:header="t('general.to')"
+			data-type="date"
+			:show-clear-button="false"
+		>
+			<template #body="{ data }">
+				{{ data.end?.toLocaleString(t("lang"), dateOptions) }}
 			</template>
 			<template #filter="{ filterModel, filterCallback }">
 				<Calendar
@@ -92,11 +140,7 @@
 			:show-filter-menu="false"
 		>
 			<template #body="{ data }">
-				{{ data.teamA?.playerA?.name }}
-				<template v-if="data.teamA?.playerB">
-					<br />
-					{{ data.teamA?.playerB?.name }}
-				</template>
+				<ViewTeamNames :team="<Team>data.teamA" />
 			</template>
 			<template #filter="{ filterModel, filterCallback }">
 				<InputText
@@ -104,7 +148,7 @@
 					size="small"
 					type="text"
 					class="p-column-filter"
-					placeholder="Search by name"
+					:placeholder="t('general.filter_by_name')"
 					@input="filterCallback()"
 				/>
 			</template>
@@ -116,11 +160,7 @@
 			:show-filter-menu="false"
 		>
 			<template #body="{ data }">
-				{{ data.teamB?.playerA?.name }}
-				<template v-if="data.teamB?.playerB">
-					<br />
-					{{ data.teamB?.playerB?.name }}
-				</template>
+				<ViewTeamNames :team="<Team>data.teamB" />
 			</template>
 			<template #filter="{ filterModel, filterCallback }">
 				<InputText
@@ -128,7 +168,7 @@
 					size="small"
 					type="text"
 					class="p-column-filter"
-					placeholder="Search by name"
+					:placeholder="t('general.filter_by_name')"
 					@input="filterCallback()"
 				/>
 			</template>
@@ -139,20 +179,23 @@
 </template>
 
 <script setup lang="ts">
-import {
-	genTitle,
-	getTournamentDetails,
-	getTournamentMatches,
-} from "@/backend/tournament"
+import { genTitle, getTournamentDetails } from "@/backend/tournament"
 import { useRoute } from "vue-router"
 import { useI18n } from "vue-i18n"
-import { useToast } from "primevue/usetoast"
 import { computed, ref } from "vue"
 import { getTournamentCourts } from "@/backend/court"
 import { FilterMatchMode, FilterService } from "primevue/api"
-import { DataTableFilterMeta } from "primevue/datatable"
+import {
+	DataTableFilterMeta,
+	DataTableFilterMetaData,
+} from "primevue/datatable"
 import { Team } from "@/interfaces/team"
 import { AnnotatedMatch } from "@/interfaces/match"
+import { getFilteredMatches } from "@/backend/match"
+import { useToast } from "primevue/usetoast"
+import ViewTeamNames from "@/components/links/LinkTeamNames.vue"
+import LinkTournament from "@/components/links/LinkTournament.vue"
+import LinkCompetition from "@/components/links/LinkCompetition.vue"
 
 const route = useRoute()
 const { t } = useI18n({ inheritLocale: true })
@@ -166,11 +209,21 @@ const TITLE_FILTER = "TITLE_FILTER"
 FilterService.register(TEAMS_FILTER, teamFilter)
 FilterService.register(TITLE_FILTER, titleFilter)
 
+const endFallback = new Date()
+endFallback.setMonth(endFallback.getMonth() + 2)
 const filters = ref<DataTableFilterMeta>({
-	title: { value: null, matchMode: TITLE_FILTER },
+	tourName: { value: null, matchMode: FilterMatchMode.CONTAINS },
 	compName: { value: null, matchMode: FilterMatchMode.CONTAINS },
+	title: { value: null, matchMode: TITLE_FILTER },
 	court: { value: null, matchMode: FilterMatchMode.IN },
-	begin: { value: null, matchMode: FilterMatchMode.DATE_AFTER },
+	begin: {
+		value: tournament.value ? tournament.value?.game_phase.begin : new Date(),
+		matchMode: FilterMatchMode.DATE_AFTER,
+	},
+	end: {
+		value: tournament.value ? tournament.value?.game_phase.end : endFallback,
+		matchMode: FilterMatchMode.DATE_BEFORE,
+	},
 	teamA: { value: null, matchMode: TEAMS_FILTER },
 	teamB: { value: null, matchMode: TEAMS_FILTER },
 })
@@ -181,6 +234,7 @@ function teamFilter(team: Team | null, filter: string | null) {
 	const playerB = team?.playerB?.name.toLowerCase() || ""
 	return playerA.includes(filterValue) || playerB.includes(filterValue)
 }
+
 function titleFilter(
 	title: AnnotatedMatch["title"] | null,
 	filter: string | null,
@@ -190,12 +244,13 @@ function titleFilter(
 	return titleValue.toLowerCase().includes(filterValue)
 }
 
-const { data: matches } = getTournamentMatches(
+const { data: matches } = getFilteredMatches(
 	route,
 	t,
-	computed(() => tournament.value?.game_phase.begin),
-	computed(() => tournament.value?.game_phase.end),
-	courts,
+	computed(() => (<DataTableFilterMetaData>filters.value.begin).value) ||
+		new Date(),
+	computed(() => (<DataTableFilterMetaData>filters.value.end).value) ||
+		new Date().setMonth(new Date().getMonth() + 2),
 )
 
 const dateOptions: Intl.DateTimeFormatOptions = {

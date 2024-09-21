@@ -1,16 +1,12 @@
 package de.secretj12.turnierplaner.resources;
 
 import de.secretj12.turnierplaner.db.entities.Court;
-import de.secretj12.turnierplaner.db.entities.Match;
 import de.secretj12.turnierplaner.db.entities.Tournament;
-import de.secretj12.turnierplaner.db.entities.competition.Competition;
-import de.secretj12.turnierplaner.db.entities.competition.CompetitionType;
 import de.secretj12.turnierplaner.db.repositories.CourtRepositiory;
 import de.secretj12.turnierplaner.db.repositories.MatchRepository;
 import de.secretj12.turnierplaner.db.repositories.TournamentRepository;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.jDirectorTournamentAdd;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.jDirectorTournamentUpdate;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.competition.jUserCompetitionType;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserCourt;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserMatchEvent;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserTournament;
@@ -25,7 +21,6 @@ import jakarta.ws.rs.core.Response;
 import org.jboss.resteasy.reactive.Separator;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -103,7 +98,6 @@ public class TournamentResource {
 
     @GET
     @Path("/{tourName}/courts")
-    @RolesAllowed("director")
     @Produces(MediaType.APPLICATION_JSON)
     public Set<jUserCourt> getCourts(@PathParam("tourName") String tourName) {
         Tournament tournament = tournaments.getByName(tourName);
@@ -178,51 +172,13 @@ public class TournamentResource {
     ) {
         Tournament tournament = tournaments.getByName(tourId);
 
-        var matchEvents = new ArrayList<jUserMatchEvent>();
-        for (var comp : tournament.getCompetitions()) {
-            var rounds = getMatchRounds(comp);
-
-            var thirdPlace = comp.getThirdPlace();
-            if (thirdPlace != null) {
-                jUserMatchEvent matchEvent = new jUserMatchEvent(thirdPlace);
-                matchEvent.setCompName(comp.getName());
-                matchEvent.setType(jUserCompetitionType.KNOCKOUT);
-                matchEvent.setNumber(rounds.size() - 1);
-                matchEvent.setTotal(rounds.size());
-                matchEvent.setFinal(false);
-                matchEvents.add(matchEvent);
-            }
-
-            for (int i = 0; i < rounds.size(); i++) {
-                for (var match : rounds.get(i)) {
-                    jUserMatchEvent matchEvent = new jUserMatchEvent(match);
-                    matchEvent.setCompName(comp.getName());
-                    matchEvent.setType(jUserCompetitionType.KNOCKOUT);
-                    matchEvent.setNumber(i);
-                    matchEvent.setTotal(rounds.size());
-                    matchEvent.setFinal(true);
-                    matchEvents.add(matchEvent);
-                }
-            }
-
-            if (comp.getType() == CompetitionType.GROUPS) {
-                for (var group : comp.getGroups()) {
-                    for (var match : group.getMatches()) {
-                        jUserMatchEvent matchEvent = new jUserMatchEvent(match);
-                        matchEvent.setCompName(comp.getName());
-                        matchEvent.setType(jUserCompetitionType.GROUPS);
-                        matchEvent.setNumber(group.getIndex());
-                        matchEvent.setFinal(false);
-                        matchEvents.add(matchEvent);
-                    }
-                }
-            }
-        }
-
         Instant fromD = from == null ? null : Instant.parse(from);
         Instant toD = to == null ? null : Instant.parse(to);
-        return matchEvents
-            .stream().filter(match -> {
+        return tournament
+            .getCompetitions()
+            .stream().flatMap(competition -> competition.getMatches().stream())
+            .map(jUserMatchEvent::new)
+            .filter(match -> {
                 if (courts != null
                     && (match.getCourt() == null || !courts.contains(match.getCourt())))
                     return false;
@@ -236,28 +192,6 @@ public class TournamentResource {
                 return true;
             })
             .toList();
-    }
-
-    private List<List<Match>> getMatchRounds(Competition competition) {
-        Match finale = competition.getFinale();
-        if (finale == null)
-            return List.of();
-
-        List<List<Match>> matchRounds = new ArrayList<>();
-        List<Match> queue = List.of(finale);
-        List<Match> newQueue = new ArrayList<>();
-        while (!queue.isEmpty()) {
-            matchRounds.add(queue);
-            for (Match match : queue) {
-                if (match.getDependentOn() != null) {
-                    newQueue.add(match.getDependentOn().getPreviousA());
-                    newQueue.add(match.getDependentOn().getPreviousB());
-                }
-            }
-            queue = newQueue;
-            newQueue = new ArrayList<>();
-        }
-        return matchRounds.reversed();
     }
 
     private void checkTournamentAccessibility(Tournament tournament) {

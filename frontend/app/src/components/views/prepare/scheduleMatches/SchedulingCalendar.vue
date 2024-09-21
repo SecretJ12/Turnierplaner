@@ -74,13 +74,7 @@ const { data: groups } = getGroup(
 
 const curStart = ref<Date | undefined>()
 const curEnd = ref<Date | undefined>()
-const { data: exMatches } = getTournamentMatchEvents(
-	route,
-	t,
-	curStart,
-	curEnd,
-	computed(() => props.courts),
-)
+const { data: exMatches } = getTournamentMatchEvents(route, t, curStart, curEnd)
 
 const events = defineModel<MatchCalEvent[]>({ default: [] })
 watch(

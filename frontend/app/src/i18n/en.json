@@ -29,12 +29,17 @@
 		"calendar": "Calendar",
 		"list": "List",
 		"title": "Title",
+		"tournament": "Tournament",
 		"competition": "Competition",
 		"court": "Court",
 		"begin": "Begin",
 		"team": "Team",
 		"result": "Result",
-		"courts": "Courts"
+		"courts": "Courts",
+		"any": "Any",
+		"filter_by_name": "Filter by name",
+		"from": "From",
+		"to": "To"
 	},
 	"ViewPlayerRegistration": {
 		"headline": "Player Registration",
@@ -186,7 +191,8 @@
 		"register_success": "Successful registered",
 		"register_failed": "Registration failed",
 		"over": "O",
-		"under": "U"
+		"under": "U",
+		"player_not_found": "Player not found"
 	},
 	"ViewKnockout": {
 		"finale": "Finale",

@@ -25,7 +25,7 @@ public class Team extends PanacheEntityBase {
     @Column(name = "id", nullable = false)
     private UUID id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "competition", referencedColumnName = "id")
     private Competition competition;
 

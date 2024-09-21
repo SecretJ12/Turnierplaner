@@ -292,6 +292,8 @@ public class TestdataGenerator {
         }
         // TODO support more than 2 groups ? How is the tree supposed to look like again with Nextmatch? @Jonas
         Match finalOfGroupMatch1 = createMatch(courts[random.nextInt(4)], competition);
+        competition.setFinale(finalOfGroupMatch1);
+        competitions.persist(competition);
         matchRepository.persist(finalOfGroupMatch1);
         FinalOfGroup finalOfGroup1 = new FinalOfGroup();
         finalOfGroup1.setNextMatch(finalOfGroupMatch1);
@@ -301,6 +303,8 @@ public class TestdataGenerator {
         finalOfGroupRepository.persist(finalOfGroup1);
 
         Match finalOfGroupMatch2 = createMatch(courts[random.nextInt(4)], competition);
+        competition.setThirdPlace(finalOfGroupMatch2);
+        competitions.persist(competition);
         matchRepository.persist(finalOfGroupMatch2);
         FinalOfGroup finalOfGroup2 = new FinalOfGroup();
         finalOfGroup2.setNextMatch(finalOfGroupMatch2);
@@ -329,6 +333,9 @@ public class TestdataGenerator {
                 currentMatches[j].setFinished(false);
 
                 matchRepository.persist(currentMatches[j]);
+                if (i == 1) {
+                    competition.setFinale(currentMatches[0]);
+                }
 
                 if (i != compSettings.getTeamNumbers() / 2) {
                     if (previousMatches[j * 2].isFinished() && previousMatches[j * 2 + 1].isFinished())
@@ -352,6 +359,7 @@ public class TestdataGenerator {
                 currentMatches[1].setTeamB(getLooserOfMatchIfExists(previousMatches[1]));
 
                 matchRepository.persist(currentMatches[1]);
+                competition.setThirdPlace(currentMatches[1]);
                 if (previousMatches[0].isFinished() && previousMatches[1].isFinished())
                     createSets(currentMatches[1]);
                 NextMatch nextThirdPlace = new NextMatch();
@@ -365,6 +373,7 @@ public class TestdataGenerator {
             previousMatches = currentMatches;
             currentMatches = new Match[compSettings.getTeamNumbers() / 2];
         }
+        competitions.persist(competition);
     }
 
     private Team getWinnerOfMatchIfExists(Match match) {

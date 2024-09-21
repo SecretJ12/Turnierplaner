@@ -59,11 +59,16 @@ export function useDeleteCourt() {
 export function getTournamentCourts(route: RouteLocationNormalizedLoaded) {
 	return useQuery({
 		queryKey: ["tournamentCourts", computed(() => route.params.tourId)],
-		queryFn: () =>
-			axios
-				.get(`/tournament/${route.params.tourId}/courts`)
+		queryFn: async () => {
+			return axios
+				.get(
+					route.params.tourId
+						? `/tournament/${route.params.tourId}/courts`
+						: `/court`,
+				)
 				.then<Court[]>((response) => response.data)
-				.then<Court[]>((data) => data.sort(courtComp)),
+				.then<Court[]>((data) => data.sort(courtComp))
+		},
 	})
 }
 

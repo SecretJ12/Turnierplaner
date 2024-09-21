@@ -4,6 +4,8 @@ import de.secretj12.turnierplaner.db.entities.Match;
 import de.secretj12.turnierplaner.db.entities.Tournament;
 import de.secretj12.turnierplaner.db.entities.groups.Group;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -29,6 +31,7 @@ public class Competition {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Fetch(FetchMode.SELECT)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tournament_id", nullable = false)
     private Tournament tournament;
@@ -68,6 +71,9 @@ public class Competition {
     private LocalDate playerBmaxAge;
     @Column(name = "creation_progess", nullable = false)
     private CreationProgress cProgress;
+
+    @Column(name = "totalRounds")
+    private int total;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "finale_id")
@@ -275,5 +281,13 @@ public class Competition {
 
     public void setFinale(Match finale) {
         this.finale = finale;
+    }
+
+    public int getTotal() {
+        return total;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
     }
 }

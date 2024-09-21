@@ -40,7 +40,7 @@ import { Player } from "@/interfaces/player"
 import { Mode } from "@/interfaces/competition"
 import { ref } from "vue"
 import { useToast } from "primevue/usetoast"
-import { extractSearchPlayer, getPlayer } from "@/backend/player"
+import { extractSearchPlayer, findPlayers } from "@/backend/player"
 import { getCompetitionDetails } from "@/backend/competition"
 import { useRoute } from "vue-router"
 import { getTournamentDetails } from "@/backend/tournament"
@@ -58,7 +58,7 @@ const { data: tournament } = getTournamentDetails(route, t, toast)
 const { data: competition } = getCompetitionDetails(route, t, toast)
 const selectedPlayer = ref<Player | null>(null)
 const search = ref<string>("")
-const { data: suggestionsPlayer, isFetching: loading } = getPlayer(
+const { data: suggestionsPlayer, isFetching: loading } = findPlayers(
 	search,
 	extractSearchPlayer(competition, false),
 	t,

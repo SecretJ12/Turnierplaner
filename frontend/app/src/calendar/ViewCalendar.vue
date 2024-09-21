@@ -1,5 +1,6 @@
 <template>
 	<vue-cal
+		id="vuecal"
 		ref="vuecal"
 		:key="calid"
 		:events="events"
@@ -14,8 +15,8 @@
 		:split-days="props.splitDays"
 		sticky-split-labels
 		:min-event-width="props.minEventWidth"
-		:min-split-width="props.minSplitWidth"
 		:min-cell-width="props.minCellWidth"
+		:min-split-width="props.minSplitWidth"
 		:time-cell-height="props.timeCellHeight"
 		:snap-to-time="props.snapToTime"
 		:time-step="props.timeStep"
@@ -54,6 +55,7 @@ import VueCal from "vue-cal"
 import "vue-cal/dist/vuecal.css"
 import { Ref, ref, watch } from "vue"
 import { CalEvent, DaySplit, View } from "@/calendar/CalendarInterfaces"
+import { sleep } from "@/backend/Tracker"
 
 const props = withDefaults(
 	defineProps<{
@@ -77,7 +79,7 @@ const props = withDefaults(
 	}>(),
 	{
 		selectedDate: () => new Date(),
-		timeFrom: 8 * 60,
+		timeFrom: 0,
 		timeTo: 24 * 60,
 		snapToTime: 15,
 		timeStep: 15,
@@ -151,7 +153,7 @@ function onEventChange({
 	event: CalEvent<T>
 	originalEvent: CalEvent<T>
 }) {
-	if (props.automaticEvent && originalEvent) {
+	if (props.automaticEvent && originalEvent && originalEvent.id) {
 		events.value.splice(
 			events.value.findIndex((e) => e.id === originalEvent.id),
 			1,
@@ -164,14 +166,23 @@ function onEventChange({
 	emit("onEventChange", event, originalEvent)
 }
 
-function onViewChange({
+async function onViewChange({
 	startDate,
 	endDate,
 }: {
 	startDate: Date
 	endDate: Date
 }) {
+	console.log("view change")
 	emit("onViewChange", startDate, endDate)
+
+	await sleep(500)
+	const calendar = document.querySelector("#vuecal .vuecal__bg")
+	if (calendar)
+		calendar.scrollTo({
+			top: (60 / props.timeStep) * 8 * props.timeCellHeight,
+			behavior: "smooth",
+		})
 }
 </script>
 

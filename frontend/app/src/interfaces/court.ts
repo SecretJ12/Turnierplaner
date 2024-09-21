@@ -6,5 +6,5 @@ export enum courttype {
 
 export interface Court {
 	name: string
-	type: courttype
+	courtType: courttype
 }

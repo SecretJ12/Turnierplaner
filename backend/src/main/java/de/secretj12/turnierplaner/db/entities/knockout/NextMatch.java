@@ -13,14 +13,14 @@ public class NextMatch {
     private UUID id;
 
     @MapsId
-    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "next_match", referencedColumnName = "id", nullable = false)
     private Match nextMatch;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "previous_a", referencedColumnName = "id", nullable = false)
     private Match previousA;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "previous_b", referencedColumnName = "id", nullable = false)
     private Match previousB;
 

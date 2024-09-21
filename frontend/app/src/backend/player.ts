@@ -1,9 +1,10 @@
 import { Competition, Sex } from "@/interfaces/competition"
 import axios from "axios"
-import { Player, playerServerToClient } from "@/interfaces/player"
+import { Player, PlayerServer, playerServerToClient } from "@/interfaces/player"
 import { ToastServiceMethods } from "primevue/toastservice"
 import { computed, Ref } from "vue"
 import { useQuery } from "@tanstack/vue-query"
+import { RouteLocationNormalizedLoaded } from "vue-router"
 
 export interface searchPlayer {
 	sex: Sex
@@ -41,7 +42,7 @@ export function extractSearchPlayer(
 	})
 }
 
-export function getPlayer(
+export function findPlayers(
 	search: Ref<string>,
 	searchPlayer: Ref<searchPlayer>,
 	t: (s: string) => string,
@@ -51,7 +52,7 @@ export function getPlayer(
 		queryKey: ["searchPlayer", search, searchPlayer],
 		queryFn: async () => {
 			return axios
-				.get<Player[]>(
+				.get<PlayerServer[]>(
 					`/player/find?search=${search.value.toLowerCase()}` +
 						(searchPlayer.value.sex !== Sex.ANY
 							? `&sex=${searchPlayer.value.sex}`
@@ -63,13 +64,36 @@ export function getPlayer(
 							? `&maxAge=${searchPlayer.value.maxAge.toISOString().slice(0, 10)}`
 							: ""),
 				)
-				.then((result) => {
-					return result.data.map(playerServerToClient)
-				})
+				.then<Player[]>((result) => result.data.map(playerServerToClient))
 				.catch((error) => {
 					toast.add({
 						severity: "error",
 						summary: t("ViewCompetition.query_search_failed"),
+						detail: error,
+						life: 3000,
+					})
+					console.log(error)
+					throw error
+				})
+		},
+	})
+}
+
+export function getPlayer(
+	route: RouteLocationNormalizedLoaded,
+	t: (s: string) => string,
+	toast: ToastServiceMethods,
+) {
+	return useQuery({
+		queryKey: ["playerDetails", computed(() => route.params.playerId)],
+		queryFn: async () => {
+			return axios
+				.get<PlayerServer>(`/player/${route.params.playerId}/details`)
+				.then<Player>((result) => playerServerToClient(result.data))
+				.catch((error) => {
+					toast.add({
+						severity: "error",
+						summary: t("Player.player_not_found"),
 						detail: error,
 						life: 3000,
 					})
