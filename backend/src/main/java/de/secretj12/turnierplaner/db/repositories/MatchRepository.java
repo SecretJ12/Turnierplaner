@@ -72,7 +72,7 @@ public class MatchRepository implements PanacheRepository<Match> {
                 cb.equal(root.get(Match_.TEAM_A).get(Team_.PLAYER_B), player),
                 cb.equal(root.get(Match_.TEAM_B).get(Team_.PLAYER_A), player),
                 cb.equal(root.get(Match_.TEAM_B).get(Team_.PLAYER_B), player)
-                                ));
+            ));
         }
         if (from != null) {
             predicates.add(cb.greaterThanOrEqualTo(root.get(Match_.BEGIN), from));
