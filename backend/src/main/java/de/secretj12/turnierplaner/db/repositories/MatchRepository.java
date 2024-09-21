@@ -8,6 +8,7 @@ import de.secretj12.turnierplaner.db.entities.competition.Competition;
 import de.secretj12.turnierplaner.db.entities.competition.Competition_;
 import de.secretj12.turnierplaner.db.entities.competition.Team_;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserMatch;
+import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserMatchEvent;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import io.quarkus.panache.common.Parameters;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -50,9 +51,9 @@ public class MatchRepository implements PanacheRepository<Match> {
     }
 
     @Transactional
-    public List<jUserMatch> filterMatches(Tournament tournament, Competition competition,
-                                          Player player,
-                                          Instant from, Instant to) {
+    public List<jUserMatchEvent> filterMatches(Tournament tournament, Competition competition,
+                                               Player player,
+                                               Instant from, Instant to) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Match> q = cb.createQuery(Match.class);
         Root<Match> root = q.from(Match.class);
@@ -61,7 +62,7 @@ public class MatchRepository implements PanacheRepository<Match> {
         q.where(predicate);
 
         List<Match> result = em.createQuery(q).getResultList();
-        return result.stream().map(jUserMatch::new).toList();
+        return result.stream().map(jUserMatchEvent::new).toList();
     }
 
     private Predicate applyAllValidPredicates(CriteriaBuilder cb, Root<Match> root, CriteriaQuery<Match> query, Tournament tournament, Competition competition, Player player, Instant from, Instant to) {
