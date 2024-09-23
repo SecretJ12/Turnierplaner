@@ -62,7 +62,7 @@ export function getFilteredMatches(
 		],
 		queryFn: async () => {
 			return axios
-				.get(`matches`, {
+				.get(`/matches`, {
 					params: {
 						tour: route.params.tourId,
 						player: route.params.playerId,
