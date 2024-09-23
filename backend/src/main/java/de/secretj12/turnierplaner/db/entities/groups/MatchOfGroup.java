@@ -17,7 +17,7 @@ public class MatchOfGroup {
     private Group group;
 
     @MapsId
-    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     @JoinColumn(name = "match", referencedColumnName = "id", nullable = false)
     private Match match;
 

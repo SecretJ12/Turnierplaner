@@ -13,7 +13,7 @@ public class FinalOfGroup {
     @Id
     private UUID id;
 
-    @Column(name = "position")
+    @Column(name = "position", nullable = false)
     private int pos;
 
     @MapsId
