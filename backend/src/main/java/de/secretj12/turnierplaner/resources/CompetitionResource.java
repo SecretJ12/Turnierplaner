@@ -15,8 +15,6 @@ import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jD
 import de.secretj12.turnierplaner.resources.jsonEntities.director.jDirectorScheduleMatch;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.competition.jUserCompetition;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.group.jUserGroupSystem;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayer;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayerRegistrationForm;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayerSignUpForm;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserTeam;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.knockout.jUserKnockoutMatch;
@@ -350,31 +348,6 @@ public class CompetitionResource {
         competitions.persist(competition);
 
         return "Teams updated";
-    }
-
-    @POST
-    @Transactional
-    @Path("/{compName}/signUpRegister/{playerSide}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public jUserPlayer registerSignUpPlayer(@PathParam("tourName") String tourName,
-                                            @PathParam("compName") String compName,
-                                            @PathParam("playerSide") String playerSide,
-                                            jUserPlayerRegistrationForm playerForm) {
-        Player newPlayer = playersResource.adminPlayerRegistration(playerForm);
-
-        Competition competition = competitions.getByName(tourName, compName);
-
-        Team team = new Team();
-        if (playerSide.equals("playerA")) {
-            team.setPlayerA(newPlayer);
-        } else {
-            team.setPlayerB(newPlayer);
-        }
-        team.setCompetition(competition);
-        teams.persist(team);
-
-        return new jUserPlayer(newPlayer);
     }
 
     private boolean conditionsFailA(Competition comp, Player player) {
