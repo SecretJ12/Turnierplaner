@@ -1,7 +1,11 @@
 <template>
 	<Dialog
 		v-model:visible="visible"
-		:style="{ width: '50rem' }"
+		:style="[
+			props.numberSets === NumberSets.THREE
+				? { width: '50rem' }
+				: { width: '70rem' },
+		]"
 		header="Update Score"
 		modal
 	>
@@ -26,12 +30,12 @@
 		</div>
 		<PlayerPointRow
 			:team="currentMatch?.teamA"
-			:game-points="team1GamePoints"
+			v-model:game-points="team1GamePoints"
 			v-if="visible"
 		/>
 		<PlayerPointRow
 			:team="currentMatch?.teamB"
-			:game-points="team2GamePoints"
+			v-model:game-points="team2GamePoints"
 			v-if="visible"
 		/>
 		<divider />
@@ -73,18 +77,29 @@
 </template>
 <script lang="ts" setup>
 import { Match } from "@/interfaces/match"
-import { ref } from "vue"
+import { computed, ref } from "vue"
 import { useI18n } from "vue-i18n"
 import PlayerPointRow from "@/components/items/PlayerPointRow.vue"
 import { NumberSets } from "@/interfaces/competition"
+import { useUpdateSet } from "@/backend/set"
+import { useRoute } from "vue-router"
+import { useToast } from "primevue/usetoast"
+import { useQueryClient } from "@tanstack/vue-query"
+
+const { t } = useI18n({ inheritLocale: true })
+const toast = useToast()
+
+const route = useRoute()
+const queryClient = useQueryClient()
 
 const props = defineProps<{
 	numberSets: NumberSets
 }>()
 
-const numberSets = props.numberSets ? 3 : 5
+const numberSets = computed(() =>
+	props.numberSets === NumberSets.THREE ? 3 : 5,
+)
 
-const { t } = useI18n({ inheritLocale: true })
 const currentMatch = ref<Match | null>(null)
 const visible = ref(false)
 const selectedSet = ref("0")
@@ -96,11 +111,26 @@ const showPopUp = function (match: Match) {
 	currentMatch.value = match
 	team1GamePoints.value = match.sets?.map((set) => set.scoreA) ?? []
 	team2GamePoints.value = match.sets?.map((set) => set.scoreB) ?? []
-	console.log(team1GamePoints.value)
+	for (let i = team1GamePoints.value.length; i < numberSets.value; i++) {
+		team1GamePoints.value.push(0)
+		team2GamePoints.value.push(0)
+	}
+	console.log(props.numberSets)
+	console.log(numberSets.value)
 	visible.value = true
 }
+const { mutate: updateSet } = useUpdateSet(route, t, toast)
 
 const savePoints = function () {
+	if (!currentMatch.value || !currentMatch.value.id) return
+	updateSet({
+		matchId: currentMatch.value!.id,
+		sets: team1GamePoints.value.map((scoreA, index) => ({
+			index,
+			scoreA,
+			scoreB: team2GamePoints.value[index],
+		})),
+	})
 	visible.value = false
 }
 

@@ -33,6 +33,7 @@ public class SetResource {
     @POST
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
     public String updateMatches(@PathParam("tourName") String tourName, @PathParam("matchId") Long matchId,
                                 List<jUserSet> sets) {
         Tournament tournament = tournaments.getByName(tourName);
@@ -56,6 +57,7 @@ public class SetResource {
 
             setRepository.persist(set);
         }
+        System.out.println("Updated matches");
 
         return "Updated matches";
     }

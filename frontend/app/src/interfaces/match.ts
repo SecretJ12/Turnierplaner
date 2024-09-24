@@ -11,11 +11,6 @@ export interface Game {
 	scoreB: number
 }
 
-export interface SetKey {
-	match_id: string
-	index: number
-}
-
 export interface Set {
 	// key: SetKey
 	index: number
