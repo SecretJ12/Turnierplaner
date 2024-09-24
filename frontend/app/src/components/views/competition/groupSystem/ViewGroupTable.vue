@@ -51,7 +51,7 @@
 						<div>
 							<ViewMatch
 								:match="findMatch(team)"
-								@click="showPopUp(findMatch(teamA, teamB))"
+								@click="showPopUp(findMatch(team))"
 							/>
 						</div>
 					</td>

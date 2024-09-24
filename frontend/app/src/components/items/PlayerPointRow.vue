@@ -37,7 +37,6 @@ import { Team } from "@/interfaces/team"
 const gamePoints = defineModel("gamePoints", { type: Array<number> })
 const props = defineProps<{
 	team: Team | undefined | null
-	gamePoints: Array<number>
 }>()
 </script>
 
