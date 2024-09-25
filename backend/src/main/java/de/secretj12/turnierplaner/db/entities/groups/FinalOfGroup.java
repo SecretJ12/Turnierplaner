@@ -13,11 +13,11 @@ public class FinalOfGroup {
     @Id
     private UUID id;
 
-    @Column(name = "position")
+    @Column(name = "position", nullable = false)
     private int pos;
 
     @MapsId
-    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "next_match", referencedColumnName = "id", nullable = false)
     private Match nextMatch;
 

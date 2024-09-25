@@ -13,7 +13,7 @@ public class NextMatch {
     private UUID id;
 
     @MapsId
-    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     @JoinColumn(name = "next_match", referencedColumnName = "id", nullable = false)
     private Match nextMatch;
 

@@ -38,7 +38,7 @@ public class Match {
     @NotNull
     @Fetch(FetchMode.SELECT)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "competition_id")
+    @JoinColumn(name = "competition_id", nullable = false)
     private Competition competition;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "court")
@@ -64,15 +64,12 @@ public class Match {
     @Column(name = "number")
     private int number;
 
-    @Fetch(FetchMode.SELECT)
     @OneToOne(mappedBy = "nextMatch", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private NextMatch dependentOn;
 
-    @Fetch(FetchMode.SELECT)
     @OneToMany(mappedBy = "previousA", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Collection<NextMatch> previousOfA;
 
-    @Fetch(FetchMode.SELECT)
     @OneToMany(mappedBy = "previousB", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Collection<NextMatch> previousOfB;
 

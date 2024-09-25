@@ -22,7 +22,7 @@ public class Group {
     @Column(name = "index")
     private int index;
     @ManyToOne
-    @JoinColumn(name = "competition_id")
+    @JoinColumn(name = "competition_id", nullable = false)
     private Competition competition;
 
     @OneToMany(mappedBy = "groupA", cascade = CascadeType.REMOVE, orphanRemoval = true)

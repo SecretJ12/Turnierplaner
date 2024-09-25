@@ -8,7 +8,6 @@ import de.secretj12.turnierplaner.db.repositories.TournamentRepository;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.jDirectorTournamentAdd;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.jDirectorTournamentUpdate;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserCourt;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserMatchEvent;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserTournament;
 import io.quarkus.security.UnauthorizedException;
 import io.quarkus.security.identity.SecurityIdentity;
@@ -18,9 +17,7 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.jboss.resteasy.reactive.Separator;
 
-import java.time.Instant;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -159,39 +156,6 @@ public class TournamentResource {
         dbTournament.setEndGamePhase(tournament.getEndGamePhase());
         tournaments.persist(dbTournament);
         return "successfully changed";
-    }
-
-    @GET
-    @Path("/{tourId}/matches")
-    @RolesAllowed("director")
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<jUserMatchEvent> getMatchesAt(@PathParam("tourId") String tourId,
-                                              @QueryParam("from") String from,
-                                              @QueryParam("to") String to,
-                                              @QueryParam("courts") @Separator(",") List<String> courts
-    ) {
-        Tournament tournament = tournaments.getByName(tourId);
-
-        Instant fromD = from == null ? null : Instant.parse(from);
-        Instant toD = to == null ? null : Instant.parse(to);
-        return tournament
-            .getCompetitions()
-            .stream().flatMap(competition -> competition.getMatches().stream())
-            .map(jUserMatchEvent::new)
-            .filter(match -> {
-                if (courts != null
-                    && (match.getCourt() == null || !courts.contains(match.getCourt())))
-                    return false;
-                if (fromD != null
-                    && (match.getBegin() == null || match.getEnd().isBefore(fromD)))
-                    return false;
-                if (toD != null
-                    && (match.getEnd() == null || match.getBegin().isAfter(toD)))
-                    return false;
-
-                return true;
-            })
-            .toList();
     }
 
     private void checkTournamentAccessibility(Tournament tournament) {

@@ -15,8 +15,6 @@ import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jD
 import de.secretj12.turnierplaner.resources.jsonEntities.director.jDirectorScheduleMatch;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.competition.jUserCompetition;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.group.jUserGroupSystem;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayer;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayerRegistrationForm;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayerSignUpForm;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserTeam;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.knockout.jUserKnockoutMatch;
@@ -352,31 +350,6 @@ public class CompetitionResource {
         return "Teams updated";
     }
 
-    @POST
-    @Transactional
-    @Path("/{compName}/signUpRegister/{playerSide}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public jUserPlayer registerSignUpPlayer(@PathParam("tourName") String tourName,
-                                            @PathParam("compName") String compName,
-                                            @PathParam("playerSide") String playerSide,
-                                            jUserPlayerRegistrationForm playerForm) {
-        Player newPlayer = playersResource.adminPlayerRegistration(playerForm);
-
-        Competition competition = competitions.getByName(tourName, compName);
-
-        Team team = new Team();
-        if (playerSide.equals("playerA")) {
-            team.setPlayerA(newPlayer);
-        } else {
-            team.setPlayerB(newPlayer);
-        }
-        team.setCompetition(competition);
-        teams.persist(team);
-
-        return new jUserPlayer(newPlayer);
-    }
-
     private boolean conditionsFailA(Competition comp, Player player) {
         return (comp.getPlayerASex() == Sex.FEMALE && player.getSex() == SexType.MALE)
             || (comp.getPlayerASex() == Sex.MALE && player.getSex() == SexType.FEMALE)
@@ -447,25 +420,10 @@ public class CompetitionResource {
         checkTournamentAccessibility(tourName);
 
         Competition competition = competitions.getByName(tourName, compName);
-        Match finale = competition.getFinale();
-        if (finale == null)
-            finale = new Match();
 
+        knockoutTools.updateKnockoutTree(competition, tree);
 
-        jUserKnockoutMatch curTree = tree;
-        int total = 1;
-        while (curTree.getPreviousA() != null) {
-            curTree = curTree.getPreviousA();
-            total++;
-        }
-        competition.setTotal(total);
-
-        knockoutTools.updateKnockoutTree(competition, tree, finale, total - 1);
-        knockoutTools.updateThirdPlace(competition, finale, total);
-
-        // TODO only set progress if everything is assigned
         competition.setcProgress(CreationProgress.SCHEDULING);
-        competition.setFinale(finale);
         competitions.persist(competition);
         return true;
     }
@@ -497,8 +455,6 @@ public class CompetitionResource {
 
         Competition competition = competitions.getByName(tourName, compName);
 
-        competition.setFinale(null);
-        competition.setThirdPlace(null);
         groupTools.generateMatches(competition, groups);
 
         competition.setcProgress(CreationProgress.SCHEDULING);
