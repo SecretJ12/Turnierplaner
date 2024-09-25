@@ -71,7 +71,7 @@
 				type="button"
 				@click="savePoints"
 			></Button>
-			<Button label="Save" type="button" @click="visible = false"></Button>
+			<Button label="Save" type="button" @click="savePoints"></Button>
 		</div>
 	</Dialog>
 </template>
@@ -122,14 +122,20 @@ const showPopUp = function (match: Match) {
 const { mutate: updateSet } = useUpdateSet(route, t, toast)
 
 const savePoints = function () {
-	if (!currentMatch.value || !currentMatch.value.id) return
+	if (!currentMatch.value || !currentMatch.value.id) {
+		console.log("No match")
+		return
+	}
+	console.log("saving..")
+	const sets = team1GamePoints.value.map((scoreA, index) => ({
+		index: index,
+		scoreA: scoreA,
+		scoreB: team2GamePoints.value[index],
+	}))
+	console.log(sets)
 	updateSet({
 		matchId: currentMatch.value!.id,
-		sets: team1GamePoints.value.map((scoreA, index) => ({
-			index,
-			scoreA,
-			scoreB: team2GamePoints.value[index],
-		})),
+		sets: sets,
 	})
 	visible.value = false
 }

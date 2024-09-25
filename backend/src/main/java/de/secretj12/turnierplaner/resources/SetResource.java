@@ -18,6 +18,7 @@ import jakarta.ws.rs.core.MediaType;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 
 @RolesAllowed("director")
 @Path("/tournament/{tourName}/competition/{matchId}/set")
@@ -31,29 +32,39 @@ public class SetResource {
 
 
     @POST
-    @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public String updateMatches(@PathParam("tourName") String tourName, @PathParam("matchId") Long matchId,
+    @Transactional
+    public String updateMatches(@PathParam("tourName") String tourName, @PathParam("matchId") UUID matchId,
                                 List<jUserSet> sets) {
+        System.out.println("tourName: " + tourName);
+        System.out.println("matchId: " + matchId);
+        System.out.println("sets: " + sets);
         Tournament tournament = tournaments.getByName(tourName);
         Instant beginGamePhase = tournament.getBeginGamePhase();
         if (beginGamePhase != null && beginGamePhase.isAfter(Instant.now()))
             throw new UnauthorizedException("Cannot update matches before game phase has begun");
 
         Match match = matchRepository.findById(matchId);
+        System.out.println(match);
         if (match == null)
-            throw new NotFoundException("Could find match");
+            throw new InternalServerErrorException("Could find match");
 
         for (jUserSet jSet : sets) {
             Set.SetKey setKey = new Set.SetKey();
             setKey.setMatch(match);
             setKey.setIndex(jSet.getIndex());
 
-            Set set = new Set();
-            set.setKey(setKey);
+            Set set = setRepository.findById(setKey);
+
+            if (set == null) {
+                set = new Set();
+                set.setKey(setKey);
+            }
             set.setScoreA(jSet.getScoreA());
             set.setScoreB(jSet.getScoreB());
+            System.out.println(set.getScoreA());
+            System.out.println(set.getScoreB());
 
             setRepository.persist(set);
         }
