@@ -222,7 +222,7 @@ import {
 import { useQueryClient } from "@tanstack/vue-query"
 import { extractSearchPlayer, findPlayers } from "@/backend/player"
 
-const { t } = useI18n({ inheritLocale: true })
+const { t } = useI18n()
 const toast = useToast()
 
 const route = useRoute()

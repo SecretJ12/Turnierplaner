@@ -15,7 +15,7 @@ import { TournamentServer } from "@/interfaces/tournament"
 import { useI18n } from "vue-i18n"
 import { useAddTournament } from "@/backend/tournament"
 
-const { t } = useI18n({ inheritLocale: true })
+const { t } = useI18n()
 const toast = useToast()
 
 let tourName: string | null = null

@@ -39,7 +39,7 @@ import {
 import MatchEvent from "@/components/views/prepare/scheduleMatches/MatchEvent.vue"
 
 const route = useRoute()
-const { t } = useI18n({ inheritLocale: true })
+const { t } = useI18n()
 const toast = useToast()
 
 const { data: competition } = getCompetitionDetails(route, t, toast)

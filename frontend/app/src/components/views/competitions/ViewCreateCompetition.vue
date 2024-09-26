@@ -41,7 +41,7 @@ import {
 import { useToast } from "primevue/usetoast"
 import { useAddCompetition } from "@/backend/competition"
 
-const { t } = useI18n({ inheritLocale: true })
+const { t } = useI18n()
 const toast = useToast()
 
 const route = useRoute()

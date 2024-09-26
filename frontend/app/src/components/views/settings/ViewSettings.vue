@@ -16,7 +16,7 @@ import { useI18n } from "vue-i18n"
 import SettingsCourts from "@/components/views/settings/SettingsCourts.vue"
 import SettingsItem from "@/components/views/settings/SettingsItem.vue"
 
-const { t } = useI18n({ inheritLocale: true })
+const { t } = useI18n()
 </script>
 
 <style scoped></style>

@@ -11,7 +11,7 @@ import ViewCreateCourtSmall from "@/components/views/court/ViewCreateCourtSmall.
 import { getCourts } from "@/backend/court"
 import { useI18n } from "vue-i18n"
 
-const { t } = useI18n({ inheritLocale: true })
+const { t } = useI18n()
 const { data: courts } = getCourts()
 </script>
 

@@ -6,7 +6,7 @@
 			option-value="id"
 			:options="options"
 			option-label="name"
-			placeholder="Platztyp"
+			:placeholder="t('court.type')"
 		/>
 		<Button size="small" @click="add">Add</Button>
 	</InputGroup>
@@ -18,7 +18,7 @@ import { useCreateCourt } from "@/backend/court"
 import { useI18n } from "vue-i18n"
 import { useToast } from "primevue/usetoast"
 
-const { t } = useI18n({ inheritLocale: true })
+const { t } = useI18n()
 const toast = useToast()
 const { mutate: addCourt } = useCreateCourt()
 

@@ -40,7 +40,7 @@ import ViewSignUpForm from "@/components/views/competition/signup/ViewSignUpForm
 import { Competition } from "@/interfaces/competition"
 import { useI18n } from "vue-i18n"
 
-const { t } = useI18n({ inheritLocale: true })
+const { t } = useI18n()
 
 let windowWidth = ref(window.innerWidth)
 window.addEventListener("resize", () => {

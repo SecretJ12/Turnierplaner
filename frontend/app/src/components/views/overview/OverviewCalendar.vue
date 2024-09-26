@@ -32,7 +32,7 @@ import {
 import { MatchCalEvent } from "@/components/views/prepare/scheduleMatches/ScheduleMatchesHelper"
 
 const route = useRoute()
-const { t } = useI18n({ inheritLocale: true })
+const { t } = useI18n()
 const toast = useToast()
 
 const curStart = ref<Date | undefined>()

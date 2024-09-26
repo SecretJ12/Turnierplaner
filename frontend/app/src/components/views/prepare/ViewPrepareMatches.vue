@@ -96,7 +96,7 @@ import { Progress, progressOrder } from "@/interfaces/competition"
 import Button from "primevue/button"
 import ViewEditTeams from "@/components/views/prepare/editTeams/ViewEditTeams.vue"
 
-const { t } = useI18n({ inheritLocale: true })
+const { t } = useI18n()
 
 function $t(name: string) {
 	return computed(() => t(name))

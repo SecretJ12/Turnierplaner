@@ -425,7 +425,7 @@ import { useForm } from "vee-validate"
 import { boolean, date, mixed, object, string } from "yup"
 import { toTypedSchema } from "@vee-validate/yup"
 
-const { t } = useI18n({ inheritLocale: true })
+const { t } = useI18n()
 
 const props = withDefaults(
 	defineProps<{

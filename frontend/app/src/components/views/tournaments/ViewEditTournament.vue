@@ -26,7 +26,7 @@ import { useToast } from "primevue/usetoast"
 import { getTournamentDetails, useUpdateTournament } from "@/backend/tournament"
 import { router } from "@/main"
 
-const { t } = useI18n({ inheritLocale: true })
+const { t } = useI18n()
 const toast = useToast()
 
 const route = useRoute()

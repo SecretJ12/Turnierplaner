@@ -137,7 +137,7 @@ import { useToast } from "primevue/usetoast"
 import { PlayerRegistration } from "@/interfaces/player"
 import { useRegisterPlayer } from "@/backend/registration"
 
-const { t } = useI18n({ inheritLocale: true })
+const { t } = useI18n()
 const toast = useToast()
 const { mutate: register, isSuccess: registered } = useRegisterPlayer(t, toast)
 

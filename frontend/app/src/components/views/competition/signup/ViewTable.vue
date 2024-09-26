@@ -173,7 +173,7 @@ import { getCompetitionDetails } from "@/backend/competition"
 import { getSignedUpSepByComp } from "@/backend/signup"
 import ViewPlayerName from "@/components/links/LinkPlayerName.vue"
 
-const { t } = useI18n({ inheritLocale: true })
+const { t } = useI18n()
 const toast = useToast()
 
 const route = useRoute()

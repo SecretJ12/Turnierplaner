@@ -36,7 +36,7 @@ import ViewMatchDate from "@/components/views/competition/knockoutSystem/ViewMat
 import { knockoutTitle } from "@/components/views/competition/knockoutSystem/KnockoutTitleGenerator"
 import { useI18n } from "vue-i18n"
 
-const { t } = useI18n({ inheritLocale: true })
+const { t } = useI18n()
 
 const props = defineProps<{
 	mode: Mode

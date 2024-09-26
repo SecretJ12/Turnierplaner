@@ -31,7 +31,7 @@ import { getCanCreate } from "@/backend/security"
 import { getTournamentList } from "@/backend/tournament"
 import { useToast } from "primevue/usetoast"
 
-const { t } = useI18n({ inheritLocale: true })
+const { t } = useI18n()
 const toast = useToast()
 
 const isLoggedIn = inject("loggedIn", ref(false))

@@ -20,7 +20,7 @@ import OverviewCalendar from "@/components/views/overview/OverviewCalendar.vue"
 import OverviewList from "@/components/views/overview/OverviewList.vue"
 import { useI18n } from "vue-i18n"
 
-const { t } = useI18n({ inheritLocale: true })
+const { t } = useI18n()
 
 const views = [
 	{

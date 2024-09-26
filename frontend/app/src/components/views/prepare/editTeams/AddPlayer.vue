@@ -45,7 +45,7 @@ import { getCompetitionDetails } from "@/backend/competition"
 import { useRoute } from "vue-router"
 import { getTournamentDetails } from "@/backend/tournament"
 
-const { t } = useI18n({ inheritLocale: true })
+const { t } = useI18n()
 const toast = useToast()
 
 const props = defineProps<{

@@ -19,7 +19,7 @@ import { useToast } from "primevue/usetoast"
 import OverviewList from "@/components/views/overview/OverviewList.vue"
 
 const route = useRoute()
-const { t } = useI18n({ inheritLocale: true })
+const { t } = useI18n()
 const toast = useToast()
 
 const { data: player } = getPlayer(route, t, toast)

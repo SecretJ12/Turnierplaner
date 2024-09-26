@@ -1,7 +1,9 @@
 <script lang="ts" setup>
 import HeadContent from "@/components/header/HeadContent.vue"
-import { provide, ref } from "vue"
+import { provide, ref, watch } from "vue"
 import { access_token, auth } from "@/security/AuthService"
+import { getConfig } from "@/backend/config"
+import { useI18n } from "vue-i18n"
 
 let aside = false
 
@@ -31,6 +33,16 @@ auth.addUserLoadedListener(() => {
 auth.addUserUnloadedListener(() => {
 	access_token.value = null
 	loggedIn.value = false
+})
+
+const { data: config } = getConfig()
+const { locale } = useI18n()
+
+watch(config, () => {
+	if (config.value) {
+		console.log("update language")
+		locale.value = config.value.language
+	}
 })
 </script>
 

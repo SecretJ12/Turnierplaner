@@ -98,7 +98,7 @@ import { getSignedUpSeparated, useUpdateTeams } from "@/backend/signup"
 const route = useRoute()
 const router = useRouter()
 const toast = useToast()
-const { t } = useI18n({ inheritLocale: true })
+const { t } = useI18n()
 
 function $t(name: string) {
 	return computed(() => t(name))

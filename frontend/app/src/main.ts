@@ -57,7 +57,7 @@ const options: I18nOptions = {
 	locale: "de", // set locale
 	fallbackLocale: "en", // set fallback locale
 	warnHtmlMessage: false,
-	missingWarn: false,
+	missingWarn: true,
 	fallbackWarn: false,
 	messages,
 	legacy: false,

@@ -5,7 +5,7 @@
 				<span class="material-symbols-outlined">settings</span>
 			</template>
 		</Button>
-		<Dropdown v-model="$i18n.locale" :options="$i18n.availableLocales" />
+		<Dropdown v-model="locale" :options="availableLocales" />
 
 		<span
 			v-if="!isLoggedIn"
@@ -26,9 +26,11 @@
 import { auth } from "@/security/AuthService"
 import { inject, ref, watch } from "vue"
 import { router } from "@/main"
+import { useI18n } from "vue-i18n"
 
 const currentUser = ref<string>("")
 const isLoggedIn = inject("loggedIn", ref(false))
+const { locale, availableLocales } = useI18n()
 
 function settings() {
 	router.push({

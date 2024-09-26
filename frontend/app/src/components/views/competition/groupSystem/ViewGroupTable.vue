@@ -78,7 +78,7 @@ import { NumberSets } from "@/interfaces/competition"
 import { getCanEdit } from "@/backend/security"
 import { useRoute } from "vue-router"
 
-const { t } = useI18n({ inheritLocale: true })
+const { t } = useI18n()
 
 const props = defineProps<{
 	group: Group
