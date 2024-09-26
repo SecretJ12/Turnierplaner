@@ -7,10 +7,6 @@ export function getConfig() {
 		queryKey: ["config", "default"],
 		queryFn: async () =>
 			axios.get("/config/default").then<Config>((response) => response.data),
-		placeholderData: {
-			name: "title",
-			language: "en",
-		},
 		staleTime: 0,
 	})
 }

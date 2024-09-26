@@ -8,7 +8,7 @@
 		>
 		<div class="flex flex-row align-items-baseline gap-3">
 			<h1 id="colorHeadLine" class="m-0 cursor-pointer title" @click="toHome">
-				{{ t("title") }}
+				{{ config?.name ? t(config.name) : t("title") }}
 			</h1>
 			<h2 class="m-0 cursor-pointer" @click="toTournament">
 				{{ route.params.tourId }}
@@ -24,9 +24,12 @@
 import { router } from "@/main"
 import { useI18n } from "vue-i18n"
 import { useRoute } from "vue-router"
+import { getConfig } from "@/backend/config"
 
 const route = useRoute()
 const { t } = useI18n()
+
+const { data: config } = getConfig()
 
 function toHome() {
 	router.push({ name: "Tournaments" })
