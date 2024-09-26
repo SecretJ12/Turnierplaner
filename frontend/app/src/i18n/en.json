@@ -158,7 +158,8 @@
 		"selectPlayerFirst": "Please select a player first",
 		"noPlayerFound": "No player found",
 		"invalidMode": "Invalid mode",
-		"playerDeleted": "Player deleted"
+		"playerDeleted": "Player deleted",
+		"teamDeleted": "Team deleted"
 	},
 	"ViewCreateCompetition": {
 		"header": "Create competition",

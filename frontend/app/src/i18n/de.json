@@ -155,7 +155,8 @@
 		"selectPlayerFirst": "Bitte wähle zuerst einen Spieler aus",
 		"noPlayerFound": "Keinen Spieler gefunden",
 		"invalidMode": "Ungültiger Modus",
-		"playerDeleted": "Spieler gelöscht"
+		"playerDeleted": "Spieler gelöscht",
+		"teamDeleted": "Team gelöscht"
 	},
 	"ViewCreateCompetition": {
 		"header": "Neue Konkurrenz",

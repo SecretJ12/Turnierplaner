@@ -1,9 +1,14 @@
 import { Competition, Sex } from "@/interfaces/competition"
 import axios from "axios"
-import { Player, PlayerServer, playerServerToClient } from "@/interfaces/player"
+import {
+	Player,
+	playerClientToServer,
+	PlayerServer,
+	playerServerToClient,
+} from "@/interfaces/player"
 import { ToastServiceMethods } from "primevue/toastservice"
 import { computed, Ref } from "vue"
-import { useQuery } from "@tanstack/vue-query"
+import { useMutation, useQuery } from "@tanstack/vue-query"
 import { RouteLocationNormalizedLoaded } from "vue-router"
 
 export interface searchPlayer {
@@ -76,6 +81,44 @@ export function findPlayers(
 					throw error
 				})
 		},
+	})
+}
+
+export function getUnverified(
+	t: (s: string) => string,
+	toast: ToastServiceMethods,
+) {
+	return useQuery({
+		queryKey: ["unverifiedPlayer"],
+		queryFn: async () => {
+			return axios
+				.get<PlayerServer[]>(`/player/listUnverified`)
+				.then<Player[]>((result) => result.data.map(playerServerToClient))
+				.catch((error) => {
+					toast.add({
+						severity: "error",
+						summary: t("ViewCompetition.query_search_failed"),
+						detail: error,
+						life: 3000,
+					})
+					console.log(error)
+					throw error
+				})
+		},
+	})
+}
+
+export function useAdminVerify() {
+	return useMutation({
+		mutationFn: async (player: Player) =>
+			axios.post(`player/adminVerify`, playerClientToServer(player)),
+	})
+}
+
+export function useDeletePlayer() {
+	return useMutation({
+		mutationFn: async (player: Player) =>
+			axios.post(`player/delete`, playerClientToServer(player)),
 	})
 }
 

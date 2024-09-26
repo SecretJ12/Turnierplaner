@@ -12,7 +12,7 @@
 			<Column :header="t('general.name')" field="name" sortable>
 				<template #body="{ data }">
 					<div class="flex justify-content-between align-items-center">
-						<ViewPlayerName :player="<Player>data" />
+						<ViewPlayerName :player="<Player>data.playerA" />
 						<Button
 							v-if="canEdit"
 							severity="danger"
@@ -84,7 +84,7 @@
 			<Column :header="t('general.name')" sortable field="name">
 				<template #body="{ data }">
 					<div class="flex justify-content-between align-items-center">
-						<ViewPlayerName :player="<Player>data" />
+						<ViewPlayerName :player="<Player>data.playerA" />
 						<Button
 							v-if="canEdit"
 							severity="danger"
@@ -114,7 +114,7 @@
 				<Column :header="t('ViewCompetition.playerA')" sortable field="name">
 					<template #body="{ data }">
 						<div class="flex justify-content-between align-items-center">
-							<ViewPlayerName :player="<Player>data" />
+							<ViewPlayerName :player="<Player>data.playerA" />
 							<Button
 								v-if="canEdit"
 								severity="danger"
@@ -141,7 +141,7 @@
 				<Column :header="t('ViewCompetition.playerB')" sortable field="name">
 					<template #body="{ data }">
 						<div class="flex justify-content-between align-items-center">
-							<ViewPlayerName :player="<Player>data" />
+							<ViewPlayerName :player="<Player>data.playerB" />
 							<Button
 								v-if="canEdit"
 								severity="danger"
@@ -170,8 +170,9 @@ import { Player } from "@/interfaces/player"
 import { useToast } from "primevue/usetoast"
 import { getCanEdit } from "@/backend/security"
 import { getCompetitionDetails } from "@/backend/competition"
-import { getSignedUpSepByComp } from "@/backend/signup"
+import { getSignedUpSepByComp, useDeleteTeam } from "@/backend/signup"
 import ViewPlayerName from "@/components/links/LinkPlayerName.vue"
+import { Team } from "@/interfaces/team"
 
 const { t } = useI18n()
 const toast = useToast()
@@ -183,13 +184,17 @@ const { data: canEdit } = getCanEdit(<string>route.params.tourId, isLoggedIn)
 
 const { data: competition } = getCompetitionDetails(route, t, toast)
 const { data: signedUp } = getSignedUpSepByComp(route, t, toast)
+const { mutate: deleteTeam } = useDeleteTeam(route)
 
-function deletePlayer(player: Player) {
-	console.log(player)
-	// TODO implement
+function deletePlayer(team: Team) {
+	deleteTeam(team)
 	toast.add({
 		severity: "success",
-		summary: t("ViewSignUp.playerDeleted"),
+		summary: t(
+			competition.value?.mode == Mode.SINGLE
+				? "ViewSignUp.playerDeleted"
+				: "ViewSignUp.teamDeleted",
+		),
 		life: 3000,
 	})
 }

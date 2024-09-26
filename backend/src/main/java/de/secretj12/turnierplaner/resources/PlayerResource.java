@@ -13,11 +13,13 @@ import io.quarkus.mailer.Mailer;
 import io.quarkus.scheduler.Scheduled;
 import io.quarkus.security.identity.SecurityIdentity;
 import io.smallrye.common.annotation.Blocking;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.time.LocalDate;
 import java.time.Instant;
@@ -37,6 +39,9 @@ public class PlayerResource {
 
     @Inject
     SecurityIdentity securityIdentity;
+
+    @ConfigProperty(name = "turnierplaner.registration.expire")
+    public int expire;
 
     @GET
     @Path("/find")
@@ -60,6 +65,14 @@ public class PlayerResource {
     }
 
     @GET
+    @Path("/listUnverified")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("director")
+    public List<jUserPlayer> listUnverified() {
+        return playerRepository.adminUnverified().map(jUserPlayer::new).toList();
+    }
+
+    @GET
     @Path("/{playerId}/details")
     @Produces(MediaType.APPLICATION_JSON)
     public jUserPlayer getPlayer(@PathParam("playerId") UUID playerId) {
@@ -76,7 +89,11 @@ public class PlayerResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     public String playerRegistration(jUserPlayerRegistrationForm playerForm) {
-        if (playerRepository.getByName(playerForm.getFirstName(), playerForm.getLastName()) != null)
+        Player exPlayer = playerRepository.getByName(playerForm.getFirstName(), playerForm.getLastName());
+        if (exPlayer != null &&
+            (exPlayer.getVerificationCode() == null
+                || (exPlayer.getVerificationCode() != null && exPlayer.getVerificationCode().getExpirationDate()
+                    .isBefore(Instant.now()))))
             throw new WebApplicationException("A player already exists with this name", Response.Status.CONFLICT);
 
         // TODO check phone number (only valid phone number)
@@ -92,14 +109,13 @@ public class PlayerResource {
         }
         newPlayer.setEmail(playerForm.getEmail());
         newPlayer.setPhone(playerForm.getPhone());
-        newPlayer.setMailVerified(false);
-        // TODO Admin verification
-        newPlayer.setAdminVerified(false);
+        newPlayer.setMailVerified(securityIdentity.hasRole("director"));
+        newPlayer.setAdminVerified(securityIdentity.hasRole("director"));
         playerRepository.persist(newPlayer);
 
         VerificationCode verificationCode = new VerificationCode();
         verificationCode.setPlayer(newPlayer);
-        verificationCode.setExpirationDate(Instant.now().plus(30, ChronoUnit.MINUTES));
+        verificationCode.setExpirationDate(Instant.now().plus(expire, ChronoUnit.MINUTES));
         verificationCodeRepository.persist(verificationCode);
 
         // TODO check for valid mail
@@ -113,32 +129,6 @@ public class PlayerResource {
         return "successfully added";
     }
 
-
-    @Transactional
-    public Player adminPlayerRegistration(jUserPlayerRegistrationForm playerForm) {
-        if (!securityIdentity.hasRole("director")) throw new ForbiddenException("No permission to create player");
-        if (playerRepository.getByName(playerForm.getFirstName(), playerForm.getLastName()) != null)
-            throw new WebApplicationException("A player already exists with this name", Response.Status.CONFLICT);
-
-        Player newPlayer = new Player();
-        newPlayer.setFirstName(playerForm.getFirstName());
-        newPlayer.setLastName(playerForm.getLastName());
-        newPlayer.setBirthday(playerForm.getBirthday());
-        if (playerForm.getSex() == null) throw new BadRequestException("Sex is null");
-        switch (playerForm.getSex()) {
-            case MALE -> newPlayer.setSex(SexType.MALE);
-            case FEMALE -> newPlayer.setSex(SexType.FEMALE);
-        }
-        newPlayer.setEmail(playerForm.getEmail());
-        newPlayer.setPhone(playerForm.getPhone());
-        newPlayer.setMailVerified(true);
-        // TODO Admin verification
-        newPlayer.setAdminVerified(true);
-        playerRepository.persist(newPlayer);
-
-        return newPlayer;
-    }
-
     @GET
     @Transactional
     @Path("/verification")
@@ -149,15 +139,39 @@ public class PlayerResource {
 
         Player player = verificationCode.getPlayer();
         player.setMailVerified(true);
+        player.setVerificationCode(null);
         playerRepository.persist(player);
         verificationCodeRepository.delete(verificationCode);
+        return "Successfully verified!";
+    }
+
+    @POST
+    @RolesAllowed("director")
+    @Transactional
+    @Path("/adminVerify")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String adminVerify(Player player) {
+        Player dbPlayer = playerRepository.getById(player.getId());
+        dbPlayer.setAdminVerified(true);
+        playerRepository.persist(dbPlayer);
+        return "Successfully verified!";
+    }
+
+    @POST
+    @RolesAllowed("director")
+    @Transactional
+    @Path("/delete")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String deletePlayer(Player player) {
+        Player dbPlayer = playerRepository.getById(player.getId());
+        playerRepository.delete(dbPlayer);
         return "Successfully verified!";
     }
 
     @Transactional
     @Scheduled(every = "30m", identity = "clear-verification-code")
     void clear() {
-        // TODO also delete player? otherwise not verified player, but no new one can be created because of duplicate
+        playerRepository.deleteUnverified();
         verificationCodeRepository.delete("FROM VerificationCode v WHERE v.expiration_date < current_timestamp()");
     }
 

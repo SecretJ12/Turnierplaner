@@ -5,29 +5,39 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Table(name = "players")
-@NamedQueries(
-    @NamedQuery(name = "filter",
-                query = """
-                    SELECT p FROM Player p
-                    WHERE p.mailVerified = true
-                    AND (p.sex = :sex OR :ignoreSex = true)
-                    AND (p.birthday <= :minAge OR :ignoreMinAge = true)
-                    AND (p.birthday >= :maxAge OR :ignoreMaxAge = true)
-                    AND (lower(p.firstName) like CONCAT('%', lower(:search), '%')
-                    OR lower(p.lastName) = CONCAT('%', lower(:search), '%')
-                    OR lower(CONCAT(p.firstName, ' ', p.lastName)) like CONCAT('%', lower(:search), '%'))
-                    ORDER BY CASE
-                        WHEN lower(p.firstName) like CONCAT(lower(:search), '%') THEN 0
-                        WHEN lower(p.lastName) like CONCAT(lower(:search), '%') THEN 1
-                        ELSE 2
-                    END, p.firstName, p.lastName"""
-    )
-)
+@NamedQueries({
+               @NamedQuery(name = "filter",
+                           query = """
+                               SELECT p FROM Player p
+                               WHERE p.mailVerified = true
+                               AND (p.sex = :sex OR :ignoreSex = true)
+                               AND (p.birthday <= :minAge OR :ignoreMinAge = true)
+                               AND (p.birthday >= :maxAge OR :ignoreMaxAge = true)
+                               AND (lower(p.firstName) like CONCAT('%', lower(:search), '%')
+                               OR lower(p.lastName) = CONCAT('%', lower(:search), '%')
+                               OR lower(CONCAT(p.firstName, ' ', p.lastName)) like CONCAT('%', lower(:search), '%'))
+                               ORDER BY CASE
+                                   WHEN lower(p.firstName) like CONCAT(lower(:search), '%') THEN 0
+                                   WHEN lower(p.lastName) like CONCAT(lower(:search), '%') THEN 1
+                                   ELSE 2
+                               END, p.firstName, p.lastName"""
+               ),
+               @NamedQuery(name = "adminUnverified",
+                           query = """
+                               SELECT p FROM Player p
+                               WHERE p.adminVerified = false"""),
+               @NamedQuery(name = "deleteUnverified",
+                           query = """
+                               FROM Player p
+                               LEFT OUTER JOIN VerificationCode c
+                               WHERE p.mailVerified = false
+                               AND c.expiration_date < current_timestamp()
+                               """)
+})
 public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -57,9 +67,9 @@ public class Player {
     @Column(name = "admin_verified")
     private boolean adminVerified;
 
-    @OneToMany(mappedBy = "player")
+    @OneToOne(mappedBy = "player")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private List<VerificationCode> verificationCodes;
+    private VerificationCode verificationCode;
 
     public Player() {
     }
@@ -146,5 +156,13 @@ public class Player {
 
     public void setAdminVerified(boolean admin_verified) {
         this.adminVerified = admin_verified;
+    }
+
+    public VerificationCode getVerificationCode() {
+        return verificationCode;
+    }
+
+    public void setVerificationCode(VerificationCode verificationCodes) {
+        this.verificationCode = verificationCodes;
     }
 }

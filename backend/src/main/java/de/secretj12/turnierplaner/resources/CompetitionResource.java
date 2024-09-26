@@ -308,6 +308,26 @@ public class CompetitionResource {
     }
 
     @POST
+    @Path("/{compName}/deleteTeam")
+    @Transactional
+    @RolesAllowed("director")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public String deleteTeam(@PathParam("tourName") String tourName, @PathParam("compName") String compName,
+                             jUserTeam team) {
+        Team dbTeam = teams.findById(team.getId());
+        if (dbTeam == null)
+            throw new BadRequestException("Team does not exist");
+        Competition competition = competitions.getByName(tourName, compName);
+        switch (competition.getcProgress()) {
+            case GAMES, SCHEDULING:
+                throw new BadRequestException("Can't delete team after assigning teams");
+        }
+        teams.delete(dbTeam);
+        return "Team deleted";
+    }
+
+    @POST
     @Transactional
     @RolesAllowed("director")
     @Path("/{compName}/updateTeams")

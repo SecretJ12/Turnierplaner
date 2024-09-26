@@ -17,7 +17,7 @@
 			>
 				{{ route.params.tourId }}
 			</h2>
-			<h2 v-if="route.name === 'Settings'">
+			<h2 v-if="route.name === 'Settings'" class="cursor-pointer">
 				{{ t("general.settings") }}
 			</h2>
 			<h3
