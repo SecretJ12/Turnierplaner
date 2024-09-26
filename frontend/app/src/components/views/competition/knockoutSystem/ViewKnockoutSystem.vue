@@ -23,7 +23,11 @@
 			</template>
 		</ViewKnockoutTree>
 	</template>
-	<UpdatePointsDialog ref="dialog" :number-sets="props.numberSets" />
+	<UpdatePointsDialog
+		v-if="canEdit"
+		ref="dialog"
+		:number-sets="props.numberSets"
+	/>
 </template>
 
 <script lang="ts" setup>
@@ -35,9 +39,10 @@ import ViewMatch from "@/components/views/competition/knockoutSystem/ViewMatch.v
 import ViewMatchDate from "@/components/views/competition/knockoutSystem/ViewMatchDate.vue"
 import { knockoutTitle } from "@/components/views/competition/knockoutSystem/KnockoutTitleGenerator"
 import { useI18n } from "vue-i18n"
-import { ref } from "vue"
+import { inject, ref } from "vue"
 import { Match } from "@/interfaces/match"
 import UpdatePointsDialog from "@/components/items/UpdatePointsDialog.vue"
+import { getCanEdit } from "@/backend/security"
 
 const { t } = useI18n({ inheritLocale: true })
 
@@ -47,11 +52,14 @@ const props = defineProps<{
 }>()
 
 const route = useRoute()
+const isLoggedIn = inject("loggedIn", ref(false))
+const { data: canEdit } = getCanEdit(<string>route.params.tourId, isLoggedIn)
+
 const { data: knockoutSystem } = getKnockout(route)
 const dialog = ref()
 
 const showPopUp = function (match: Match) {
-	dialog.value.showPopUp(match)
+	if (canEdit) dialog.value.showPopUp(match)
 }
 </script>
 

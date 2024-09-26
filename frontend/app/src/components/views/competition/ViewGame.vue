@@ -1,6 +1,9 @@
 <template>
 	<Suspense>
-		<ViewGroupSystem v-if="props.tourType === CompType.GROUPS" />
+		<ViewGroupSystem
+			v-if="props.tourType === CompType.GROUPS"
+			:number-sets="props.numberSets"
+		/>
 		<ViewKnockoutSystem
 			v-else-if="props.tourType === CompType.KNOCKOUT"
 			:mode="props.mode"

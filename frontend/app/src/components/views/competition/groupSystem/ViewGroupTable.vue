@@ -50,8 +50,8 @@
 					>
 						<div>
 							<ViewMatch
-								:match="findMatch(team)"
-								@click="showPopUp(findMatch(team))"
+								:match="findMatch(team, teamB)"
+								@click="showPopUp(findMatch(team, teamB))"
 							/>
 						</div>
 					</td>
@@ -59,24 +59,36 @@
 			</tr>
 		</template>
 	</table>
-	<UpdatePointsDialog ref="dialog" />
+	<UpdatePointsDialog
+		v-if="canEdit"
+		:number-sets="props.numberSets"
+		ref="dialog"
+	/>
 </template>
 
 <script setup lang="ts">
 import { Group } from "@/interfaces/groupSystem"
-import { ref } from "vue"
+import { inject, ref } from "vue"
 import { useI18n } from "vue-i18n"
 import ViewMatch from "@/components/views/competition/groupSystem/ViewMatch.vue"
 import { Match } from "@/interfaces/match"
 import { Team } from "@/interfaces/team"
-import UpdatePointsDialog from "@/components/items/UpdatePointsDialog.vue"
 import ViewTeamNames from "@/components/links/LinkTeamNames.vue"
+import UpdatePointsDialog from "@/components/items/UpdatePointsDialog.vue"
+import { NumberSets } from "@/interfaces/competition"
+import { getCanEdit } from "@/backend/security"
+import { useRoute } from "vue-router"
 
 const { t } = useI18n({ inheritLocale: true })
 
 const props = defineProps<{
 	group: Group
+	numberSets: NumberSets
 }>()
+
+const route = useRoute()
+const isLoggedIn = inject("loggedIn", ref(false))
+const { data: canEdit } = getCanEdit(<string>route.params.tourId, isLoggedIn)
 
 function findMatch(teamA: Team, teamB: Team): Match {
 	const match: Match | undefined = props.group.matches.find((match) => {
@@ -112,7 +124,7 @@ function hoverLeave() {
 
 const dialog = ref()
 const showPopUp = function (match: Match) {
-	dialog.value.showPopUp(match)
+	if (canEdit) dialog.value.showPopUp(match)
 }
 </script>
 
