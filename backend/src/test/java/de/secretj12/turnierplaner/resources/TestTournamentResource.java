@@ -103,7 +103,7 @@ public class TestTournamentResource {
     @Test
     public void testCanCreateUnauthorized() {
         given()
-            .get("/tournament/canCreate")
+            .get("/config/isDirector")
             .then()
             .assertThat()
             .statusCode(Response.Status.OK.getStatusCode())
@@ -114,7 +114,7 @@ public class TestTournamentResource {
     @TestSecurity(user = "testUser", roles = {"director"})
     public void testCanCreateAuthorized() {
         given()
-            .get("/tournament/canCreate")
+            .get("/config/isDirector")
             .then()
             .statusCode(Response.Status.OK.getStatusCode())
             .body(is("true"));

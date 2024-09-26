@@ -27,14 +27,7 @@ import java.util.UUID;
                @NamedQuery(name = "adminUnverified",
                            query = """
                                SELECT p FROM Player p
-                               WHERE p.adminVerified = false"""),
-               @NamedQuery(name = "deleteUnverified",
-                           query = """
-                               FROM Player p
-                               LEFT OUTER JOIN VerificationCode c
-                               WHERE p.mailVerified = false
-                               AND c.expiration_date < current_timestamp()
-                               """)
+                               WHERE p.adminVerified = false""")
 })
 public class Player {
     @Id

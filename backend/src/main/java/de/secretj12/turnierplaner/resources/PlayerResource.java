@@ -21,8 +21,8 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import java.time.LocalDate;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
@@ -171,8 +171,12 @@ public class PlayerResource {
     @Transactional
     @Scheduled(every = "30m", identity = "clear-verification-code")
     void clear() {
-        playerRepository.deleteUnverified();
-        verificationCodeRepository.delete("FROM VerificationCode v WHERE v.expiration_date < current_timestamp()");
+        List<VerificationCode> codes = verificationCodeRepository.find(
+            "FROM VerificationCode v WHERE v.expiration_date < " + "current_timestamp()").list();
+        for (var code : codes) {
+            if (code.getPlayer() != null)
+                playerRepository.delete(code.getPlayer());
+            verificationCodeRepository.delete(code);
+        }
     }
-
 }

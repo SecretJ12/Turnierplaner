@@ -40,8 +40,4 @@ public class PlayerRepository implements PanacheRepository<Player> {
     public Stream<Player> adminUnverified() {
         return find("#adminUnverified").stream();
     }
-
-    public void deleteUnverified() {
-        delete("#deleteUnverified");
-    }
 }

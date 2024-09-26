@@ -64,6 +64,7 @@ public class TestPlayerResource {
     @AfterEach
     @Transactional
     public void delete() {
+        verificationCodes.deleteAll();
         players.deleteAll();
     }
 
