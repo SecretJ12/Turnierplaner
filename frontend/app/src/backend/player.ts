@@ -8,7 +8,7 @@ import {
 } from "@/interfaces/player"
 import { ToastServiceMethods } from "primevue/toastservice"
 import { computed, Ref } from "vue"
-import { useMutation, useQuery } from "@tanstack/vue-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query"
 import { RouteLocationNormalizedLoaded } from "vue-router"
 
 export interface searchPlayer {
@@ -109,16 +109,28 @@ export function getUnverified(
 }
 
 export function useAdminVerify() {
+	const queryClient = useQueryClient()
 	return useMutation({
 		mutationFn: async (player: Player) =>
 			axios.post(`player/adminVerify`, playerClientToServer(player)),
+		onSuccess() {
+			queryClient.invalidateQueries({
+				queryKey: ["unverifiedPlayer"],
+			})
+		},
 	})
 }
 
 export function useDeletePlayer() {
+	const queryClient = useQueryClient()
 	return useMutation({
 		mutationFn: async (player: Player) =>
 			axios.post(`player/delete`, playerClientToServer(player)),
+		onSuccess() {
+			queryClient.invalidateQueries({
+				queryKey: ["unverifiedPlayer"],
+			})
+		},
 	})
 }
 

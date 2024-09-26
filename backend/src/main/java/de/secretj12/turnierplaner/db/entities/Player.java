@@ -1,8 +1,6 @@
 package de.secretj12.turnierplaner.db.entities;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -67,8 +65,7 @@ public class Player {
     @Column(name = "admin_verified")
     private boolean adminVerified;
 
-    @OneToOne(mappedBy = "player")
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToOne(mappedBy = "player", cascade = CascadeType.REMOVE)
     private VerificationCode verificationCode;
 
     public Player() {

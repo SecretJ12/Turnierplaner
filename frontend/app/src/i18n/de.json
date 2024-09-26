@@ -261,6 +261,8 @@
 		"not_selected": "Alle Felder müssen ausgefüllt werden"
 	},
 	"settings": {
-		"save_default": "Als Standard speichern"
+		"save_default": "Als Standard speichern",
+		"verification": "Verifikation",
+		"no_unverified": "Es gibt aktuell keine unverifizierten Spieler"
 	}
 }

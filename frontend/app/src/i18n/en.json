@@ -263,6 +263,8 @@
 		"not_selected": "All fields need to be filled"
 	},
 	"settings": {
-		"save_default": "Save as default"
+		"save_default": "Save as default",
+		"verification": "Verification",
+		"no_unverified": "No unverified player"
 	}
 }

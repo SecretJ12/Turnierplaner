@@ -16,6 +16,14 @@
 				</template>
 			</Card>
 		</SettingsItem>
+		<SettingsItem v-if="isDirector">
+			<Card>
+				<template #title>{{ t("settings.verification") }}</template>
+				<template #content>
+					<SettingsPlayerVerify />
+				</template>
+			</Card>
+		</SettingsItem>
 	</div>
 </template>
 
@@ -26,6 +34,7 @@ import SettingsItem from "@/components/views/settings/SettingsItem.vue"
 import SettingsGeneral from "@/components/views/settings/SettingsGeneral.vue"
 import { getIsAdmin, getIsDirector } from "@/backend/security"
 import { inject, ref } from "vue"
+import SettingsPlayerVerify from "@/components/views/settings/SettingsPlayerVerify.vue"
 
 const { t } = useI18n()
 
