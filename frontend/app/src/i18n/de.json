@@ -6,6 +6,7 @@
 	"yes": "Ja",
 	"general": {
 		"settings": "Einstellungen",
+		"general": "Allgemein",
 		"create": "Erstellen",
 		"update": "Aktualisieren",
 		"name": "Name",
@@ -257,5 +258,8 @@
 			"GRASS": "Gras"
 		},
 		"not_selected": "Alle Felder müssen ausgefüllt werden"
+	},
+	"settings": {
+		"save_default": "Als Standard speichern"
 	}
 }

@@ -3,21 +3,21 @@ import { auth } from "@/security/AuthService"
 import axios from "axios"
 import { useQuery } from "@tanstack/vue-query"
 
-export function getCanCreate(isLoggedIn: Ref<boolean>) {
+export function getIsDirector(isLoggedIn: Ref<boolean>) {
 	return useQuery({
 		queryKey: ["can_create", isLoggedIn],
-		queryFn: fetchCanCreate,
+		queryFn: fetchIsDirector,
 		placeholderData: false,
 		staleTime: 0,
 	})
 }
 
-async function fetchCanCreate() {
+async function fetchIsDirector() {
 	const user = await auth.getUser()
 	if (user === null) return false
 
 	return await axios
-		.get<boolean>("/tournament/canCreate")
+		.get<boolean>("/config/isDirector")
 		.then((response) => {
 			return response.data
 		})
@@ -41,6 +41,29 @@ async function fetchCanEdit(tourId: string) {
 
 	return await axios
 		.get<boolean>(`/tournament/${tourId}/competition/canEdit`)
+		.then((response) => {
+			return response.data
+		})
+		.catch(() => {
+			return false
+		})
+}
+
+export function getIsAdmin(isLoggedIn: Ref<boolean>) {
+	return useQuery({
+		queryKey: ["isAdmin", isLoggedIn],
+		queryFn: () => fetchIsAdmin(),
+		placeholderData: false,
+		staleTime: 0,
+	})
+}
+
+async function fetchIsAdmin() {
+	const user = await auth.getUser()
+	if (user === null) return false
+
+	return await axios
+		.get<boolean>(`/config/isAdmin`)
 		.then((response) => {
 			return response.data
 		})

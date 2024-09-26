@@ -6,6 +6,7 @@ import de.secretj12.turnierplaner.db.repositories.ConfigRepository;
 import de.secretj12.turnierplaner.db.repositories.DefaultConfigRepository;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserConfig;
 import io.quarkus.security.identity.SecurityIdentity;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
@@ -53,5 +54,29 @@ public class ConfigResource {
         if (nConfig.getLanguage() != null)
             config.setLanguage(nConfig.getLanguage());
         configRepository.persist(config);
+    }
+
+    @POST
+    @RolesAllowed("admin")
+    @Path("/saveDefault")
+    @Transactional
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void saveConfigDefault(jUserConfig nConfig) {
+        DefaultConfig defConfig = defaultConfigRepository.findById(0L);
+        defConfig.setLanguage(nConfig.getLanguage());
+        defaultConfigRepository.persist(defConfig);
+    }
+
+    @GET
+    @Path("/isAdmin")
+    public boolean isAdmin() {
+        return securityIdentity.hasRole("admin");
+    }
+
+    @GET
+    @Path("/isDirector")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Boolean canCreate() {
+        return securityIdentity.hasRole("director");
     }
 }

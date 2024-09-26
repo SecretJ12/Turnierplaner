@@ -53,13 +53,6 @@ public class TournamentResource {
     }
 
     @GET
-    @Path("/canCreate")
-    @Produces(MediaType.TEXT_PLAIN)
-    public Boolean canCreate() {
-        return securityIdentity.hasRole("director");
-    }
-
-    @GET
     @Path("/{tourName}/details")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)

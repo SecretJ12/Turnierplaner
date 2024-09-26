@@ -28,3 +28,21 @@ export function useSaveLanguage(isLoggedIn: Ref<boolean>) {
 		},
 	})
 }
+
+export function useSaveDefault(isLoggedIn: Ref<boolean>) {
+	const queryClient = useQueryClient()
+	return useMutation({
+		mutationFn: async (language: string) => {
+			if (isLoggedIn)
+				return axios.post("/config/saveDefault", {
+					language: language,
+				})
+		},
+		onSuccess() {
+			queryClient.invalidateQueries({
+				queryKey: ["config", isLoggedIn.value],
+				refetchType: "all",
+			})
+		},
+	})
+}

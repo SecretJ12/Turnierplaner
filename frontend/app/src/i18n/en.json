@@ -6,6 +6,7 @@
 	"yes": "Yes",
 	"general": {
 		"settings": "Settings",
+		"general": "General",
 		"create": "Create",
 		"update": "Update",
 		"name": "Name",
@@ -259,5 +260,8 @@
 			"GRASS": "Grass"
 		},
 		"not_selected": "All fields need to be filled"
+	},
+	"settings": {
+		"save_default": "Save as default"
 	}
 }
