@@ -1,5 +1,10 @@
 <template>
 	<div id="headerRight">
+		<Button v-if="isLoggedIn" rounded outlined size="small" @click="settings">
+			<template #icon>
+				<span class="material-symbols-outlined">settings</span>
+			</template>
+		</Button>
 		<Dropdown v-model="$i18n.locale" :options="$i18n.availableLocales" />
 
 		<span
@@ -20,9 +25,16 @@
 <script lang="ts" setup>
 import { auth } from "@/security/AuthService"
 import { inject, ref, watch } from "vue"
+import { router } from "@/main"
 
 const currentUser = ref<string>("")
 const isLoggedIn = inject("loggedIn", ref(false))
+
+function settings() {
+	router.push({
+		name: "Settings",
+	})
+}
 
 let windowWidth = ref(window.innerWidth)
 window.addEventListener("resize", () => {

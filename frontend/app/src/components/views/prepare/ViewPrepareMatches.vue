@@ -196,7 +196,7 @@ function nextPage() {
 
 const stepList = ref([
 	{
-		label: <string>(<unknown>$t("ViewPrepare.steps.settings")),
+		label: <string>(<unknown>$t("general.settings")),
 		name: "settings",
 		index: 1,
 	},

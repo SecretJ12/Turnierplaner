@@ -6,6 +6,11 @@ export default [
 			import("@/components/views/tournaments/ViewTournaments.vue"),
 	},
 	{
+		path: "/settings",
+		name: "Settings",
+		component: () => import("@/components/views/settings/ViewSettings.vue"),
+	},
+	{
 		path: "/createTournament",
 		name: "Create tournament",
 		component: () =>

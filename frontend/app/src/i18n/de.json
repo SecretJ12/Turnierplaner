@@ -5,6 +5,7 @@
 	"no": "Nein",
 	"yes": "Ja",
 	"general": {
+		"settings": "Einstellungen",
 		"create": "Erstellen",
 		"update": "Aktualisieren",
 		"name": "Name",
@@ -209,7 +210,6 @@
 	},
 	"ViewPrepare": {
 		"steps": {
-			"settings": "Einstellungen",
 			"editTeams": "Teams auslosen",
 			"assignMatches": "Spiele auslosen",
 			"scheduleMatches": "Zeiteinteilung",

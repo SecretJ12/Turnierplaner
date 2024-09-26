@@ -5,6 +5,7 @@
 	"no": "No",
 	"yes": "Yes",
 	"general": {
+		"settings": "Settings",
 		"create": "Create",
 		"update": "Update",
 		"name": "Name",
@@ -211,7 +212,6 @@
 	},
 	"ViewPrepare": {
 		"steps": {
-			"settings": "Einstellungen",
 			"editTeams": "Edit teams",
 			"assignMatches": "Assign matches",
 			"scheduleMatches": "Schedule matches",
