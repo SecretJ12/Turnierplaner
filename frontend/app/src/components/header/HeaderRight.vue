@@ -5,7 +5,11 @@
 				<span class="material-symbols-outlined">settings</span>
 			</template>
 		</Button>
-		<Dropdown v-model="locale" :options="availableLocales" />
+		<Dropdown
+			v-model="locale"
+			:options="availableLocales"
+			@change="(event) => saveLanguage(event.value)"
+		/>
 
 		<span
 			v-if="!isLoggedIn"
@@ -27,10 +31,13 @@ import { auth } from "@/security/AuthService"
 import { inject, ref, watch } from "vue"
 import { router } from "@/main"
 import { useI18n } from "vue-i18n"
+import { useSaveLanguage } from "@/backend/config"
 
 const currentUser = ref<string>("")
 const isLoggedIn = inject("loggedIn", ref(false))
 const { locale, availableLocales } = useI18n()
+
+const { mutate: saveLanguage } = useSaveLanguage(isLoggedIn)
 
 function settings() {
 	router.push({

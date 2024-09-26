@@ -1,24 +1,57 @@
 package de.secretj12.turnierplaner.resources;
 
+import de.secretj12.turnierplaner.db.entities.Config;
+import de.secretj12.turnierplaner.db.entities.DefaultConfig;
+import de.secretj12.turnierplaner.db.repositories.ConfigRepository;
+import de.secretj12.turnierplaner.db.repositories.DefaultConfigRepository;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserConfig;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
+import io.quarkus.security.identity.SecurityIdentity;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import org.eclipse.microprofile.jwt.JsonWebToken;
+
+import java.util.UUID;
 
 @Path("/config")
 public class ConfigResource {
 
-    @ConfigProperty(name = "club.name")
-    String name;
-    @ConfigProperty(name = "language.default")
-    String language;
+    @Inject
+    DefaultConfigRepository defaultConfigRepository;
+    @Inject
+    ConfigRepository configRepository;
+
+    @Inject
+    SecurityIdentity securityIdentity;
+    @Inject
+    JsonWebToken jwt;
 
     @GET
-    @Path("/default")
-    public jUserConfig getDefaultConfig() {
-        var config = new jUserConfig();
-        config.setName(name);
-        config.setLanguage(language);
-        return config;
+    @Path("/load")
+    @Produces(MediaType.APPLICATION_JSON)
+    public jUserConfig loadUserConfig() {
+        Config config = null;
+        if (jwt.getSubject() != null)
+            config = configRepository.findByUUID(UUID.fromString(jwt.getSubject()));
+        return new jUserConfig(defaultConfigRepository.findById(0L), config);
+    }
+
+    @POST
+    @Path("/save")
+    @Transactional
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void saveConfig(jUserConfig nConfig) {
+        UUID uuid = UUID.fromString(jwt.getSubject());
+        DefaultConfig defConfig = defaultConfigRepository.findById(0L);
+        Config config = configRepository.findByUUID(uuid);
+        if (config == null) {
+            config = new Config();
+            config.setId(uuid);
+            config.setLanguage(defConfig.getLanguage());
+        }
+        if (nConfig.getLanguage() != null)
+            config.setLanguage(nConfig.getLanguage());
+        configRepository.persist(config);
     }
 }

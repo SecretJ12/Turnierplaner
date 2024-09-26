@@ -1,4 +1,4 @@
 export interface Config {
-	name: string
+	title: string
 	language: string
 }

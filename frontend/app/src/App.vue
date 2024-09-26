@@ -35,12 +35,13 @@ auth.addUserUnloadedListener(() => {
 	loggedIn.value = false
 })
 
-const { data: config } = getConfig()
+const { data: config } = getConfig(loggedIn)
 const { locale } = useI18n()
 
-watch(config, () => {
+watch(config, async () => {
+	console.log("update settings")
 	if (config.value) {
-		console.log("update language")
+		console.log("update language: ", config.value.language)
 		locale.value = config.value.language
 	}
 })
