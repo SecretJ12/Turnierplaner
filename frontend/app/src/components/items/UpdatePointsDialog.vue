@@ -84,13 +84,11 @@ import { NumberSets } from "@/interfaces/competition"
 import { useUpdateSet } from "@/backend/set"
 import { useRoute } from "vue-router"
 import { useToast } from "primevue/usetoast"
-import { useQueryClient } from "@tanstack/vue-query"
 
 const { t } = useI18n({ inheritLocale: true })
 const toast = useToast()
 
 const route = useRoute()
-const queryClient = useQueryClient()
 
 const props = defineProps<{
 	numberSets: NumberSets
@@ -111,6 +109,7 @@ const showPopUp = function (match: Match) {
 	currentMatch.value = match
 	team1GamePoints.value = match.sets?.map((set) => set.scoreA) ?? []
 	team2GamePoints.value = match.sets?.map((set) => set.scoreB) ?? []
+	// fill the rest up with 0
 	for (let i = team1GamePoints.value.length; i < numberSets.value; i++) {
 		team1GamePoints.value.push(0)
 		team2GamePoints.value.push(0)
@@ -127,17 +126,34 @@ const savePoints = function () {
 		return
 	}
 	console.log("saving..")
-	const sets = team1GamePoints.value.map((scoreA, index) => ({
-		index: index,
-		scoreA: scoreA,
-		scoreB: team2GamePoints.value[index],
-	}))
+	const sets = getAllChangedSets()
 	console.log(sets)
-	updateSet({
-		matchId: currentMatch.value!.id,
-		sets: sets,
-	})
+	if (sets.length > 0)
+		updateSet({
+			matchId: currentMatch.value!.id,
+			sets: sets,
+		})
 	visible.value = false
+}
+
+// return list of sets that contain all set that differ from the beginning
+const getAllChangedSets = function () {
+	let changedSets = []
+	for (let i = 0; i < numberSets.value; i++) {
+		const a = currentMatch.value?.sets?.[i].scoreA
+		const b = currentMatch.value?.sets?.[i].scoreB
+		if (
+			(team1GamePoints.value[i] != 0 && team1GamePoints.value[i] !== a) ||
+			(team2GamePoints.value[i] != 0 && team2GamePoints.value[i] !== b)
+		) {
+			changedSets.push({
+				index: i,
+				scoreA: team1GamePoints.value[i],
+				scoreB: team2GamePoints.value[i],
+			})
+		}
+	}
+	return changedSets
 }
 
 const updatePoints = function (point1: number, point2: number) {
