@@ -2,7 +2,7 @@
 	<div class="w-full p-2 pt-0 grid">
 		<SettingsItem v-if="isAdmin">
 			<Card>
-				<template #title>{{ t("general.courts") }}</template>
+				<template #title>{{ t("general.general") }}</template>
 				<template #content>
 					<SettingsGeneral />
 				</template>

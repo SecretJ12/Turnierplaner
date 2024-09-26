@@ -58,12 +58,27 @@ public class ConfigResource {
 
     @POST
     @RolesAllowed("admin")
-    @Path("/saveDefault")
+    @Path("/saveDefaultLanguage")
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     public void saveConfigDefault(jUserConfig nConfig) {
         DefaultConfig defConfig = defaultConfigRepository.findById(0L);
         defConfig.setLanguage(nConfig.getLanguage());
+        defaultConfigRepository.persist(defConfig);
+    }
+
+    @POST
+    @RolesAllowed("admin")
+    @Path("/saveTitle")
+    @Transactional
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void save(jUserConfig nConfig) {
+        DefaultConfig defConfig = defaultConfigRepository.findById(0L);
+        if (nConfig.getTitle() != null)
+            defConfig.setTitle(nConfig.getTitle());
+        else
+            defConfig.setTitle("title");
+
         defaultConfigRepository.persist(defConfig);
     }
 

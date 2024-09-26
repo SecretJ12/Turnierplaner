@@ -12,12 +12,23 @@ export function getConfig(isLoggedIn: Ref<boolean>) {
 }
 
 export function useSaveLanguage(isLoggedIn: Ref<boolean>) {
-	const queryClient = useQueryClient()
 	return useMutation({
 		mutationFn: async (language: string) => {
 			if (isLoggedIn)
 				return axios.post("/config/save", {
 					language: language,
+				})
+		},
+	})
+}
+
+export function useSaveDefault(isLoggedIn: Ref<boolean>) {
+	const queryClient = useQueryClient()
+	return useMutation({
+		mutationFn: async (language: string) => {
+			if (isLoggedIn)
+				return axios.post("/config/saveDefaultLanguage", {
+					language,
 				})
 		},
 		onSuccess() {
@@ -29,13 +40,13 @@ export function useSaveLanguage(isLoggedIn: Ref<boolean>) {
 	})
 }
 
-export function useSaveDefault(isLoggedIn: Ref<boolean>) {
+export function useSaveTitle(isLoggedIn: Ref<boolean>) {
 	const queryClient = useQueryClient()
 	return useMutation({
-		mutationFn: async (language: string) => {
+		mutationFn: async (title: string) => {
 			if (isLoggedIn)
-				return axios.post("/config/saveDefault", {
-					language: language,
+				return axios.post("/config/saveTitle", {
+					title,
 				})
 		},
 		onSuccess() {

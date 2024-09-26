@@ -38,13 +38,17 @@ auth.addUserUnloadedListener(() => {
 const { data: config } = getConfig(loggedIn)
 const { locale } = useI18n()
 
-watch(config, async () => {
-	console.log("update settings")
-	if (config.value) {
-		console.log("update language: ", config.value.language)
-		locale.value = config.value.language
-	}
-})
+watch(
+	config,
+	async () => {
+		console.log("update settings")
+		if (config.value) {
+			console.log("update language: ", config.value.language)
+			locale.value = config.value.language
+		}
+	},
+	{ immediate: true },
+)
 </script>
 
 <template>

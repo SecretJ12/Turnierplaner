@@ -15,7 +15,7 @@ public class jUserConfig {
     }
 
     public jUserConfig(DefaultConfig defConfig, Config config) {
-        this.title = defConfig.getTitle();
+        this.title = defConfig.getTitle() != null ? defConfig.getTitle() : "title";
         if (config == null)
             this.language = defConfig.getLanguage();
         else

@@ -24,7 +24,8 @@ public class Defaults {
         var defaultConfig = new DefaultConfig();
         defaultConfig.setId(0);
         defaultConfig.setTitle(clubName);
-        defaultConfig.setLanguage(language);
+        if (language != null && !language.isEmpty() && !language.equals("title"))
+            defaultConfig.setLanguage(language);
         defaultConfigRepository.persist(defaultConfig);
     }
 }
