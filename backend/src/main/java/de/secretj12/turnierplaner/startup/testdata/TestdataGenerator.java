@@ -76,13 +76,13 @@ public class TestdataGenerator {
         // @formatter:on
 
         createTournament(TDate.BEFORE_REGISTRATION, "Clubmeisterschaft 2026", "Anmeldung ausstehend", true,
-                compSetting);
+            compSetting);
         createTournament(TDate.REGISTRATION_OPEN, "Clubmeisterschaft 2025", "Anmeldung offen", true, compSetting);
         createTournament(TDate.BEFORE_GAMEPHASE, "Clubmeisterschaft 2024", "Anmeldung vorbei", true, compSetting);
         createTournament(TDate.GAMEPHASE_OPEN, "Clubmeisterschaft 2023", "Spielphase offen", true, compSetting);
         createTournament(TDate.AFTER_GAMEPHASE, "Clubmeisterschaft 2022", "Spielphase vorbei", true, compSetting);
         createTournament(TDate.BEFORE_REGISTRATION, "Clubmeisterschaft 2027", "Noch in der Planung", false,
-                compSetting);
+            compSetting);
     }
 
     private void createTournament(TDate tDate, String name, String description, boolean visible,
@@ -136,8 +136,8 @@ public class TestdataGenerator {
         int numberOfSets = 2;
         int winDif = 0;
         List<Tuple2<Integer, Integer>> possibleResults = List.of(Tuple2.of(6, 0), Tuple2.of(6, 1), Tuple2.of(6, 2),
-                Tuple2.of(6, 3), Tuple2.of(6, 4), Tuple2.of(6, 5), Tuple2.of(7, 5),
-                Tuple2.of(7, 6));
+            Tuple2.of(6, 3), Tuple2.of(6, 4), Tuple2.of(6, 5), Tuple2.of(7, 5),
+            Tuple2.of(7, 6));
         for (int i = 0; i < numberOfSets; i++) {
             Set.SetKey setKey = new Set.SetKey();
             setKey.setMatch(match);
@@ -267,9 +267,9 @@ public class TestdataGenerator {
             groups[k].setCompetition(competition);
             groupRepository.persist(groups[k]);
             for (int i = k * compSettings.getNumberOfGroups() / compSettings.getNumberOfGroups(); i < compSettings
-                    .getTeamNumbers() / compSettings.getNumberOfGroups() * (k + 1); i++) {
+                .getTeamNumbers() / compSettings.getNumberOfGroups() * (k + 1); i++) {
                 for (int j = i + 1; j < compSettings.getTeamNumbers() / compSettings
-                        .getNumberOfGroups() * (k + 1); j++) {
+                    .getNumberOfGroups() * (k + 1); j++) {
                     Match match = createMatch(courts[i * j % 4], competition);
                     match.setTeamA(groupTeams[i]);
                     match.setTeamB(groupTeams[j]);
@@ -504,9 +504,9 @@ public class TestdataGenerator {
             competition.setType(compSetting.getCompetitionType());
             switch (tDate) {
                 case BEFORE_REGISTRATION, REGISTRATION_OPEN, BEFORE_GAMEPHASE -> competition.setcProgress(
-                        CreationProgress.TEAMS);
+                    CreationProgress.TEAMS);
                 case GAMEPHASE_OPEN, AFTER_GAMEPHASE -> competition.setcProgress(
-                        CreationProgress.SCHEDULING);
+                    CreationProgress.SCHEDULING);
             }
             if (Math.random() > 0.9) {
                 competition.setNumberSets(NumberSets.FIVE);

@@ -12,7 +12,7 @@ import jakarta.ws.rs.NotFoundException;
 public class CommonHelpers {
     @Inject
     TournamentRepository tournaments;
-    
+
     @Inject
     SecurityIdentity securityIdentity;
 
