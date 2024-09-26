@@ -18,7 +18,11 @@
 						}"
 					>
 						<div
-							:ref="(el: HTMLElement) => setEl(level, index, el)"
+							:ref="
+								<VNodeRef>(
+									(<unknown>((el: HTMLElement) => setEl(level, index, el)))
+								)
+							"
 							style="height: fit-content; flex: 1 0 auto"
 						>
 							<slot
@@ -137,7 +141,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, Ref, ref, watch } from "vue"
+import { computed, Ref, ref, VNodeRef, watch } from "vue"
 import { KnockoutMatch } from "@/interfaces/knockoutSystem"
 import { Team } from "@/interfaces/team"
 

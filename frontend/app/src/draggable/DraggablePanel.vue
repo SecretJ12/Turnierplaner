@@ -61,6 +61,12 @@ watch(container, () => {
 
 const emit = defineEmits(["onRemove"])
 
+interface Event extends Sortable.SortableEvent {
+	originalEvent: {
+		clientY: number
+	}
+}
+
 function create() {
 	let el = container.value
 	if (!el) return
@@ -88,9 +94,10 @@ function create() {
 		onChoose: (event: Sortable.SortableEvent) => {
 			if (event.oldIndex === undefined) return
 			selectedElement = props.list[event.oldIndex]
-			if (event.originalEvent) {
+			if ((<Event>event).originalEvent) {
 				offsetY =
-					event.originalEvent.clientY - event.target.getBoundingClientRect().top
+					(<Event>event).originalEvent.clientY -
+					event.target.getBoundingClientRect().top
 			}
 		},
 		onRemove: (event: Sortable.SortableEvent) => {

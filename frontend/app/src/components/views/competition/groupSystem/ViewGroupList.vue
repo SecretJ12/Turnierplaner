@@ -14,12 +14,14 @@
 			<tbody class="table-group-divider">
 				<tr
 					v-for="match in props.group.matches"
-					:key="match.teamA?.id + match.teamB?.id"
+					:key="(match.teamA?.id || '') + (match.teamB?.id || '')"
 				>
-					<td>{{ new Date(match.begin).toLocaleTimeString() }}</td>
+					<td v-if="match.begin">
+						{{ new Date(match.begin).toLocaleTimeString() }}
+					</td>
 					<td>{{ match.court }}</td>
-					<td>{{ match.teamA.playerA.firstName }}</td>
-					<td>{{ match.teamB.playerA.firstName }}</td>
+					<td>{{ match.teamA?.playerA?.name }}</td>
+					<td>{{ match.teamB?.playerA?.name }}</td>
 				</tr>
 			</tbody>
 		</table>
