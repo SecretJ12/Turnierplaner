@@ -40,13 +40,7 @@ const curEnd = ref<Date | undefined>()
 
 const { data: courts } = getTournamentCourts(route)
 const { data: tournament } = getTournamentDetails(route, t, toast)
-const { data: matches } = getTournamentMatchEvents(
-	route,
-	t,
-	curStart,
-	curEnd,
-	courts,
-)
+const { data: matches } = getTournamentMatchEvents(route, t, curStart, curEnd)
 
 function onViewChange(startDate: Date, endDate: Date) {
 	curStart.value = startDate

@@ -67,6 +67,16 @@ const options: I18nOptions = {
 
 const i18n = createI18n<false, typeof options>(options)
 
+declare module "@vue/runtime-core" {
+	interface ComponentCustomProperties {
+		$i18n: {
+			locale: string
+			availableLocales: string[]
+		}
+		$t: (_: string) => string
+	}
+}
+
 /* add font awesome icon component */
 const app = createApp(App)
 

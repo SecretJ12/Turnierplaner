@@ -16,12 +16,16 @@ export function genRandomizeItems(
 ) {
 	return ref([
 		{
-			label: computed(() => t("ViewPrepare.editTeams.reroll")),
+			label: <string>(
+				(<unknown>computed(() => t("ViewPrepare.editTeams.reroll")))
+			),
 			icon: "pi pi-refresh",
 			command: reroll,
 		},
 		{
-			label: computed(() => t("ViewPrepare.editTeams.reset")),
+			label: <string>(
+				(<unknown>computed(() => t("ViewPrepare.editTeams.reset")))
+			),
 			icon: "pi pi-times",
 			command: reset,
 		},

@@ -196,22 +196,22 @@ function nextPage() {
 
 const stepList = ref([
 	{
-		label: $t("ViewPrepare.steps.settings"),
+		label: <string>(<unknown>$t("ViewPrepare.steps.settings")),
 		name: "settings",
 		index: 1,
 	},
 	{
-		label: $t("ViewPrepare.steps.editTeams"),
+		label: <string>(<unknown>$t("ViewPrepare.steps.editTeams")),
 		name: "editTeams",
 		index: 2,
 	},
 	{
-		label: $t("ViewPrepare.steps.assignMatches"),
+		label: <string>(<unknown>$t("ViewPrepare.steps.assignMatches")),
 		name: "assignMatches",
 		index: 3,
 	},
 	{
-		label: $t("ViewPrepare.steps.scheduleMatches"),
+		label: <string>(<unknown>$t("ViewPrepare.steps.scheduleMatches")),
 		name: "scheduleMatches",
 		index: 4,
 	},

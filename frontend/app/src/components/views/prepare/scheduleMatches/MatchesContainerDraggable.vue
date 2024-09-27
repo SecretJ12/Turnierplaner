@@ -76,6 +76,7 @@ function addMatch(match: Match, title: AnnotatedMatch["title"]) {
 		matches.value.push({
 			title,
 			compName: <string>route.params.compId,
+			tourName: <string>route.params.tourId,
 			...match,
 		})
 }

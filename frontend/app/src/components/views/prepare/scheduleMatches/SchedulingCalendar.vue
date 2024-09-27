@@ -133,6 +133,7 @@ function addMatch(match: Match, title: AnnotatedMatch["title"]) {
 			data: {
 				title,
 				compName: <string>route.params.compId,
+				tourName: <string>route.params.tourId,
 				...match,
 			},
 		})

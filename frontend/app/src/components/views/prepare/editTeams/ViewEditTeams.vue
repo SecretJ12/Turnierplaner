@@ -228,12 +228,12 @@ async function reroll() {
 
 const randomizeItems = ref([
 	{
-		label: $t("ViewPrepare.editTeams.reroll"),
+		label: <string>(<unknown>$t("ViewPrepare.editTeams.reroll")),
 		icon: "pi pi-refresh",
 		command: reroll,
 	},
 	{
-		label: $t("ViewPrepare.editTeams.reset"),
+		label: <string>(<unknown>$t("ViewPrepare.editTeams.reset")),
 		icon: "pi pi-times",
 		command: clearTeams,
 	},
