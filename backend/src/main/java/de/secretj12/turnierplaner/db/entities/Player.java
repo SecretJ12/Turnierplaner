@@ -12,6 +12,7 @@ import java.util.UUID;
                            query = """
                                SELECT p FROM Player p
                                WHERE p.mailVerified = true
+                               AND (p.adminVerified = true OR :admin = true)
                                AND (p.sex = :sex OR :ignoreSex = true)
                                AND (p.birthday <= :minAge OR :ignoreMinAge = true)
                                AND (p.birthday >= :maxAge OR :ignoreMaxAge = true)

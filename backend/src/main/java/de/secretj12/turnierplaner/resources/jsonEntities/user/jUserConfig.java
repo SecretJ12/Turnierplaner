@@ -6,6 +6,7 @@ import de.secretj12.turnierplaner.db.entities.DefaultConfig;
 public class jUserConfig {
     private String title;
     private String language;
+    private boolean adminVerificationNeeded;
 
     public jUserConfig() {
     }
@@ -20,6 +21,7 @@ public class jUserConfig {
             this.language = defConfig.getLanguage();
         else
             this.language = config.getLanguage();
+        this.adminVerificationNeeded = defConfig.isAdminVerificationNeeded();
     }
 
     public String getTitle() {
@@ -36,5 +38,13 @@ public class jUserConfig {
 
     public void setLanguage(String language) {
         this.language = language;
+    }
+
+    public boolean isAdminVerificationNeeded() {
+        return adminVerificationNeeded;
+    }
+
+    public void setAdminVerificationNeeded(boolean adminVerificationNeeded) {
+        this.adminVerificationNeeded = adminVerificationNeeded;
     }
 }

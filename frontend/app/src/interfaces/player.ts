@@ -36,7 +36,7 @@ export interface PlayerRegistration {
 	firstName: string
 	lastName: string
 	sex: Sex
-	birthdate: Date
+	birthday: Date
 	email: string
 	phone: string
 }

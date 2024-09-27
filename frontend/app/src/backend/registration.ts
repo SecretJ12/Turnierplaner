@@ -13,7 +13,7 @@ export function useRegisterPlayer(
 				firstName: reg.firstName,
 				lastName: reg.lastName,
 				sex: reg.sex,
-				birthdate: dateToJson(reg.birthdate),
+				birthday: dateToJson(reg.birthday),
 				email: reg.email,
 				phone: reg.phone,
 			})

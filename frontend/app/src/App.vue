@@ -41,11 +41,7 @@ const { locale } = useI18n()
 watch(
 	config,
 	async () => {
-		console.log("update settings")
-		if (config.value) {
-			console.log("update language: ", config.value.language)
-			locale.value = config.value.language
-		}
+		if (config.value) locale.value = config.value.language
 	},
 	{ immediate: true },
 )

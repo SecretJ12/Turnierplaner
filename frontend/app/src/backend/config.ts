@@ -57,3 +57,21 @@ export function useSaveTitle(isLoggedIn: Ref<boolean>) {
 		},
 	})
 }
+
+export function useSaveIsAdminVerificationNeeded(isLoggedIn: Ref<boolean>) {
+	const queryClient = useQueryClient()
+	return useMutation({
+		mutationFn: async (adminVerificationNeeded: boolean) => {
+			if (isLoggedIn)
+				return axios.post("/config/saveIsAdminNeeded", {
+					adminVerificationNeeded,
+				})
+		},
+		onSuccess() {
+			queryClient.invalidateQueries({
+				queryKey: ["config", isLoggedIn.value],
+				refetchType: "all",
+			})
+		},
+	})
+}

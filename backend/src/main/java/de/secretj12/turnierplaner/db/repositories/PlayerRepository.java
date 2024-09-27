@@ -25,9 +25,10 @@ public class PlayerRepository implements PanacheRepository<Player> {
                 .firstResultOptional().orElse(null);
     }
 
-    public Stream<Player> filter(String search, SexType sex, LocalDate minAge, LocalDate maxAge) {
+    public Stream<Player> filter(String search, SexType sex, LocalDate minAge, LocalDate maxAge, boolean admin) {
         return find("#filter", Parameters
             .with("search", search)
+            .and("admin", admin)
             .and("sex", sex)
             .and("ignoreSex", sex == null)
             .and("minAge", minAge)
@@ -38,6 +39,6 @@ public class PlayerRepository implements PanacheRepository<Player> {
     }
 
     public Stream<Player> adminUnverified() {
-        return find("#adminUnverified").stream();
+        return find("#adminUnverified").page(0, 10).stream();
     }
 }

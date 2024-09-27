@@ -13,6 +13,8 @@ public class Defaults {
     String clubName;
     @ConfigProperty(name = "turnierplaner.language")
     String language;
+    @ConfigProperty(name = "turnierplaner.admin-verification-needed")
+    boolean adminVerificationNeeded;
     @Inject
     DefaultConfigRepository defaultConfigRepository;
 
@@ -24,6 +26,7 @@ public class Defaults {
         var defaultConfig = new DefaultConfig();
         defaultConfig.setId(0);
         defaultConfig.setTitle(clubName);
+        defaultConfig.setAdminVerificationNeeded(adminVerificationNeeded);
         if (language != null && !language.isEmpty() && !language.equals("title"))
             defaultConfig.setLanguage(language);
         defaultConfigRepository.persist(defaultConfig);

@@ -61,7 +61,7 @@ public class ConfigResource {
     @Path("/saveDefaultLanguage")
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
-    public void saveConfigDefault(jUserConfig nConfig) {
+    public void saveDefaultLanguage(jUserConfig nConfig) {
         DefaultConfig defConfig = defaultConfigRepository.findById(0L);
         defConfig.setLanguage(nConfig.getLanguage());
         defaultConfigRepository.persist(defConfig);
@@ -72,13 +72,24 @@ public class ConfigResource {
     @Path("/saveTitle")
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
-    public void save(jUserConfig nConfig) {
+    public void saveTitle(jUserConfig nConfig) {
         DefaultConfig defConfig = defaultConfigRepository.findById(0L);
         if (nConfig.getTitle() != null)
             defConfig.setTitle(nConfig.getTitle());
         else
             defConfig.setTitle("title");
 
+        defaultConfigRepository.persist(defConfig);
+    }
+
+    @POST
+    @RolesAllowed("admin")
+    @Path("/saveIsAdminNeeded")
+    @Transactional
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void saveIsAdminNeeded(jUserConfig nConfig) {
+        DefaultConfig defConfig = defaultConfigRepository.findById(0L);
+        defConfig.setAdminVerificationNeeded(nConfig.isAdminVerificationNeeded());
         defaultConfigRepository.persist(defConfig);
     }
 

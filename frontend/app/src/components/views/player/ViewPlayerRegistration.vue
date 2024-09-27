@@ -43,13 +43,13 @@
 						<Calendar
 							show-icon
 							class="w-full"
-							v-bind="birthdate"
+							v-bind="birthday"
 							:manual-input="false"
 							:date-format="t('date_format')"
-							:class="{ 'p-invalid': errors.birthdate }"
+							:class="{ 'p-invalid': errors.birthday }"
 						/>
-						<InlineMessage v-if="errors.birthdate" class="mt-2"
-							>{{ t(errors.birthdate || "") }}
+						<InlineMessage v-if="errors.birthday" class="mt-2"
+							>{{ t(errors.birthday || "") }}
 						</InlineMessage>
 					</div>
 					<div class="field col-6">
@@ -151,7 +151,7 @@ const { defineInputBinds, errors, defineComponentBinds, handleSubmit } =
 				firstName: string().min(4).max(40).required(),
 				lastName: string().min(4).max(40).required(),
 				sex: mixed().oneOf(Object.values(Sex)).required(),
-				birthdate: date().required(),
+				birthday: date().required(),
 				email: string().max(100).email().required(),
 				phone: string()
 					.matches(phoneRegExp, t("ViewPlayerRegistration.phone.correct"))
@@ -164,7 +164,7 @@ const { defineInputBinds, errors, defineComponentBinds, handleSubmit } =
 const firstName = defineInputBinds("firstName")
 const lastName = defineInputBinds("lastName")
 const sex = defineComponentBinds("sex")
-const birthdate = defineComponentBinds("birthdate")
+const birthday = defineComponentBinds("birthday")
 const email = defineInputBinds("email")
 const phone = defineInputBinds("phone")
 

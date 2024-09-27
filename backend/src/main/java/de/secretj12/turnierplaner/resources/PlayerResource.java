@@ -1,9 +1,11 @@
 package de.secretj12.turnierplaner.resources;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import de.secretj12.turnierplaner.db.entities.DefaultConfig;
 import de.secretj12.turnierplaner.db.entities.Player;
 import de.secretj12.turnierplaner.db.entities.SexType;
 import de.secretj12.turnierplaner.db.entities.VerificationCode;
+import de.secretj12.turnierplaner.db.repositories.DefaultConfigRepository;
 import de.secretj12.turnierplaner.db.repositories.PlayerRepository;
 import de.secretj12.turnierplaner.db.repositories.VerificationCodeRepository;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayer;
@@ -38,6 +40,8 @@ public class PlayerResource {
     MailTemplates mailTemplates = new MailTemplates();
 
     @Inject
+    DefaultConfigRepository defaultConfigRepository;
+    @Inject
     SecurityIdentity securityIdentity;
 
     @ConfigProperty(name = "turnierplaner.registration.expire")
@@ -61,7 +65,10 @@ public class PlayerResource {
         if (search.isEmpty()) {
             return List.of();
         }
-        return playerRepository.filter(search, dbSex, minAge, maxAge).map(jUserPlayer::new).toList();
+
+        DefaultConfig defConfig = defaultConfigRepository.findById(0L);
+        boolean admin = securityIdentity.hasRole("director") || !defConfig.isAdminVerificationNeeded();
+        return playerRepository.filter(search, dbSex, minAge, maxAge, admin).map(jUserPlayer::new).toList();
     }
 
     @GET

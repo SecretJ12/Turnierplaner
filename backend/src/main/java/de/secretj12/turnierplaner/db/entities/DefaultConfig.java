@@ -13,6 +13,7 @@ public class DefaultConfig {
 
     private String title;
     private String language;
+    private boolean adminVerificationNeeded;
 
     public int getId() {
         return id;
@@ -36,5 +37,13 @@ public class DefaultConfig {
 
     public void setLanguage(String language) {
         this.language = language;
+    }
+
+    public boolean isAdminVerificationNeeded() {
+        return adminVerificationNeeded;
+    }
+
+    public void setAdminVerificationNeeded(boolean adminVerificationNeeded) {
+        this.adminVerificationNeeded = adminVerificationNeeded;
     }
 }
