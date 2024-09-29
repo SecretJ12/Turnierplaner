@@ -705,7 +705,7 @@
       "standardFlowEnabled": true,
       "implicitFlowEnabled": false,
       "directAccessGrantsEnabled": false,
-      "serviceAccountsEnabled": false,
+      "serviceAccountsEnabled": true,
       "publicClient": false,
       "frontchannelLogout": false,
       "protocol": "openid-connect",
@@ -2550,6 +2550,10 @@
       "clientRoles": {
         "backend-quarkus": [
           "uma_protection"
+        ],
+        "realm-management": [
+          "manage-users",
+          "view-realm"
         ]
       },
       "notBefore": 0,
