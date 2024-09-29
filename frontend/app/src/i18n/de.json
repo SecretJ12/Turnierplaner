@@ -265,6 +265,7 @@
 		"verification": "Verifikation",
 		"no_unverified": "Es gibt aktuell keine unverifizierten Spieler",
 		"admin_needed": "Verifikation durch Admin nötig",
-		"admin_needed_summary": "Spieler müssen von einem Admin verifiziert werden um sich zu einem Spiel anmelden zu können."
+		"admin_needed_summary": "Spieler müssen von einem Admin verifiziert werden um sich zu einem Spiel anmelden zu können.",
+		"user": "Benutzerverwaltung"
 	}
 }
