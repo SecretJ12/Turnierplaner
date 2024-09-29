@@ -1,5 +1,13 @@
 <template>
-	<DataTable :value="users" striped-rows class="w-full mb-2" size="small">
+	<DataTable
+		v-if="users"
+		:value="users"
+		:paginator="users.length > 5"
+		:rows="5"
+		striped-rows
+		class="w-full mb-2"
+		size="small"
+	>
 		<template #empty>
 			{{ t("settings.no_unverified") }}
 		</template>
