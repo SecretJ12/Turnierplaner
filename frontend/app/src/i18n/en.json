@@ -40,7 +40,6 @@
 		"filter_by_name": "Filter by name",
 		"from": "From",
 		"to": "To",
-		"tournament_tree": "Tournament tree",
 		"update_score": "Update the score for the game"
 	},
 	"ViewPlayerRegistration": {
@@ -203,6 +202,9 @@
 		"semifinals": "Semifinales",
 		"quarterfinals": "Quarterfinales",
 		"round": "Round"
+	},
+	"ViewPlayerOverview": {
+		"header" : "Player Overview"
 	},
 	"ViewPrepare": {
 		"steps": {

@@ -1,7 +1,9 @@
 <template>
 	<div class="w-full p-2">
 		<Card style="margin-top: -10px !important">
-			<template #title> Player Overview - {{ player?.name }}</template>
+			<template #title>
+				{{ t("ViewPlayerOverview.header") }} - {{ player?.name }}</template
+			>
 			<template #content>
 				<OverviewList />
 			</template>

@@ -40,7 +40,6 @@
 		"filter_by_name": "Nach Name filtern",
 		"from": "Von",
 		"to": "Bis",
-		"tournament_tree": "Turnierbaum",
 		"update_score": "Aktualisieren Sie die Punkte für das Spiel"
 	},
 	"ViewPlayerRegistration": {
@@ -201,6 +200,9 @@
 		"semifinals": "Halbfinale",
 		"quarterfinals": "Viertelfinale",
 		"round": "Runde"
+	},
+	"ViewPlayerOverview": {
+		"header" : "Player Overview"
 	},
 	"ViewPrepare": {
 		"steps": {
