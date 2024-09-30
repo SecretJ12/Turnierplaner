@@ -39,7 +39,7 @@ public class Competition {
     @JoinColumn(name = "tournament_id", nullable = false)
     private Tournament tournament;
 
-    @Column(name = "description", nullable = false)
+    @Column(name = "description")
     private String description;
     @Column(name = "type", nullable = false)
     private CompetitionType type;
