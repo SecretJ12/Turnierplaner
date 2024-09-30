@@ -20,7 +20,7 @@ public class Group {
     @OneToMany(mappedBy = "group", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Set<MatchOfGroup> matchesOfGroup;
     @Column(name = "index")
-    private int index;
+    private byte index;
     @ManyToOne
     @JoinColumn(name = "competition_id", nullable = false)
     private Competition competition;
@@ -46,11 +46,11 @@ public class Group {
         this.competition = competition;
     }
 
-    public int getIndex() {
+    public byte getIndex() {
         return index;
     }
 
-    public void setIndex(int index) {
+    public void setIndex(byte index) {
         this.index = index;
     }
 

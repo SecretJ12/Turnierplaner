@@ -268,9 +268,9 @@ public class TestdataGenerator {
         Team[] groupTeams = createTeams(competition, compSettings);
 
         Group[] groups = new Group[compSettings.getNumberOfGroups()];
-        for (int k = 0; k < compSettings.getNumberOfGroups(); k++) {
+        for (byte k = 0; k < compSettings.getNumberOfGroups(); k++) {
             groups[k] = new Group();
-            groups[k].setIndex(k + 1);
+            groups[k].setIndex((byte) (k + 1));
             groups[k].setCompetition(competition);
             groupRepository.persist(groups[k]);
             for (int i = k * compSettings.getNumberOfGroups() / compSettings.getNumberOfGroups(); i < compSettings

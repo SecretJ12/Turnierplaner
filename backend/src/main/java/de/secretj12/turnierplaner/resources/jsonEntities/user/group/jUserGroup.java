@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 
 public class jUserGroup {
 
-    private long index;
+    private byte index;
     private List<UUID> teams;
     private List<jUserMatch> matches;
 
@@ -24,11 +24,11 @@ public class jUserGroup {
         this.matches = group.getMatches().stream().map(jUserMatch::new).toList();
     }
 
-    public long getIndex() {
+    public byte getIndex() {
         return index;
     }
 
-    public void setIndex(long index) {
+    public void setIndex(byte index) {
         this.index = index;
     }
 

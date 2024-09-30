@@ -122,19 +122,19 @@ public class TestDeletionBehaviour {
 
         Group gA = new Group();
         gA.setCompetition(competition);
-        gA.setIndex(0);
+        gA.setIndex((byte) 0);
         groupRepository.persist(gA);
         Group gB = new Group();
         gB.setCompetition(competition);
-        gB.setIndex(1);
+        gB.setIndex((byte) 1);
         groupRepository.persist(gB);
         Group gC = new Group();
         gC.setCompetition(competition);
-        gC.setIndex(2);
+        gC.setIndex((byte) 2);
         groupRepository.persist(gC);
         Group gD = new Group();
         gD.setCompetition(competition);
-        gD.setIndex(3);
+        gD.setIndex((byte) 3);
         groupRepository.persist(gD);
 
         Match gmA = new Match();
