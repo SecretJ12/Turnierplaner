@@ -38,7 +38,7 @@
 		</tr>
 	</table>
 	<UpdatePointsDialog
-		v-if="canEdit"
+		v-if="canEdit && props.numberSets !== undefined"
 		ref="dialog"
 		:number-sets="props.numberSets"
 	/>
@@ -57,7 +57,7 @@ import { useRoute } from "vue-router"
 const props = defineProps<{
 	match: KnockoutMatch
 	mode: Mode
-	numberSets: NumberSets
+	numberSets?: NumberSets
 }>()
 
 const isLoggedIn = inject("loggedIn", ref(false))

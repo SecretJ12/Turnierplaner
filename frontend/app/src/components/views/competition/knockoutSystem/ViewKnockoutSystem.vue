@@ -15,7 +15,7 @@
 					v-if="match"
 					:match="match"
 					:mode="props.mode"
-					:numberSets="props.numberSets"
+					:number-sets="props.numberSets"
 				/>
 			</template>
 			<template #additional="{ match }">

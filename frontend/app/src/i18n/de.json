@@ -39,7 +39,10 @@
 		"any": "Beliebig",
 		"filter_by_name": "Nach Name filtern",
 		"from": "Von",
-		"to": "Bis",
+		"to": "Bis"
+	},
+	"DialogUpdateScore": {
+		"header": "Punkte Eintragung",
 		"update_score": "Aktualisieren Sie die Punkte für das Spiel"
 	},
 	"ViewPlayerRegistration": {
@@ -202,7 +205,7 @@
 		"round": "Runde"
 	},
 	"ViewPlayerOverview": {
-		"header": "Player Overview"
+		"header": "Spieler Übersicht"
 	},
 	"ViewPrepare": {
 		"steps": {

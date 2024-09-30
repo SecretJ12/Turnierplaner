@@ -6,16 +6,17 @@
 				? { width: '50rem' }
 				: { width: '70rem' },
 		]"
-		header="Update Score"
+		:header="t('DialogUpdateScore.header')"
 		modal
 	>
 		<span class="text-surface-500 dark:text-surface-400 block mb-2">{{
-			t("general.update_score")
+			t("DialogUpdateScore.update_score")
 		}}</span>
 		<div class="grid">
 			<div class="col-fixed" style="width: 300px"></div>
 			<div
 				v-for="n in numberSets"
+				:key="n"
 				class="col-fixed flex justify-content-center flex-wrap"
 				style="width: 140px"
 			>
@@ -40,7 +41,7 @@
 		/>
 		<divider />
 		<div class="grid">
-			<div v-for="n in 7" class="col">
+			<div v-for="n in 7" :key="n" class="col">
 				<Button
 					v-if="n - 1 <= 4"
 					:label="'6:' + (n - 1)"
@@ -54,7 +55,7 @@
 			</div>
 		</div>
 		<div class="grid">
-			<div v-for="n in 7" class="col">
+			<div v-for="n in 7" :key="n" class="col">
 				<Button
 					v-if="n - 1 <= 4"
 					:label="n - 1 + ':6'"

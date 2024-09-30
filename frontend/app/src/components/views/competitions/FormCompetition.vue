@@ -249,6 +249,7 @@
 			}}</label>
 			<Dropdown
 				v-model="playerASex"
+				v-bind="playerASexAttrs"
 				:disabled="disabled"
 				:options="[
 					{ name: t('CompetitionSettings.male'), value: Sex.MALE },
@@ -259,7 +260,6 @@
 				class="w-full"
 				option-label="name"
 				option-value="value"
-				v-bind="playerASexAttrs"
 			>
 				<template #option="slotProps">
 					<div>
@@ -273,6 +273,7 @@
 				t("CompetitionSettings.sex")
 			}}</label>
 			<Dropdown
+				v-model="playerBSex"
 				:disabled="disabled"
 				:options="[
 					{ name: t('CompetitionSettings.male'), value: Sex.MALE },
@@ -283,7 +284,7 @@
 				class="w-full"
 				option-label="name"
 				option-value="value"
-				v-bind="playerBSex"
+				v-bind="playerBSexAttrs"
 			>
 				<template #option="slotProps">
 					<div>{{ slotProps.option.name }}</div>
