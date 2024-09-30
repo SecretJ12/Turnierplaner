@@ -56,24 +56,23 @@ export function groupSystemServerToClient(
 	}
 }
 
-function uniqueBy<T>(arr: T[], compareFn: (a: T, b: T) => boolean): T[] {
-	return arr.filter(
-		(item, index, self) =>
-			index === self.findIndex((other) => compareFn(item, other)),
-	)
-}
-
 function groupServerToClient(group: GroupServer): Group {
 	const matches = group.matches.map((match) => matchServerToClient(match))
-	const teams: Team[] = []
-	matches.filter((m) => {
-		if (m.teamA) teams.push(m.teamA)
-		if (m.teamB) teams.push(m.teamB)
-	})
+	const teams = [
+		...new Map(
+			matches
+				.flatMap((m) => [m.teamA, m.teamB])
+				.filter((t) => t !== null)
+				.sort((a, b) =>
+					(a?.playerA?.name ?? "").localeCompare(b?.playerA?.name ?? ""),
+				)
+				.map((t) => [t?.id, t]),
+		).values(),
+	]
 	return {
 		index: group.index,
 		matches,
-		teams: uniqueBy(teams, (t1, t2) => t1.id === t2.id),
+		teams: teams,
 	}
 }
 
