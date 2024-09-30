@@ -50,9 +50,7 @@ const messages = languages
 
 export type MessageSchema = (typeof messages)["de"]
 
-declare module "vue-i18n" {
-	export interface DefineLocaleMessage extends MessageSchema {}
-}
+declare module "vue-i18n" {}
 
 const options: I18nOptions = {
 	locale: "de", // set locale

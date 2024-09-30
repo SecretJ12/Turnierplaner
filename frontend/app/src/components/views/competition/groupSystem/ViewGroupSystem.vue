@@ -4,6 +4,7 @@
 	<template v-if="groupSystem">
 		<ViewGroupTable
 			v-for="group in groupSystem.groups"
+			:key="group.index"
 			:group="group"
 			:number-sets="props.numberSets"
 		/>
@@ -16,7 +17,7 @@
 import { useRoute } from "vue-router"
 import ViewGroupTable from "@/components/views/competition/groupSystem/ViewGroupTable.vue"
 import { getGroup } from "@/backend/group"
-import { Mode, NumberSets } from "@/interfaces/competition"
+import { NumberSets } from "@/interfaces/competition"
 
 const route = useRoute()
 const { data: groupSystem } = getGroup(route)

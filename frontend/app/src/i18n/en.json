@@ -39,7 +39,10 @@
 		"any": "Any",
 		"filter_by_name": "Filter by name",
 		"from": "From",
-		"to": "To",
+		"to": "To"
+	},
+	"DialogUpdateScore": {
+		"header": "Score Update",
 		"update_score": "Update the score for the game"
 	},
 	"ViewPlayerRegistration": {
