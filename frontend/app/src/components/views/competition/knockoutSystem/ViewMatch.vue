@@ -9,10 +9,9 @@
 			<td class="name">
 				<ViewTeamNames :team="props.match.teamA" :inverted="true" />
 			</td>
-
 			<template v-if="props.match.sets !== null">
 				<td v-for="set in props.match.sets" :key="set.index" class="result">
-					{{ set.scoreA }}
+					{{ set.scoreA }} {{ set.index }}
 				</td>
 			</template>
 		</tr>
@@ -23,7 +22,7 @@
 
 			<template v-if="props.match.sets !== null">
 				<td v-for="set in props.match.sets" :key="set.index" class="result">
-					{{ set.scoreB }}
+					{{ set.scoreB }} {{ set.index }}
 				</td>
 			</template>
 		</tr>

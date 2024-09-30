@@ -59,7 +59,9 @@ const { data: knockoutSystem } = getKnockout(route)
 const dialog = ref()
 
 const showPopUp = function (match: Match) {
-	if (canEdit) dialog.value.showPopUp(match)
+	if (canEdit.value) {
+		dialog.value.showPopUp(match)
+	}
 }
 </script>
 

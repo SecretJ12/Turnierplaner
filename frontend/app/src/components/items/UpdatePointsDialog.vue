@@ -69,7 +69,7 @@
 				label="Cancel"
 				severity="secondary"
 				type="button"
-				@click="savePoints"
+				@click="cancel"
 			></Button>
 			<Button label="Save" type="button" @click="savePoints"></Button>
 		</div>
@@ -120,6 +120,10 @@ const showPopUp = function (match: Match) {
 }
 const { mutate: updateSet } = useUpdateSet(route, t, toast)
 
+const cancel = function () {
+	visible.value = false
+}
+
 const savePoints = function () {
 	if (!currentMatch.value || !currentMatch.value.id) {
 		console.log("No match")
@@ -140,12 +144,23 @@ const savePoints = function () {
 const getAllChangedSets = function () {
 	let changedSets = []
 	for (let i = 0; i < numberSets.value; i++) {
+		console.log("i ", i)
+		console.log("currentmatch ", currentMatch.value?.sets)
+		console.log("currentmatch ", currentMatch.value?.sets?.[i])
+		if (
+			!currentMatch.value?.sets?.length ||
+			i > currentMatch.value?.sets?.length - 1
+		) {
+			changedSets.push({
+				index: i,
+				scoreA: team1GamePoints.value[i],
+				scoreB: team2GamePoints.value[i],
+			})
+			continue
+		}
 		const a = currentMatch.value?.sets?.[i].scoreA
 		const b = currentMatch.value?.sets?.[i].scoreB
-		if (
-			(team1GamePoints.value[i] != 0 && team1GamePoints.value[i] !== a) ||
-			(team2GamePoints.value[i] != 0 && team2GamePoints.value[i] !== b)
-		) {
+		if (team1GamePoints.value[i] !== a || team2GamePoints.value[i] !== b) {
 			changedSets.push({
 				index: i,
 				scoreA: team1GamePoints.value[i],

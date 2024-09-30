@@ -133,19 +133,26 @@ public class TestdataGenerator {
 
     private void createSets(Match match) {
         ArrayList<Set> setArrayList = new ArrayList<>();
-        int numberOfSets = 2;
+        byte numberOfSets = 2;
         int winDif = 0;
-        List<Tuple2<Integer, Integer>> possibleResults = List.of(Tuple2.of(6, 0), Tuple2.of(6, 1), Tuple2.of(6, 2),
-            Tuple2.of(6, 3), Tuple2.of(6, 4), Tuple2.of(6, 5), Tuple2.of(7, 5),
-            Tuple2.of(7, 6));
-        for (int i = 0; i < numberOfSets; i++) {
+        List<Tuple2<Byte, Byte>> possibleResults = List.of(
+                Tuple2.of((byte) 6, (byte) 0),
+                Tuple2.of((byte) 6, (byte) 1),
+                Tuple2.of((byte) 6, (byte) 2),
+                Tuple2.of((byte) 6, (byte) 3),
+                Tuple2.of((byte) 6, (byte) 4),
+                Tuple2.of((byte) 6, (byte) 5),
+                Tuple2.of((byte) 7, (byte) 5),
+                Tuple2.of((byte) 7, (byte) 6)
+        );
+        for (byte i = 0; i < numberOfSets; i++) {
             Set.SetKey setKey = new Set.SetKey();
             setKey.setMatch(match);
             setKey.setIndex(i);
             Set set = new Set();
             set.setKey(setKey);
 
-            int r = random.nextInt(possibleResults.size());
+            byte r = (byte) random.nextInt(possibleResults.size());
             switch (random.nextInt(Math.abs(winDif) + 2)) {
                 case 0 -> {
                     set.setScoreA(possibleResults.get(r).getItem1());
@@ -181,14 +188,14 @@ public class TestdataGenerator {
             Set set = new Set();
             set.setKey(setKey);
 
-            int winner;
-            int looser;
+            byte winner;
+            byte looser;
             if (random.nextInt(10) < 9) {
                 winner = 10;
-                looser = random.nextInt(9);
+                looser = (byte) random.nextInt(9);
             } else {
-                winner = random.nextInt(11, 20);
-                looser = winner - 2;
+                winner = (byte) random.nextInt(11, 20);
+                looser = (byte) (winner - 2);
             }
             if (random.nextBoolean()) {
                 set.setScoreA(winner);

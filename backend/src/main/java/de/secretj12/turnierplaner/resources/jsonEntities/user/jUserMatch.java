@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -41,7 +42,7 @@ public class jUserMatch {
         if (match.getTeamB() != null)
             this.teamB = new jUserTeam(match.getTeamB());
 
-        this.sets = match.getSets().stream().map(jUserSet::new).toList();
+        this.sets = match.getSets().stream().map(jUserSet::new).sorted(Comparator.comparingInt(jUserSet::getIndex)).toList();
     }
 
     public UUID getId() {

@@ -13,9 +13,9 @@ public class Set {
     private SetKey key;
 
     @Column(name = "score_a")
-    private int scoreA;
+    private byte scoreA;
     @Column(name = "score_b")
-    private int scoreB;
+    private byte scoreB;
 
     public SetKey getKey() {
         return key;
@@ -25,19 +25,19 @@ public class Set {
         this.key = key;
     }
 
-    public int getScoreA() {
+    public byte getScoreA() {
         return scoreA;
     }
 
-    public void setScoreA(int scoreA) {
+    public void setScoreA(byte scoreA) {
         this.scoreA = scoreA;
     }
 
-    public int getScoreB() {
+    public byte getScoreB() {
         return scoreB;
     }
 
-    public void setScoreB(int scoreB) {
+    public void setScoreB(byte scoreB) {
         this.scoreB = scoreB;
     }
 
@@ -47,13 +47,13 @@ public class Set {
         @JoinColumn(name = "match_id")
         private Match match;
         @Column(name = "index")
-        private long index;
+        private byte index;
 
-        public long getIndex() {
+        public byte getIndex() {
             return index;
         }
 
-        public void setIndex(long id) {
+        public void setIndex(byte id) {
             this.index = id;
         }
 

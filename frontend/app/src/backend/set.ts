@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/vue-query"
+import { useMutation, useQueryClient } from "@tanstack/vue-query"
 import { Set } from "@/interfaces/match"
 import axios from "axios"
 import { RouteLocationNormalizedLoaded } from "vue-router"
@@ -9,12 +9,26 @@ export function useUpdateSet(
 	t: (s: string) => string,
 	toast: ToastServiceMethods,
 ) {
+	const queryClient = useQueryClient()
 	return useMutation({
 		mutationFn: (data: { sets: Set[]; matchId: string }) =>
-			axios.post(
-				`/tournament/${<string>route.params.tourId}/competition/${data.matchId}/set`,
-				data.sets,
-			),
+			axios
+				.post(
+					`/tournament/${<string>route.params.tourId}/competition/${data.matchId}/set`,
+					data.sets,
+				)
+				.then(() => {
+					queryClient.invalidateQueries({
+						queryKey: ["knockout", route.params.tourId, route.params.compId],
+						refetchType: "all",
+					})
+				})
+				.then(() => {
+					queryClient.invalidateQueries({
+						queryKey: ["group", route.params.tourId, route.params.compId],
+						refetchType: "all",
+					})
+				}),
 		onSuccess() {
 			toast.add({
 				severity: "success",
