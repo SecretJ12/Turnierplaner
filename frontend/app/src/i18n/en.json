@@ -42,7 +42,9 @@
 		"filter_by_name": "Filter by name",
 		"from": "From",
 		"to": "To",
-		"sex": "Sex"
+		"sex": "Sex",
+		"male": "Male",
+		"female": "Female"
 	},
 	"DialogUpdateScore": {
 		"header": "Score Update",
@@ -143,8 +145,6 @@
 		"player": "Player settings",
 		"differentB": "Different settings for player 2",
 		"sex": "Sex",
-		"male": "Male",
-		"female": "Female",
 		"any": "Any",
 		"minAge": "Minimum age",
 		"maxAge": "Maximum age",

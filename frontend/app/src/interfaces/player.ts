@@ -2,6 +2,7 @@ export interface PlayerServer {
 	id?: string
 	firstName: string
 	lastName: string
+	sex?: Sex
 }
 
 export interface Player extends PlayerServer {
@@ -13,6 +14,7 @@ export function playerServerToClient(player: PlayerServer): Player {
 		id: player.id,
 		firstName: player.firstName,
 		lastName: player.lastName,
+		sex: player.sex,
 		get name() {
 			return `${this.firstName} ${this.lastName}`
 		},

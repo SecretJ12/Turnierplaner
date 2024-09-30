@@ -9,6 +9,8 @@ import de.secretj12.turnierplaner.db.repositories.CompetitionRepository;
 import de.secretj12.turnierplaner.db.repositories.DefaultConfigRepository;
 import de.secretj12.turnierplaner.db.repositories.PlayerRepository;
 import de.secretj12.turnierplaner.db.repositories.VerificationCodeRepository;
+import de.secretj12.turnierplaner.resources.jsonEntities.director.jDirectorPlayer;
+import de.secretj12.turnierplaner.resources.jsonEntities.jPage;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayer;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayerRegistrationForm;
 import io.quarkus.mailer.Mailer;
@@ -82,10 +84,15 @@ public class PlayerResource {
     @Path("/find")
     @RolesAllowed("director")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<jUserPlayer> listPlayer(@QueryParam("search") String search,
-                                        @DefaultValue("0") @QueryParam("page") int page,
-                                        @DefaultValue("5") @QueryParam("pageSize") int pageSize) {
-        return playerRepository.filter(search, null, null, null, true, page, pageSize).map(jUserPlayer::new).toList();
+    public jPage<List<jDirectorPlayer>> listPlayer(@QueryParam("search") String search,
+                                                   @DefaultValue("0") @QueryParam("page") int page,
+                                                   @DefaultValue("5") @QueryParam("pageSize") int pageSize) {
+        if (pageSize <= 0)
+            throw new BadRequestException("Page size has to be greater 0");
+        return new jPage<>(
+                           playerRepository.countFilter(search, null, null, null, true), playerRepository.filter(search,
+                               null, null, null, true, page, pageSize)
+                               .map(jDirectorPlayer::new).toList());
     }
 
     @GET

@@ -216,11 +216,16 @@ public class TestdataGenerator {
         matchRepository.persist(match);
     }
 
-    private Player createPlayer(AGE_RESTR ageRestr) {
+    private Player createPlayer(AGE_RESTR ageRestr, SexFilter sexFilter) {
         Player player = new Player();
         Name name = faker.name();
         player.setFirstName(name.firstName());
         player.setLastName(name.lastName());
+        player.setSex(switch (sexFilter) {
+            case MALE -> Sex.MALE;
+            case FEMALE -> Sex.FEMALE;
+            case ANY -> Math.random() > 0.5 ? Sex.MALE : Sex.FEMALE;
+        });
         player.setEmail(player.getFirstName() + "." + player.getLastName() + "@gmail.com");
         player.setPhone(faker.phoneNumber().cellPhone());
         player.setMailVerified(true);
@@ -237,12 +242,7 @@ public class TestdataGenerator {
     private Team[] createTeams(Competition competition, CompetitionSettings competitionSettings) {
         Team[] teams = new Team[competitionSettings.getTeamNumbers()];
         for (int i = 0; i < competitionSettings.getTeamNumbers(); i++) {
-            Player player = createPlayer(competitionSettings.getAgeRestr());
-            if (competitionSettings.getSex() == SexFilter.ANY) {
-                player.setSex(Sex.MALE);
-            } else {
-                player.setSex(Sex.FEMALE);
-            }
+            Player player = createPlayer(competitionSettings.getAgeRestr(), competitionSettings.getSex());
             players.persist(player);
 
             teams[i] = new Team();
@@ -250,12 +250,7 @@ public class TestdataGenerator {
             teams[i].setPlayerA(player);
 
             if (competitionSettings.getCompetitionMode() == CompetitionMode.DOUBLES) {
-                Player player2 = createPlayer(competitionSettings.getAgeRestr());
-                if (competitionSettings.getSex() == SexFilter.ANY || competitionSettings.getSex() == SexFilter.FEMALE) {
-                    player2.setSex(Sex.FEMALE);
-                } else {
-                    player2.setSex(Sex.FEMALE);
-                }
+                Player player2 = createPlayer(competitionSettings.getAgeRestr(), competitionSettings.getSex());
                 players.persist(player2);
                 teams[i].setPlayerB(player2);
             }

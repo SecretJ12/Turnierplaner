@@ -42,7 +42,9 @@
 		"filter_by_name": "Nach Name filtern",
 		"from": "Von",
 		"to": "Bis",
-		"sex": "Geschlecht"
+		"sex": "Geschlecht",
+		"male": "Männlich",
+		"female": "Weiblich"
 	},
 	"DialogUpdateScore": {
 		"header": "Punkte Eintragung",
@@ -140,8 +142,6 @@
 		"player": "Spielereinstellungen",
 		"differentB": "Verschiedene Einstellungen für Spieler 2",
 		"sex": "Geschlecht",
-		"male": "Männlich",
-		"female": "Weiblich",
 		"any": "Egal",
 		"minAge": "Mindestalter",
 		"maxAge": "Maximalalter",

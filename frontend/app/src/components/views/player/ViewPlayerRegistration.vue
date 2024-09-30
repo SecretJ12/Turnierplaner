@@ -57,8 +57,8 @@
 						<Dropdown
 							v-bind="sex"
 							:options="[
-								{ name: t('CompetitionSettings.male'), value: Sex.MALE },
-								{ name: t('CompetitionSettings.female'), value: Sex.FEMALE },
+								{ name: t('general.male'), value: Sex.MALE },
+								{ name: t('general.female'), value: Sex.FEMALE },
 							]"
 							option-label="name"
 							option-value="value"

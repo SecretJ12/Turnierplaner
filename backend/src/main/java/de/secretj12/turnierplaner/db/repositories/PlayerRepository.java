@@ -39,6 +39,19 @@ public class PlayerRepository implements PanacheRepository<Player> {
                 .page(page, pageSize).stream();
     }
 
+    public Long countFilter(String search, Sex sex, LocalDate minAge, LocalDate maxAge, boolean admin) {
+        return find("#countFilter", Parameters
+            .with("search", search)
+            .and("admin", admin)
+            .and("sex", sex)
+            .and("ignoreSex", sex == null)
+            .and("minAge", minAge)
+            .and("ignoreMinAge", minAge == null)
+            .and("maxAge", maxAge)
+            .and("ignoreMaxAge", maxAge == null))
+                .count();
+    }
+
     public Stream<Player> adminUnverified() {
         return find("#adminUnverified").page(0, 10).stream();
     }

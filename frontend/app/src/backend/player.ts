@@ -9,6 +9,7 @@ import { ToastServiceMethods } from "primevue/toastservice"
 import { computed, Ref } from "vue"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query"
 import { RouteLocationNormalizedLoaded } from "vue-router"
+import { Page } from "@/interfaces/general"
 
 export function findCompPlayers(
 	search: Ref<string>,
@@ -53,13 +54,18 @@ export function findPlayers(
 	toast: ToastServiceMethods,
 ) {
 	return useQuery({
-		queryKey: ["searchPlayer", search],
+		queryKey: ["searchPlayer", search, page, pageSize],
 		queryFn: async () => {
 			return axios
-				.get<PlayerServer[]>(
+				.get<Page<PlayerServer[]>>(
 					`/player/find?search=${search.value.toLowerCase()}&page=${page.value}&pageSize=${pageSize.value}`,
 				)
-				.then<Player[]>((result) => result.data.map(playerServerToClient))
+				.then<Page<Player[]>>((result) => {
+					return {
+						total: result.data.total,
+						data: result.data.data.map(playerServerToClient),
+					}
+				})
 				.catch((error) => {
 					toast.add({
 						severity: "error",

@@ -25,6 +25,18 @@ import java.util.UUID;
                                    ELSE 2
                                END, p.firstName, p.lastName"""
                ),
+               @NamedQuery(name = "countFilter",
+                           query = """
+                               SELECT p FROM Player p
+                               WHERE p.mailVerified = true
+                               AND (p.adminVerified = true OR :admin = true)
+                               AND (p.sex = :sex OR :ignoreSex = true)
+                               AND (p.birthday <= :minAge OR :ignoreMinAge = true)
+                               AND (p.birthday >= :maxAge OR :ignoreMaxAge = true)
+                               AND (lower(p.firstName) like CONCAT('%', lower(:search), '%')
+                               OR lower(p.lastName) = CONCAT('%', lower(:search), '%')
+                               OR lower(CONCAT(p.firstName, ' ', p.lastName)) like CONCAT('%', lower(:search), '%'))"""
+               ),
                @NamedQuery(name = "adminUnverified",
                            query = """
                                SELECT p FROM Player p

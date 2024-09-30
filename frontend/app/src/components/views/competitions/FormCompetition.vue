@@ -276,8 +276,8 @@
 				v-model="playerBSex"
 				:disabled="disabled"
 				:options="[
-					{ name: t('CompetitionSettings.male'), value: Sex.MALE },
-					{ name: t('CompetitionSettings.female'), value: Sex.FEMALE },
+					{ name: t('general.male'), value: Sex.MALE },
+					{ name: t('general.female'), value: Sex.FEMALE },
 					{ name: t('CompetitionSettings.any'), value: Sex.ANY },
 				]"
 				:placeholder="t(`CompetitionSettings.sex`)"
