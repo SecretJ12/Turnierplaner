@@ -136,14 +136,14 @@ public class TestdataGenerator {
         byte numberOfSets = 2;
         int winDif = 0;
         List<Tuple2<Byte, Byte>> possibleResults = List.of(
-                Tuple2.of((byte) 6, (byte) 0),
-                Tuple2.of((byte) 6, (byte) 1),
-                Tuple2.of((byte) 6, (byte) 2),
-                Tuple2.of((byte) 6, (byte) 3),
-                Tuple2.of((byte) 6, (byte) 4),
-                Tuple2.of((byte) 6, (byte) 5),
-                Tuple2.of((byte) 7, (byte) 5),
-                Tuple2.of((byte) 7, (byte) 6)
+            Tuple2.of((byte) 6, (byte) 0),
+            Tuple2.of((byte) 6, (byte) 1),
+            Tuple2.of((byte) 6, (byte) 2),
+            Tuple2.of((byte) 6, (byte) 3),
+            Tuple2.of((byte) 6, (byte) 4),
+            Tuple2.of((byte) 6, (byte) 5),
+            Tuple2.of((byte) 7, (byte) 5),
+            Tuple2.of((byte) 7, (byte) 6)
         );
         for (byte i = 0; i < numberOfSets; i++) {
             Set.SetKey setKey = new Set.SetKey();
