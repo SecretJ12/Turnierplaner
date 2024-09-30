@@ -3,11 +3,11 @@ package de.secretj12.turnierplaner.resources.jsonEntities.user;
 import de.secretj12.turnierplaner.db.entities.Set;
 
 public class jUserSet {
-    private long index;
-    private int scoreA;
-    private int scoreB;
+    private byte index;
+    private byte scoreA;
+    private byte scoreB;
 
-    public jUserSet(long index, int scoreA, int scoreB) {
+    public jUserSet(byte index, byte scoreA, byte scoreB) {
         this.index = index;
         this.scoreA = scoreA;
         this.scoreB = scoreB;
@@ -19,27 +19,27 @@ public class jUserSet {
         this.index = set.getKey().getIndex();
     }
 
-    public long getIndex() {
+    public byte getIndex() {
         return index;
     }
 
-    public void setIndex(long index) {
+    public void setIndex(byte index) {
         this.index = index;
     }
 
-    public int getScoreA() {
+    public byte getScoreA() {
         return scoreA;
     }
 
-    public void setScoreA(int scoreA) {
+    public void setScoreA(byte scoreA) {
         this.scoreA = scoreA;
     }
 
-    public int getScoreB() {
+    public byte getScoreB() {
         return scoreB;
     }
 
-    public void setScoreB(int scoreB) {
+    public void setScoreB(byte scoreB) {
         this.scoreB = scoreB;
     }
 }
