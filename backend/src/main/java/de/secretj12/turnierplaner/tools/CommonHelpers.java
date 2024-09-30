@@ -22,4 +22,10 @@ public class CommonHelpers {
         if (!securityIdentity.hasRole("director") && !tournament.isVisible())
             throw new UnauthorizedException("Cannot access tournament");
     }
+
+    public void checkTournamentAccessibility(Tournament tournament) {
+        if (tournament == null) throw new NotFoundException("Tournament could not be found");
+        if (!securityIdentity.hasRole("director") && !tournament.isVisible())
+            throw new UnauthorizedException("Cannot access tournament");
+    }
 }

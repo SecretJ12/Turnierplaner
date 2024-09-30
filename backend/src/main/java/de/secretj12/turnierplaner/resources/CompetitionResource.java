@@ -405,13 +405,6 @@ public class CompetitionResource {
         return new jUserGroupSystem(groups, finale, thirdPlace);
     }
 
-    private void checkTournamentAccessibility(String tourName) {
-        Tournament tournament = tournaments.getByName(tourName);
-        if (tournament == null) throw new NotFoundException("Tournament could not be found");
-        if (!securityIdentity.hasRole("director") && !tournament.isVisible())
-            throw new UnauthorizedException("Cannot access tournament");
-    }
-
     @POST
     @Transactional
     @RolesAllowed("director")
