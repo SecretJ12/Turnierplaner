@@ -220,7 +220,7 @@ import {
 	useSignUpSingle,
 } from "@/backend/competition"
 import { useQueryClient } from "@tanstack/vue-query"
-import { extractSearchPlayer, findPlayers } from "@/backend/player"
+import { findCompPlayers } from "@/backend/player"
 
 const { t } = useI18n()
 const toast = useToast()
@@ -232,17 +232,19 @@ const { data: competition } = getCompetitionDetails(route, t, toast)
 
 const selectedPlayerA = ref<Player | null>(null)
 const searchA = ref<string>("")
-const { data: suggestionsPlayerA, isFetching: loadingA } = findPlayers(
+const { data: suggestionsPlayerA, isFetching: loadingA } = findCompPlayers(
 	searchA,
-	extractSearchPlayer(competition, false),
+	route,
+	false,
 	t,
 	toast,
 )
 const selectedPlayerB = ref<Player | null>(null)
 const searchB = ref<string>("")
-const { data: suggestionsPlayerB, isFetching: loadingB } = findPlayers(
+const { data: suggestionsPlayerB, isFetching: loadingB } = findCompPlayers(
 	searchB,
-	extractSearchPlayer(competition, true),
+	route,
+	true,
 	t,
 	toast,
 )

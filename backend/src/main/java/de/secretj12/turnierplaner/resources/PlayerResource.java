@@ -5,6 +5,8 @@ import de.secretj12.turnierplaner.db.entities.DefaultConfig;
 import de.secretj12.turnierplaner.db.entities.Player;
 import de.secretj12.turnierplaner.db.entities.SexType;
 import de.secretj12.turnierplaner.db.entities.VerificationCode;
+import de.secretj12.turnierplaner.db.entities.competition.Competition;
+import de.secretj12.turnierplaner.db.repositories.CompetitionRepository;
 import de.secretj12.turnierplaner.db.repositories.DefaultConfigRepository;
 import de.secretj12.turnierplaner.db.repositories.PlayerRepository;
 import de.secretj12.turnierplaner.db.repositories.VerificationCodeRepository;
@@ -32,6 +34,8 @@ import java.util.UUID;
 @Path("/player")
 public class PlayerResource {
     @Inject
+    CompetitionRepository competitionRepository;
+    @Inject
     PlayerRepository playerRepository;
     @Inject
     VerificationCodeRepository verificationCodeRepository;
@@ -48,19 +52,28 @@ public class PlayerResource {
     public int expire;
 
     @GET
-    @Path("/find")
+    @Path("/compFind/{tourId}/{compId}/")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<jUserPlayer> listPlayer(@QueryParam("search") String search, @QueryParam("sex") jUserSex sex,
-                                        @QueryParam("minAge") @JsonFormat(pattern = "yyyy-MM-dd") String minAgeS,
-                                        @QueryParam("maxAge") @JsonFormat(pattern = "yyyy-MM-dd") String maxAgeS) {
-        // TODO instead of filtering by params of client, better filter by given competition, prevents leak of birthday
-        // TODO only return verified accounts (except for admins)
-        LocalDate minAge = minAgeS != null ? LocalDate.parse(minAgeS) : null;
-        LocalDate maxAge = maxAgeS != null ? LocalDate.parse(maxAgeS) : null;
+    public List<jUserPlayer> listCompPlayer(@PathParam("tourId") String tourId, @PathParam("compId") String compId,
+                                            @QueryParam("search") String search,
+                                            @DefaultValue("false") @QueryParam("playerB") boolean playerB) {
+        Competition competition = competitionRepository.getByName(tourId, compId);
+        if (competition == null)
+            throw new BadRequestException("Invalid competition");
 
-        SexType dbSex = sex == null ? null : switch (sex) {
+        LocalDate minAge =
+            playerB ?
+                (competition.playerBhasMinAge() ? competition.getPlayerBminAge() : null)
+                : (competition.playerAhasMinAge() ? competition.getPlayerAminAge() : null);
+        LocalDate maxAge =
+            playerB ?
+                (competition.playerBhasMaxAge() ? competition.getPlayerBmaxAge() : null)
+                : (competition.playerAhasMaxAge() ? competition.getPlayerAmaxAge() : null);
+
+        SexType dbSex = switch (playerB ? competition.getPlayerBSex() : competition.getPlayerASex()) {
             case MALE -> SexType.MALE;
             case FEMALE -> SexType.FEMALE;
+            case ANY -> null;
         };
         if (search.isEmpty()) {
             return List.of();
@@ -68,7 +81,17 @@ public class PlayerResource {
 
         DefaultConfig defConfig = defaultConfigRepository.findById(0L);
         boolean admin = securityIdentity.hasRole("director") || !defConfig.isAdminVerificationNeeded();
-        return playerRepository.filter(search, dbSex, minAge, maxAge, admin).map(jUserPlayer::new).toList();
+        return playerRepository.filter(search, dbSex, minAge, maxAge, admin, 0, 10).map(jUserPlayer::new).toList();
+    }
+
+    @GET
+    @Path("/find")
+    @RolesAllowed("director")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<jUserPlayer> listPlayer(@QueryParam("search") String search,
+                                        @DefaultValue("0") @QueryParam("page") int page,
+                                        @DefaultValue("5") @QueryParam("pageSize") int pageSize) {
+        return playerRepository.filter(search, null, null, null, true, page, pageSize).map(jUserPlayer::new).toList();
     }
 
     @GET
@@ -100,7 +123,7 @@ public class PlayerResource {
         if (exPlayer != null &&
             (exPlayer.getVerificationCode() == null
                 || (exPlayer.getVerificationCode() != null && exPlayer.getVerificationCode().getExpirationDate()
-                    .isBefore(Instant.now()))))
+                                                                      .isBefore(Instant.now()))))
             throw new WebApplicationException("A player already exists with this name", Response.Status.CONFLICT);
 
         // TODO check phone number (only valid phone number)

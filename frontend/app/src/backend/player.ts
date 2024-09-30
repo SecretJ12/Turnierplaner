@@ -1,4 +1,3 @@
-import { Competition, Sex } from "@/interfaces/competition"
 import axios from "axios"
 import {
 	Player,
@@ -11,63 +10,54 @@ import { computed, Ref } from "vue"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query"
 import { RouteLocationNormalizedLoaded } from "vue-router"
 
-export interface searchPlayer {
-	sex: Sex
-	hasMinAge: boolean
-	minAge: Date | null
-	hasMaxAge: boolean
-	maxAge: Date | null
-}
-
-export function extractSearchPlayer(
-	competition: Ref<Competition> | Ref<undefined>,
+export function findCompPlayers(
+	search: Ref<string>,
+	route: RouteLocationNormalizedLoaded,
 	playerB: boolean,
-): Ref<searchPlayer> {
-	return computed(() => {
-		if (!competition.value) {
-			return {
-				sex: Sex.ANY,
-				hasMinAge: false,
-				minAge: null,
-				hasMaxAge: false,
-				maxAge: null,
-			}
-		}
-
-		const player = playerB
-			? competition.value.playerB
-			: competition.value.playerA
-		return {
-			sex: player.sex,
-			hasMinAge: player.hasMinAge,
-			minAge: player.minAge,
-			hasMaxAge: player.hasMaxAge,
-			maxAge: player.maxAge,
-		}
+	t: (s: string) => string,
+	toast: ToastServiceMethods,
+) {
+	return useQuery({
+		queryKey: [
+			"searchPlayer",
+			search,
+			computed(() => route.params.tourId),
+			computed(() => route.params.compId),
+		],
+		queryFn: async () => {
+			return axios
+				.get<PlayerServer[]>(
+					`/player/compFind/${route.params.tourId}/${route.params.compId}?search=${search.value.toLowerCase()}` +
+						`playerB=${playerB}`,
+				)
+				.then<Player[]>((result) => result.data.map(playerServerToClient))
+				.catch((error) => {
+					toast.add({
+						severity: "error",
+						summary: t("ViewCompetition.query_search_failed"),
+						detail: error,
+						life: 3000,
+					})
+					console.log(error)
+					throw error
+				})
+		},
 	})
 }
 
 export function findPlayers(
 	search: Ref<string>,
-	searchPlayer: Ref<searchPlayer>,
+	page: Ref<number>,
+	pageSize: Ref<number>,
 	t: (s: string) => string,
 	toast: ToastServiceMethods,
 ) {
 	return useQuery({
-		queryKey: ["searchPlayer", search, searchPlayer],
+		queryKey: ["searchPlayer", search],
 		queryFn: async () => {
 			return axios
 				.get<PlayerServer[]>(
-					`/player/find?search=${search.value.toLowerCase()}` +
-						(searchPlayer.value.sex !== Sex.ANY
-							? `&sex=${searchPlayer.value.sex}`
-							: "") +
-						(searchPlayer.value.hasMinAge && searchPlayer.value.minAge !== null
-							? `&minAge=${searchPlayer.value.minAge.toISOString().slice(0, 10)}`
-							: "") +
-						(searchPlayer.value.hasMaxAge && searchPlayer.value.maxAge !== null
-							? `&maxAge=${searchPlayer.value.maxAge.toISOString().slice(0, 10)}`
-							: ""),
+					`/player/find?search=${search.value.toLowerCase()}&page=${page.value}&pageSize=${pageSize.value}`,
 				)
 				.then<Player[]>((result) => result.data.map(playerServerToClient))
 				.catch((error) => {
