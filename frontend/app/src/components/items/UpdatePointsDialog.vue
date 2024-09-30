@@ -15,13 +15,13 @@
 		<div class="grid">
 			<div class="col-fixed" style="width: 300px"></div>
 			<div
+				v-for="n in numberSets"
 				class="col-fixed flex justify-content-center flex-wrap"
 				style="width: 140px"
-				v-for="n in numberSets"
 			>
 				<RadioButton
 					v-model="selectedSet"
-					:inputId="n.toString()"
+					:input-id="n.toString()"
 					name="sets"
 					:value="(n - 1).toString()"
 				/>
@@ -29,38 +29,38 @@
 			</div>
 		</div>
 		<PlayerPointRow
-			:team="currentMatch?.teamA"
-			v-model:game-points="team1GamePoints"
 			v-if="visible"
+			v-model:game-points="team1GamePoints"
+			:team="currentMatch?.teamA"
 		/>
 		<PlayerPointRow
-			:team="currentMatch?.teamB"
-			v-model:game-points="team2GamePoints"
 			v-if="visible"
+			v-model:game-points="team2GamePoints"
+			:team="currentMatch?.teamB"
 		/>
 		<divider />
 		<div class="grid">
-			<div class="col" v-for="n in 7">
+			<div v-for="n in 7" class="col">
 				<Button
+					v-if="n - 1 <= 4"
 					:label="'6:' + (n - 1)"
 					@click="updatePoints(6, n - 1)"
-					v-if="n - 1 <= 4"
 				/>
 				<Button
+					v-else
 					:label="'7:' + (n - 1)"
 					@click="updatePoints(7, n - 1)"
-					v-else
 				/>
 			</div>
 		</div>
 		<div class="grid">
-			<div class="col" v-for="n in 7">
+			<div v-for="n in 7" class="col">
 				<Button
+					v-if="n - 1 <= 4"
 					:label="n - 1 + ':6'"
 					@click="updatePoints(n - 1, 6)"
-					v-if="n - 1 <= 4"
 				/>
-				<Button :label="n - 1 + ':7'" @click="updatePoints(n - 1, 7)" v-else />
+				<Button v-else :label="n - 1 + ':7'" @click="updatePoints(n - 1, 7)" />
 			</div>
 		</div>
 		<divider />
