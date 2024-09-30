@@ -144,9 +144,6 @@ const savePoints = function () {
 const getAllChangedSets = function () {
 	let changedSets = []
 	for (let i = 0; i < numberSets.value; i++) {
-		console.log("i ", i)
-		console.log("currentmatch ", currentMatch.value?.sets)
-		console.log("currentmatch ", currentMatch.value?.sets?.[i])
 		if (
 			!currentMatch.value?.sets?.length ||
 			i > currentMatch.value?.sets?.length - 1

@@ -10,8 +10,13 @@
 				<ViewTeamNames :team="props.match.teamA" :inverted="true" />
 			</td>
 			<template v-if="props.match.sets !== null">
-				<td v-for="set in props.match.sets" :key="set.index" class="result">
-					{{ set.scoreA }} {{ set.index }}
+				<td
+					v-for="set in props.match.sets"
+					:key="set.index"
+					class="result"
+					@click="showPopUp(props.match)"
+				>
+					{{ set.scoreA }}
 				</td>
 			</template>
 		</tr>
@@ -21,23 +26,50 @@
 			</td>
 
 			<template v-if="props.match.sets !== null">
-				<td v-for="set in props.match.sets" :key="set.index" class="result">
-					{{ set.scoreB }} {{ set.index }}
+				<td
+					v-for="set in props.match.sets"
+					:key="set.index"
+					class="result"
+					@click="showPopUp(props.match)"
+				>
+					{{ set.scoreB }}
 				</td>
 			</template>
 		</tr>
 	</table>
+	<UpdatePointsDialog
+		v-if="canEdit"
+		ref="dialog"
+		:number-sets="props.numberSets"
+	/>
 </template>
 
 <script setup lang="ts">
 import { KnockoutMatch } from "@/interfaces/knockoutSystem"
-import { Mode } from "@/interfaces/competition"
+import { Mode, NumberSets } from "@/interfaces/competition"
 import ViewTeamNames from "@/components/links/LinkTeamNames.vue"
+import UpdatePointsDialog from "@/components/items/UpdatePointsDialog.vue"
+import { inject, ref } from "vue"
+import { Match } from "@/interfaces/match"
+import { getCanEdit } from "@/backend/security"
+import { useRoute } from "vue-router"
 
 const props = defineProps<{
 	match: KnockoutMatch
 	mode: Mode
+	numberSets: NumberSets
 }>()
+
+const isLoggedIn = inject("loggedIn", ref(false))
+const route = useRoute()
+const { data: canEdit } = getCanEdit(<string>route.params.tourId, isLoggedIn)
+const dialog = ref()
+
+const showPopUp = function (match: Match) {
+	if (canEdit.value) {
+		dialog.value.showPopUp(match)
+	}
+}
 </script>
 
 <style scoped>
