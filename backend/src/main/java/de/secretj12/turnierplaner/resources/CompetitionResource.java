@@ -2,7 +2,7 @@ package de.secretj12.turnierplaner.resources;
 
 import de.secretj12.turnierplaner.db.entities.Match;
 import de.secretj12.turnierplaner.db.entities.Player;
-import de.secretj12.turnierplaner.db.entities.SexType;
+import de.secretj12.turnierplaner.db.entities.Sex;
 import de.secretj12.turnierplaner.db.entities.Tournament;
 import de.secretj12.turnierplaner.db.entities.competition.*;
 import de.secretj12.turnierplaner.db.entities.groups.Group;
@@ -373,15 +373,15 @@ public class CompetitionResource {
     }
 
     private boolean conditionsFailA(Competition comp, Player player) {
-        return (comp.getPlayerASex() == Sex.FEMALE && player.getSex() == SexType.MALE)
-            || (comp.getPlayerASex() == Sex.MALE && player.getSex() == SexType.FEMALE)
+        return (comp.getPlayerASex() == SexFilter.FEMALE && player.getSex() == Sex.MALE)
+            || (comp.getPlayerASex() == SexFilter.MALE && player.getSex() == Sex.FEMALE)
             || (comp.playerAhasMinAge() && comp.getPlayerAminAge().isBefore(player.getBirthday()))
             || (comp.playerAhasMaxAge() && comp.getPlayerAmaxAge().isAfter(player.getBirthday()));
     }
 
     private boolean conditionsFailB(Competition comp, Player player) {
-        return (comp.getPlayerBSex() == Sex.FEMALE && player.getSex() == SexType.MALE)
-            || (comp.getPlayerBSex() == Sex.MALE && player.getSex() == SexType.FEMALE)
+        return (comp.getPlayerBSex() == SexFilter.FEMALE && player.getSex() == Sex.MALE)
+            || (comp.getPlayerBSex() == SexFilter.MALE && player.getSex() == Sex.FEMALE)
             || (comp.playerBhasMinAge() && comp.getPlayerBminAge().isBefore(player.getBirthday()))
             || (comp.playerBhasMaxAge() && comp.getPlayerBmaxAge().isAfter(player.getBirthday()));
     }

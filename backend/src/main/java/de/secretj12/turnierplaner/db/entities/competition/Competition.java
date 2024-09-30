@@ -53,7 +53,7 @@ public class Competition {
     private NumberSets numberSets;
 
     @Column(name = "playerA_sex", nullable = false)
-    private Sex playerASex;
+    private SexFilter playerASexFilter;
     @Column(name = "playerA_has_min_age")
     private boolean playerAhasMinAge;
     @Column(name = "playerA_min_age")
@@ -66,7 +66,7 @@ public class Competition {
     @Column(name = "playerB_different")
     private boolean playerBdifferent;
     @Column(name = "playerB_sex")
-    private Sex playerBSex;
+    private SexFilter playerBSexFilter;
     @Column(name = "playerB_has_min_age")
     private boolean playerBhasMinAge;
     @Column(name = "playerB_min_age")
@@ -179,12 +179,12 @@ public class Competition {
         this.signup = signup;
     }
 
-    public Sex getPlayerASex() {
-        return playerASex;
+    public SexFilter getPlayerASex() {
+        return playerASexFilter;
     }
 
-    public void setPlayerASex(Sex playerASex) {
-        this.playerASex = playerASex;
+    public void setPlayerASex(SexFilter playerASexFilter) {
+        this.playerASexFilter = playerASexFilter;
     }
 
     public boolean playerAhasMinAge() {
@@ -227,12 +227,12 @@ public class Competition {
         this.playerBdifferent = playerBequalsA;
     }
 
-    public Sex getPlayerBSex() {
-        return playerBSex;
+    public SexFilter getPlayerBSex() {
+        return playerBSexFilter;
     }
 
-    public void setPlayerBSex(Sex playerBSex) {
-        this.playerBSex = playerBSex;
+    public void setPlayerBSex(SexFilter playerBSexFilter) {
+        this.playerBSexFilter = playerBSexFilter;
     }
 
     public boolean playerBhasMinAge() {

@@ -60,7 +60,7 @@ public class TestDeletionBehaviour {
         comp.setMode(CompetitionMode.DOUBLES);
         comp.setType(CompetitionType.GROUPS);
         comp.setSignup(CompetitionSignUp.TOGETHER);
-        comp.setPlayerASex(Sex.MALE);
+        comp.setPlayerASex(SexFilter.MALE);
         comp.setTournament(tour);
         comp.setcProgress(CreationProgress.GAMES);
         comp.setNumberSets(NumberSets.THREE);

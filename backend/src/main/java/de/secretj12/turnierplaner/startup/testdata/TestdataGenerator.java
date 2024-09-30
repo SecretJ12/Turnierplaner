@@ -67,13 +67,13 @@ public class TestdataGenerator {
 
         List<CompetitionSettings> compSetting = new ArrayList<>();
         // @formatter:off
-        compSetting.add(new CompetitionSettings("Single Groups", CompetitionType.GROUPS, CompetitionMode.SINGLES, Sex.MALE, 8, false, AGE_RESTR.NONE, false, 2));
-        compSetting.add(new CompetitionSettings("Single U18", CompetitionType.GROUPS, CompetitionMode.SINGLES, Sex.MALE, 8, false, AGE_RESTR.U18, false, 2));
-        compSetting.add(new CompetitionSettings("Single Knockout", CompetitionType.KNOCKOUT, CompetitionMode.SINGLES, Sex.MALE, 16, false, AGE_RESTR.NONE, false, 2));
-        compSetting.add(new CompetitionSettings("Double", CompetitionType.KNOCKOUT, CompetitionMode.DOUBLES, Sex.MALE, 16, false, AGE_RESTR.NONE, false, 2));
-        compSetting.add(new CompetitionSettings("Double random", CompetitionType.KNOCKOUT, CompetitionMode.DOUBLES, Sex.ANY, 32, true, AGE_RESTR.NONE, false, 2));
-        compSetting.add(new CompetitionSettings("Double O50", CompetitionType.KNOCKOUT, CompetitionMode.DOUBLES, Sex.ANY, 8, false, AGE_RESTR.O50, true, 2));
-        compSetting.add(new CompetitionSettings("Double Mixed", CompetitionType.KNOCKOUT, CompetitionMode.DOUBLES, Sex.ANY, 4, true, AGE_RESTR.O50, true, 2));
+        compSetting.add(new CompetitionSettings("Single Groups", CompetitionType.GROUPS, CompetitionMode.SINGLES, SexFilter.MALE, 8, false, AGE_RESTR.NONE, false, 2));
+        compSetting.add(new CompetitionSettings("Single U18", CompetitionType.GROUPS, CompetitionMode.SINGLES, SexFilter.MALE, 8, false, AGE_RESTR.U18, false, 2));
+        compSetting.add(new CompetitionSettings("Single Knockout", CompetitionType.KNOCKOUT, CompetitionMode.SINGLES, SexFilter.MALE, 16, false, AGE_RESTR.NONE, false, 2));
+        compSetting.add(new CompetitionSettings("Double", CompetitionType.KNOCKOUT, CompetitionMode.DOUBLES, SexFilter.MALE, 16, false, AGE_RESTR.NONE, false, 2));
+        compSetting.add(new CompetitionSettings("Double random", CompetitionType.KNOCKOUT, CompetitionMode.DOUBLES, SexFilter.ANY, 32, true, AGE_RESTR.NONE, false, 2));
+        compSetting.add(new CompetitionSettings("Double O50", CompetitionType.KNOCKOUT, CompetitionMode.DOUBLES, SexFilter.ANY, 8, false, AGE_RESTR.O50, true, 2));
+        compSetting.add(new CompetitionSettings("Double Mixed", CompetitionType.KNOCKOUT, CompetitionMode.DOUBLES, SexFilter.ANY, 4, true, AGE_RESTR.O50, true, 2));
         // @formatter:on
 
         createTournament(TDate.BEFORE_REGISTRATION, "Clubmeisterschaft 2026", "Anmeldung ausstehend", true,
@@ -238,10 +238,10 @@ public class TestdataGenerator {
         Team[] teams = new Team[competitionSettings.getTeamNumbers()];
         for (int i = 0; i < competitionSettings.getTeamNumbers(); i++) {
             Player player = createPlayer(competitionSettings.getAgeRestr());
-            if (competitionSettings.getSex() == Sex.ANY) {
-                player.setSex(SexType.MALE);
+            if (competitionSettings.getSex() == SexFilter.ANY) {
+                player.setSex(Sex.MALE);
             } else {
-                player.setSex(SexType.FEMALE);
+                player.setSex(Sex.FEMALE);
             }
             players.persist(player);
 
@@ -251,10 +251,10 @@ public class TestdataGenerator {
 
             if (competitionSettings.getCompetitionMode() == CompetitionMode.DOUBLES) {
                 Player player2 = createPlayer(competitionSettings.getAgeRestr());
-                if (competitionSettings.getSex() == Sex.ANY || competitionSettings.getSex() == Sex.FEMALE) {
-                    player2.setSex(SexType.FEMALE);
+                if (competitionSettings.getSex() == SexFilter.ANY || competitionSettings.getSex() == SexFilter.FEMALE) {
+                    player2.setSex(Sex.FEMALE);
                 } else {
-                    player2.setSex(SexType.FEMALE);
+                    player2.setSex(Sex.FEMALE);
                 }
                 players.persist(player2);
                 teams[i].setPlayerB(player2);
@@ -462,13 +462,13 @@ public class TestdataGenerator {
                 switch (compSetting.getSex()) {
                     case ANY -> throw new RuntimeException();
                     case MALE -> {
-                        competition.setPlayerASex(Sex.MALE);
-                        competition.setPlayerBSex(Sex.MALE);
+                        competition.setPlayerASex(SexFilter.MALE);
+                        competition.setPlayerBSex(SexFilter.MALE);
                         competition.setDescription("Herren-Konkurrenz");
                     }
                     case FEMALE -> {
-                        competition.setPlayerASex(Sex.FEMALE);
-                        competition.setPlayerBSex(Sex.FEMALE);
+                        competition.setPlayerASex(SexFilter.FEMALE);
+                        competition.setPlayerBSex(SexFilter.FEMALE);
                         competition.setDescription("Damen-Konkurrenz");
                     }
                 }
@@ -495,16 +495,16 @@ public class TestdataGenerator {
                 }
                 switch (compSetting.getSex()) {
                     case ANY -> {
-                        competition.setPlayerASex(Sex.MALE);
-                        competition.setPlayerBSex(Sex.FEMALE);
+                        competition.setPlayerASex(SexFilter.MALE);
+                        competition.setPlayerBSex(SexFilter.FEMALE);
                     }
                     case MALE -> {
-                        competition.setPlayerASex(Sex.MALE);
-                        competition.setPlayerBSex(Sex.MALE);
+                        competition.setPlayerASex(SexFilter.MALE);
+                        competition.setPlayerBSex(SexFilter.MALE);
                     }
                     case FEMALE -> {
-                        competition.setPlayerASex(Sex.FEMALE);
-                        competition.setPlayerBSex(Sex.FEMALE);
+                        competition.setPlayerASex(SexFilter.FEMALE);
+                        competition.setPlayerBSex(SexFilter.FEMALE);
                     }
                 }
             }

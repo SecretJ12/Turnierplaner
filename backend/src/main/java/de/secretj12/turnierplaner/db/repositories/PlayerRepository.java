@@ -1,7 +1,7 @@
 package de.secretj12.turnierplaner.db.repositories;
 
 import de.secretj12.turnierplaner.db.entities.Player;
-import de.secretj12.turnierplaner.db.entities.SexType;
+import de.secretj12.turnierplaner.db.entities.Sex;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import io.quarkus.panache.common.Parameters;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -22,10 +22,11 @@ public class PlayerRepository implements PanacheRepository<Player> {
         return find("FROM Player p WHERE p.firstName = :firstName and p.lastName = :lastName", Parameters
             .with("firstName", first_name)
             .and("lastName", last_name))
-            .firstResultOptional().orElse(null);
+                .firstResultOptional().orElse(null);
     }
 
-    public Stream<Player> filter(String search, SexType sex, LocalDate minAge, LocalDate maxAge, boolean admin, int page, int pageSize) {
+    public Stream<Player> filter(String search, Sex sex, LocalDate minAge, LocalDate maxAge, boolean admin, int page,
+                                 int pageSize) {
         return find("#filter", Parameters
             .with("search", search)
             .and("admin", admin)
@@ -35,7 +36,7 @@ public class PlayerRepository implements PanacheRepository<Player> {
             .and("ignoreMinAge", minAge == null)
             .and("maxAge", maxAge)
             .and("ignoreMaxAge", maxAge == null))
-            .page(page, pageSize).stream();
+                .page(page, pageSize).stream();
     }
 
     public Stream<Player> adminUnverified() {

@@ -2,13 +2,13 @@ package de.secretj12.turnierplaner.startup.testdata;
 
 import de.secretj12.turnierplaner.db.entities.competition.CompetitionMode;
 import de.secretj12.turnierplaner.db.entities.competition.CompetitionType;
-import de.secretj12.turnierplaner.db.entities.competition.Sex;
+import de.secretj12.turnierplaner.db.entities.competition.SexFilter;
 
 class CompetitionSettings {
     private String name;
     private CompetitionType competitionType;
     private CompetitionMode competitionMode;
-    private Sex sex;
+    private SexFilter sexFilter;
     private int teamNumbers;
     private boolean registerIndividual;
     private AGE_RESTR ageRestr;
@@ -16,12 +16,12 @@ class CompetitionSettings {
     private int numberOfGroups;
 
     public CompetitionSettings(String description, CompetitionType competitionType, CompetitionMode competitionMode,
-                               Sex sex, int playerNumbers, boolean registerIndividual, AGE_RESTR ageRestr,
+                               SexFilter sexFilter, int playerNumbers, boolean registerIndividual, AGE_RESTR ageRestr,
                                boolean differentConditions, int numberOfGroups) {
         this.name = description;
         this.competitionType = competitionType;
         this.competitionMode = competitionMode;
-        this.sex = sex;
+        this.sexFilter = sexFilter;
         this.teamNumbers = playerNumbers;
         this.registerIndividual = registerIndividual;
         this.ageRestr = ageRestr;
@@ -41,8 +41,8 @@ class CompetitionSettings {
         return competitionMode;
     }
 
-    public Sex getSex() {
-        return sex;
+    public SexFilter getSex() {
+        return sexFilter;
     }
 
     public int getTeamNumbers() {

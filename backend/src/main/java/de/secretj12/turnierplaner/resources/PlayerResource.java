@@ -1,9 +1,8 @@
 package de.secretj12.turnierplaner.resources;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import de.secretj12.turnierplaner.db.entities.DefaultConfig;
 import de.secretj12.turnierplaner.db.entities.Player;
-import de.secretj12.turnierplaner.db.entities.SexType;
+import de.secretj12.turnierplaner.db.entities.Sex;
 import de.secretj12.turnierplaner.db.entities.VerificationCode;
 import de.secretj12.turnierplaner.db.entities.competition.Competition;
 import de.secretj12.turnierplaner.db.repositories.CompetitionRepository;
@@ -12,7 +11,6 @@ import de.secretj12.turnierplaner.db.repositories.PlayerRepository;
 import de.secretj12.turnierplaner.db.repositories.VerificationCodeRepository;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayer;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayerRegistrationForm;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserSex;
 import io.quarkus.mailer.Mailer;
 import io.quarkus.scheduler.Scheduled;
 import io.quarkus.security.identity.SecurityIdentity;
@@ -61,18 +59,14 @@ public class PlayerResource {
         if (competition == null)
             throw new BadRequestException("Invalid competition");
 
-        LocalDate minAge =
-            playerB ?
-                (competition.playerBhasMinAge() ? competition.getPlayerBminAge() : null)
-                : (competition.playerAhasMinAge() ? competition.getPlayerAminAge() : null);
-        LocalDate maxAge =
-            playerB ?
-                (competition.playerBhasMaxAge() ? competition.getPlayerBmaxAge() : null)
-                : (competition.playerAhasMaxAge() ? competition.getPlayerAmaxAge() : null);
+        LocalDate minAge = playerB ? (competition.playerBhasMinAge() ? competition
+            .getPlayerBminAge() : null) : (competition.playerAhasMinAge() ? competition.getPlayerAminAge() : null);
+        LocalDate maxAge = playerB ? (competition.playerBhasMaxAge() ? competition
+            .getPlayerBmaxAge() : null) : (competition.playerAhasMaxAge() ? competition.getPlayerAmaxAge() : null);
 
-        SexType dbSex = switch (playerB ? competition.getPlayerBSex() : competition.getPlayerASex()) {
-            case MALE -> SexType.MALE;
-            case FEMALE -> SexType.FEMALE;
+        Sex dbSex = switch (playerB ? competition.getPlayerBSex() : competition.getPlayerASex()) {
+            case MALE -> Sex.MALE;
+            case FEMALE -> Sex.FEMALE;
             case ANY -> null;
         };
         if (search.isEmpty()) {
@@ -123,7 +117,7 @@ public class PlayerResource {
         if (exPlayer != null &&
             (exPlayer.getVerificationCode() == null
                 || (exPlayer.getVerificationCode() != null && exPlayer.getVerificationCode().getExpirationDate()
-                                                                      .isBefore(Instant.now()))))
+                    .isBefore(Instant.now()))))
             throw new WebApplicationException("A player already exists with this name", Response.Status.CONFLICT);
 
         // TODO check phone number (only valid phone number)
@@ -134,8 +128,8 @@ public class PlayerResource {
         newPlayer.setBirthday(playerForm.getBirthday());
         if (playerForm.getSex() == null) throw new BadRequestException("Sex is null");
         switch (playerForm.getSex()) {
-            case MALE -> newPlayer.setSex(SexType.MALE);
-            case FEMALE -> newPlayer.setSex(SexType.FEMALE);
+            case MALE -> newPlayer.setSex(Sex.MALE);
+            case FEMALE -> newPlayer.setSex(Sex.FEMALE);
         }
         newPlayer.setEmail(playerForm.getEmail());
         newPlayer.setPhone(playerForm.getPhone());

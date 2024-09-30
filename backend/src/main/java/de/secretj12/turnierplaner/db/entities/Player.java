@@ -42,7 +42,7 @@ public class Player {
     private String lastName;
 
     @Column(name = "sex")
-    private SexType sex;
+    private Sex sex;
 
     @Column(name = "birthday")
     private LocalDate birthday;
@@ -65,7 +65,7 @@ public class Player {
     public Player() {
     }
 
-    public Player(String firstName, String lastName, SexType sex, LocalDate birthday, String email, String phone,
+    public Player(String firstName, String lastName, Sex sex, LocalDate birthday, String email, String phone,
                   boolean mailVerified, boolean adminVerified) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -109,11 +109,11 @@ public class Player {
         this.birthday = birthday;
     }
 
-    public SexType getSex() {
+    public Sex getSex() {
         return sex;
     }
 
-    public void setSex(SexType sex) {
+    public void setSex(Sex sex) {
         this.sex = sex;
     }
 

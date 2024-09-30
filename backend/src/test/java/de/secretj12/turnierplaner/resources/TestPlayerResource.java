@@ -1,7 +1,7 @@
 package de.secretj12.turnierplaner.resources;
 
 import de.secretj12.turnierplaner.db.entities.Player;
-import de.secretj12.turnierplaner.db.entities.SexType;
+import de.secretj12.turnierplaner.db.entities.Sex;
 import de.secretj12.turnierplaner.db.entities.VerificationCode;
 import de.secretj12.turnierplaner.db.repositories.PlayerRepository;
 import de.secretj12.turnierplaner.db.repositories.VerificationCodeRepository;
@@ -39,23 +39,23 @@ public class TestPlayerResource {
     public void addPlayer() {
         for (int i = 0; i < 5; i++) {
             players.persist(
-                new Player("M" + i, "F" + i + "V", SexType.MALE, LocalDate.parse(
+                new Player("M" + i, "F" + i + "V", Sex.MALE, LocalDate.parse(
                     "2023-04-02"), "a@example.org", "+12345", true, true));
         }
         for (int i = 5; i < 10; i++) {
-            players.persist(new Player("M" + i, "F" + i, SexType.MALE, LocalDate.parse(
+            players.persist(new Player("M" + i, "F" + i, Sex.MALE, LocalDate.parse(
                 "2023-04-05"), "a@example.org", "+12345", false, true));
         }
         for (int i = 10; i < 20; i++) {
-            players.persist(new Player("M" + i, "F" + i + "V", SexType.MALE, LocalDate.parse(
+            players.persist(new Player("M" + i, "F" + i + "V", Sex.MALE, LocalDate.parse(
                 "2023-04-05"), "a@example.org", "+12345", true, true));
         }
         for (int i = 0; i < 3; i++) {
-            players.persist(new Player("F" + i, "M" + i, SexType.FEMALE, LocalDate.parse(
+            players.persist(new Player("F" + i, "M" + i, Sex.FEMALE, LocalDate.parse(
                 "2023-04-02"), "a@example.org", "+12345", true, true));
         }
 
-        players.persist(new Player("first", "last", SexType.MALE, LocalDate.parse(
+        players.persist(new Player("first", "last", Sex.MALE, LocalDate.parse(
             "2023-04-02"), "a@example.org", "+12345", true, true));
 
         mailbox.clear();
