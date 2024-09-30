@@ -12,6 +12,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import net.datafaker.Faker;
+import net.datafaker.providers.base.Name;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -217,9 +218,9 @@ public class TestdataGenerator {
 
     private Player createPlayer(AGE_RESTR ageRestr) {
         Player player = new Player();
-        String name = faker.harryPotter().character();
-        player.setFirstName(name.split(" ")[0]);
-        player.setLastName(name.contains(" ") ? name.split(" ", 2)[1] : "");
+        Name name = faker.name();
+        player.setFirstName(name.firstName());
+        player.setLastName(name.lastName());
         player.setEmail(player.getFirstName() + "." + player.getLastName() + "@gmail.com");
         player.setPhone(faker.phoneNumber().cellPhone());
         player.setMailVerified(true);
