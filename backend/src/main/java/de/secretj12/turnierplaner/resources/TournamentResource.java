@@ -3,13 +3,12 @@ package de.secretj12.turnierplaner.resources;
 import de.secretj12.turnierplaner.db.entities.Court;
 import de.secretj12.turnierplaner.db.entities.Tournament;
 import de.secretj12.turnierplaner.db.repositories.CourtRepositiory;
-import de.secretj12.turnierplaner.db.repositories.MatchRepository;
 import de.secretj12.turnierplaner.db.repositories.TournamentRepository;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.jDirectorTournamentAdd;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.jDirectorTournamentUpdate;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserCourt;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserTournament;
-import io.quarkus.security.UnauthorizedException;
+import de.secretj12.turnierplaner.tools.CommonHelpers;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
@@ -33,7 +32,7 @@ public class TournamentResource {
     @Inject
     SecurityIdentity securityIdentity;
     @Inject
-    MatchRepository matches;
+    CommonHelpers common;
 
     @GET
     @Path("/list")
@@ -42,15 +41,15 @@ public class TournamentResource {
     public List<jUserTournament> getAllTournaments() {
         if (securityIdentity.hasRole("director"))
             return tournaments.streamAll()
-                .map(jDirectorTournamentAdd::new)
-                .sorted(Comparator.comparing(jUserTournament::getBeginGamePhase))
-                .map(t -> (jUserTournament) t).toList();
+                    .map(jDirectorTournamentAdd::new)
+                    .sorted(Comparator.comparing(jUserTournament::getBeginGamePhase))
+                    .map(t -> (jUserTournament) t).toList();
         else
             return tournaments.listAllVisible()
-                .stream()
-                .map(jUserTournament::new)
-                .sorted(Comparator.comparing(jUserTournament::getBeginGamePhase))
-                .toList();
+                    .stream()
+                    .map(jUserTournament::new)
+                    .sorted(Comparator.comparing(jUserTournament::getBeginGamePhase))
+                    .toList();
     }
 
     @GET
@@ -66,7 +65,7 @@ public class TournamentResource {
     @Produces(MediaType.APPLICATION_JSON)
     public jUserTournament getTournament(@PathParam("tourName") String name) {
         Tournament tournament = tournaments.getByName(name);
-        checkTournamentAccessibility(tournament);
+        common.checkTournamentAccessibility(tournament);
         if (securityIdentity.hasRole("director"))
             return new jDirectorTournamentUpdate(tournament);
         else
@@ -156,12 +155,5 @@ public class TournamentResource {
         dbTournament.setEndGamePhase(tournament.getEndGamePhase());
         tournaments.persist(dbTournament);
         return "successfully changed";
-    }
-
-    private void checkTournamentAccessibility(Tournament tournament) {
-        if (tournament == null)
-            throw new NotFoundException("Tournament could not be found");
-        if (!securityIdentity.hasRole("director") && !tournament.isVisible())
-            throw new UnauthorizedException("Cannot access tournament");
     }
 }
