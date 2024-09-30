@@ -9,10 +9,10 @@
 			</div>
 		</div>
 		<div
+			v-for="(p, i) in gamePoints"
+			v-if="gamePoints"
 			class="col-fixed"
 			style="width: 140px"
-			v-if="gamePoints"
-			v-for="(p, i) in gamePoints"
 		>
 			<InputNumber
 				v-model="gamePoints[i]"
@@ -23,9 +23,9 @@
 				}"
 				class="p-inputnumber-input"
 				input-style-class="p-inputnumber"
-				inputId="minmax-buttons"
+				input-id="minmax-buttons"
 				mode="decimal"
-				styleClass="p-inputnumber"
+				style-class="p-inputnumber"
 			/>
 		</div>
 	</div>

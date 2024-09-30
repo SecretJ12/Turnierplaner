@@ -4,12 +4,12 @@
 			<label for="name">{{ t("general.name") }}</label>
 			<InputText
 				id="name"
+				v-model="name"
 				:class="{ 'p-invalid': errors.name }"
 				:disabled="disabled"
 				class="w-full"
 				maxlength="30"
 				type="text"
-				v-model="name"
 				v-bind="nameAttrs"
 			/>
 			<InlineMessage v-if="errors.name" class="mt-2"
@@ -20,11 +20,11 @@
 			<label for="description">{{ t("general.description") }}</label>
 			<textarea
 				id="description"
+				v-model="description"
 				:disabled="disabled"
 				class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
 				rows="4"
 				type="text"
-				v-model="description"
 				v-bind="descriptionAttrs"
 			></textarea>
 		</div>
@@ -34,6 +34,7 @@
 		<div class="field col-12 md:col-6 md:mr-8">
 			<label for="name">{{ t("CompetitionSettings.type") }}</label>
 			<Dropdown
+				v-model="selectedTourType"
 				:disabled="disabled"
 				:options="[
 					{
@@ -49,7 +50,6 @@
 				class="w-full"
 				option-label="name"
 				option-value="value"
-				v-model="selectedTourType"
 				v-bind="selectedTourTypeAttrs"
 			>
 				<template #value="slotProps">
@@ -88,6 +88,7 @@
 		<div class="field col-6">
 			<label for="name">{{ t("CompetitionSettings.mode") }}</label>
 			<Dropdown
+				v-model="selectedTourMode"
 				:disabled="disabled"
 				:options="[
 					{ name: t('CompetitionSettings.single'), value: Mode.SINGLE },
@@ -97,7 +98,6 @@
 				class="w-full"
 				option-label="name"
 				option-value="value"
-				v-model="selectedTourMode"
 				v-bind="selectedTourModeAttrs"
 			>
 				<template #value="slotProps">
@@ -140,6 +140,7 @@
 		>
 			<label for="name">{{ t("CompetitionSettings.signup") }}</label>
 			<Dropdown
+				v-model="signUp"
 				:disabled="disabled"
 				:options="[
 					{
@@ -155,7 +156,6 @@
 				class="w-full"
 				option-label="name"
 				option-value="value"
-				v-model="signUp"
 				v-bind="signUpAttrs"
 			>
 				<template #value="slotProps">
@@ -202,7 +202,7 @@
 				v-model="numberSets"
 				v-bind="numberSetsAtrrs"
 				:options="numberSetsOptions"
-				optionLabel="name"
+				option-label="name"
 				option-value="value"
 				:placeholder="t('CompetitionSettings.numberSets')"
 				class="w-full"
@@ -215,10 +215,10 @@
 		<div class="field col-12 flex flex-row align-items-center mb-4">
 			<Checkbox
 				id="playerB_different"
+				v-model="playerB_different"
 				:binary="true"
 				:disabled="disabled"
 				input-id="playerB_different_input"
-				v-model="playerB_different"
 				v-bind="playerB_differentAttrs"
 			/>
 			<label class="ml-2 mb-0 mt-1" for="playerB_different_input">{{
@@ -248,6 +248,7 @@
 				t("CompetitionSettings.sex")
 			}}</label>
 			<Dropdown
+				v-model="playerASex"
 				:disabled="disabled"
 				:options="[
 					{ name: t('CompetitionSettings.male'), value: Sex.MALE },
@@ -258,7 +259,6 @@
 				class="w-full"
 				option-label="name"
 				option-value="value"
-				v-model="playerASex"
 				v-bind="playerASexAttrs"
 			>
 				<template #option="slotProps">
@@ -304,20 +304,20 @@
 			<div class="flex flex-row align-items-center gap-2">
 				<Checkbox
 					id="minAgeA"
+					v-model="playerAHasMinAge"
 					:binary="true"
 					:disabled="disabled"
-					v-model="playerAHasMinAge"
 					v-bind="playerAHasMinAgeAttrs"
 				/>
 
 				<Calendar
 					id="minAgeA"
+					v-model="playerAMinAge"
 					:date-format="t('date_format')"
 					:disabled="!playerAHasMinAge || disabled"
 					:manual-input="false"
 					class="w-full"
 					show-icon
-					v-model="playerAMinAge"
 					v-bind="playerAMinAgeAttrs"
 				/>
 			</div>
@@ -329,18 +329,18 @@
 			<div class="flex flex-row align-items-center gap-2">
 				<Checkbox
 					id="minAgeB"
-					:binary="true"
 					v-model="playerBHasMinAge"
+					:binary="true"
 					v-bind="playerBHasMinAgeAttrs"
 				/>
 				<Calendar
 					id="minAgeB"
+					v-model="playerBMinAge"
 					:date-format="t('date_format')"
 					:disabled="!playerBHasMinAge || disabled"
 					:manual-input="false"
 					class="w-full"
 					show-icon
-					v-model="playerBMinAge"
 					v-bind="playerBMinAgeAttrs"
 				/>
 			</div>
@@ -359,20 +359,20 @@
 			<div class="flex flex-row align-items-center gap-2">
 				<Checkbox
 					id="maxAgeA"
+					v-model="playerAHasMaxAge"
 					:binary="true"
 					:disabled="disabled"
-					v-model="playerAHasMaxAge"
 					v-bind="playerAHasMaxAgeAttrs"
 				/>
 
 				<Calendar
 					id="maxAgeA"
+					v-model="playerAMaxAge"
 					:date-format="t('date_format')"
 					:disabled="!playerAHasMaxAge || disabled"
 					:manual-input="false"
 					class="w-full"
 					show-icon
-					v-model="playerAMaxAge"
 					v-bind="playerAMaxAgeAttrs"
 				/>
 			</div>
@@ -384,20 +384,20 @@
 			<div class="flex flex-row align-items-center gap-2">
 				<Checkbox
 					id="maxAgeB"
+					v-model="playerBHasMaxAge"
 					:binary="true"
 					:disabled="disabled"
-					v-model="playerBHasMaxAge"
 					v-bind="playerBHasMaxAgeAttrs"
 				/>
 
 				<Calendar
 					id="maxAgeB"
+					v-model="playerBMaxAge"
 					:date-format="t('date_format')"
 					:disabled="!playerBHasMaxAge || disabled"
 					:manual-input="false"
 					class="w-full"
 					show-icon
-					v-model="playerBMaxAge"
 					v-bind="playerBMaxAgeAttrs"
 				/>
 			</div>

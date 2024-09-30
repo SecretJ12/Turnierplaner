@@ -61,8 +61,8 @@
 	</table>
 	<UpdatePointsDialog
 		v-if="canEdit"
-		:number-sets="props.numberSets"
 		ref="dialog"
+		:number-sets="props.numberSets"
 	/>
 </template>
 
