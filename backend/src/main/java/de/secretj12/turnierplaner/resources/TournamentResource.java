@@ -41,15 +41,15 @@ public class TournamentResource {
     public List<jUserTournament> getAllTournaments() {
         if (securityIdentity.hasRole("director"))
             return tournaments.streamAll()
-                    .map(jDirectorTournamentAdd::new)
-                    .sorted(Comparator.comparing(jUserTournament::getBeginGamePhase))
-                    .map(t -> (jUserTournament) t).toList();
+                .map(jDirectorTournamentAdd::new)
+                .sorted(Comparator.comparing(jUserTournament::getBeginGamePhase))
+                .map(t -> (jUserTournament) t).toList();
         else
             return tournaments.listAllVisible()
-                    .stream()
-                    .map(jUserTournament::new)
-                    .sorted(Comparator.comparing(jUserTournament::getBeginGamePhase))
-                    .toList();
+                .stream()
+                .map(jUserTournament::new)
+                .sorted(Comparator.comparing(jUserTournament::getBeginGamePhase))
+                .toList();
     }
 
     @GET

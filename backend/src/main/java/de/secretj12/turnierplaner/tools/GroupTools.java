@@ -75,7 +75,7 @@ public class GroupTools {
                 teams = teamsOfGroup(group);
             } else {
                 group = new Group();
-                group.setIndex((byte)index);
+                group.setIndex((byte) index);
                 group.setCompetition(competition);
                 groupsRepository.persist(group);
                 exGroups.add(group);
