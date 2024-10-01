@@ -41,6 +41,7 @@ public class PlayerResource {
     VerificationCodeRepository verificationCodeRepository;
     @Inject
     Mailer mailer;
+    // TODO inject mail template, store in txt/html
     MailTemplates mailTemplates = new MailTemplates();
 
     @Inject
@@ -127,8 +128,17 @@ public class PlayerResource {
                     .isBefore(Instant.now()))))
             throw new WebApplicationException("A player already exists with this name", Response.Status.CONFLICT);
 
-        // TODO check phone number (only valid phone number)
-        // TODO check fields are not empty!
+        if (playerForm.getFirstName() == null)
+            throw new BadRequestException("First name may not be empty");
+        if (playerForm.getLastName() == null)
+            throw new BadRequestException("Last name may not be empty");
+        if (playerForm.getBirthday() == null)
+            throw new BadRequestException("Birthday may not be empty");
+        if (playerForm.getEmail() == null)
+            throw new BadRequestException("E-Mail may not be empty");
+        if (playerForm.getPhone() == null)
+            throw new BadRequestException("Phone may not be empty");
+
         Player newPlayer = new Player();
         newPlayer.setFirstName(playerForm.getFirstName());
         newPlayer.setLastName(playerForm.getLastName());
@@ -149,7 +159,6 @@ public class PlayerResource {
         verificationCode.setExpirationDate(Instant.now().plus(expire, ChronoUnit.MINUTES));
         verificationCodeRepository.persist(verificationCode);
 
-        // TODO check for valid mail
         try {
             mailer.send(mailTemplates.verificationMail(newPlayer.getEmail(), verificationCode.getId().toString()));
         } catch (Exception e) {
