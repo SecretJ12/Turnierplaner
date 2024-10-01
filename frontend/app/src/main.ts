@@ -58,7 +58,6 @@ const options: I18nOptions = {
 	warnHtmlMessage: false,
 	missingWarn: false,
 	fallbackWarn: false,
-	// @ts-expect-error "Not a fix datatype"
 	messages,
 	legacy: false,
 }
