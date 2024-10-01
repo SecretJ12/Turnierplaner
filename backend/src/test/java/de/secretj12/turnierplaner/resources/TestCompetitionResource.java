@@ -1,8 +1,7 @@
 package de.secretj12.turnierplaner.resources;
 
-import de.secretj12.turnierplaner.db.entities.NumberSets;
+import de.secretj12.turnierplaner.enums.*;
 import de.secretj12.turnierplaner.db.entities.Player;
-import de.secretj12.turnierplaner.db.entities.Sex;
 import de.secretj12.turnierplaner.db.entities.Tournament;
 import de.secretj12.turnierplaner.db.entities.competition.*;
 import de.secretj12.turnierplaner.db.repositories.CompetitionRepository;
@@ -25,7 +24,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
-import static de.secretj12.turnierplaner.db.entities.competition.CreationProgress.TEAMS;
+import static de.secretj12.turnierplaner.enums.CreationProgress.TEAMS;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
@@ -75,7 +74,7 @@ public class TestCompetitionResource {
         Competition comp20 = new Competition();
         comp20.setName("Herren");
         comp20.setDescription("Offen für alle Herren");
-        comp20.setMode(CompetitionMode.SINGLES);
+        comp20.setMode(CompetitionMode.SINGLE);
         comp20.setType(CompetitionType.KNOCKOUT);
         comp20.setPlayerASex(SexFilter.MALE);
         comp20.setcProgress(TEAMS);
@@ -87,7 +86,7 @@ public class TestCompetitionResource {
         Competition comp21 = new Competition();
         comp21.setName("Herren");
         comp21.setDescription("Offen für alle Herren");
-        comp21.setMode(CompetitionMode.SINGLES);
+        comp21.setMode(CompetitionMode.SINGLE);
         comp21.setType(CompetitionType.KNOCKOUT);
         comp21.setPlayerASex(SexFilter.MALE);
         comp21.setcProgress(TEAMS);
@@ -99,7 +98,7 @@ public class TestCompetitionResource {
         Competition comp22 = new Competition();
         comp22.setName("Damen");
         comp22.setDescription("Offen für alle Damen");
-        comp22.setMode(CompetitionMode.SINGLES);
+        comp22.setMode(CompetitionMode.SINGLE);
         comp22.setType(CompetitionType.KNOCKOUT);
         comp22.setPlayerASex(SexFilter.FEMALE);
         comp22.setcProgress(TEAMS);
@@ -657,7 +656,7 @@ public class TestCompetitionResource {
         Competition compSingle = new Competition();
         compSingle.setName("Single");
         compSingle.setDescription("Offen für alle Herren");
-        compSingle.setMode(CompetitionMode.SINGLES);
+        compSingle.setMode(CompetitionMode.SINGLE);
         compSingle.setType(CompetitionType.KNOCKOUT);
         compSingle.setPlayerASex(SexFilter.MALE);
         compSingle.setcProgress(TEAMS);
@@ -669,7 +668,7 @@ public class TestCompetitionResource {
         Competition compDoubleIndSame = new Competition();
         compDoubleIndSame.setName("DoubleIndSame");
         compDoubleIndSame.setDescription("Offen für alle Herren");
-        compDoubleIndSame.setMode(CompetitionMode.DOUBLES);
+        compDoubleIndSame.setMode(CompetitionMode.DOUBLE);
         compDoubleIndSame.setType(CompetitionType.KNOCKOUT);
         compDoubleIndSame.setPlayerASex(SexFilter.MALE);
         compDoubleIndSame.setcProgress(TEAMS);
@@ -682,7 +681,7 @@ public class TestCompetitionResource {
         Competition compDoubleIndDif = new Competition();
         compDoubleIndDif.setName("DoubleIndDif");
         compDoubleIndDif.setDescription("Offen für alle Herren");
-        compDoubleIndDif.setMode(CompetitionMode.DOUBLES);
+        compDoubleIndDif.setMode(CompetitionMode.DOUBLE);
         compDoubleIndDif.setType(CompetitionType.KNOCKOUT);
         compDoubleIndDif.setPlayerASex(SexFilter.MALE);
         compDoubleIndDif.setcProgress(TEAMS);
@@ -696,7 +695,7 @@ public class TestCompetitionResource {
         Competition compDoubleTog = new Competition();
         compDoubleTog.setName("DoubleTog");
         compDoubleTog.setDescription("Offen für alle Herren");
-        compDoubleTog.setMode(CompetitionMode.DOUBLES);
+        compDoubleTog.setMode(CompetitionMode.DOUBLE);
         compDoubleTog.setType(CompetitionType.KNOCKOUT);
         compDoubleTog.setPlayerASex(SexFilter.MALE);
         compDoubleTog.setcProgress(TEAMS);
@@ -711,7 +710,7 @@ public class TestCompetitionResource {
         Competition compSingle2 = new Competition();
         compSingle2.setName("Single");
         compSingle2.setDescription("Offen für alle Herren");
-        compSingle2.setMode(CompetitionMode.SINGLES);
+        compSingle2.setMode(CompetitionMode.SINGLE);
         compSingle2.setType(CompetitionType.KNOCKOUT);
         compSingle2.setPlayerASex(SexFilter.MALE);
         compSingle2.setcProgress(TEAMS);

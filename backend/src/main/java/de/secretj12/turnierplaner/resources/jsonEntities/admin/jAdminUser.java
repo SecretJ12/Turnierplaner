@@ -1,5 +1,6 @@
 package de.secretj12.turnierplaner.resources.jsonEntities.admin;
 
+import de.secretj12.turnierplaner.enums.jAdminRole;
 import org.keycloak.representations.idm.UserRepresentation;
 
 public class jAdminUser {

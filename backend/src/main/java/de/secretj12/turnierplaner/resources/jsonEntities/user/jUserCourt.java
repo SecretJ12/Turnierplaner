@@ -1,7 +1,7 @@
 package de.secretj12.turnierplaner.resources.jsonEntities.user;
 
 import de.secretj12.turnierplaner.db.entities.Court;
-import de.secretj12.turnierplaner.db.entities.CourtType;
+import de.secretj12.turnierplaner.enums.CourtType;
 
 public class jUserCourt {
 

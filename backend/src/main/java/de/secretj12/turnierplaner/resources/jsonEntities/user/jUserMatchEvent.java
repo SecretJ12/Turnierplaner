@@ -1,7 +1,7 @@
 package de.secretj12.turnierplaner.resources.jsonEntities.user;
 
 import de.secretj12.turnierplaner.db.entities.Match;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.competition.jUserCompetitionType;
+import de.secretj12.turnierplaner.enums.CompetitionType;
 
 public class jUserMatchEvent extends jUserMatch {
 
@@ -17,7 +17,7 @@ public class jUserMatchEvent extends jUserMatch {
      * Type of the match in competition
      * -> also group competitions contain knockout matches
      */
-    public jUserCompetitionType type;
+    public CompetitionType type;
     /**
      * For knockout: round number
      * For group: group number
@@ -39,7 +39,7 @@ public class jUserMatchEvent extends jUserMatch {
         super(match);
         this.tourName = match.getCompetition().getTournament().getName();
         this.compName = match.getCompetition().getName();
-        this.type = match.getGroup() != null ? jUserCompetitionType.GROUPS : jUserCompetitionType.KNOCKOUT;
+        this.type = match.getGroup() != null ? CompetitionType.GROUPS : CompetitionType.KNOCKOUT;
         this.number = match.getNumber();
         this.total = match.getCompetition().getTotal();
         if (match.getDependentOn() == null) {
@@ -72,11 +72,11 @@ public class jUserMatchEvent extends jUserMatch {
         this.compName = compName;
     }
 
-    public jUserCompetitionType getType() {
+    public CompetitionType getType() {
         return type;
     }
 
-    public void setType(jUserCompetitionType type) {
+    public void setType(CompetitionType type) {
         this.type = type;
     }
 

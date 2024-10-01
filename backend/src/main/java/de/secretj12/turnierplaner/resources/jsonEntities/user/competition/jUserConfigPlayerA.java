@@ -1,21 +1,21 @@
 package de.secretj12.turnierplaner.resources.jsonEntities.user.competition;
 
-import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorValidSex;
+import de.secretj12.turnierplaner.enums.SexFilter;
 
 import java.time.LocalDate;
 
 public class jUserConfigPlayerA {
-    private jDirectorValidSex sex;
+    private SexFilter sex;
     private boolean hasMinAge;
     private LocalDate minAge;
     private boolean hasMaxAge;
     private LocalDate maxAge;
 
-    public jDirectorValidSex getSex() {
+    public SexFilter getSex() {
         return sex;
     }
 
-    public void setSex(jDirectorValidSex sex) {
+    public void setSex(SexFilter sex) {
         this.sex = sex;
     }
 

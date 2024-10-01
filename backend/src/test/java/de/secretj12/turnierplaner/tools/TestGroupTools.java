@@ -1,7 +1,7 @@
 package de.secretj12.turnierplaner.tools;
 
 import de.secretj12.turnierplaner.db.entities.Match;
-import de.secretj12.turnierplaner.db.entities.NumberSets;
+import de.secretj12.turnierplaner.enums.*;
 import de.secretj12.turnierplaner.db.entities.Player;
 import de.secretj12.turnierplaner.db.entities.Tournament;
 import de.secretj12.turnierplaner.db.entities.competition.*;
@@ -71,7 +71,7 @@ public class TestGroupTools {
         Competition comp = new Competition();
         comp.setName("Herren");
         comp.setDescription("Empty description");
-        comp.setMode(CompetitionMode.DOUBLES);
+        comp.setMode(CompetitionMode.DOUBLE);
         comp.setType(CompetitionType.GROUPS);
         comp.setSignup(CompetitionSignUp.TOGETHER);
         comp.setPlayerASex(SexFilter.MALE);

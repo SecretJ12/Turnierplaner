@@ -1,6 +1,6 @@
 package de.secretj12.turnierplaner.resources.jsonEntities.director.competition;
 
-import de.secretj12.turnierplaner.db.entities.NumberSets;
+import de.secretj12.turnierplaner.enums.*;
 import de.secretj12.turnierplaner.db.entities.competition.*;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.competition.jUserCompetition;
 
@@ -25,8 +25,8 @@ public class jDirectorCompetitionAdd extends jUserCompetition {
             case GROUPS -> competition.setType(CompetitionType.GROUPS);
         }
         switch (getMode()) {
-            case SINGLE -> competition.setMode(CompetitionMode.SINGLES);
-            case DOUBLE -> competition.setMode(CompetitionMode.DOUBLES);
+            case SINGLE -> competition.setMode(CompetitionMode.SINGLE);
+            case DOUBLE -> competition.setMode(CompetitionMode.DOUBLE);
         }
         switch (getSignUp()) {
             case INDIVIDUAL -> competition.setSignup(CompetitionSignUp.INDIVIDUAL);

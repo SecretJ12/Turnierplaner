@@ -1,5 +1,6 @@
 package de.secretj12.turnierplaner.db.entities;
 
+import de.secretj12.turnierplaner.enums.CourtType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

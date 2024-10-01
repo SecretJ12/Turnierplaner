@@ -1,7 +1,7 @@
 package de.secretj12.turnierplaner.resources;
 
 import de.secretj12.turnierplaner.db.entities.Court;
-import de.secretj12.turnierplaner.db.entities.CourtType;
+import de.secretj12.turnierplaner.enums.CourtType;
 import de.secretj12.turnierplaner.db.entities.Tournament;
 import de.secretj12.turnierplaner.db.repositories.CourtRepositiory;
 import de.secretj12.turnierplaner.db.repositories.TournamentRepository;

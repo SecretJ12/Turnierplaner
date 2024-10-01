@@ -2,7 +2,7 @@ package de.secretj12.turnierplaner.resources;
 
 import de.secretj12.turnierplaner.db.entities.Match;
 import de.secretj12.turnierplaner.db.entities.Player;
-import de.secretj12.turnierplaner.db.entities.Sex;
+import de.secretj12.turnierplaner.enums.*;
 import de.secretj12.turnierplaner.db.entities.Tournament;
 import de.secretj12.turnierplaner.db.entities.competition.*;
 import de.secretj12.turnierplaner.db.entities.groups.Group;
@@ -192,7 +192,7 @@ public class CompetitionResource {
                 || competition.getTournament().getEndRegistration().isBefore(Instant.now())))
             throw new NotAuthorizedException("Registration phase is not active");
 
-        if (competition.getMode() == CompetitionMode.SINGLES
+        if (competition.getMode() == CompetitionMode.SINGLE
             || (competition.getSignup() == CompetitionSignUp.INDIVIDUAL
                 && !competition.isPlayerBdifferent())) {
             // single mode or double with individual registration but same constraints

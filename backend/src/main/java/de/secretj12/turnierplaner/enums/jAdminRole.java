@@ -1,4 +1,4 @@
-package de.secretj12.turnierplaner.resources.jsonEntities.admin;
+package de.secretj12.turnierplaner.enums;
 
 public enum jAdminRole {
     USER("user"), REPORTER("reporter"), DIRECTOR("director"), ADMIN("admin");

@@ -1,26 +1,23 @@
 package de.secretj12.turnierplaner.resources.jsonEntities.director;
 
 import de.secretj12.turnierplaner.db.entities.Player;
+import de.secretj12.turnierplaner.enums.Sex;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayer;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserSex;
 
 public class jDirectorPlayer extends jUserPlayer {
 
-    private jUserSex sex;
+    private Sex sex;
 
     public jDirectorPlayer(Player p) {
         super(p);
-        this.sex = switch (p.getSex()) {
-            case MALE -> jUserSex.MALE;
-            case FEMALE -> jUserSex.FEMALE;
-        };
+        this.sex = p.getSex();
     }
 
-    public jUserSex getSex() {
+    public Sex getSex() {
         return sex;
     }
 
-    public void setSex(jUserSex sex) {
+    public void setSex(Sex sex) {
         this.sex = sex;
     }
 }

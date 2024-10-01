@@ -1,20 +1,16 @@
 package de.secretj12.turnierplaner.resources.jsonEntities.user.competition;
 
 import de.secretj12.turnierplaner.db.entities.competition.Competition;
-import de.secretj12.turnierplaner.db.entities.competition.CreationProgress;
-import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorMode;
-import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorSignUp;
-import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorValidSex;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.jNumberSets;
+import de.secretj12.turnierplaner.enums.*;
 import jakarta.ws.rs.NotFoundException;
 
 public class jUserCompetition {
     private String name;
     private String description;
-    private jUserCompetitionType type;
-    private jDirectorMode mode;
-    private jDirectorSignUp signUp;
-    private jNumberSets numberSets;
+    private CompetitionType type;
+    private CompetitionMode mode;
+    private CompetitionSignUp signUp;
+    private NumberSets numberSets;
     private jUserConfigPlayerA playerA;
     private jUserConfigPlayerB playerB;
     private CreationProgress cProgress;
@@ -28,41 +24,19 @@ public class jUserCompetition {
 
         this.name = competition.getName();
         this.description = competition.getDescription();
-        this.type = switch (competition.getType()) {
-            case GROUPS -> jUserCompetitionType.GROUPS;
-            case KNOCKOUT -> jUserCompetitionType.KNOCKOUT;
-        };
-        this.mode = switch (competition.getMode()) {
-            case SINGLES -> jDirectorMode.SINGLE;
-            case DOUBLES -> jDirectorMode.DOUBLE;
-        };
-        this.signUp = switch (competition.getSignup()) {
-            case INDIVIDUAL -> jDirectorSignUp.INDIVIDUAL;
-            case TOGETHER -> jDirectorSignUp.TOGETHER;
-        };
-        this.numberSets = switch (competition.getNumberSets()) {
-            case THREE -> jNumberSets.THREE;
-            case FIVE -> jNumberSets.FIVE;
-        };
+        this.type = competition.getType();
+        this.mode = competition.getMode();
+        this.signUp = competition.getSignup();
+        this.numberSets = competition.getNumberSets();
         this.playerA = new jUserConfigPlayerA();
-        this.playerA.setSex(switch (competition.getPlayerASex()) {
-            case MALE -> jDirectorValidSex.MALE;
-            case FEMALE -> jDirectorValidSex.FEMALE;
-            case ANY -> jDirectorValidSex.ANY;
-            case null -> null;
-        });
+        this.playerA.setSex(competition.getPlayerASex());
         this.playerA.setHasMinAge(competition.playerAhasMinAge());
         this.playerA.setMinAge(competition.getPlayerAminAge());
         this.playerA.setHasMaxAge(competition.playerAhasMaxAge());
         this.playerA.setMaxAge(competition.getPlayerAmaxAge());
         this.playerB = new jUserConfigPlayerB();
         this.playerB.setDifferent(competition.isPlayerBdifferent());
-        this.playerB.setSex(switch (competition.getPlayerBSex()) {
-            case MALE -> jDirectorValidSex.MALE;
-            case FEMALE -> jDirectorValidSex.FEMALE;
-            case ANY -> jDirectorValidSex.ANY;
-            case null -> null;
-        });
+        this.playerB.setSex(competition.getPlayerBSex());
         this.playerB.setHasMinAge(competition.playerBhasMinAge());
         this.playerB.setMinAge(competition.getPlayerBminAge());
         this.playerB.setHasMaxAge(competition.playerBhasMaxAge());
@@ -87,27 +61,27 @@ public class jUserCompetition {
         this.description = description;
     }
 
-    public jUserCompetitionType getType() {
+    public CompetitionType getType() {
         return type;
     }
 
-    public void setType(jUserCompetitionType type) {
+    public void setType(CompetitionType type) {
         this.type = type;
     }
 
-    public jDirectorMode getMode() {
+    public CompetitionMode getMode() {
         return mode;
     }
 
-    public void setMode(jDirectorMode mode) {
+    public void setMode(CompetitionMode mode) {
         this.mode = mode;
     }
 
-    public jDirectorSignUp getSignUp() {
+    public CompetitionSignUp getSignUp() {
         return signUp;
     }
 
-    public void setSignUp(jDirectorSignUp signUp) {
+    public void setSignUp(CompetitionSignUp signUp) {
         this.signUp = signUp;
     }
 
@@ -135,11 +109,11 @@ public class jUserCompetition {
         this.cProgress = cProgress;
     }
 
-    public jNumberSets getNumberSets() {
+    public NumberSets getNumberSets() {
         return numberSets;
     }
 
-    public void setNumberSets(jNumberSets numberSets) {
+    public void setNumberSets(NumberSets numberSets) {
         this.numberSets = numberSets;
     }
 }

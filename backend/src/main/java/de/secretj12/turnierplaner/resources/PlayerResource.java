@@ -2,7 +2,7 @@ package de.secretj12.turnierplaner.resources;
 
 import de.secretj12.turnierplaner.db.entities.DefaultConfig;
 import de.secretj12.turnierplaner.db.entities.Player;
-import de.secretj12.turnierplaner.db.entities.Sex;
+import de.secretj12.turnierplaner.enums.Sex;
 import de.secretj12.turnierplaner.db.entities.VerificationCode;
 import de.secretj12.turnierplaner.db.entities.competition.Competition;
 import de.secretj12.turnierplaner.db.repositories.CompetitionRepository;

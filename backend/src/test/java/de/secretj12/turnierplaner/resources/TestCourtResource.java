@@ -1,7 +1,7 @@
 package de.secretj12.turnierplaner.resources;
 
 import de.secretj12.turnierplaner.db.entities.Court;
-import de.secretj12.turnierplaner.db.entities.CourtType;
+import de.secretj12.turnierplaner.enums.CourtType;
 import de.secretj12.turnierplaner.db.repositories.CourtRepositiory;
 import io.quarkus.hibernate.orm.panache.Panache;
 import io.quarkus.test.junit.QuarkusTest;
