@@ -38,7 +38,7 @@
 							index + indexB < props.group.teams.length - 1
 						"
 						:class="{
-							'cursor-pointer': canEdit,
+							'cursor-pointer': isReporter,
 							highlightLow:
 								hoverIdA &&
 								hoverIdB &&
@@ -59,7 +59,7 @@
 		</template>
 	</table>
 	<UpdatePointsDialog
-		v-if="canEdit"
+		v-if="isReporter"
 		ref="dialog"
 		:number-sets="props.numberSets"
 	/>
@@ -75,8 +75,7 @@ import { Team } from "@/interfaces/team"
 import ViewTeamNames from "@/components/links/LinkTeamNames.vue"
 import UpdatePointsDialog from "@/components/items/UpdatePointsDialog.vue"
 import { NumberSets } from "@/interfaces/competition"
-import { getCanEdit } from "@/backend/security"
-import { useRoute } from "vue-router"
+import { getIsReporter } from "@/backend/security"
 
 const { t } = useI18n()
 
@@ -85,9 +84,8 @@ const props = defineProps<{
 	numberSets: NumberSets
 }>()
 
-const route = useRoute()
 const isLoggedIn = inject("loggedIn", ref(false))
-const { data: canEdit } = getCanEdit(<string>route.params.tourId, isLoggedIn)
+const { data: isReporter } = getIsReporter(isLoggedIn)
 
 function findMatch(teamA: Team, teamB: Team): Match {
 	const match: Match | undefined = props.group.matches.find((match) => {
@@ -124,7 +122,7 @@ function hoverLeave() {
 const dialog = ref()
 
 function showPopUp(match: Match) {
-	if (canEdit.value) dialog.value.showPopUp(match)
+	if (isReporter.value) dialog.value.showPopUp(match)
 }
 </script>
 

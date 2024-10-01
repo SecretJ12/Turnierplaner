@@ -102,7 +102,14 @@ public class ConfigResource {
     @GET
     @Path("/isDirector")
     @Produces(MediaType.TEXT_PLAIN)
-    public Boolean canCreate() {
+    public Boolean isDirector() {
         return securityIdentity.hasRole("director");
+    }
+
+    @GET
+    @Path("/isReporter")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Boolean isReporter() {
+        return securityIdentity.hasRole("reporter");
     }
 }

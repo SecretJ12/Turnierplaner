@@ -15,19 +15,19 @@
 					:key="set.index"
 					class="result"
 					:class="{
-						'cursor-pointer': canEdit,
+						'cursor-pointer': isReporter,
 					}"
 					@click="showPopUp(props.match)"
 				>
 					{{ set.scoreA }}
 				</td>
 			</template>
-			<template v-else-if="allowUpdate">
+			<template v-else-if="allowUpdate && isReporter">
 				<td
 					rowspan="2"
 					class="empty-result"
 					:class="{
-						'cursor-pointer': canEdit,
+						'cursor-pointer': isReporter,
 					}"
 					@click="showPopUp(props.match)"
 				>
@@ -46,7 +46,7 @@
 					:key="set.index"
 					class="result"
 					:class="{
-						'cursor-pointer': canEdit,
+						'cursor-pointer': isReporter,
 					}"
 					@click="showPopUp(props.match)"
 				>
@@ -56,7 +56,7 @@
 		</tr>
 	</table>
 	<UpdatePointsDialog
-		v-if="canEdit && props.numberSets !== undefined"
+		v-if="isReporter"
 		ref="dialog"
 		:number-sets="props.numberSets"
 	/>
@@ -69,8 +69,7 @@ import ViewTeamNames from "@/components/links/LinkTeamNames.vue"
 import UpdatePointsDialog from "@/components/items/UpdatePointsDialog.vue"
 import { inject, ref } from "vue"
 import { Match } from "@/interfaces/match"
-import { getCanEdit } from "@/backend/security"
-import { useRoute } from "vue-router"
+import { getIsReporter } from "@/backend/security"
 
 const props = withDefaults(
 	defineProps<{
@@ -86,12 +85,11 @@ const props = withDefaults(
 )
 
 const isLoggedIn = inject("loggedIn", ref(false))
-const route = useRoute()
-const { data: canEdit } = getCanEdit(<string>route.params.tourId, isLoggedIn)
+const { data: isReporter } = getIsReporter(isLoggedIn)
 const dialog = ref()
 
 const showPopUp = function (match: Match) {
-	if (canEdit.value) {
+	if (isReporter.value) {
 		dialog.value.showPopUp(match)
 	}
 }
