@@ -9,18 +9,29 @@
 			<td class="name">
 				<ViewTeamNames :team="props.match.teamA" :inverted="true" />
 			</td>
-			<template v-if="props.match.sets !== null">
+			<template v-if="props.match.sets && props.match.sets.length > 0">
 				<td
 					v-for="set in props.match.sets"
 					:key="set.index"
 					class="result"
 					:class="{
-						'cursor-pointer': canEdit
+						'cursor-pointer': canEdit,
 					}"
 					@click="showPopUp(props.match)"
 				>
 					{{ set.scoreA }}
 				</td>
+			</template>
+			<template v-else>
+				<td
+					v-for="set in [1, 2]"
+					:key="set"
+					class="result"
+					:class="{
+						'cursor-pointer': canEdit,
+					}"
+					@click="showPopUp(props.match)"
+				></td>
 			</template>
 		</tr>
 		<tr :class="{ winner: props.match.finished && props.match.winner }">
@@ -28,18 +39,29 @@
 				<ViewTeamNames :team="props.match.teamB" :inverted="true" />
 			</td>
 
-			<template v-if="props.match.sets !== null">
+			<template v-if="props.match.sets && props.match.sets.length > 0">
 				<td
 					v-for="set in props.match.sets"
 					:key="set.index"
 					class="result"
 					:class="{
-						'cursor-pointer': canEdit
+						'cursor-pointer': canEdit,
 					}"
 					@click="showPopUp(props.match)"
 				>
 					{{ set.scoreB }}
 				</td>
+			</template>
+			<template v-else>
+				<td
+					v-for="set in [1, 2]"
+					:key="set"
+					class="result"
+					:class="{
+						'cursor-pointer': canEdit,
+					}"
+					@click="showPopUp(props.match)"
+				></td>
 			</template>
 		</tr>
 	</table>
