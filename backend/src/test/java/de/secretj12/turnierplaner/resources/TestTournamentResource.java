@@ -5,7 +5,7 @@ import de.secretj12.turnierplaner.enums.CourtType;
 import de.secretj12.turnierplaner.db.entities.Tournament;
 import de.secretj12.turnierplaner.db.repositories.CourtRepositiory;
 import de.secretj12.turnierplaner.db.repositories.TournamentRepository;
-import de.secretj12.turnierplaner.resources.jsonEntities.director.jDirectorTournamentUpdate;
+import de.secretj12.turnierplaner.model.director.jDirectorTournamentUpdate;
 import io.quarkus.hibernate.orm.panache.Panache;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.security.TestSecurity;

@@ -2,7 +2,7 @@ package de.secretj12.turnierplaner.resources;
 
 import de.secretj12.turnierplaner.db.entities.Court;
 import de.secretj12.turnierplaner.db.repositories.CourtRepositiory;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserCourt;
+import de.secretj12.turnierplaner.model.user.jUserCourt;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;

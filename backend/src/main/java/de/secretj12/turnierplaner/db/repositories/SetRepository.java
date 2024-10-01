@@ -2,7 +2,7 @@ package de.secretj12.turnierplaner.db.repositories;
 
 import de.secretj12.turnierplaner.db.entities.Match;
 import de.secretj12.turnierplaner.db.entities.Set;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserSet;
+import de.secretj12.turnierplaner.model.user.jUserSet;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
