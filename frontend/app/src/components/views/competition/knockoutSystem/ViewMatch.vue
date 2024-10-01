@@ -81,6 +81,7 @@ const props = withDefaults(
 	}>(),
 	{
 		allowUpdate: false,
+		numberSets: NumberSets.THREE,
 	},
 )
 

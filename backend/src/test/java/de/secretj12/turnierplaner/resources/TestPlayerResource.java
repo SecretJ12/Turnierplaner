@@ -1,9 +1,6 @@
 package de.secretj12.turnierplaner.resources;
 
-import de.secretj12.turnierplaner.db.entities.Player;
-import de.secretj12.turnierplaner.db.entities.Sex;
-import de.secretj12.turnierplaner.db.entities.Tournament;
-import de.secretj12.turnierplaner.db.entities.VerificationCode;
+import de.secretj12.turnierplaner.db.entities.*;
 import de.secretj12.turnierplaner.db.entities.competition.*;
 import de.secretj12.turnierplaner.db.repositories.CompetitionRepository;
 import de.secretj12.turnierplaner.db.repositories.PlayerRepository;
@@ -49,6 +46,7 @@ public class TestPlayerResource {
         competition.setType(CompetitionType.KNOCKOUT);
         competition.setSignup(CompetitionSignUp.INDIVIDUAL);
         competition.setPlayerASex(SexFilter.ANY);
+        competition.setNumberSets(NumberSets.THREE);
         return competition;
     }
 
