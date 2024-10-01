@@ -8,7 +8,6 @@ import de.secretj12.turnierplaner.db.repositories.MatchRepository;
 import de.secretj12.turnierplaner.db.repositories.SetRepository;
 import de.secretj12.turnierplaner.db.repositories.TournamentRepository;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserSet;
-import de.secretj12.turnierplaner.tools.CommonHelpers;
 import io.quarkus.security.UnauthorizedException;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
@@ -20,7 +19,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
-@RolesAllowed("director")
+@RolesAllowed("reporter")
 @Path("/tournament/{tourName}/competition/{matchId}/set")
 public class SetResource {
     @Inject
@@ -43,7 +42,6 @@ public class SetResource {
             throw new UnauthorizedException("Cannot update matches before game phase has begun");
 
         Match match = matchRepository.findById(matchId);
-        System.out.println(match);
         if (match == null)
             throw new InternalServerErrorException("Could find match");
 
@@ -62,7 +60,6 @@ public class SetResource {
             set.setScoreB(jSet.getScoreB());
             setRepository.persist(set);
         }
-        System.out.println("Updated matches");
 
         return "Updated matches";
     }
