@@ -16,6 +16,7 @@
 					:match="match"
 					:mode="props.mode"
 					:number-sets="props.numberSets"
+					:allow-update="true"
 				/>
 			</template>
 			<template #additional="{ match }">

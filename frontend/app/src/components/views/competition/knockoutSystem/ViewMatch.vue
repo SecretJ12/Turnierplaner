@@ -22,16 +22,17 @@
 					{{ set.scoreA }}
 				</td>
 			</template>
-			<template v-else>
+			<template v-else-if="allowUpdate">
 				<td
-					v-for="set in [1, 2]"
-					:key="set"
-					class="result"
+					rowspan="2"
+					class="empty-result"
 					:class="{
 						'cursor-pointer': canEdit,
 					}"
 					@click="showPopUp(props.match)"
-				></td>
+				>
+					<span class="material-symbols-outlined">add_circle</span>
+				</td>
 			</template>
 		</tr>
 		<tr :class="{ winner: props.match.finished && props.match.winner }">
@@ -52,17 +53,6 @@
 					{{ set.scoreB }}
 				</td>
 			</template>
-			<template v-else>
-				<td
-					v-for="set in [1, 2]"
-					:key="set"
-					class="result"
-					:class="{
-						'cursor-pointer': canEdit,
-					}"
-					@click="showPopUp(props.match)"
-				></td>
-			</template>
 		</tr>
 	</table>
 	<UpdatePointsDialog
@@ -82,11 +72,17 @@ import { Match } from "@/interfaces/match"
 import { getCanEdit } from "@/backend/security"
 import { useRoute } from "vue-router"
 
-const props = defineProps<{
-	match: KnockoutMatch
-	mode: Mode
-	numberSets?: NumberSets
-}>()
+const props = withDefaults(
+	defineProps<{
+		match: KnockoutMatch
+		mode: Mode
+		numberSets?: NumberSets | undefined
+		allowUpdate?: boolean
+	}>(),
+	{
+		allowUpdate: false,
+	},
+)
 
 const isLoggedIn = inject("loggedIn", ref(false))
 const route = useRoute()
@@ -141,6 +137,12 @@ td {
 .result {
 	text-align: center;
 	width: 25px;
+	background-color: #fdfdfd;
+}
+
+.empty-result {
+	text-align: center;
+	width: 50px;
 	background-color: #fdfdfd;
 }
 

@@ -142,17 +142,22 @@ const savePoints = function () {
 const getAllChangedSets = function () {
 	let changedSets = []
 	for (let i = 0; i < numberSets.value; i++) {
+		// case set does not exist yet
 		if (
 			!currentMatch.value?.sets?.length ||
 			i > currentMatch.value?.sets?.length - 1
 		) {
-			changedSets.push({
-				index: i,
-				scoreA: team1GamePoints.value[i],
-				scoreB: team2GamePoints.value[i],
-			})
+			// don't create a new set for 0 points
+			if (team1GamePoints.value[i] !== 0 || team2GamePoints.value[i] !== 0) {
+				changedSets.push({
+					index: i,
+					scoreA: team1GamePoints.value[i],
+					scoreB: team2GamePoints.value[i],
+				})
+			}
 			continue
 		}
+		// you can set a existing set to 0, additionally check that the value is not the same as before
 		const a = currentMatch.value?.sets?.[i].scoreA
 		const b = currentMatch.value?.sets?.[i].scoreB
 		if (team1GamePoints.value[i] !== a || team2GamePoints.value[i] !== b) {
