@@ -1,6 +1,7 @@
 package de.secretj12.turnierplaner.model;
 
 import de.secretj12.turnierplaner.db.entities.Match;
+import de.secretj12.turnierplaner.db.entities.NumberSets;
 import de.secretj12.turnierplaner.db.entities.Tournament;
 import de.secretj12.turnierplaner.db.entities.competition.*;
 import de.secretj12.turnierplaner.db.entities.groups.FinalOfGroup;
@@ -62,6 +63,7 @@ public class TestDeletionBehaviour {
         comp.setPlayerASex(Sex.MALE);
         comp.setTournament(tour);
         comp.setcProgress(CreationProgress.GAMES);
+        comp.setNumberSets(NumberSets.THREE);
         competitionRepository.persist(comp);
     }
 
