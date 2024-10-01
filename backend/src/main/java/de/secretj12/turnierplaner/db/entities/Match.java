@@ -7,11 +7,10 @@ import de.secretj12.turnierplaner.db.entities.groups.MatchOfGroup;
 import de.secretj12.turnierplaner.db.entities.knockout.NextMatch;
 import io.smallrye.common.constraint.NotNull;
 import jakarta.persistence.*;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.NamedQueries;
-import jakarta.persistence.NamedQuery;
-import jakarta.persistence.Table;
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.Instant;
 import java.util.Collection;
@@ -21,14 +20,14 @@ import java.util.UUID;
 @Entity
 @Table(name = "matches")
 @NamedQueries({
-               @NamedQuery(name = "deleteByComp",
-                           query = """
-                               DELETE FROM Match m WHERE m.competition = :comp"""),
-               @NamedQuery(name = "nonGroupMatches",
-                           query = """
-                               FROM Match m WHERE m.competition = :comp
-                               AND NOT EXISTS (FROM MatchOfGroup mog WHERE mog.match = m)
-                               """)})
+    @NamedQuery(name = "deleteByComp",
+                query = """
+                    DELETE FROM Match m WHERE m.competition = :comp"""),
+    @NamedQuery(name = "nonGroupMatches",
+                query = """
+                    FROM Match m WHERE m.competition = :comp
+                    AND NOT EXISTS (FROM MatchOfGroup mog WHERE mog.match = m)
+                    """)})
 public class Match {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -81,7 +80,8 @@ public class Match {
     @OneToOne(mappedBy = "match", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private MatchOfGroup group;
 
-    @OneToMany(mappedBy = "key.match", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(mappedBy = "key.match", cascade = CascadeType.REMOVE)
     private List<Set> sets;
 
     public UUID getId() {

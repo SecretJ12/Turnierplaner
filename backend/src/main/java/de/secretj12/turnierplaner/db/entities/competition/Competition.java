@@ -90,13 +90,13 @@ public class Competition {
     @JoinColumn(name = "thirdPlace_id")
     private Match thirdPlace;
 
-    @OneToMany(mappedBy = "competition")
+    @OneToMany(mappedBy = "competition", cascade = CascadeType.REMOVE)
     private List<Team> teams;
 
-    @OneToMany(mappedBy = "competition")
+    @OneToMany(mappedBy = "competition", cascade = CascadeType.REMOVE)
     private List<Match> matches;
 
-    @OneToMany(mappedBy = "competition")
+    @OneToMany(mappedBy = "competition", cascade = CascadeType.REMOVE)
     private List<Group> groups;
 
     public UUID getId() {
