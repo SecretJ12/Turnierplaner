@@ -33,7 +33,7 @@ import {
 import { useToast } from "primevue/usetoast"
 import { ref, watch } from "vue"
 
-const { t } = useI18n({ inheritLocale: true })
+const { t } = useI18n()
 const toast = useToast()
 
 const route = useRoute()

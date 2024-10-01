@@ -6,6 +6,11 @@ export default [
 			import("@/components/views/tournaments/ViewTournaments.vue"),
 	},
 	{
+		path: "/settings",
+		name: "Settings",
+		component: () => import("@/components/views/settings/ViewSettings.vue"),
+	},
+	{
 		path: "/createTournament",
 		name: "Create tournament",
 		component: () =>
@@ -86,6 +91,11 @@ export default [
 		name: "Player registration",
 		component: () =>
 			import("@/components/views/player/ViewPlayerRegistration.vue"),
+	},
+	{
+		path: "/player/update/:playerId",
+		name: "Update player",
+		component: () => import("@/components/views/player/ViewPlayerUpdate.vue"),
 	},
 	{
 		path: "/player/verification",

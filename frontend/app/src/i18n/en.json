@@ -5,6 +5,8 @@
 	"no": "No",
 	"yes": "Yes",
 	"general": {
+		"settings": "Settings",
+		"general": "General",
 		"create": "Create",
 		"update": "Update",
 		"name": "Name",
@@ -39,7 +41,10 @@
 		"any": "Any",
 		"filter_by_name": "Filter by name",
 		"from": "From",
-		"to": "To"
+		"to": "To",
+		"sex": "Sex",
+		"male": "Male",
+		"female": "Female"
 	},
 	"DialogUpdateScore": {
 		"header": "Score Update",
@@ -140,8 +145,6 @@
 		"player": "Player settings",
 		"differentB": "Different settings for player 2",
 		"sex": "Sex",
-		"male": "Male",
-		"female": "Female",
 		"any": "Any",
 		"minAge": "Minimum age",
 		"maxAge": "Maximum age",
@@ -156,7 +159,8 @@
 		"selectPlayerFirst": "Please select a player first",
 		"noPlayerFound": "No player found",
 		"invalidMode": "Invalid mode",
-		"playerDeleted": "Player deleted"
+		"playerDeleted": "Player deleted",
+		"teamDeleted": "Team deleted"
 	},
 	"ViewCreateCompetition": {
 		"header": "Create competition",
@@ -211,7 +215,6 @@
 	},
 	"ViewPrepare": {
 		"steps": {
-			"settings": "Einstellungen",
 			"editTeams": "Edit teams",
 			"assignMatches": "Assign matches",
 			"scheduleMatches": "Schedule matches",
@@ -259,5 +262,16 @@
 			"GRASS": "Grass"
 		},
 		"not_selected": "All fields need to be filled"
+	},
+	"settings": {
+		"save_default": "Save as default",
+		"verification": "Verification",
+		"no_unverified": "No unverified player",
+		"admin_needed": "Admin verification needed",
+		"admin_needed_summary": "Players need to be verified before being able to sign up to a competition",
+		"user": "User management",
+		"player": "Player management",
+		"player_updated": "Player updated",
+		"player_update_headline": "Update player"
 	}
 }

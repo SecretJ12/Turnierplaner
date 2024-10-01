@@ -58,7 +58,7 @@ public class TestKnockoutTools {
         comp.setMode(CompetitionMode.DOUBLES);
         comp.setType(CompetitionType.KNOCKOUT);
         comp.setSignup(CompetitionSignUp.TOGETHER);
-        comp.setPlayerASex(Sex.MALE);
+        comp.setPlayerASex(SexFilter.MALE);
         comp.setTournament(tour);
         comp.setcProgress(CreationProgress.GAMES);
         comp.setNumberSets(NumberSets.THREE);

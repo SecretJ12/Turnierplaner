@@ -2,6 +2,7 @@ export interface PlayerServer {
 	id?: string
 	firstName: string
 	lastName: string
+	sex?: Sex
 }
 
 export interface Player extends PlayerServer {
@@ -13,6 +14,7 @@ export function playerServerToClient(player: PlayerServer): Player {
 		id: player.id,
 		firstName: player.firstName,
 		lastName: player.lastName,
+		sex: player.sex,
 		get name() {
 			return `${this.firstName} ${this.lastName}`
 		},
@@ -32,11 +34,45 @@ export enum Sex {
 	FEMALE = "FEMALE",
 }
 
-export interface PlayerRegistration {
+export interface PlayerRegistrationForm {
+	firstName: string
+	lastName: string
+	sex: Sex | undefined
+	birthday: Date | undefined
+	email: string
+	phone: string
+}
+
+export interface PlayerRegistration extends PlayerRegistrationForm {
+	sex: Sex
+	birthday: Date
+}
+
+export interface PlayerDetails extends PlayerRegistration {
+	id: string
+}
+
+export interface PlayerDetailsServer {
+	id: string
 	firstName: string
 	lastName: string
 	sex: Sex
-	birthdate: Date
+	birthday: Date | string
 	email: string
 	phone: string
+}
+
+export function playerDetailsServerToClient(
+	player: PlayerDetailsServer,
+): PlayerDetails {
+	return {
+		...player,
+		birthday: new Date(player.birthday),
+	}
+}
+
+export function playerDetailsClientToServer(
+	player: PlayerDetails,
+): PlayerDetailsServer {
+	return player
 }

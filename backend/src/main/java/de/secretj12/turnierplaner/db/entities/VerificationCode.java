@@ -13,7 +13,7 @@ public class VerificationCode {
     @Column(name = "id", nullable = false)
     private UUID id;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "player_id")
     private Player player;
 

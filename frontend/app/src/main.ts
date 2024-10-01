@@ -19,6 +19,7 @@ import ToastService from "primevue/toastservice"
 import Toast from "primevue/toast"
 import Tooltip from "primevue/tooltip"
 import FocusTrap from "primevue/focustrap"
+import InputGroup from "primevue/inputgroup"
 
 /* Primevue styling */
 import "primeflex/primeflex.css"
@@ -56,7 +57,7 @@ const options: I18nOptions = {
 	locale: "de", // set locale
 	fallbackLocale: "en", // set fallback locale
 	warnHtmlMessage: false,
-	missingWarn: false,
+	missingWarn: true,
 	fallbackWarn: false,
 	messages,
 	legacy: false,
@@ -117,6 +118,7 @@ app
 	.use(PrimeVue, { ripple: true })
 	.use(ToastService)
 	.component("Toast", Toast)
+	.component("InputGroup", InputGroup)
 	.directive("tooltip", Tooltip)
 	.directive("focustrap", FocusTrap)
 	.use(VueQueryPlugin, vueQueryPluginOptions)

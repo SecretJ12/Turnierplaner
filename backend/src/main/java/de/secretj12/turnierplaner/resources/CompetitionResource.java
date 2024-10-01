@@ -2,7 +2,7 @@ package de.secretj12.turnierplaner.resources;
 
 import de.secretj12.turnierplaner.db.entities.Match;
 import de.secretj12.turnierplaner.db.entities.Player;
-import de.secretj12.turnierplaner.db.entities.SexType;
+import de.secretj12.turnierplaner.db.entities.Sex;
 import de.secretj12.turnierplaner.db.entities.Tournament;
 import de.secretj12.turnierplaner.db.entities.competition.*;
 import de.secretj12.turnierplaner.db.entities.groups.Group;
@@ -141,7 +141,7 @@ public class CompetitionResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     public String updateCompetition(@PathParam("tourName") String tourName, jDirectorCompetitionUpdate competition) {
-        Competition dbCompetition = competitions.getById(competition.getId());
+        Competition dbCompetition = competitions.findById(competition.getId());
         if (dbCompetition == null) throw new BadRequestException("Competition doesn't exist");
         if (!dbCompetition.getTournament().getName().equals(tourName))
             throw new BadRequestException("Tournament of competition is not the given");
@@ -201,7 +201,7 @@ public class CompetitionResource {
             if (reg.getPlayerA() == null) throw new BadRequestException("Player A is null");
             if (reg.getPlayerB() != null) throw new BadRequestException("Player B is not null");
 
-            Player playerA = players.getById(reg.getPlayerA().getId());
+            Player playerA = players.findById(reg.getPlayerA().getId());
             if (playerA == null) throw new BadRequestException("Player A does not exist");
 
             if (conditionsFailA(competition, playerA))
@@ -230,7 +230,7 @@ public class CompetitionResource {
                     throw new BadRequestException("Player A and player B are not null");
 
                 if (reg.getPlayerA() != null) {
-                    Player playerA = players.getById(reg.getPlayerA().getId());
+                    Player playerA = players.findById(reg.getPlayerA().getId());
                     if (playerA == null) throw new BadRequestException("Player A doesn't exist");
 
                     if (conditionsFailA(competition, playerA))
@@ -249,7 +249,7 @@ public class CompetitionResource {
                     teams.persist(team);
                 }
                 if (reg.getPlayerB() != null) {
-                    Player playerB = players.getById(reg.getPlayerB().getId());
+                    Player playerB = players.findById(reg.getPlayerB().getId());
                     if (playerB == null) throw new BadRequestException("Player B does not exist");
 
                     if (conditionsFailB(competition, playerB))
@@ -274,9 +274,9 @@ public class CompetitionResource {
                 if (reg.getPlayerA() == null) throw new BadRequestException("Player A is null");
                 if (reg.getPlayerB() == null) throw new BadRequestException("Player B is null");
 
-                Player playerA = players.getById(reg.getPlayerA().getId());
+                Player playerA = players.findById(reg.getPlayerA().getId());
                 if (playerA == null) throw new BadRequestException("Player A does not exist");
-                Player playerB = players.getById(reg.getPlayerB().getId());
+                Player playerB = players.findById(reg.getPlayerB().getId());
                 if (playerB == null) throw new BadRequestException("Player B does not exist");
 
                 if (conditionsFailA(competition, playerA))
@@ -308,6 +308,26 @@ public class CompetitionResource {
     }
 
     @POST
+    @Path("/{compName}/deleteTeam")
+    @Transactional
+    @RolesAllowed("director")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public String deleteTeam(@PathParam("tourName") String tourName, @PathParam("compName") String compName,
+                             jUserTeam team) {
+        Team dbTeam = teams.findById(team.getId());
+        if (dbTeam == null)
+            throw new BadRequestException("Team does not exist");
+        Competition competition = competitions.getByName(tourName, compName);
+        switch (competition.getcProgress()) {
+            case GAMES, SCHEDULING:
+                throw new BadRequestException("Can't delete team after assigning teams");
+        }
+        teams.delete(dbTeam);
+        return "Team deleted";
+    }
+
+    @POST
     @Transactional
     @RolesAllowed("director")
     @Path("/{compName}/updateTeams")
@@ -328,8 +348,8 @@ public class CompetitionResource {
             }
         }
         for (var team : teams) {
-            Player playerA = team.getPlayerA() == null ? null : players.getById(team.getPlayerA().getId());
-            Player playerB = team.getPlayerB() == null ? null : players.getById(team.getPlayerB().getId());
+            Player playerA = team.getPlayerA() == null ? null : players.findById(team.getPlayerA().getId());
+            Player playerB = team.getPlayerB() == null ? null : players.findById(team.getPlayerB().getId());
 
             var cTeamOp = curTeams.stream().filter(cT -> cT.getId().equals(team.getId())).findAny();
             if (cTeamOp.isEmpty()) {
@@ -353,15 +373,15 @@ public class CompetitionResource {
     }
 
     private boolean conditionsFailA(Competition comp, Player player) {
-        return (comp.getPlayerASex() == Sex.FEMALE && player.getSex() == SexType.MALE)
-            || (comp.getPlayerASex() == Sex.MALE && player.getSex() == SexType.FEMALE)
+        return (comp.getPlayerASex() == SexFilter.FEMALE && player.getSex() == Sex.MALE)
+            || (comp.getPlayerASex() == SexFilter.MALE && player.getSex() == Sex.FEMALE)
             || (comp.playerAhasMinAge() && comp.getPlayerAminAge().isBefore(player.getBirthday()))
             || (comp.playerAhasMaxAge() && comp.getPlayerAmaxAge().isAfter(player.getBirthday()));
     }
 
     private boolean conditionsFailB(Competition comp, Player player) {
-        return (comp.getPlayerBSex() == Sex.FEMALE && player.getSex() == SexType.MALE)
-            || (comp.getPlayerBSex() == Sex.MALE && player.getSex() == SexType.FEMALE)
+        return (comp.getPlayerBSex() == SexFilter.FEMALE && player.getSex() == Sex.MALE)
+            || (comp.getPlayerBSex() == SexFilter.MALE && player.getSex() == Sex.FEMALE)
             || (comp.playerBhasMinAge() && comp.getPlayerBminAge().isBefore(player.getBirthday()))
             || (comp.playerBhasMaxAge() && comp.getPlayerBmaxAge().isAfter(player.getBirthday()));
     }

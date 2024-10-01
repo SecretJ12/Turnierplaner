@@ -58,7 +58,7 @@ const props = defineProps<{
 }>()
 watch(() => props.courts, reload)
 
-const { t } = useI18n({ inheritLocale: true })
+const { t } = useI18n()
 const route = useRoute()
 const toast = useToast()
 const { data: tournament } = getTournamentDetails(route, t, toast)

@@ -40,7 +40,7 @@ public class MatchResource {
     ) {
         Tournament tournament = tournaments.getByName(tourName);
         Competition competition = competitions.getByName(tourName, compName);
-        Player player = playerId == null ? null : players.getById(UUID.fromString(playerId));
+        Player player = playerId == null ? null : players.findById(UUID.fromString(playerId));
         Instant fromD = from == null ? null : Instant.parse(from);
         Instant toD = to == null ? null : Instant.parse(to);
 

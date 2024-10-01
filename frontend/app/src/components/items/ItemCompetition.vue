@@ -76,10 +76,6 @@ function settings() {
 	bottom: 1.25rem;
 }
 
-.settings:hover {
-	filter: drop-shadow(0 0 6px #808080);
-}
-
 .settings:active {
 	color: #505050;
 }

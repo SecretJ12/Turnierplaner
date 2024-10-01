@@ -1,11 +1,11 @@
 package de.secretj12.turnierplaner.db.repositories;
 
 import de.secretj12.turnierplaner.db.entities.Player;
-import de.secretj12.turnierplaner.db.entities.SexType;
+import de.secretj12.turnierplaner.db.entities.Sex;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import io.quarkus.panache.common.Parameters;
-
 import jakarta.enterprise.context.ApplicationScoped;
+
 import java.time.LocalDate;
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 public class PlayerRepository implements PanacheRepository<Player> {
 
 
-    public Player getById(UUID uuid) {
+    public Player findById(UUID uuid) {
         return find("id", uuid).firstResultOptional().orElse(null);
     }
 
@@ -25,16 +25,34 @@ public class PlayerRepository implements PanacheRepository<Player> {
                 .firstResultOptional().orElse(null);
     }
 
-    public Stream<Player> filter(String search, SexType sex, LocalDate minAge, LocalDate maxAge) {
+    public Stream<Player> filter(String search, Sex sex, LocalDate minAge, LocalDate maxAge, boolean admin, int page,
+                                 int pageSize) {
         return find("#filter", Parameters
             .with("search", search)
+            .and("admin", admin)
             .and("sex", sex)
             .and("ignoreSex", sex == null)
             .and("minAge", minAge)
             .and("ignoreMinAge", minAge == null)
             .and("maxAge", maxAge)
             .and("ignoreMaxAge", maxAge == null))
-                .page(0, 10).stream();
+                .page(page, pageSize).stream();
     }
 
+    public Long countFilter(String search, Sex sex, LocalDate minAge, LocalDate maxAge, boolean admin) {
+        return find("#countFilter", Parameters
+            .with("search", search)
+            .and("admin", admin)
+            .and("sex", sex)
+            .and("ignoreSex", sex == null)
+            .and("minAge", minAge)
+            .and("ignoreMinAge", minAge == null)
+            .and("maxAge", maxAge)
+            .and("ignoreMaxAge", maxAge == null))
+                .count();
+    }
+
+    public Stream<Player> adminUnverified() {
+        return find("#adminUnverified").page(0, 10).stream();
+    }
 }

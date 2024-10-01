@@ -100,7 +100,7 @@ import { getTournamentDetails } from "@/backend/tournament"
 import { useToast } from "primevue/usetoast"
 import { getCompetitionsList } from "@/backend/competition"
 
-const { t } = useI18n({ inheritLocale: true })
+const { t } = useI18n()
 const toast = useToast()
 
 const route = useRoute()

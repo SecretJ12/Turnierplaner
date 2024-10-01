@@ -26,7 +26,7 @@ import { getCompetitionDetails } from "@/backend/competition"
 const route = useRoute()
 const router = useRouter()
 const toast = useToast()
-const { t } = useI18n({ inheritLocale: true })
+const { t } = useI18n()
 
 const isUpdating = defineModel<boolean>("isUpdating", { default: false })
 const knockoutRef = ref<InstanceType<typeof AssignMatchesKnockout> | null>(null)

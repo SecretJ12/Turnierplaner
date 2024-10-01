@@ -1,26 +1,33 @@
 package de.secretj12.turnierplaner.resources;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import de.secretj12.turnierplaner.db.entities.DefaultConfig;
 import de.secretj12.turnierplaner.db.entities.Player;
-import de.secretj12.turnierplaner.db.entities.SexType;
+import de.secretj12.turnierplaner.db.entities.Sex;
 import de.secretj12.turnierplaner.db.entities.VerificationCode;
+import de.secretj12.turnierplaner.db.entities.competition.Competition;
+import de.secretj12.turnierplaner.db.repositories.CompetitionRepository;
+import de.secretj12.turnierplaner.db.repositories.DefaultConfigRepository;
 import de.secretj12.turnierplaner.db.repositories.PlayerRepository;
 import de.secretj12.turnierplaner.db.repositories.VerificationCodeRepository;
+import de.secretj12.turnierplaner.resources.jsonEntities.director.jDirectorPlayer;
+import de.secretj12.turnierplaner.resources.jsonEntities.director.jDirectorPlayerUpdateForm;
+import de.secretj12.turnierplaner.resources.jsonEntities.jPage;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayer;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayerRegistrationForm;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserSex;
 import io.quarkus.mailer.Mailer;
 import io.quarkus.scheduler.Scheduled;
 import io.quarkus.security.identity.SecurityIdentity;
 import io.smallrye.common.annotation.Blocking;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import java.time.LocalDate;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
@@ -28,45 +35,121 @@ import java.util.UUID;
 @Path("/player")
 public class PlayerResource {
     @Inject
+    CompetitionRepository competitionRepository;
+    @Inject
     PlayerRepository playerRepository;
     @Inject
     VerificationCodeRepository verificationCodeRepository;
     @Inject
     Mailer mailer;
+    // TODO inject mail template, store in txt/html
     MailTemplates mailTemplates = new MailTemplates();
 
     @Inject
+    DefaultConfigRepository defaultConfigRepository;
+    @Inject
     SecurityIdentity securityIdentity;
 
-    @GET
-    @Path("/find")
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<jUserPlayer> listPlayer(@QueryParam("search") String search, @QueryParam("sex") jUserSex sex,
-                                        @QueryParam("minAge") @JsonFormat(pattern = "yyyy-MM-dd") String minAgeS,
-                                        @QueryParam("maxAge") @JsonFormat(pattern = "yyyy-MM-dd") String maxAgeS) {
-        // TODO instead of filtering by params of client, better filter by given competition, prevents leak of birthday
-        // TODO only return verified accounts (except for admins)
-        LocalDate minAge = minAgeS != null ? LocalDate.parse(minAgeS) : null;
-        LocalDate maxAge = maxAgeS != null ? LocalDate.parse(maxAgeS) : null;
+    @ConfigProperty(name = "turnierplaner.registration.expire")
+    public int expire;
 
-        SexType dbSex = sex == null ? null : switch (sex) {
-            case MALE -> SexType.MALE;
-            case FEMALE -> SexType.FEMALE;
+    @GET
+    @Path("/compFind/{tourId}/{compId}/")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<jUserPlayer> listCompPlayer(@PathParam("tourId") String tourId, @PathParam("compId") String compId,
+                                            @QueryParam("search") String search,
+                                            @DefaultValue("false") @QueryParam("playerB") boolean playerB) {
+        Competition competition = competitionRepository.getByName(tourId, compId);
+        if (competition == null)
+            throw new BadRequestException("Invalid competition");
+
+        LocalDate minAge = playerB ? (competition.playerBhasMinAge() ? competition
+            .getPlayerBminAge() : null) : (competition.playerAhasMinAge() ? competition.getPlayerAminAge() : null);
+        LocalDate maxAge = playerB ? (competition.playerBhasMaxAge() ? competition
+            .getPlayerBmaxAge() : null) : (competition.playerAhasMaxAge() ? competition.getPlayerAmaxAge() : null);
+
+        Sex dbSex = switch (playerB ? competition.getPlayerBSex() : competition.getPlayerASex()) {
+            case MALE -> Sex.MALE;
+            case FEMALE -> Sex.FEMALE;
+            case ANY -> null;
         };
         if (search.isEmpty()) {
             return List.of();
         }
-        return playerRepository.filter(search, dbSex, minAge, maxAge).map(jUserPlayer::new).toList();
+
+        DefaultConfig defConfig = defaultConfigRepository.findById(0L);
+        boolean admin = securityIdentity.hasRole("director") || !defConfig.isAdminVerificationNeeded();
+        return playerRepository.filter(search, dbSex, minAge, maxAge, admin, 0, 10).map(jUserPlayer::new).toList();
+    }
+
+    @GET
+    @Path("/find")
+    @RolesAllowed("director")
+    @Produces(MediaType.APPLICATION_JSON)
+    public jPage<List<jDirectorPlayer>> listPlayer(@QueryParam("search") String search,
+                                                   @DefaultValue("0") @QueryParam("page") int page,
+                                                   @DefaultValue("5") @QueryParam("pageSize") int pageSize) {
+        if (pageSize <= 0)
+            throw new BadRequestException("Page size has to be greater 0");
+        return new jPage<>(
+                           playerRepository.countFilter(search, null, null, null, true), playerRepository.filter(search,
+                               null, null, null, true, page, pageSize)
+                               .map(jDirectorPlayer::new).toList());
+    }
+
+    @GET
+    @Path("/listUnverified")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("director")
+    public List<jUserPlayer> listUnverified() {
+        return playerRepository.adminUnverified().map(jUserPlayer::new).toList();
+    }
+
+    @GET
+    @Path("/{playerId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public jUserPlayer getPlayer(@PathParam("playerId") UUID playerId) {
+        Player player = playerRepository.findById(playerId);
+        if (player == null)
+            throw new NotFoundException("Player not found");
+        return new jUserPlayer(player);
     }
 
     @GET
     @Path("/{playerId}/details")
+    @RolesAllowed("director")
     @Produces(MediaType.APPLICATION_JSON)
-    public jUserPlayer getPlayer(@PathParam("playerId") UUID playerId) {
-        Player player = playerRepository.getById(playerId);
+    public jDirectorPlayerUpdateForm getDetails(@PathParam("playerId") UUID playerId) {
+        Player player = playerRepository.findById(playerId);
         if (player == null)
             throw new NotFoundException("Player not found");
-        return new jUserPlayer(player);
+        return new jDirectorPlayerUpdateForm(player);
+    }
+
+    private void checkPlayerForm(jUserPlayerRegistrationForm form) {
+        if (form.getFirstName() == null)
+            throw new BadRequestException("First name may not be empty");
+        if (form.getLastName() == null)
+            throw new BadRequestException("Last name may not be empty");
+        if (form.getBirthday() == null)
+            throw new BadRequestException("Birthday may not be empty");
+        if (form.getEmail() == null)
+            throw new BadRequestException("E-Mail may not be empty");
+        if (form.getPhone() == null)
+            throw new BadRequestException("Phone may not be empty");
+    }
+
+    private void updatePlayer(jUserPlayerRegistrationForm form, Player player) {
+        player.setFirstName(form.getFirstName());
+        player.setLastName(form.getLastName());
+        player.setBirthday(form.getBirthday());
+        if (form.getSex() == null) throw new BadRequestException("Sex is null");
+        switch (form.getSex()) {
+            case MALE -> player.setSex(Sex.MALE);
+            case FEMALE -> player.setSex(Sex.FEMALE);
+        }
+        player.setEmail(form.getEmail());
+        player.setPhone(form.getPhone());
     }
 
     @POST
@@ -76,33 +159,26 @@ public class PlayerResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     public String playerRegistration(jUserPlayerRegistrationForm playerForm) {
-        if (playerRepository.getByName(playerForm.getFirstName(), playerForm.getLastName()) != null)
+        Player exPlayer = playerRepository.getByName(playerForm.getFirstName(), playerForm.getLastName());
+        if (exPlayer != null &&
+            (exPlayer.getVerificationCode() == null
+                || (exPlayer.getVerificationCode() != null && exPlayer.getVerificationCode().getExpirationDate()
+                    .isAfter(Instant.now()))))
             throw new WebApplicationException("A player already exists with this name", Response.Status.CONFLICT);
 
-        // TODO check phone number (only valid phone number)
-        // TODO check fields are not empty!
+        checkPlayerForm(playerForm);
+
         Player newPlayer = new Player();
-        newPlayer.setFirstName(playerForm.getFirstName());
-        newPlayer.setLastName(playerForm.getLastName());
-        newPlayer.setBirthday(playerForm.getBirthday());
-        if (playerForm.getSex() == null) throw new BadRequestException("Sex is null");
-        switch (playerForm.getSex()) {
-            case MALE -> newPlayer.setSex(SexType.MALE);
-            case FEMALE -> newPlayer.setSex(SexType.FEMALE);
-        }
-        newPlayer.setEmail(playerForm.getEmail());
-        newPlayer.setPhone(playerForm.getPhone());
-        newPlayer.setMailVerified(false);
-        // TODO Admin verification
-        newPlayer.setAdminVerified(false);
+        updatePlayer(playerForm, newPlayer);
+        newPlayer.setMailVerified(securityIdentity.hasRole("director"));
+        newPlayer.setAdminVerified(securityIdentity.hasRole("director"));
         playerRepository.persist(newPlayer);
 
         VerificationCode verificationCode = new VerificationCode();
         verificationCode.setPlayer(newPlayer);
-        verificationCode.setExpirationDate(Instant.now().plus(30, ChronoUnit.MINUTES));
+        verificationCode.setExpirationDate(Instant.now().plus(expire, ChronoUnit.MINUTES));
         verificationCodeRepository.persist(verificationCode);
 
-        // TODO check for valid mail
         try {
             mailer.send(mailTemplates.verificationMail(newPlayer.getEmail(), verificationCode.getId().toString()));
         } catch (Exception e) {
@@ -113,30 +189,24 @@ public class PlayerResource {
         return "successfully added";
     }
 
-
+    @POST
     @Transactional
-    public Player adminPlayerRegistration(jUserPlayerRegistrationForm playerForm) {
-        if (!securityIdentity.hasRole("director")) throw new ForbiddenException("No permission to create player");
-        if (playerRepository.getByName(playerForm.getFirstName(), playerForm.getLastName()) != null)
-            throw new WebApplicationException("A player already exists with this name", Response.Status.CONFLICT);
+    @Path("/update")
+    @Blocking
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public String playerRegistration(jDirectorPlayerUpdateForm uPlayer) {
+        Player player = playerRepository.findById(uPlayer.getId());
+        if (player == null)
+            throw new BadRequestException("Player does not exist");
 
-        Player newPlayer = new Player();
-        newPlayer.setFirstName(playerForm.getFirstName());
-        newPlayer.setLastName(playerForm.getLastName());
-        newPlayer.setBirthday(playerForm.getBirthday());
-        if (playerForm.getSex() == null) throw new BadRequestException("Sex is null");
-        switch (playerForm.getSex()) {
-            case MALE -> newPlayer.setSex(SexType.MALE);
-            case FEMALE -> newPlayer.setSex(SexType.FEMALE);
-        }
-        newPlayer.setEmail(playerForm.getEmail());
-        newPlayer.setPhone(playerForm.getPhone());
-        newPlayer.setMailVerified(true);
-        // TODO Admin verification
-        newPlayer.setAdminVerified(true);
-        playerRepository.persist(newPlayer);
+        checkPlayerForm(uPlayer);
 
-        return newPlayer;
+        updatePlayer(uPlayer, player);
+        player.setAdminVerified(true);
+        playerRepository.persist(player);
+
+        return "successfully updated";
     }
 
     @GET
@@ -149,16 +219,44 @@ public class PlayerResource {
 
         Player player = verificationCode.getPlayer();
         player.setMailVerified(true);
+        player.setVerificationCode(null);
         playerRepository.persist(player);
         verificationCodeRepository.delete(verificationCode);
+        return "Successfully verified!";
+    }
+
+    @POST
+    @RolesAllowed("director")
+    @Transactional
+    @Path("/adminVerify")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String adminVerify(Player player) {
+        Player dbPlayer = playerRepository.findById(player.getId());
+        dbPlayer.setAdminVerified(true);
+        playerRepository.persist(dbPlayer);
+        return "Successfully verified!";
+    }
+
+    @POST
+    @RolesAllowed("director")
+    @Transactional
+    @Path("/delete")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String deletePlayer(Player player) {
+        Player dbPlayer = playerRepository.findById(player.getId());
+        playerRepository.delete(dbPlayer);
         return "Successfully verified!";
     }
 
     @Transactional
     @Scheduled(every = "30m", identity = "clear-verification-code")
     void clear() {
-        // TODO also delete player? otherwise not verified player, but no new one can be created because of duplicate
-        verificationCodeRepository.delete("FROM VerificationCode v WHERE v.expiration_date < current_timestamp()");
+        List<VerificationCode> codes = verificationCodeRepository.find(
+            "FROM VerificationCode v WHERE v.expiration_date < " + "current_timestamp()").list();
+        for (var code : codes) {
+            if (code.getPlayer() != null)
+                playerRepository.delete(code.getPlayer());
+            verificationCodeRepository.delete(code);
+        }
     }
-
 }

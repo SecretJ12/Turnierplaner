@@ -30,7 +30,7 @@ import { useI18n } from "vue-i18n"
 import ViewTeamNames from "@/components/links/LinkTeamNames.vue"
 import LinkCompetition from "@/components/links/LinkCompetition.vue"
 
-const { t } = useI18n({ inheritLocale: true })
+const { t } = useI18n()
 
 const props = defineProps<{
 	match: AnnotatedMatch

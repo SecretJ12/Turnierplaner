@@ -20,7 +20,7 @@ import { useI18n } from "vue-i18n"
 import { useVerify } from "@/backend/registration"
 import { useToast } from "primevue/usetoast"
 
-const { t } = useI18n({ inheritLocale: true })
+const { t } = useI18n()
 const toast = useToast()
 
 const { mutate: verify, isSuccess, isError } = useVerify()

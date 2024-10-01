@@ -63,10 +63,10 @@ public class TestMatchResource {
         comp.setDescription("Offen für alle Herren");
         comp.setMode(CompetitionMode.SINGLES);
         comp.setType(CompetitionType.KNOCKOUT);
-        comp.setPlayerASex(Sex.MALE);
+        comp.setPlayerASex(SexFilter.MALE);
         comp.setcProgress(TEAMS);
         comp.setSignup(CompetitionSignUp.INDIVIDUAL);
-        comp.setPlayerASex(Sex.ANY);
+        comp.setPlayerASex(SexFilter.ANY);
         comp.setTournament(tour);
         comp.setNumberSets(NumberSets.THREE);
         competitions.persist(comp);
@@ -76,10 +76,10 @@ public class TestMatchResource {
         comp2.setDescription("Offen für alle Herren");
         comp2.setMode(CompetitionMode.SINGLES);
         comp2.setType(CompetitionType.KNOCKOUT);
-        comp2.setPlayerASex(Sex.MALE);
+        comp2.setPlayerASex(SexFilter.MALE);
         comp2.setcProgress(TEAMS);
         comp2.setSignup(CompetitionSignUp.INDIVIDUAL);
-        comp2.setPlayerASex(Sex.ANY);
+        comp2.setPlayerASex(SexFilter.ANY);
         comp2.setTournament(tour);
         comp2.setNumberSets(NumberSets.THREE);
         competitions.persist(comp2);

@@ -39,7 +39,7 @@ import { Mode, SignUp } from "@/interfaces/competition"
 import Button from "primevue/button"
 import { getCompetitionDetails } from "@/backend/competition"
 
-const { t } = useI18n({ inheritLocale: true })
+const { t } = useI18n()
 const router = useRouter()
 const route = useRoute()
 const toast = useToast()

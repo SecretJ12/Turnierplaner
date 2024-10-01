@@ -44,7 +44,7 @@ import { useToast } from "primevue/usetoast"
 import { useRoute } from "vue-router"
 import { computed } from "vue"
 
-const { t } = useI18n({ inheritLocale: true })
+const { t } = useI18n()
 const toast = useToast()
 const route = useRoute()
 

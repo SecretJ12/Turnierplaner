@@ -40,12 +40,12 @@ import { Player } from "@/interfaces/player"
 import { Mode } from "@/interfaces/competition"
 import { ref } from "vue"
 import { useToast } from "primevue/usetoast"
-import { extractSearchPlayer, findPlayers } from "@/backend/player"
+import { findCompPlayers } from "@/backend/player"
 import { getCompetitionDetails } from "@/backend/competition"
 import { useRoute } from "vue-router"
 import { getTournamentDetails } from "@/backend/tournament"
 
-const { t } = useI18n({ inheritLocale: true })
+const { t } = useI18n()
 const toast = useToast()
 
 const props = defineProps<{
@@ -58,9 +58,10 @@ const { data: tournament } = getTournamentDetails(route, t, toast)
 const { data: competition } = getCompetitionDetails(route, t, toast)
 const selectedPlayer = ref<Player | null>(null)
 const search = ref<string>("")
-const { data: suggestionsPlayer, isFetching: loading } = findPlayers(
+const { data: suggestionsPlayer, isFetching: loading } = findCompPlayers(
 	search,
-	extractSearchPlayer(competition, false),
+	route,
+	false,
 	t,
 	toast,
 )

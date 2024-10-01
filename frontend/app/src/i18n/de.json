@@ -5,6 +5,8 @@
 	"no": "Nein",
 	"yes": "Ja",
 	"general": {
+		"settings": "Einstellungen",
+		"general": "Allgemein",
 		"create": "Erstellen",
 		"update": "Aktualisieren",
 		"name": "Name",
@@ -39,7 +41,10 @@
 		"any": "Beliebig",
 		"filter_by_name": "Nach Name filtern",
 		"from": "Von",
-		"to": "Bis"
+		"to": "Bis",
+		"sex": "Geschlecht",
+		"male": "Männlich",
+		"female": "Weiblich"
 	},
 	"DialogUpdateScore": {
 		"header": "Punkte Eintragung",
@@ -137,8 +142,6 @@
 		"player": "Spielereinstellungen",
 		"differentB": "Verschiedene Einstellungen für Spieler 2",
 		"sex": "Geschlecht",
-		"male": "Männlich",
-		"female": "Weiblich",
 		"any": "Egal",
 		"minAge": "Mindestalter",
 		"maxAge": "Maximalalter",
@@ -153,7 +156,8 @@
 		"selectPlayerFirst": "Bitte wähle zuerst einen Spieler aus",
 		"noPlayerFound": "Keinen Spieler gefunden",
 		"invalidMode": "Ungültiger Modus",
-		"playerDeleted": "Spieler gelöscht"
+		"playerDeleted": "Spieler gelöscht",
+		"teamDeleted": "Team gelöscht"
 	},
 	"ViewCreateCompetition": {
 		"header": "Neue Konkurrenz",
@@ -209,7 +213,6 @@
 	},
 	"ViewPrepare": {
 		"steps": {
-			"settings": "Einstellungen",
 			"editTeams": "Teams auslosen",
 			"assignMatches": "Spiele auslosen",
 			"scheduleMatches": "Zeiteinteilung",
@@ -257,5 +260,16 @@
 			"GRASS": "Gras"
 		},
 		"not_selected": "Alle Felder müssen ausgefüllt werden"
+	},
+	"settings": {
+		"save_default": "Als Standard speichern",
+		"verification": "Verifikation",
+		"no_unverified": "Es gibt aktuell keine unverifizierten Spieler",
+		"admin_needed": "Verifikation durch Admin nötig",
+		"admin_needed_summary": "Spieler müssen von einem Admin verifiziert werden um sich zu einem Spiel anmelden zu können.",
+		"user": "Benutzerverwaltung",
+		"player": "Spielerverwaltung",
+		"player_updated": "Spieler aktualisiert",
+		"player_update_headline": "Spieler aktualisieren"
 	}
 }

@@ -198,7 +198,7 @@ import LinkTournament from "@/components/links/LinkTournament.vue"
 import LinkCompetition from "@/components/links/LinkCompetition.vue"
 
 const route = useRoute()
-const { t } = useI18n({ inheritLocale: true })
+const { t } = useI18n()
 const toast = useToast()
 const { data: tournament } = getTournamentDetails(route, t, toast)
 const { data: courts } = getTournamentCourts(route)

@@ -1,33 +1,47 @@
 package de.secretj12.turnierplaner.db.entities;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Table(name = "players")
-@NamedQueries(
-    @NamedQuery(name = "filter",
-                query = """
-                    SELECT p FROM Player p
-                    WHERE p.mailVerified = true
-                    AND (p.sex = :sex OR :ignoreSex = true)
-                    AND (p.birthday <= :minAge OR :ignoreMinAge = true)
-                    AND (p.birthday >= :maxAge OR :ignoreMaxAge = true)
-                    AND (lower(p.firstName) like CONCAT('%', lower(:search), '%')
-                    OR lower(p.lastName) = CONCAT('%', lower(:search), '%')
-                    OR lower(CONCAT(p.firstName, ' ', p.lastName)) like CONCAT('%', lower(:search), '%'))
-                    ORDER BY CASE
-                        WHEN lower(p.firstName) like CONCAT(lower(:search), '%') THEN 0
-                        WHEN lower(p.lastName) like CONCAT(lower(:search), '%') THEN 1
-                        ELSE 2
-                    END, p.firstName, p.lastName"""
-    )
-)
+@NamedQueries({
+               @NamedQuery(name = "filter",
+                           query = """
+                               SELECT p FROM Player p
+                               WHERE p.mailVerified = true
+                               AND (p.adminVerified = true OR :admin = true)
+                               AND (p.sex = :sex OR :ignoreSex = true)
+                               AND (p.birthday <= :minAge OR :ignoreMinAge = true)
+                               AND (p.birthday >= :maxAge OR :ignoreMaxAge = true)
+                               AND (lower(p.firstName) like CONCAT('%', lower(:search), '%')
+                               OR lower(p.lastName) = CONCAT('%', lower(:search), '%')
+                               OR lower(CONCAT(p.firstName, ' ', p.lastName)) like CONCAT('%', lower(:search), '%'))
+                               ORDER BY CASE
+                                   WHEN lower(p.firstName) like CONCAT(lower(:search), '%') THEN 0
+                                   WHEN lower(p.lastName) like CONCAT(lower(:search), '%') THEN 1
+                                   ELSE 2
+                               END, p.firstName, p.lastName"""
+               ),
+               @NamedQuery(name = "countFilter",
+                           query = """
+                               SELECT p FROM Player p
+                               WHERE p.mailVerified = true
+                               AND (p.adminVerified = true OR :admin = true)
+                               AND (p.sex = :sex OR :ignoreSex = true)
+                               AND (p.birthday <= :minAge OR :ignoreMinAge = true)
+                               AND (p.birthday >= :maxAge OR :ignoreMaxAge = true)
+                               AND (lower(p.firstName) like CONCAT('%', lower(:search), '%')
+                               OR lower(p.lastName) = CONCAT('%', lower(:search), '%')
+                               OR lower(CONCAT(p.firstName, ' ', p.lastName)) like CONCAT('%', lower(:search), '%'))"""
+               ),
+               @NamedQuery(name = "adminUnverified",
+                           query = """
+                               SELECT p FROM Player p
+                               WHERE p.adminVerified = false""")
+})
 public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -40,7 +54,7 @@ public class Player {
     private String lastName;
 
     @Column(name = "sex")
-    private SexType sex;
+    private Sex sex;
 
     @Column(name = "birthday")
     private LocalDate birthday;
@@ -57,14 +71,13 @@ public class Player {
     @Column(name = "admin_verified")
     private boolean adminVerified;
 
-    @OneToMany(mappedBy = "player")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private List<VerificationCode> verificationCodes;
+    @OneToOne(mappedBy = "player", cascade = CascadeType.REMOVE)
+    private VerificationCode verificationCode;
 
     public Player() {
     }
 
-    public Player(String firstName, String lastName, SexType sex, LocalDate birthday, String email, String phone,
+    public Player(String firstName, String lastName, Sex sex, LocalDate birthday, String email, String phone,
                   boolean mailVerified, boolean adminVerified) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -108,11 +121,11 @@ public class Player {
         this.birthday = birthday;
     }
 
-    public SexType getSex() {
+    public Sex getSex() {
         return sex;
     }
 
-    public void setSex(SexType sex) {
+    public void setSex(Sex sex) {
         this.sex = sex;
     }
 
@@ -146,5 +159,13 @@ public class Player {
 
     public void setAdminVerified(boolean admin_verified) {
         this.adminVerified = admin_verified;
+    }
+
+    public VerificationCode getVerificationCode() {
+        return verificationCode;
+    }
+
+    public void setVerificationCode(VerificationCode verificationCodes) {
+        this.verificationCode = verificationCodes;
     }
 }

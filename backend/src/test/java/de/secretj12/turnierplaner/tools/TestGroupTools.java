@@ -74,7 +74,7 @@ public class TestGroupTools {
         comp.setMode(CompetitionMode.DOUBLES);
         comp.setType(CompetitionType.GROUPS);
         comp.setSignup(CompetitionSignUp.TOGETHER);
-        comp.setPlayerASex(Sex.MALE);
+        comp.setPlayerASex(SexFilter.MALE);
         comp.setTournament(tour);
         comp.setcProgress(CreationProgress.GAMES);
         comp.setNumberSets(NumberSets.THREE);
@@ -260,8 +260,8 @@ public class TestGroupTools {
         List<Group> groups = competition.getGroups();
         List<Set<Match>> matches = groups.stream().map(Group::getMatches).toList();
         // necessary to preload matches
-        matches.stream().forEach(ms -> ms.forEach(Match::getTeamA));
-        matches.stream().forEach(ms -> ms.forEach(Match::getTeamB));
+        matches.forEach(ms -> ms.forEach(Match::getTeamA));
+        matches.forEach(ms -> ms.forEach(Match::getTeamB));
         Match fin = competition.getFinale();
         List<Match> firstMatches = groupCountFrom > 1 ? flatMatches(List.of(fin)) : List.of();
 

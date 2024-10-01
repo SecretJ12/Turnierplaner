@@ -1,21 +1,22 @@
 package de.secretj12.turnierplaner.resources;
 
-import de.secretj12.turnierplaner.db.entities.Player;
-import de.secretj12.turnierplaner.db.entities.SexType;
-import de.secretj12.turnierplaner.db.entities.VerificationCode;
+import de.secretj12.turnierplaner.db.entities.*;
+import de.secretj12.turnierplaner.db.entities.competition.*;
+import de.secretj12.turnierplaner.db.repositories.CompetitionRepository;
 import de.secretj12.turnierplaner.db.repositories.PlayerRepository;
+import de.secretj12.turnierplaner.db.repositories.TournamentRepository;
 import de.secretj12.turnierplaner.db.repositories.VerificationCodeRepository;
 import io.quarkus.hibernate.orm.panache.Panache;
 import io.quarkus.mailer.MockMailbox;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
+import jakarta.inject.Inject;
+import jakarta.transaction.*;
+import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import jakarta.inject.Inject;
-import jakarta.transaction.*;
-import jakarta.ws.rs.core.Response;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -28,34 +29,80 @@ import static org.junit.jupiter.api.Assertions.*;
 public class TestPlayerResource {
 
     @Inject
+    TournamentRepository tournamentRepository;
+    @Inject
+    CompetitionRepository competitionRepository;
+    @Inject
     PlayerRepository players;
     @Inject
     VerificationCodeRepository verificationCodes;
     @Inject
     MockMailbox mailbox;
 
+    private Competition genComp() {
+        Competition competition = new Competition();
+        competition.setcProgress(CreationProgress.TEAMS);
+        competition.setMode(CompetitionMode.SINGLES);
+        competition.setType(CompetitionType.KNOCKOUT);
+        competition.setSignup(CompetitionSignUp.INDIVIDUAL);
+        competition.setPlayerASex(SexFilter.ANY);
+        competition.setNumberSets(NumberSets.THREE);
+        return competition;
+    }
+
     @BeforeEach
     @Transactional
     public void addPlayer() {
+        Tournament tournament = new Tournament();
+        tournament.setName("Clubmeisterschaft");
+        tournamentRepository.persist(tournament);
+
+        Competition herren = genComp();
+        herren.setTournament(tournament);
+        herren.setName("Herren");
+        herren.setPlayerASex(SexFilter.MALE);
+        competitionRepository.persist(herren);
+
+        Competition damen = genComp();
+        damen.setTournament(tournament);
+        damen.setName("Damen");
+        damen.setPlayerASex(SexFilter.FEMALE);
+        competitionRepository.persist(damen);
+
+        Competition uX = genComp();
+        uX.setTournament(tournament);
+        uX.setName("uX");
+        uX.setcProgress(CreationProgress.TEAMS);
+        uX.setPlayerAhasMaxAge(true);
+        uX.setPlayerAmaxAge(LocalDate.parse("2023-04-03"));
+        competitionRepository.persist(uX);
+
+        Competition oX = genComp();
+        oX.setTournament(tournament);
+        oX.setName("oX");
+        oX.setPlayerAhasMinAge(true);
+        oX.setPlayerAminAge(LocalDate.parse("2023-04-03"));
+        competitionRepository.persist(oX);
+
         for (int i = 0; i < 5; i++) {
             players.persist(
-                new Player("M" + i, "F" + i + "V", SexType.MALE, LocalDate.parse(
+                new Player("M" + i, "F" + i + "V", Sex.MALE, LocalDate.parse(
                     "2023-04-02"), "a@example.org", "+12345", true, true));
         }
         for (int i = 5; i < 10; i++) {
-            players.persist(new Player("M" + i, "F" + i, SexType.MALE, LocalDate.parse(
+            players.persist(new Player("M" + i, "F" + i, Sex.MALE, LocalDate.parse(
                 "2023-04-05"), "a@example.org", "+12345", false, true));
         }
         for (int i = 10; i < 20; i++) {
-            players.persist(new Player("M" + i, "F" + i + "V", SexType.MALE, LocalDate.parse(
+            players.persist(new Player("M" + i, "F" + i + "V", Sex.MALE, LocalDate.parse(
                 "2023-04-05"), "a@example.org", "+12345", true, true));
         }
         for (int i = 0; i < 3; i++) {
-            players.persist(new Player("F" + i, "M" + i, SexType.FEMALE, LocalDate.parse(
+            players.persist(new Player("F" + i, "M" + i + "V", Sex.FEMALE, LocalDate.parse(
                 "2023-04-02"), "a@example.org", "+12345", true, true));
         }
 
-        players.persist(new Player("first", "last", SexType.MALE, LocalDate.parse(
+        players.persist(new Player("first", "last", Sex.MALE, LocalDate.parse(
             "2023-04-02"), "a@example.org", "+12345", true, true));
 
         mailbox.clear();
@@ -64,33 +111,27 @@ public class TestPlayerResource {
     @AfterEach
     @Transactional
     public void delete() {
+        verificationCodes.deleteAll();
         players.deleteAll();
+        competitionRepository.deleteAll();
+        tournamentRepository.deleteAll();
     }
 
     @Test
     public void listPlayerEmpty() {
         given()
             .param("search", "")
-            .get("/player/find")
+            .get("/player/compFind/Clubmeisterschaft/Herren")
             .then().assertThat()
             .statusCode(Response.Status.OK.getStatusCode())
             .body("size()", equalTo(0));
     }
 
     @Test
-    public void listPlayerLessThan10() {
-        given()
-            .param("search", "M")
-            .get("/player/find")
-            .then().assertThat()
-            .statusCode(Response.Status.OK.getStatusCode()).and().body("size()", equalTo(10));
-    }
-
-    @Test
     public void listPlayerMale() {
         given()
             .param("search", "M").param("sex", "MALE")
-            .get("/player/find")
+            .get("/player/compFind/Clubmeisterschaft/Herren")
             .then().assertThat()
             .statusCode(Response.Status.OK.getStatusCode())
             .body("findAll { it.firstName.startsWith('M') }.size()", equalTo(10));
@@ -100,7 +141,7 @@ public class TestPlayerResource {
     public void listPlayerFemale() {
         given()
             .param("search", "F").param("sex", "FEMALE")
-            .get("/player/find")
+            .get("/player/compFind/Clubmeisterschaft/Damen")
             .then().assertThat()
             .statusCode(Response.Status.OK.getStatusCode())
             .body("findAll { it.firstName.startsWith('F') }.size()", equalTo(3));
@@ -108,15 +149,19 @@ public class TestPlayerResource {
 
     @Test
     public void listPlayerCheckVerified() {
-        given().param("search", "M").get("/player/find").then().assertThat().statusCode(Response.Status.OK
-            .getStatusCode()).and().body("findAll { it.lastName.endsWith('V') }.size()", equalTo(10));
+        given()
+            .param("search", "M")
+            .get("/player/compFind/Clubmeisterschaft/Herren")
+            .then().assertThat()
+            .statusCode(Response.Status.OK.getStatusCode()).and()
+            .body("findAll { it.lastName.endsWith('V') }.size()", equalTo(10));
     }
 
     @Test
     public void listPlayerMaxAge() {
         given()
-            .param("search", "M").param("maxAge", "2023-04-03")
-            .get("/player/find")
+            .param("search", "M")
+            .get("/player/compFind/Clubmeisterschaft/uX")
             .then().assertThat()
             .statusCode(Response.Status.OK.getStatusCode())
             .body("size()", equalTo(10));
@@ -125,8 +170,8 @@ public class TestPlayerResource {
     @Test
     public void listPlayerMinAge() {
         given()
-            .param("search", "M").param("minAge", "2023-04-03")
-            .get("/player/find")
+            .param("search", "M")
+            .get("/player/compFind/Clubmeisterschaft/oX")
             .then().assertThat()
             .statusCode(Response.Status.OK.getStatusCode())
             .body("size()", equalTo(8));

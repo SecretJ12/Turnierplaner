@@ -27,10 +27,10 @@ export interface TournamentServer {
 	name: string
 	visible: boolean
 	description: string
-	beginRegistration: Date
-	endRegistration: Date
-	beginGamePhase: Date
-	endGamePhase: Date
+	beginRegistration: Date | string
+	endRegistration: Date | string
+	beginGamePhase: Date | string
+	endGamePhase: Date | string
 }
 
 export interface Tournament {

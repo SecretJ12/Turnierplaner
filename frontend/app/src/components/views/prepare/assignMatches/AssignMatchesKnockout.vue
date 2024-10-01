@@ -94,7 +94,7 @@ import { knockoutTitle } from "@/components/views/competition/knockoutSystem/Kno
 
 const route = useRoute()
 const toast = useToast()
-const { t } = useI18n({ inheritLocale: true })
+const { t } = useI18n()
 const randomizeItems = genRandomizeItems(t, reroll, reset)
 
 const isUpdating = defineModel<boolean>("isUpdating", { default: false })

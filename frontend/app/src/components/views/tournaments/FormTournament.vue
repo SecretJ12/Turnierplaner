@@ -120,7 +120,7 @@ import Card from "primevue/card"
 import { array, boolean, date, mixed, object, setLocale, string } from "yup"
 import { toTypedSchema } from "@vee-validate/yup"
 
-const { t } = useI18n({ inheritLocale: true })
+const { t } = useI18n()
 
 const props = withDefaults(
 	defineProps<{

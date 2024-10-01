@@ -54,7 +54,7 @@ import { AnnotatedMatch } from "@/interfaces/match"
 
 const route = useRoute()
 const router = useRouter()
-const { t } = useI18n({ inheritLocale: true })
+const { t } = useI18n()
 const toast = useToast()
 
 const isUpdating = defineModel<boolean>("isUpdating", { default: false })

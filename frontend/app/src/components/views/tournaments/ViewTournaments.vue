@@ -27,15 +27,15 @@ import Item from "../../items/ItemTournament.vue"
 import AddItem from "../../items/ItemAdd.vue"
 import { router } from "@/main"
 import { useI18n } from "vue-i18n"
-import { getCanCreate } from "@/backend/security"
+import { getIsDirector } from "@/backend/security"
 import { getTournamentList } from "@/backend/tournament"
 import { useToast } from "primevue/usetoast"
 
-const { t } = useI18n({ inheritLocale: true })
+const { t } = useI18n()
 const toast = useToast()
 
 const isLoggedIn = inject("loggedIn", ref(false))
-const { data: canCreate } = getCanCreate(isLoggedIn)
+const { data: canCreate } = getIsDirector(isLoggedIn)
 const {
 	data: tournaments,
 	isLoading,

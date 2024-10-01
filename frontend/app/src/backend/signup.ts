@@ -92,7 +92,7 @@ function separateByComp(
 			.map((team) => {
 				const player = team.playerA
 				if (player === null) throw new Error("Player A is null")
-				return playerServerToClient(player)
+				return teamServerToClient(team)
 			})
 	} else if (
 		competition.value.mode === Mode.DOUBLE &&
@@ -104,14 +104,14 @@ function separateByComp(
 			.map((team) => {
 				const player = team.playerA
 				if (player === null) throw new Error("Player A is null")
-				return playerServerToClient(player)
+				return teamServerToClient(team)
 			})
 		teamLists.playersB = signedUp.value
 			.filter((team) => team.playerB !== null)
 			.map((team) => {
 				const player = team.playerB
 				if (player === null) throw new Error("Player B is null")
-				return playerServerToClient(player)
+				return teamServerToClient(team)
 			})
 	} else if (
 		competition.value.mode === Mode.DOUBLE &&
@@ -135,7 +135,7 @@ function separateByComp(
 }
 
 function separate(signedUp: Ref<Team[]> | Ref<undefined>) {
-	const teamLists: TeamLists = {
+	const teamLists: TeamPlayerLists = {
 		playersA: [],
 		playersB: [],
 		teams: [],
@@ -154,6 +154,12 @@ function separate(signedUp: Ref<Team[]> | Ref<undefined>) {
 }
 
 export interface TeamLists {
+	playersA: Team[]
+	playersB: Team[]
+	teams: Team[]
+}
+
+export interface TeamPlayerLists {
 	playersA: Player[]
 	playersB: Player[]
 	teams: Team[]
@@ -204,6 +210,24 @@ export function useUpdateTeams(
 				detail: t("general.save_failed"),
 				life: 3000,
 				closable: false,
+			})
+		},
+	})
+}
+
+export function useDeleteTeam(route: RouteLocationNormalizedLoaded) {
+	const queryClient = useQueryClient()
+	return useMutation({
+		mutationFn: async (team: Team) =>
+			axios.post(
+				`/tournament/${route.params.tourId}/competition/${route.params.compId}/deleteTeam`,
+				{
+					id: team.id,
+				},
+			),
+		onSuccess() {
+			queryClient.invalidateQueries({
+				queryKey: ["signedUp", route.params.tourId, route.params.compId],
 			})
 		},
 	})

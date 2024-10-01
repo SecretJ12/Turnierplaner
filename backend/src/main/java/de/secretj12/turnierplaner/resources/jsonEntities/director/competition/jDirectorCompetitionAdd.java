@@ -33,9 +33,9 @@ public class jDirectorCompetitionAdd extends jUserCompetition {
             case TOGETHER -> competition.setSignup(CompetitionSignUp.TOGETHER);
         }
         switch (getPlayerA().getSex()) {
-            case MALE -> competition.setPlayerASex(Sex.MALE);
-            case FEMALE -> competition.setPlayerASex(Sex.FEMALE);
-            case ANY -> competition.setPlayerASex(Sex.ANY);
+            case MALE -> competition.setPlayerASex(SexFilter.MALE);
+            case FEMALE -> competition.setPlayerASex(SexFilter.FEMALE);
+            case ANY -> competition.setPlayerASex(SexFilter.ANY);
         }
         competition.setPlayerAhasMinAge(getPlayerA().isHasMinAge());
         competition.setPlayerAminAge(getPlayerA().getMinAge());
@@ -43,9 +43,9 @@ public class jDirectorCompetitionAdd extends jUserCompetition {
         competition.setPlayerAmaxAge(getPlayerA().getMaxAge());
         competition.setPlayerBdifferent(getPlayerB().isDifferent());
         switch (getPlayerB().getSex()) {
-            case MALE -> competition.setPlayerBSex(Sex.MALE);
-            case FEMALE -> competition.setPlayerBSex(Sex.FEMALE);
-            case ANY -> competition.setPlayerBSex(Sex.ANY);
+            case MALE -> competition.setPlayerBSex(SexFilter.MALE);
+            case FEMALE -> competition.setPlayerBSex(SexFilter.FEMALE);
+            case ANY -> competition.setPlayerBSex(SexFilter.ANY);
         }
         competition.setPlayerBhasMinAge(getPlayerB().isHasMinAge());
         competition.setPlayerBminAge(getPlayerB().getMinAge());

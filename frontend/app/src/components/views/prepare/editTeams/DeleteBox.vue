@@ -54,7 +54,7 @@ import PlayerCard from "@/components/views/prepare/components/PlayerCard.vue"
 import OverlayPanel from "primevue/overlaypanel"
 import { useI18n } from "vue-i18n"
 
-const { t } = useI18n({ inheritLocale: true })
+const { t } = useI18n()
 
 const props = defineProps<{
 	group: string
