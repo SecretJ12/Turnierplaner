@@ -1,6 +1,6 @@
 package de.secretj12.turnierplaner.model.admin;
 
-import de.secretj12.turnierplaner.enums.jAdminRole;
+import de.secretj12.turnierplaner.enums.AdminRole;
 import org.keycloak.representations.idm.UserRepresentation;
 
 public class jAdminUser {
@@ -8,12 +8,12 @@ public class jAdminUser {
     private String id;
     private String username;
 
-    private jAdminRole role;
+    private AdminRole role;
 
     public jAdminUser() {
     }
 
-    public jAdminUser(UserRepresentation user, jAdminRole role) {
+    public jAdminUser(UserRepresentation user, AdminRole role) {
         this.id = user.getId();
         this.username = user.getUsername();
         this.role = role;
@@ -35,11 +35,11 @@ public class jAdminUser {
         this.username = username;
     }
 
-    public jAdminRole getRole() {
+    public AdminRole getRole() {
         return role;
     }
 
-    public void setRole(jAdminRole role) {
+    public void setRole(AdminRole role) {
         this.role = role;
     }
 }

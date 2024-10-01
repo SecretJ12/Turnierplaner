@@ -78,7 +78,7 @@ public class Team extends PanacheEntityBase {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return id.hashCode();
     }
 
     public static Team findById(UUID id) {

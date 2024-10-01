@@ -13,7 +13,7 @@ export function useUpdateSet(
 	return useMutation({
 		mutationFn: (data: { sets: Set[]; matchId: string }) =>
 			axios.post(
-				`/tournament/${<string>route.params.tourId}/competition/${data.matchId}/set`,
+				`/tournament/${<string>route.params.tourId}/competition/${<string>route.params.compId}/set/${data.matchId}`,
 				data.sets,
 			),
 		onSuccess() {

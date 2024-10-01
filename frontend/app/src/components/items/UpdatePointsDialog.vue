@@ -106,6 +106,7 @@ const team1GamePoints = ref<number[]>([])
 const team2GamePoints = ref<number[]>([])
 
 const showPopUp = function (match: Match) {
+	selectedSet.value = 0
 	currentMatch.value = match
 	team1GamePoints.value = match.sets?.map((set) => set.scoreA) ?? []
 	team2GamePoints.value = match.sets?.map((set) => set.scoreB) ?? []
