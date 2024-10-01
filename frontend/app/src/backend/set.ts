@@ -12,29 +12,24 @@ export function useUpdateSet(
 	const queryClient = useQueryClient()
 	return useMutation({
 		mutationFn: (data: { sets: Set[]; matchId: string }) =>
-			axios
-				.post(
-					`/tournament/${<string>route.params.tourId}/competition/${data.matchId}/set`,
-					data.sets,
-				)
-				.then(() => {
-					queryClient.invalidateQueries({
-						queryKey: ["knockout", route.params.tourId, route.params.compId],
-						refetchType: "all",
-					})
-				})
-				.then(() => {
-					queryClient.invalidateQueries({
-						queryKey: ["group", route.params.tourId, route.params.compId],
-						refetchType: "all",
-					})
-				}),
+			axios.post(
+				`/tournament/${<string>route.params.tourId}/competition/${data.matchId}/set`,
+				data.sets,
+			),
 		onSuccess() {
 			toast.add({
 				severity: "success",
 				summary: t("general.success"),
 				detail: t("general.saved"),
 				life: 3000,
+			})
+			queryClient.invalidateQueries({
+				queryKey: ["knockout", route.params.tourId, route.params.compId],
+				refetchType: "all",
+			})
+			queryClient.invalidateQueries({
+				queryKey: ["group", route.params.tourId, route.params.compId],
+				refetchType: "all",
 			})
 		},
 		onError(error) {

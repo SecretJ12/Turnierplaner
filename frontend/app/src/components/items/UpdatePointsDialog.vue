@@ -127,12 +127,9 @@ const cancel = function () {
 
 const savePoints = function () {
 	if (!currentMatch.value || !currentMatch.value.id) {
-		console.log("No match")
 		return
 	}
-	console.log("saving..")
 	const sets = getAllChangedSets()
-	console.log(sets)
 	if (sets.length > 0)
 		updateSet({
 			matchId: currentMatch.value!.id,
