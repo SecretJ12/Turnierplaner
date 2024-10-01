@@ -1,5 +1,6 @@
 package de.secretj12.turnierplaner.resources;
 
+import de.secretj12.turnierplaner.db.entities.NumberSets;
 import de.secretj12.turnierplaner.db.entities.Player;
 import de.secretj12.turnierplaner.db.entities.SexType;
 import de.secretj12.turnierplaner.db.entities.Tournament;
@@ -81,6 +82,7 @@ public class TestCompetitionResource {
         comp20.setSignup(CompetitionSignUp.INDIVIDUAL);
         comp20.setPlayerASex(Sex.ANY);
         comp20.setTournament(tour20);
+        comp20.setNumberSets(NumberSets.THREE);
         competitions.persist(comp20);
         Competition comp21 = new Competition();
         comp21.setName("Herren");
@@ -92,6 +94,7 @@ public class TestCompetitionResource {
         comp21.setSignup(CompetitionSignUp.INDIVIDUAL);
         comp21.setPlayerASex(Sex.ANY);
         comp21.setTournament(tour21);
+        comp21.setNumberSets(NumberSets.THREE);
         competitions.persist(comp21);
         Competition comp22 = new Competition();
         comp22.setName("Damen");
@@ -103,6 +106,7 @@ public class TestCompetitionResource {
         comp22.setSignup(CompetitionSignUp.INDIVIDUAL);
         comp22.setPlayerASex(Sex.ANY);
         comp22.setTournament(tour22);
+        comp22.setNumberSets(NumberSets.THREE);
         competitions.persist(comp22);
 
         Player playerM = new Player();
@@ -294,7 +298,8 @@ public class TestCompetitionResource {
                       "sex": "ANY",
                       "hasMinAge": false,
                       "hasMaxAge": false
-                    }
+                    },
+                    "numberSets": "THREE"
                 }
                 """)
             .post("/tournament/Clubmeisterschaft 2021/competition/add")
@@ -479,6 +484,7 @@ public class TestCompetitionResource {
                     "type": "KNOCKOUT",
                     "mode": "SINGLE",
                     "signUp": "INDIVIDUAL",
+                    "numberSets": "FIVE",
                     "playerA": {
                       "sex": "FEMALE",
                       "hasMinAge": false,
@@ -658,6 +664,7 @@ public class TestCompetitionResource {
         compSingle.setSignup(CompetitionSignUp.INDIVIDUAL);
         compSingle.setPlayerASex(Sex.ANY);
         compSingle.setTournament(tour21);
+        compSingle.setNumberSets(NumberSets.THREE);
         competitions.persist(compSingle);
         Competition compDoubleIndSame = new Competition();
         compDoubleIndSame.setName("DoubleIndSame");
@@ -670,6 +677,7 @@ public class TestCompetitionResource {
         compDoubleIndSame.setPlayerASex(Sex.ANY);
         compDoubleIndSame.setPlayerBdifferent(false);
         compDoubleIndSame.setTournament(tour21);
+        compDoubleIndSame.setNumberSets(NumberSets.FIVE);
         competitions.persist(compDoubleIndSame);
         Competition compDoubleIndDif = new Competition();
         compDoubleIndDif.setName("DoubleIndDif");
@@ -683,6 +691,7 @@ public class TestCompetitionResource {
         compDoubleIndDif.setPlayerBdifferent(true);
         compDoubleIndDif.setPlayerBSex(Sex.FEMALE);
         compDoubleIndDif.setTournament(tour21);
+        compDoubleIndDif.setNumberSets(NumberSets.THREE);
         competitions.persist(compDoubleIndDif);
         Competition compDoubleTog = new Competition();
         compDoubleTog.setName("DoubleTog");
@@ -695,6 +704,7 @@ public class TestCompetitionResource {
         compDoubleTog.setPlayerASex(Sex.ANY);
         compDoubleTog.setPlayerBSex(Sex.ANY);
         compDoubleTog.setTournament(tour21);
+        compDoubleTog.setNumberSets(NumberSets.THREE);
         competitions.persist(compDoubleTog);
 
         Tournament tour22 = tournaments.getByName("Clubmeisterschaft 2022");
@@ -708,6 +718,7 @@ public class TestCompetitionResource {
         compSingle2.setSignup(CompetitionSignUp.INDIVIDUAL);
         compSingle2.setPlayerASex(Sex.ANY);
         compSingle2.setTournament(tour22);
+        compSingle2.setNumberSets(NumberSets.THREE);
         competitions.persist(compSingle2);
     }
 

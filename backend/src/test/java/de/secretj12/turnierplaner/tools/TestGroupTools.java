@@ -1,6 +1,7 @@
-package de.secretj12.turnierplaner.modifier;
+package de.secretj12.turnierplaner.tools;
 
 import de.secretj12.turnierplaner.db.entities.Match;
+import de.secretj12.turnierplaner.db.entities.NumberSets;
 import de.secretj12.turnierplaner.db.entities.Player;
 import de.secretj12.turnierplaner.db.entities.Tournament;
 import de.secretj12.turnierplaner.db.entities.competition.*;
@@ -76,6 +77,7 @@ public class TestGroupTools {
         comp.setPlayerASex(Sex.MALE);
         comp.setTournament(tour);
         comp.setcProgress(CreationProgress.GAMES);
+        comp.setNumberSets(NumberSets.THREE);
         competitionRepository.persist(comp);
     }
 
