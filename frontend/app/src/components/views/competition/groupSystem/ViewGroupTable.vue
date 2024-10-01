@@ -38,6 +38,7 @@
 							index + indexB < props.group.teams.length - 1
 						"
 						:class="{
+							'cursor-pointer': canEdit,
 							highlightLow:
 								hoverIdA &&
 								hoverIdB &&
@@ -47,12 +48,10 @@
 						}"
 						@mouseover="matchHover(index, indexB)"
 						@mouseleave="hoverLeave()"
+						@click="showPopUp(findMatch(team, teamB))"
 					>
 						<div>
-							<ViewMatch
-								:match="findMatch(team, teamB)"
-								@click="showPopUp(findMatch(team, teamB))"
-							/>
+							<ViewMatch :match="findMatch(team, teamB)" />
 						</div>
 					</td>
 				</template>
@@ -123,7 +122,8 @@ function hoverLeave() {
 }
 
 const dialog = ref()
-const showPopUp = function (match: Match) {
+
+function showPopUp(match: Match) {
 	if (canEdit.value) dialog.value.showPopUp(match)
 }
 </script>

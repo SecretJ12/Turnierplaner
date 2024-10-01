@@ -14,6 +14,9 @@
 					v-for="set in props.match.sets"
 					:key="set.index"
 					class="result"
+					:class="{
+						'cursor-pointer': canEdit
+					}"
 					@click="showPopUp(props.match)"
 				>
 					{{ set.scoreA }}
@@ -30,6 +33,9 @@
 					v-for="set in props.match.sets"
 					:key="set.index"
 					class="result"
+					:class="{
+						'cursor-pointer': canEdit
+					}"
 					@click="showPopUp(props.match)"
 				>
 					{{ set.scoreB }}
