@@ -1,5 +1,7 @@
 package de.secretj12.turnierplaner.resources.jsonEntities.user;
 
+import de.secretj12.turnierplaner.db.entities.Player;
+
 import java.time.LocalDate;
 
 public class jUserPlayerRegistrationForm {
@@ -10,6 +12,21 @@ public class jUserPlayerRegistrationForm {
     LocalDate birthday;
     String email;
     String phone;
+
+    public jUserPlayerRegistrationForm() {
+    }
+
+    public jUserPlayerRegistrationForm(Player player) {
+        this.firstName = player.getFirstName();
+        this.lastName = player.getLastName();
+        this.sex = switch (player.getSex()) {
+            case MALE -> jUserSex.MALE;
+            case FEMALE -> jUserSex.FEMALE;
+        };
+        this.birthday = player.getBirthday();
+        this.email = player.getEmail();
+        this.phone = player.getPhone();
+    }
 
     public String getFirstName() {
         return firstName;

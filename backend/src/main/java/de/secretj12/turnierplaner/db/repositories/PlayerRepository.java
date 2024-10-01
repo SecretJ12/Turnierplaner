@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 public class PlayerRepository implements PanacheRepository<Player> {
 
 
-    public Player getById(UUID uuid) {
+    public Player findById(UUID uuid) {
         return find("id", uuid).firstResultOptional().orElse(null);
     }
 

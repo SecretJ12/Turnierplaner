@@ -10,6 +10,7 @@ import de.secretj12.turnierplaner.db.repositories.DefaultConfigRepository;
 import de.secretj12.turnierplaner.db.repositories.PlayerRepository;
 import de.secretj12.turnierplaner.db.repositories.VerificationCodeRepository;
 import de.secretj12.turnierplaner.resources.jsonEntities.director.jDirectorPlayer;
+import de.secretj12.turnierplaner.resources.jsonEntities.director.jDirectorPlayerUpdateForm;
 import de.secretj12.turnierplaner.resources.jsonEntities.jPage;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayer;
 import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayerRegistrationForm;
@@ -105,13 +106,50 @@ public class PlayerResource {
     }
 
     @GET
-    @Path("/{playerId}/details")
+    @Path("/{playerId}")
     @Produces(MediaType.APPLICATION_JSON)
     public jUserPlayer getPlayer(@PathParam("playerId") UUID playerId) {
-        Player player = playerRepository.getById(playerId);
+        Player player = playerRepository.findById(playerId);
         if (player == null)
             throw new NotFoundException("Player not found");
         return new jUserPlayer(player);
+    }
+
+    @GET
+    @Path("/{playerId}/details")
+    @RolesAllowed("director")
+    @Produces(MediaType.APPLICATION_JSON)
+    public jUserPlayer getDetails(@PathParam("playerId") UUID playerId) {
+        Player player = playerRepository.findById(playerId);
+        if (player == null)
+            throw new NotFoundException("Player not found");
+        return new jDirectorPlayer(player);
+    }
+
+    private void checkPlayerForm(jUserPlayerRegistrationForm form) {
+        if (form.getFirstName() == null)
+            throw new BadRequestException("First name may not be empty");
+        if (form.getLastName() == null)
+            throw new BadRequestException("Last name may not be empty");
+        if (form.getBirthday() == null)
+            throw new BadRequestException("Birthday may not be empty");
+        if (form.getEmail() == null)
+            throw new BadRequestException("E-Mail may not be empty");
+        if (form.getPhone() == null)
+            throw new BadRequestException("Phone may not be empty");
+    }
+
+    private void updatePlayer(jUserPlayerRegistrationForm form, Player player) {
+        player.setFirstName(form.getFirstName());
+        player.setLastName(form.getLastName());
+        player.setBirthday(form.getBirthday());
+        if (form.getSex() == null) throw new BadRequestException("Sex is null");
+        switch (form.getSex()) {
+            case MALE -> player.setSex(Sex.MALE);
+            case FEMALE -> player.setSex(Sex.FEMALE);
+        }
+        player.setEmail(form.getEmail());
+        player.setPhone(form.getPhone());
     }
 
     @POST
@@ -125,31 +163,13 @@ public class PlayerResource {
         if (exPlayer != null &&
             (exPlayer.getVerificationCode() == null
                 || (exPlayer.getVerificationCode() != null && exPlayer.getVerificationCode().getExpirationDate()
-                    .isBefore(Instant.now()))))
+                    .isAfter(Instant.now()))))
             throw new WebApplicationException("A player already exists with this name", Response.Status.CONFLICT);
 
-        if (playerForm.getFirstName() == null)
-            throw new BadRequestException("First name may not be empty");
-        if (playerForm.getLastName() == null)
-            throw new BadRequestException("Last name may not be empty");
-        if (playerForm.getBirthday() == null)
-            throw new BadRequestException("Birthday may not be empty");
-        if (playerForm.getEmail() == null)
-            throw new BadRequestException("E-Mail may not be empty");
-        if (playerForm.getPhone() == null)
-            throw new BadRequestException("Phone may not be empty");
+        checkPlayerForm(playerForm);
 
         Player newPlayer = new Player();
-        newPlayer.setFirstName(playerForm.getFirstName());
-        newPlayer.setLastName(playerForm.getLastName());
-        newPlayer.setBirthday(playerForm.getBirthday());
-        if (playerForm.getSex() == null) throw new BadRequestException("Sex is null");
-        switch (playerForm.getSex()) {
-            case MALE -> newPlayer.setSex(Sex.MALE);
-            case FEMALE -> newPlayer.setSex(Sex.FEMALE);
-        }
-        newPlayer.setEmail(playerForm.getEmail());
-        newPlayer.setPhone(playerForm.getPhone());
+        updatePlayer(playerForm, newPlayer);
         newPlayer.setMailVerified(securityIdentity.hasRole("director"));
         newPlayer.setAdminVerified(securityIdentity.hasRole("director"));
         playerRepository.persist(newPlayer);
@@ -167,6 +187,26 @@ public class PlayerResource {
         }
 
         return "successfully added";
+    }
+
+    @POST
+    @Transactional
+    @Path("/update")
+    @Blocking
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public String playerRegistration(jDirectorPlayerUpdateForm uPlayer) {
+        Player player = playerRepository.findById(uPlayer.getId());
+        if (player == null)
+            throw new BadRequestException("Player does not exist");
+
+        checkPlayerForm(uPlayer);
+
+        updatePlayer(uPlayer, player);
+        player.setAdminVerified(true);
+        playerRepository.persist(player);
+
+        return "successfully updated";
     }
 
     @GET
@@ -191,7 +231,7 @@ public class PlayerResource {
     @Path("/adminVerify")
     @Produces(MediaType.TEXT_PLAIN)
     public String adminVerify(Player player) {
-        Player dbPlayer = playerRepository.getById(player.getId());
+        Player dbPlayer = playerRepository.findById(player.getId());
         dbPlayer.setAdminVerified(true);
         playerRepository.persist(dbPlayer);
         return "Successfully verified!";
@@ -203,7 +243,7 @@ public class PlayerResource {
     @Path("/delete")
     @Produces(MediaType.TEXT_PLAIN)
     public String deletePlayer(Player player) {
-        Player dbPlayer = playerRepository.getById(player.getId());
+        Player dbPlayer = playerRepository.findById(player.getId());
         playerRepository.delete(dbPlayer);
         return "Successfully verified!";
     }

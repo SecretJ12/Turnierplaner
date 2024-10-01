@@ -11,7 +11,7 @@ import java.util.UUID;
 @ApplicationScoped
 public class CompetitionRepository implements PanacheRepository<Competition> {
 
-    public Competition getById(UUID uuid) {
+    public Competition findById(UUID uuid) {
         return find("id", uuid).firstResultOptional().orElse(null);
     }
 

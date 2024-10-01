@@ -18,7 +18,7 @@ public class TournamentRepository implements PanacheRepository<Tournament> {
         return find("name", name).firstResultOptional().orElse(null);
     }
 
-    public Tournament getById(UUID uuid) {
+    public Tournament findById(UUID uuid) {
         return find("id", uuid).firstResultOptional().orElse(null);
     }
 }

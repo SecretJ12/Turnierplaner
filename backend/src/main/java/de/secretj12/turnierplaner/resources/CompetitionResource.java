@@ -141,7 +141,7 @@ public class CompetitionResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     public String updateCompetition(@PathParam("tourName") String tourName, jDirectorCompetitionUpdate competition) {
-        Competition dbCompetition = competitions.getById(competition.getId());
+        Competition dbCompetition = competitions.findById(competition.getId());
         if (dbCompetition == null) throw new BadRequestException("Competition doesn't exist");
         if (!dbCompetition.getTournament().getName().equals(tourName))
             throw new BadRequestException("Tournament of competition is not the given");
@@ -201,7 +201,7 @@ public class CompetitionResource {
             if (reg.getPlayerA() == null) throw new BadRequestException("Player A is null");
             if (reg.getPlayerB() != null) throw new BadRequestException("Player B is not null");
 
-            Player playerA = players.getById(reg.getPlayerA().getId());
+            Player playerA = players.findById(reg.getPlayerA().getId());
             if (playerA == null) throw new BadRequestException("Player A does not exist");
 
             if (conditionsFailA(competition, playerA))
@@ -230,7 +230,7 @@ public class CompetitionResource {
                     throw new BadRequestException("Player A and player B are not null");
 
                 if (reg.getPlayerA() != null) {
-                    Player playerA = players.getById(reg.getPlayerA().getId());
+                    Player playerA = players.findById(reg.getPlayerA().getId());
                     if (playerA == null) throw new BadRequestException("Player A doesn't exist");
 
                     if (conditionsFailA(competition, playerA))
@@ -249,7 +249,7 @@ public class CompetitionResource {
                     teams.persist(team);
                 }
                 if (reg.getPlayerB() != null) {
-                    Player playerB = players.getById(reg.getPlayerB().getId());
+                    Player playerB = players.findById(reg.getPlayerB().getId());
                     if (playerB == null) throw new BadRequestException("Player B does not exist");
 
                     if (conditionsFailB(competition, playerB))
@@ -274,9 +274,9 @@ public class CompetitionResource {
                 if (reg.getPlayerA() == null) throw new BadRequestException("Player A is null");
                 if (reg.getPlayerB() == null) throw new BadRequestException("Player B is null");
 
-                Player playerA = players.getById(reg.getPlayerA().getId());
+                Player playerA = players.findById(reg.getPlayerA().getId());
                 if (playerA == null) throw new BadRequestException("Player A does not exist");
-                Player playerB = players.getById(reg.getPlayerB().getId());
+                Player playerB = players.findById(reg.getPlayerB().getId());
                 if (playerB == null) throw new BadRequestException("Player B does not exist");
 
                 if (conditionsFailA(competition, playerA))
@@ -348,8 +348,8 @@ public class CompetitionResource {
             }
         }
         for (var team : teams) {
-            Player playerA = team.getPlayerA() == null ? null : players.getById(team.getPlayerA().getId());
-            Player playerB = team.getPlayerB() == null ? null : players.getById(team.getPlayerB().getId());
+            Player playerA = team.getPlayerA() == null ? null : players.findById(team.getPlayerA().getId());
+            Player playerB = team.getPlayerB() == null ? null : players.findById(team.getPlayerB().getId());
 
             var cTeamOp = curTeams.stream().filter(cT -> cT.getId().equals(team.getId())).findAny();
             if (cTeamOp.isEmpty()) {

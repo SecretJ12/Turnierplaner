@@ -133,12 +133,12 @@ public class TournamentResource {
         if (possibleDuplicate != null && !possibleDuplicate.getId().equals(tournament.getId()))
             throw new WebApplicationException("Tournament with this name already exist", Response.Status.CONFLICT);
 
-        Tournament dbTournament = tournaments.getById(tournament.getId());
+        Tournament dbTournament = tournaments.findById(tournament.getId());
         if (dbTournament == null)
             throw new NotFoundException("Tournament with this id does not exist");
         checkDates(tournament);
 
-        tournaments.getById(tournament.getId());
+        tournaments.findById(tournament.getId());
         dbTournament.setName(tournament.getName());
         dbTournament.setDescription(tournament.getDescription());
         dbTournament.setVisible(tournament.isVisible());
