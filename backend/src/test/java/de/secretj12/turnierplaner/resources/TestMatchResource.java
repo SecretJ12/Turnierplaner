@@ -1,9 +1,6 @@
 package de.secretj12.turnierplaner.resources;
 
-import de.secretj12.turnierplaner.db.entities.Court;
-import de.secretj12.turnierplaner.db.entities.CourtType;
-import de.secretj12.turnierplaner.db.entities.Match;
-import de.secretj12.turnierplaner.db.entities.Tournament;
+import de.secretj12.turnierplaner.db.entities.*;
 import de.secretj12.turnierplaner.db.entities.competition.*;
 import de.secretj12.turnierplaner.db.repositories.CompetitionRepository;
 import de.secretj12.turnierplaner.db.repositories.CourtRepositiory;
@@ -71,6 +68,7 @@ public class TestMatchResource {
         comp.setSignup(CompetitionSignUp.INDIVIDUAL);
         comp.setPlayerASex(Sex.ANY);
         comp.setTournament(tour);
+        comp.setNumberSets(NumberSets.THREE);
         competitions.persist(comp);
 
         Competition comp2 = new Competition();
@@ -83,6 +81,7 @@ public class TestMatchResource {
         comp2.setSignup(CompetitionSignUp.INDIVIDUAL);
         comp2.setPlayerASex(Sex.ANY);
         comp2.setTournament(tour);
+        comp2.setNumberSets(NumberSets.THREE);
         competitions.persist(comp2);
 
         for (int i = 0; i < 5; i++) {
