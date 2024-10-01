@@ -107,6 +107,7 @@ const { data: signedUpTeams, isLoading: signedUpLoading } = getSignedUp(
 )
 const { data: knockoutSystem, isLoading: knockoutSystemLoading } =
 	getKnockout(route)
+// TODO update endpoint to not send sets
 const { mutate: initKnockout } = useInitKnockout(route, t, toast)
 
 const { data, reload } = track(
