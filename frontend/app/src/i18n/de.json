@@ -269,6 +269,7 @@
 		"admin_needed_summary": "Spieler müssen von einem Admin verifiziert werden um sich zu einem Spiel anmelden zu können.",
 		"user": "Benutzerverwaltung",
 		"player": "Spielerverwaltung",
-		"player_updated": "Spieler aktualisiert"
+		"player_updated": "Spieler aktualisiert",
+		"player_update_headline": "Spieler aktualisieren"
 	}
 }

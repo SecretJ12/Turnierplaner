@@ -6,6 +6,7 @@ import {
 	playerDetailsClientToServer,
 	PlayerDetailsServer,
 	playerDetailsServerToClient,
+	PlayerRegistrationForm,
 	PlayerServer,
 	playerServerToClient,
 } from "@/interfaces/player"
@@ -24,7 +25,7 @@ export function findCompPlayers(
 ) {
 	return useQuery({
 		queryKey: [
-			"searchPlayer",
+			"searchCompPlayer",
 			search,
 			computed(() => route.params.tourId),
 			computed(() => route.params.compId),
@@ -186,20 +187,42 @@ export function getPlayerDetails(
 	})
 }
 
-export function updatePlayerDetails(
+export function useUpdatePlayerDetails(
 	t: (s: string) => string,
 	toast: ToastServiceMethods,
 ) {
+	const queryClient = useQueryClient()
 	return useMutation({
 		mutationFn: async (player: PlayerDetails) => {
 			return axios.post(`/player/update`, playerDetailsClientToServer(player))
 		},
-		onSuccess() {
+		onSuccess(_, player) {
 			toast.add({
 				severity: "success",
 				summary: t("settings.player_updated"),
 				life: 3000,
 			})
+			queryClient.invalidateQueries({
+				queryKey: ["player", player.id],
+			})
+			queryClient.invalidateQueries({
+				queryKey: ["playerDetails", player.id],
+			})
+			queryClient.invalidateQueries({
+				queryKey: ["searchCompPlayer", player.id],
+			})
+			queryClient.invalidateQueries({
+				queryKey: ["searchPlayer", player.id],
+			})
 		},
 	})
+}
+
+export const PlayerDefault: PlayerRegistrationForm = {
+	firstName: "",
+	lastName: "",
+	sex: undefined,
+	birthday: undefined,
+	email: "",
+	phone: "",
 }

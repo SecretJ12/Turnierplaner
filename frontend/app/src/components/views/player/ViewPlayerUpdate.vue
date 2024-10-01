@@ -1,63 +1,66 @@
 <template>
 	<div class="flex justify-content-center w-full">
-		<Card v-if="!isSuccess" id="card">
-			<template #title>{{ t("ViewPlayerRegistration.headline") }}</template>
+		<Card id="card">
+			<template #title>{{ t("settings.player_update_headline") }}</template>
 			<template #content>
 				<ViewPlayerForm
+					v-if="isLoading || !player"
+					:disabled="disabled"
+					:player="PlayerDefault"
+				/>
+				<ViewPlayerForm
+					v-else
 					ref="form"
 					:disabled="disabled"
 					:player="player"
-					@submit="register"
+					@submit="reg"
 				/>
 			</template>
 			<template #footer>
 				<div class="justify-content-end flex">
 					<Button
-						:label="t('general.create')"
+						:label="t('general.update')"
 						:disabled="disabled"
 						@click="() => form !== null && form.onSubmit()"
 					></Button>
 				</div>
 			</template>
 		</Card>
-		<div v-else>
-			<h2>
-				{{ t("general.success") }}
-			</h2>
-			<p>
-				{{ t("ViewPlayerRegistration.after") }}
-			</p>
-		</div>
 	</div>
 </template>
 
 <script lang="ts" setup>
 import { useI18n } from "vue-i18n"
 import { useToast } from "primevue/usetoast"
-import { PlayerRegistrationForm } from "@/interfaces/player"
-import { reactive, ref } from "vue"
-import { useRegisterPlayer } from "@/backend/registration"
+import { PlayerRegistration } from "@/interfaces/player"
+import { ref } from "vue"
 import ViewPlayerForm from "@/components/views/player/ViewPlayerForm.vue"
 import FormCompetition from "@/components/views/competitions/FormCompetition.vue"
+import {
+	getPlayerDetails,
+	PlayerDefault,
+	useUpdatePlayerDetails,
+} from "@/backend/player"
+import { useRoute } from "vue-router"
 
+const route = useRoute()
 const { t } = useI18n()
 const toast = useToast()
 const form = ref<InstanceType<typeof FormCompetition> | null>(null)
 
-const {
-	mutate: register,
-	isPending: disabled,
-	isSuccess,
-} = useRegisterPlayer(t, toast)
+const { mutate: register, isPending: disabled } = useUpdatePlayerDetails(
+	t,
+	toast,
+)
+const { data: player, isLoading } = getPlayerDetails(route, t, toast)
 
-const player = reactive<PlayerRegistrationForm>({
-	firstName: "",
-	lastName: "",
-	sex: undefined,
-	birthday: undefined,
-	email: "",
-	phone: "",
-})
+function reg(playerF: PlayerRegistration) {
+	if (!player.value) return
+	register({
+		...playerF,
+		id: player.value.id,
+	})
+}
 </script>
 
 <style scoped>

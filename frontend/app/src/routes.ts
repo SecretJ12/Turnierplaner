@@ -93,6 +93,11 @@ export default [
 			import("@/components/views/player/ViewPlayerRegistration.vue"),
 	},
 	{
+		path: "/player/update/:playerId",
+		name: "Update player",
+		component: () => import("@/components/views/player/ViewPlayerUpdate.vue"),
+	},
+	{
 		path: "/player/verification",
 		name: "Player verified",
 		component: () => import("@/components/views/player/ViewVerification.vue"),

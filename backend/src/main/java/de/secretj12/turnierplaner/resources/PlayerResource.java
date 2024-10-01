@@ -119,11 +119,11 @@ public class PlayerResource {
     @Path("/{playerId}/details")
     @RolesAllowed("director")
     @Produces(MediaType.APPLICATION_JSON)
-    public jUserPlayer getDetails(@PathParam("playerId") UUID playerId) {
+    public jDirectorPlayerUpdateForm getDetails(@PathParam("playerId") UUID playerId) {
         Player player = playerRepository.findById(playerId);
         if (player == null)
             throw new NotFoundException("Player not found");
-        return new jDirectorPlayer(player);
+        return new jDirectorPlayerUpdateForm(player);
     }
 
     private void checkPlayerForm(jUserPlayerRegistrationForm form) {

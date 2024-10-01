@@ -271,6 +271,7 @@
 		"admin_needed_summary": "Players need to be verified before being able to sign up to a competition",
 		"user": "User management",
 		"player": "Player management",
-		"playerUpdated": "Player updated"
+		"player_updated": "Player updated",
+		"player_update_headline": "Update player"
 	}
 }
