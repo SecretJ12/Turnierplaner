@@ -24,7 +24,7 @@
 					v-model="selectedSet"
 					:input-id="n.toString()"
 					name="sets"
-					:value="(n - 1).toString()"
+					:value="n - 1"
 				/>
 				<label class="ml-2" :for="n.toString()">Set {{ n }}</label>
 			</div>
@@ -101,7 +101,7 @@ const numberSets = computed(() =>
 
 const currentMatch = ref<Match | null>(null)
 const visible = ref(false)
-const selectedSet = ref("0")
+const selectedSet = ref(0)
 
 const team1GamePoints = ref<number[]>([])
 const team2GamePoints = ref<number[]>([])
@@ -170,8 +170,9 @@ const getAllChangedSets = function () {
 }
 
 const updatePoints = function (point1: number, point2: number) {
-	team1GamePoints.value[Number(selectedSet.value)] = point1
-	team2GamePoints.value[Number(selectedSet.value)] = point2
+	team1GamePoints.value[selectedSet.value] = point1
+	team2GamePoints.value[selectedSet.value] = point2
+	if (selectedSet.value < numberSets.value - 1) selectedSet.value++
 }
 
 defineExpose({
