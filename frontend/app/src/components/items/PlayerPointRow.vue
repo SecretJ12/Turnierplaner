@@ -8,7 +8,7 @@
 		</div>
 		<div
 			v-if="gamePoints"
-			class="col flex flex-row flex-wrap"
+			class="col flex flex-row flex-wrap gap-2"
 			style="width: 100%"
 		>
 			<InputNumber
