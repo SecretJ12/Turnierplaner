@@ -52,13 +52,18 @@ public class SetResource {
 
             Set set = setRepository.findById(setKey);
 
-            if (set == null) {
-                set = new Set();
-                set.setKey(setKey);
+            if (set != null && jSet.getScoreA() == 0 && jSet.getScoreB() == 0) {
+                setRepository.delete(set);
+            } else {
+                if (set == null) {
+                    set = new Set();
+                    set.setKey(setKey);
+                }
+
+                set.setScoreA(jSet.getScoreA());
+                set.setScoreB(jSet.getScoreB());
+                setRepository.persist(set);
             }
-            set.setScoreA(jSet.getScoreA());
-            set.setScoreB(jSet.getScoreB());
-            setRepository.persist(set);
         }
 
         return "Updated matches";
