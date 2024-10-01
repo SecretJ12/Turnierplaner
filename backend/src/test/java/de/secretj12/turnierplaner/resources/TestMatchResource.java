@@ -6,6 +6,7 @@ import de.secretj12.turnierplaner.db.repositories.CompetitionRepository;
 import de.secretj12.turnierplaner.db.repositories.CourtRepositiory;
 import de.secretj12.turnierplaner.db.repositories.MatchRepository;
 import de.secretj12.turnierplaner.db.repositories.TournamentRepository;
+import de.secretj12.turnierplaner.enums.*;
 import io.quarkus.hibernate.orm.panache.Panache;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.security.TestSecurity;
@@ -21,7 +22,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
-import static de.secretj12.turnierplaner.db.entities.competition.CreationProgress.TEAMS;
+import static de.secretj12.turnierplaner.enums.CreationProgress.TEAMS;
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -61,7 +62,7 @@ public class TestMatchResource {
         Competition comp = new Competition();
         comp.setName("Herren");
         comp.setDescription("Offen für alle Herren");
-        comp.setMode(CompetitionMode.SINGLES);
+        comp.setMode(CompetitionMode.SINGLE);
         comp.setType(CompetitionType.KNOCKOUT);
         comp.setPlayerASex(SexFilter.MALE);
         comp.setcProgress(TEAMS);
@@ -74,7 +75,7 @@ public class TestMatchResource {
         Competition comp2 = new Competition();
         comp2.setName("Damen");
         comp2.setDescription("Offen für alle Herren");
-        comp2.setMode(CompetitionMode.SINGLES);
+        comp2.setMode(CompetitionMode.SINGLE);
         comp2.setType(CompetitionType.KNOCKOUT);
         comp2.setPlayerASex(SexFilter.MALE);
         comp2.setcProgress(TEAMS);

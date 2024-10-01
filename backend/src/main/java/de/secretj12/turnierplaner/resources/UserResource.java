@@ -1,7 +1,7 @@
 package de.secretj12.turnierplaner.resources;
 
-import de.secretj12.turnierplaner.resources.jsonEntities.admin.jAdminRole;
-import de.secretj12.turnierplaner.resources.jsonEntities.admin.jAdminUser;
+import de.secretj12.turnierplaner.enums.jAdminRole;
+import de.secretj12.turnierplaner.model.admin.jAdminUser;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;

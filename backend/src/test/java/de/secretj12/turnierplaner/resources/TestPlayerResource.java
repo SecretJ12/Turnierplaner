@@ -6,6 +6,7 @@ import de.secretj12.turnierplaner.db.repositories.CompetitionRepository;
 import de.secretj12.turnierplaner.db.repositories.PlayerRepository;
 import de.secretj12.turnierplaner.db.repositories.TournamentRepository;
 import de.secretj12.turnierplaner.db.repositories.VerificationCodeRepository;
+import de.secretj12.turnierplaner.enums.*;
 import io.quarkus.hibernate.orm.panache.Panache;
 import io.quarkus.mailer.MockMailbox;
 import io.quarkus.test.junit.QuarkusTest;
@@ -42,7 +43,7 @@ public class TestPlayerResource {
     private Competition genComp() {
         Competition competition = new Competition();
         competition.setcProgress(CreationProgress.TEAMS);
-        competition.setMode(CompetitionMode.SINGLES);
+        competition.setMode(CompetitionMode.SINGLE);
         competition.setType(CompetitionType.KNOCKOUT);
         competition.setSignup(CompetitionSignUp.INDIVIDUAL);
         competition.setPlayerASex(SexFilter.ANY);

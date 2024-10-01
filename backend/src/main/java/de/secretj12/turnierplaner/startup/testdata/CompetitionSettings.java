@@ -1,8 +1,8 @@
 package de.secretj12.turnierplaner.startup.testdata;
 
-import de.secretj12.turnierplaner.db.entities.competition.CompetitionMode;
-import de.secretj12.turnierplaner.db.entities.competition.CompetitionType;
-import de.secretj12.turnierplaner.db.entities.competition.SexFilter;
+import de.secretj12.turnierplaner.enums.CompetitionMode;
+import de.secretj12.turnierplaner.enums.CompetitionType;
+import de.secretj12.turnierplaner.enums.SexFilter;
 
 class CompetitionSettings {
     private String name;

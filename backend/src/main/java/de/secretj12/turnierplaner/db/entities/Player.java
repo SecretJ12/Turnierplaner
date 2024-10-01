@@ -1,5 +1,6 @@
 package de.secretj12.turnierplaner.db.entities;
 
+import de.secretj12.turnierplaner.enums.Sex;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;

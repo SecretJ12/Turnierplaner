@@ -7,6 +7,7 @@ import de.secretj12.turnierplaner.db.entities.groups.Group;
 import de.secretj12.turnierplaner.db.entities.groups.MatchOfGroup;
 import de.secretj12.turnierplaner.db.entities.knockout.NextMatch;
 import de.secretj12.turnierplaner.db.repositories.*;
+import de.secretj12.turnierplaner.enums.*;
 import io.smallrye.mutiny.tuples.Tuple2;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -67,13 +68,13 @@ public class TestdataGenerator {
 
         List<CompetitionSettings> compSetting = new ArrayList<>();
         // @formatter:off
-        compSetting.add(new CompetitionSettings("Single Groups", CompetitionType.GROUPS, CompetitionMode.SINGLES, SexFilter.MALE, 8, false, AGE_RESTR.NONE, false, 2));
-        compSetting.add(new CompetitionSettings("Single U18", CompetitionType.GROUPS, CompetitionMode.SINGLES, SexFilter.MALE, 8, false, AGE_RESTR.U18, false, 2));
-        compSetting.add(new CompetitionSettings("Single Knockout", CompetitionType.KNOCKOUT, CompetitionMode.SINGLES, SexFilter.MALE, 16, false, AGE_RESTR.NONE, false, 2));
-        compSetting.add(new CompetitionSettings("Double", CompetitionType.KNOCKOUT, CompetitionMode.DOUBLES, SexFilter.MALE, 16, false, AGE_RESTR.NONE, false, 2));
-        compSetting.add(new CompetitionSettings("Double random", CompetitionType.KNOCKOUT, CompetitionMode.DOUBLES, SexFilter.ANY, 32, true, AGE_RESTR.NONE, false, 2));
-        compSetting.add(new CompetitionSettings("Double O50", CompetitionType.KNOCKOUT, CompetitionMode.DOUBLES, SexFilter.ANY, 8, false, AGE_RESTR.O50, true, 2));
-        compSetting.add(new CompetitionSettings("Double Mixed", CompetitionType.KNOCKOUT, CompetitionMode.DOUBLES, SexFilter.ANY, 4, true, AGE_RESTR.O50, true, 2));
+        compSetting.add(new CompetitionSettings("Single Groups", CompetitionType.GROUPS, CompetitionMode.SINGLE, SexFilter.MALE, 8, false, AGE_RESTR.NONE, false, 2));
+        compSetting.add(new CompetitionSettings("Single U18", CompetitionType.GROUPS, CompetitionMode.SINGLE, SexFilter.MALE, 8, false, AGE_RESTR.U18, false, 2));
+        compSetting.add(new CompetitionSettings("Single Knockout", CompetitionType.KNOCKOUT, CompetitionMode.SINGLE, SexFilter.MALE, 16, false, AGE_RESTR.NONE, false, 2));
+        compSetting.add(new CompetitionSettings("Double", CompetitionType.KNOCKOUT, CompetitionMode.DOUBLE, SexFilter.MALE, 16, false, AGE_RESTR.NONE, false, 2));
+        compSetting.add(new CompetitionSettings("Double random", CompetitionType.KNOCKOUT, CompetitionMode.DOUBLE, SexFilter.ANY, 32, true, AGE_RESTR.NONE, false, 2));
+        compSetting.add(new CompetitionSettings("Double O50", CompetitionType.KNOCKOUT, CompetitionMode.DOUBLE, SexFilter.ANY, 8, false, AGE_RESTR.O50, true, 2));
+        compSetting.add(new CompetitionSettings("Double Mixed", CompetitionType.KNOCKOUT, CompetitionMode.DOUBLE, SexFilter.ANY, 4, true, AGE_RESTR.O50, true, 2));
         // @formatter:on
 
         createTournament(TDate.BEFORE_REGISTRATION, "Clubmeisterschaft 2026", "Anmeldung ausstehend", true,
@@ -249,7 +250,7 @@ public class TestdataGenerator {
             teams[i].setCompetition(competition);
             teams[i].setPlayerA(player);
 
-            if (competitionSettings.getCompetitionMode() == CompetitionMode.DOUBLES) {
+            if (competitionSettings.getCompetitionMode() == CompetitionMode.DOUBLE) {
                 Player player2 = createPlayer(competitionSettings.getAgeRestr(), competitionSettings.getSex());
                 players.persist(player2);
                 teams[i].setPlayerB(player2);
@@ -450,8 +451,8 @@ public class TestdataGenerator {
             competition.setName(compSetting.getName());
 
             // Set description
-            if (compSetting.getCompetitionMode() == CompetitionMode.SINGLES) {
-                competition.setMode(CompetitionMode.SINGLES);
+            if (compSetting.getCompetitionMode() == CompetitionMode.SINGLE) {
+                competition.setMode(CompetitionMode.SINGLE);
                 competition.setSignup(CompetitionSignUp.INDIVIDUAL);
                 competition.setPlayerBdifferent(false);
                 switch (compSetting.getSex()) {
@@ -468,7 +469,7 @@ public class TestdataGenerator {
                     }
                 }
             } else {
-                competition.setMode(CompetitionMode.DOUBLES);
+                competition.setMode(CompetitionMode.DOUBLE);
                 if (compSetting.isDifferentConditions()) {
                     competition.setPlayerBdifferent(true);
                     if (compSetting.isRegisterIndividual()) {

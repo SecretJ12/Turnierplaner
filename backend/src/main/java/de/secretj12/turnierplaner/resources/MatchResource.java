@@ -8,7 +8,7 @@ import de.secretj12.turnierplaner.db.repositories.CompetitionRepository;
 import de.secretj12.turnierplaner.db.repositories.MatchRepository;
 import de.secretj12.turnierplaner.db.repositories.PlayerRepository;
 import de.secretj12.turnierplaner.db.repositories.TournamentRepository;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserMatchEvent;
+import de.secretj12.turnierplaner.model.user.jUserMatchEvent;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;

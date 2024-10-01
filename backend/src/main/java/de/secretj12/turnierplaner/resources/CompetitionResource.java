@@ -2,21 +2,21 @@ package de.secretj12.turnierplaner.resources;
 
 import de.secretj12.turnierplaner.db.entities.Match;
 import de.secretj12.turnierplaner.db.entities.Player;
-import de.secretj12.turnierplaner.db.entities.Sex;
+import de.secretj12.turnierplaner.enums.*;
 import de.secretj12.turnierplaner.db.entities.Tournament;
 import de.secretj12.turnierplaner.db.entities.competition.*;
 import de.secretj12.turnierplaner.db.entities.groups.Group;
 import de.secretj12.turnierplaner.db.repositories.*;
-import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorCompetitionAdd;
-import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorCompetitionUpdate;
-import de.secretj12.turnierplaner.resources.jsonEntities.director.competition.jDirectorGroupsDivision;
-import de.secretj12.turnierplaner.resources.jsonEntities.director.jDirectorScheduleMatch;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.competition.jUserCompetition;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.group.jUserGroupSystem;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserPlayerSignUpForm;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserTeam;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.knockout.jUserKnockoutMatch;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.knockout.jUserKnockoutSystem;
+import de.secretj12.turnierplaner.model.director.competition.jDirectorCompetitionAdd;
+import de.secretj12.turnierplaner.model.director.competition.jDirectorCompetitionUpdate;
+import de.secretj12.turnierplaner.model.director.competition.jDirectorGroupsDivision;
+import de.secretj12.turnierplaner.model.director.jDirectorScheduleMatch;
+import de.secretj12.turnierplaner.model.user.competition.jUserCompetition;
+import de.secretj12.turnierplaner.model.user.group.jUserGroupSystem;
+import de.secretj12.turnierplaner.model.user.jUserPlayerSignUpForm;
+import de.secretj12.turnierplaner.model.user.jUserTeam;
+import de.secretj12.turnierplaner.model.user.knockout.jUserKnockoutMatch;
+import de.secretj12.turnierplaner.model.user.knockout.jUserKnockoutSystem;
 import de.secretj12.turnierplaner.tools.CommonHelpers;
 import de.secretj12.turnierplaner.tools.GroupTools;
 import de.secretj12.turnierplaner.tools.KnockoutTools;
@@ -192,7 +192,7 @@ public class CompetitionResource {
                 || competition.getTournament().getEndRegistration().isBefore(Instant.now())))
             throw new NotAuthorizedException("Registration phase is not active");
 
-        if (competition.getMode() == CompetitionMode.SINGLES
+        if (competition.getMode() == CompetitionMode.SINGLE
             || (competition.getSignup() == CompetitionSignUp.INDIVIDUAL
                 && !competition.isPlayerBdifferent())) {
             // single mode or double with individual registration but same constraints

@@ -4,7 +4,7 @@ import de.secretj12.turnierplaner.db.entities.Config;
 import de.secretj12.turnierplaner.db.entities.DefaultConfig;
 import de.secretj12.turnierplaner.db.repositories.ConfigRepository;
 import de.secretj12.turnierplaner.db.repositories.DefaultConfigRepository;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserConfig;
+import de.secretj12.turnierplaner.model.user.jUserConfig;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;

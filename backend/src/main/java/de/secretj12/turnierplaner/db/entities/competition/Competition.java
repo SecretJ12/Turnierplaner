@@ -1,7 +1,7 @@
 package de.secretj12.turnierplaner.db.entities.competition;
 
 import de.secretj12.turnierplaner.db.entities.Match;
-import de.secretj12.turnierplaner.db.entities.NumberSets;
+import de.secretj12.turnierplaner.enums.*;
 import de.secretj12.turnierplaner.db.entities.Tournament;
 import de.secretj12.turnierplaner.db.entities.groups.Group;
 import jakarta.persistence.*;

@@ -7,7 +7,7 @@ import de.secretj12.turnierplaner.db.entities.Tournament;
 import de.secretj12.turnierplaner.db.repositories.MatchRepository;
 import de.secretj12.turnierplaner.db.repositories.SetRepository;
 import de.secretj12.turnierplaner.db.repositories.TournamentRepository;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.jUserSet;
+import de.secretj12.turnierplaner.model.user.jUserSet;
 import io.quarkus.security.UnauthorizedException;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;

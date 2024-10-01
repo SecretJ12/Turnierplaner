@@ -8,7 +8,7 @@ import de.secretj12.turnierplaner.db.repositories.CompetitionRepository;
 import de.secretj12.turnierplaner.db.repositories.MatchRepository;
 import de.secretj12.turnierplaner.db.repositories.NextMatchRepository;
 import de.secretj12.turnierplaner.db.repositories.TeamRepository;
-import de.secretj12.turnierplaner.resources.jsonEntities.user.knockout.jUserKnockoutMatch;
+import de.secretj12.turnierplaner.model.user.knockout.jUserKnockoutMatch;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BadRequestException;
