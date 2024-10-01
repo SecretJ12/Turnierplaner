@@ -86,9 +86,8 @@ import { useUpdateSet } from "@/backend/set"
 import { useRoute } from "vue-router"
 import { useToast } from "primevue/usetoast"
 
-const { t } = useI18n({ inheritLocale: true })
+const { t } = useI18n()
 const toast = useToast()
-
 const route = useRoute()
 
 const props = defineProps<{
@@ -115,8 +114,6 @@ const showPopUp = function (match: Match) {
 		team1GamePoints.value.push(0)
 		team2GamePoints.value.push(0)
 	}
-	console.log(props.numberSets)
-	console.log(numberSets.value)
 	visible.value = true
 }
 const { mutate: updateSet } = useUpdateSet(route, t, toast)
