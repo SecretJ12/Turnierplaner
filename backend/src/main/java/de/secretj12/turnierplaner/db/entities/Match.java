@@ -20,14 +20,14 @@ import java.util.UUID;
 @Entity
 @Table(name = "matches")
 @NamedQueries({
-    @NamedQuery(name = "deleteByComp",
-                query = """
-                    DELETE FROM Match m WHERE m.competition = :comp"""),
-    @NamedQuery(name = "nonGroupMatches",
-                query = """
-                    FROM Match m WHERE m.competition = :comp
-                    AND NOT EXISTS (FROM MatchOfGroup mog WHERE mog.match = m)
-                    """)})
+               @NamedQuery(name = "deleteByComp",
+                           query = """
+                               DELETE FROM Match m WHERE m.competition = :comp"""),
+               @NamedQuery(name = "nonGroupMatches",
+                           query = """
+                               FROM Match m WHERE m.competition = :comp
+                               AND NOT EXISTS (FROM MatchOfGroup mog WHERE mog.match = m)
+                               """)})
 public class Match {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
