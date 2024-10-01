@@ -2,6 +2,10 @@ import axios from "axios"
 import {
 	Player,
 	playerClientToServer,
+	PlayerDetails,
+	playerDetailsClientToServer,
+	PlayerDetailsServer,
+	playerDetailsServerToClient,
 	PlayerServer,
 	playerServerToClient,
 } from "@/interfaces/player"
@@ -136,10 +140,10 @@ export function getPlayer(
 	toast: ToastServiceMethods,
 ) {
 	return useQuery({
-		queryKey: ["playerDetails", computed(() => route.params.playerId)],
+		queryKey: ["player", computed(() => route.params.playerId)],
 		queryFn: async () => {
 			return axios
-				.get<PlayerServer>(`/player/${route.params.playerId}/details`)
+				.get<PlayerServer>(`/player/${route.params.playerId}`)
 				.then<Player>((result) => playerServerToClient(result.data))
 				.catch((error) => {
 					toast.add({
@@ -151,6 +155,51 @@ export function getPlayer(
 					console.log(error)
 					throw error
 				})
+		},
+	})
+}
+
+export function getPlayerDetails(
+	route: RouteLocationNormalizedLoaded,
+	t: (s: string) => string,
+	toast: ToastServiceMethods,
+) {
+	return useQuery({
+		queryKey: ["playerDetails", computed(() => route.params.playerId)],
+		queryFn: async () => {
+			return axios
+				.get<PlayerDetailsServer>(`/player/${route.params.playerId}/details`)
+				.then<PlayerDetails>((result) =>
+					playerDetailsServerToClient(result.data),
+				)
+				.catch((error) => {
+					toast.add({
+						severity: "error",
+						summary: t("Player.player_not_found"),
+						detail: error,
+						life: 3000,
+					})
+					console.log(error)
+					throw error
+				})
+		},
+	})
+}
+
+export function updatePlayerDetails(
+	t: (s: string) => string,
+	toast: ToastServiceMethods,
+) {
+	return useMutation({
+		mutationFn: async (player: PlayerDetails) => {
+			return axios.post(`/player/update`, playerDetailsClientToServer(player))
+		},
+		onSuccess() {
+			toast.add({
+				severity: "success",
+				summary: t("settings.player_updated"),
+				life: 3000,
+			})
 		},
 	})
 }

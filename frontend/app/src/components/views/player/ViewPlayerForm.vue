@@ -1,0 +1,175 @@
+<template>
+	<div class="formgrid grid">
+		<div class="field col-6">
+			<label for="first_name">{{
+				t("ViewPlayerRegistration.first_name.field")
+			}}</label>
+			<InputText
+				id="first_name"
+				:disabled="disabled"
+				type="text"
+				v-bind="firstName"
+				maxlength="40"
+				class="w-full"
+				:class="{ 'p-invalid': errors.firstName }"
+			/>
+			<InlineMessage v-if="errors.firstName" class="mt-2"
+				>{{ t(errors.firstName || "") }}
+			</InlineMessage>
+		</div>
+		<div class="field col-6">
+			<label for="name">{{
+				t("ViewPlayerRegistration.last_name.field")
+			}}</label>
+			<InputText
+				id="name"
+				:disabled="disabled"
+				type="text"
+				v-bind="lastName"
+				maxlength="40"
+				class="w-full"
+				:class="{ 'p-invalid': errors.lastName }"
+			/>
+			<InlineMessage v-if="errors.lastName" class="mt-2"
+				>{{ t(errors.lastName || "") }}
+			</InlineMessage>
+		</div>
+		<div class="field col-6">
+			<label for="birthdate">{{
+				t("ViewPlayerRegistration.birthdate.field")
+			}}</label>
+			<Calendar
+				show-icon
+				:disabled="disabled"
+				class="w-full"
+				v-bind="birthday"
+				:manual-input="false"
+				:date-format="t('date_format')"
+				:class="{ 'p-invalid': errors.birthday }"
+			/>
+			<InlineMessage v-if="errors.birthday" class="mt-2"
+				>{{ t(errors.birthday || "") }}
+			</InlineMessage>
+		</div>
+		<div class="field col-6">
+			<label for="sex">{{ t("ViewPlayerRegistration.sex.field") }}</label>
+			<Dropdown
+				v-bind="sex"
+				:disabled="disabled"
+				:options="[
+					{ name: t('general.male'), value: Sex.MALE },
+					{ name: t('general.female'), value: Sex.FEMALE },
+				]"
+				option-label="name"
+				option-value="value"
+				:placeholder="t(`CompetitionSettings.sex`)"
+				class="w-full"
+				:class="{ 'p-invalid': errors.sex }"
+			>
+				<template #option="slotProps">
+					<div>
+						{{ slotProps.option.name }}
+					</div>
+				</template>
+			</Dropdown>
+			<InlineMessage v-if="errors.sex" class="mt-2"
+				>{{ t(errors.sex || "") }}
+			</InlineMessage>
+		</div>
+		<div class="field col-12">
+			<label for="email">{{ t("ViewPlayerRegistration.email.field") }}</label>
+			<InputText
+				id="email"
+				:disabled="disabled"
+				type="text"
+				v-bind="email"
+				maxlength="100"
+				class="w-full"
+				:class="{ 'p-invalid': errors.email }"
+			/>
+			<InlineMessage v-if="errors.email" class="mt-2"
+				>{{ t(errors.email || "") }}
+			</InlineMessage>
+		</div>
+		<div class="field col-12">
+			<label for="phone">{{ t("ViewPlayerRegistration.phone.field") }}</label>
+			<InputText
+				id="phone"
+				:disabled="disabled"
+				type="text"
+				v-bind="phone"
+				maxlength="30"
+				class="w-full"
+				:class="{ 'p-invalid': errors.phone }"
+			/>
+			<InlineMessage v-if="errors.phone" class="mt-2"
+				>{{ t(errors.phone || "") }}
+			</InlineMessage>
+		</div>
+	</div>
+</template>
+
+<script lang="ts" setup>
+import { useI18n } from "vue-i18n"
+import { Sex } from "@/interfaces/competition"
+import { useForm } from "vee-validate"
+import { toTypedSchema } from "@vee-validate/yup"
+import { date, mixed, object, string } from "yup"
+import { PlayerRegistration, PlayerRegistrationForm } from "@/interfaces/player"
+
+const { t } = useI18n()
+
+const props = withDefaults(
+	defineProps<{
+		disabled: boolean
+		player: PlayerRegistrationForm
+	}>(),
+	{
+		disabled: false,
+	},
+)
+
+const phoneRegExp =
+	/^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)$/
+
+const { defineInputBinds, errors, defineComponentBinds, handleSubmit } =
+	useForm<PlayerRegistration>({
+		validationSchema: toTypedSchema(
+			object({
+				firstName: string().min(4).max(40).required(),
+				lastName: string().min(4).max(40).required(),
+				sex: mixed().oneOf(Object.values(Sex)).required(),
+				birthday: date().required(),
+				email: string().max(100).email().required(),
+				phone: string()
+					.matches(phoneRegExp, t("ViewPlayerRegistration.phone.correct"))
+					.required(),
+			}),
+		),
+		initialValues: {
+			firstName: props.player.firstName,
+			lastName: props.player.lastName,
+			sex: props.player.sex,
+			birthday: props.player.birthday,
+			email: props.player.email,
+			phone: props.player.phone,
+		},
+	})
+
+const firstName = defineInputBinds("firstName")
+const lastName = defineInputBinds("lastName")
+const sex = defineComponentBinds("sex")
+const birthday = defineComponentBinds("birthday")
+const email = defineInputBinds("email")
+const phone = defineInputBinds("phone")
+
+const onSubmit = handleSubmit((values) => {
+	emit("submit", <PlayerRegistration>(<unknown>values))
+})
+defineExpose({ onSubmit })
+const emit = defineEmits<{
+	submit: [PlayerRegistration]
+}>()
+</script>
+
+<style scoped></style>

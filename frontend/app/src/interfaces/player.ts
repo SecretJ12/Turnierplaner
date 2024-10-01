@@ -34,11 +34,45 @@ export enum Sex {
 	FEMALE = "FEMALE",
 }
 
-export interface PlayerRegistration {
+export interface PlayerRegistrationForm {
+	firstName: string
+	lastName: string
+	sex: Sex | undefined
+	birthday: Date | undefined
+	email: string
+	phone: string
+}
+
+export interface PlayerRegistration extends PlayerRegistrationForm {
+	sex: Sex
+	birthday: Date
+}
+
+export interface PlayerDetails extends PlayerRegistration {
+	id: string
+}
+
+export interface PlayerDetailsServer {
+	id: string
 	firstName: string
 	lastName: string
 	sex: Sex
-	birthday: Date
+	birthday: Date | string
 	email: string
 	phone: string
+}
+
+export function playerDetailsServerToClient(
+	player: PlayerDetailsServer,
+): PlayerDetails {
+	return {
+		...player,
+		birthday: new Date(player.birthday),
+	}
+}
+
+export function playerDetailsClientToServer(
+	player: PlayerDetails,
+): PlayerDetailsServer {
+	return player
 }
