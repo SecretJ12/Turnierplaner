@@ -20,7 +20,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Validate backend format
-        run: mvn spotless:apply
+        run: cd backend && mvn spotless:check
   buildBackend:
     name: Build backend
     runs-on: ubuntu-latest
