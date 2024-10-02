@@ -1,22 +1,5 @@
 <template>
 	<div id="container">
-		<div style="margin-bottom: 20px">
-			<span
-				v-if="canEdit"
-				id="settings"
-				class="material-symbols-outlined cursor-pointer"
-				style="font-size: 1.7rem"
-				@click="settings"
-			>
-				settings
-			</span>
-			<div id="tourName">
-				{{ route.params.tourId }}
-			</div>
-			<h2>
-				{{ route.params.compId }}
-			</h2>
-		</div>
 		<template v-if="tournamentSuc && tournament">
 			<template v-if="new Date() < tournament.registration_phase.begin">
 				{{ t("ViewCompetition.registration_not_started") }}
