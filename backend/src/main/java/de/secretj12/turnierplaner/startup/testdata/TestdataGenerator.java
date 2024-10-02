@@ -143,7 +143,6 @@ public class TestdataGenerator {
             Tuple2.of((byte) 6, (byte) 2),
             Tuple2.of((byte) 6, (byte) 3),
             Tuple2.of((byte) 6, (byte) 4),
-            Tuple2.of((byte) 6, (byte) 5),
             Tuple2.of((byte) 7, (byte) 5),
             Tuple2.of((byte) 7, (byte) 6)
         );
@@ -162,8 +161,8 @@ public class TestdataGenerator {
                     winDif += winBias;
                 }
                 case 1 -> {
-                    set.setScoreA(possibleResults.get(r).getItem1());
-                    set.setScoreB(possibleResults.get(r).getItem2());
+                    set.setScoreA(possibleResults.get(r).getItem2());
+                    set.setScoreB(possibleResults.get(r).getItem1());
                     winDif -= winBias;
                 }
                 default -> {
@@ -182,7 +181,7 @@ public class TestdataGenerator {
             setArrayList.add(set);
             sets.persist(set);
         }
-        match.setWinner(winDif < 0);
+        match.setWinner(winDif > 0);
         if (winDif == 0) {
             Set.SetKey setKey = new Set.SetKey();
             setKey.setMatch(match);
@@ -202,11 +201,11 @@ public class TestdataGenerator {
             if (random.nextBoolean()) {
                 set.setScoreA(winner);
                 set.setScoreB(looser);
-                match.setWinner(false);
+                match.setWinner(true);
             } else {
                 set.setScoreA(looser);
                 set.setScoreB(winner);
-                match.setWinner(true);
+                match.setWinner(false);
             }
 
             setArrayList.add(set);
@@ -382,8 +381,7 @@ public class TestdataGenerator {
 
     private Team getWinnerOfMatchIfExists(Match match) {
         if (match.isFinished()) {
-            if (match.getWinner()) return match.getTeamB();
-            else return match.getTeamA();
+            return match.getWinner() ? match.getTeamA() : match.getTeamB();
         } else {
             return null;
         }
@@ -391,8 +389,7 @@ public class TestdataGenerator {
 
     private Team getLooserOfMatchIfExists(Match match) {
         if (match.isFinished()) {
-            if (match.getWinner()) return match.getTeamA();
-            else return match.getTeamB();
+            return match.getWinner() ? match.getTeamB() : match.getTeamA();
         } else {
             return null;
         }

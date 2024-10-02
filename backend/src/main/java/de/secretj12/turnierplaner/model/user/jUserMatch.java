@@ -42,8 +42,7 @@ public class jUserMatch {
         if (match.getTeamB() != null)
             this.teamB = new jUserTeam(match.getTeamB());
 
-        this.sets = match.getSets().stream().map(jUserSet::new).sorted(Comparator.comparingInt(jUserSet::getIndex))
-            .toList();
+        this.sets = match.getSets().stream().map(jUserSet::new).toList();
     }
 
     public UUID getId() {

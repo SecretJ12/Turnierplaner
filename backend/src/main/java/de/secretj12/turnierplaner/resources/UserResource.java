@@ -1,6 +1,6 @@
 package de.secretj12.turnierplaner.resources;
 
-import de.secretj12.turnierplaner.enums.jAdminRole;
+import de.secretj12.turnierplaner.enums.AdminRole;
 import de.secretj12.turnierplaner.model.admin.jAdminUser;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
@@ -43,20 +43,20 @@ public class UserResource {
         return "User updated";
     }
 
-    private jAdminRole getRole(UserRepresentation user) {
+    private AdminRole getRole(UserRepresentation user) {
         return getRole(keycloak.realm(realm).users().get(user.getId()));
     }
 
-    private jAdminRole getRole(org.keycloak.admin.client.resource.UserResource user) {
+    private AdminRole getRole(org.keycloak.admin.client.resource.UserResource user) {
         var groups = user.groups().stream().map(GroupRepresentation::getName).toList();
         if (groups.contains("admin"))
-            return jAdminRole.ADMIN;
+            return AdminRole.ADMIN;
         else if (groups.contains("director"))
-            return jAdminRole.DIRECTOR;
+            return AdminRole.DIRECTOR;
         else if (groups.contains("reporter"))
-            return jAdminRole.REPORTER;
+            return AdminRole.REPORTER;
         else if (groups.contains("user"))
-            return jAdminRole.USER;
+            return AdminRole.USER;
         else
             throw new InternalServerErrorException("Invalid role");
     }

@@ -8,6 +8,8 @@ import de.secretj12.turnierplaner.db.entities.groups.Group;
 import de.secretj12.turnierplaner.db.entities.groups.MatchOfGroup;
 import de.secretj12.turnierplaner.db.entities.knockout.NextMatch;
 import de.secretj12.turnierplaner.db.repositories.*;
+import de.secretj12.turnierplaner.enums.NumberSets;
+import de.secretj12.turnierplaner.model.user.jUserTeamGroupResult;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BadRequestException;
@@ -32,7 +34,6 @@ public class GroupTools {
     @Inject
     CompetitionRepository competitions;
 
-    // TODO please add tests for me
     public void generateMatches(Competition competition, List<Set<Team>> nGroups) {
         Match thirdP = competition.getThirdPlace();
         competition.setFinale(null);
@@ -231,5 +232,83 @@ public class GroupTools {
 
     public Set<Team> teamsOfGroup(Group group) {
         return teamRepository.teamsOfGroup(group);
+    }
+
+    public boolean isFinished(Group group) {
+        return group.getMatches().stream().allMatch(Match::isFinished);
+    }
+
+    public List<jUserTeamGroupResult> determineGropuResults(Group group) {
+        Map<Team, jUserTeamGroupResult> results = new HashMap<>();
+        teamsOfGroup(group).forEach(t -> results.put(t, new jUserTeamGroupResult(t)));
+        NumberSets numberSets = group.getCompetition().getNumberSets();
+        for (Match m : group.getMatches()) {
+            if (!m.isFinished())
+                continue;
+            var teamA = results.get(m.getTeamA());
+            var teamB = results.get(m.getTeamB());
+
+            if (m.getWinner()) {
+                teamA.matchWon();
+                teamB.matchLost();
+            } else {
+                teamA.matchLost();
+                teamB.matchWon();
+            }
+            for (var set : m.getSets()) {
+                if (set.getScoreA() > set.getScoreB()) {
+                    teamA.setWon();
+                    teamB.setLost();
+                } else {
+                    teamB.setWon();
+                    teamA.setLost();
+                }
+                if (set.getKey().getIndex() < numberSets.number - 1) {
+                    teamA.matchesWon(set.getScoreA());
+                    teamA.matchesLost(set.getScoreB());
+                    teamB.matchesWon(set.getScoreB());
+                    teamB.matchesLost(set.getScoreA());
+                } else {
+                    if (set.getScoreA() > set.getScoreB()) {
+                        teamA.matchesWon(1);
+                        teamB.matchesLost(1);
+                    } else {
+                        teamB.matchesWon(1);
+                        teamA.matchesLost(1);
+                    }
+                }
+            }
+        }
+
+        int rank = 1;
+        Comp comp = new Comp();
+        var sortedRes = results.values().stream()
+            .sorted(comp)
+            .toList();
+        sortedRes.getFirst().setRank(1);
+        for (int i = 1; i < sortedRes.size(); i++) {
+            if (comp.compare(sortedRes.get(i - 1), sortedRes.get(i)) == 0) {
+                sortedRes.get(i).setRank(rank);
+            } else {
+                sortedRes.get(i).setRank(++rank);
+            }
+        }
+        return sortedRes;
+    }
+
+    private static class Comp implements Comparator<jUserTeamGroupResult> {
+
+        @Override
+        public int compare(jUserTeamGroupResult t1, jUserTeamGroupResult t2) {
+            if (t1.getGamesWon() - t1.getMatchesLost() > t2.getMatchesWon() - t2.getMatchesLost())
+                return 1;
+            if (t2.getGamesWon() - t2.getMatchesLost() > t1.getMatchesWon() - t1.getMatchesLost())
+                return -1;
+            if (t1.getSetsWon() - t1.getSetsLost() > t2.getSetsWon() - t2.getSetsLost())
+                return 1;
+            if (t2.getSetsWon() - t2.getSetsLost() > t1.getSetsWon() - t1.getSetsLost())
+                return -1;
+            return Integer.compare(t1.getMatchesWon() - t1.getMatchesLost(), t2.getMatchesWon() - t2.getMatchesLost());
+        }
     }
 }

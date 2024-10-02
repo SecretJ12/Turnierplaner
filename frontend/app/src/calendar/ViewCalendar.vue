@@ -173,7 +173,6 @@ async function onViewChange({
 	startDate: Date
 	endDate: Date
 }) {
-	console.log("view change")
 	emit("onViewChange", startDate, endDate)
 
 	await sleep(500)

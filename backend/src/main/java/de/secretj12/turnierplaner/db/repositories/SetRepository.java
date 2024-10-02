@@ -15,6 +15,13 @@ public class SetRepository implements PanacheRepository<Set> {
         return find("key", key).firstResult();
     }
 
+    public Set findById(Match match, byte index) {
+        Set.SetKey setKey = new Set.SetKey();
+        setKey.setMatch(match);
+        setKey.setIndex(index);
+        return findById(setKey);
+    }
+
     @Transactional
     public void updateSets(Match match, List<jUserSet> sets) {
 

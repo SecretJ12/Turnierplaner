@@ -14,6 +14,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.Instant;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,6 +51,11 @@ public class Match {
 
     @Column(name = "finished")
     private Boolean finished;
+    /**
+     * Determines who is the winner of the game
+     * true - Team A
+     * false - Team B
+     */
     @Column(name = "winner")
     private Boolean winner;
 
@@ -201,7 +207,7 @@ public class Match {
     }
 
     public List<Set> getSets() {
-        return sets;
+        return sets.stream().sorted(Comparator.comparingInt(s -> s.getKey().getIndex())).toList();
     }
 
     public void setSets(List<Set> sets) {

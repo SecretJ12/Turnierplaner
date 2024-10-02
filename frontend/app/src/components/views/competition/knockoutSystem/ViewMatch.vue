@@ -5,7 +5,7 @@
 			tableDoubles: props.mode === Mode.DOUBLE,
 		}"
 	>
-		<tr :class="{ winner: props.match.finished && !props.match.winner }">
+		<tr :class="{ winner: props.match.finished && props.match.winner }">
 			<td class="name">
 				<ViewTeamNames :team="props.match.teamA" :inverted="true" />
 			</td>
@@ -35,7 +35,7 @@
 				</td>
 			</template>
 		</tr>
-		<tr :class="{ winner: props.match.finished && props.match.winner }">
+		<tr :class="{ winner: props.match.finished && !props.match.winner }">
 			<td class="name">
 				<ViewTeamNames :team="props.match.teamB" :inverted="true" />
 			</td>
