@@ -1,9 +1,9 @@
 <template>
-	<!-- TODO rework, show courts, ... -->
+	<!-- TODO mobile optimization -->
 	<table style="width: calc(100% - 1px)">
 		<tr>
 			<th id="first">
-				{{ t("ViewGroupSystem.group") }} {{ props.group.index }}
+				<span>{{ t("ViewGroupSystem.group") }} {{ props.group.index }}</span>
 			</th>
 			<template
 				v-for="(team, index) in props.group.teams.slice().reverse()"
@@ -15,18 +15,18 @@
 					@mouseover="headerHover(team.id)"
 					@mouseleave="hoverLeave()"
 				>
-					<ViewTeamNames :team="team" :inverted="true" />
+					<ViewTeamNames :team="team" :inverted="true" short />
 				</th>
 			</template>
 		</tr>
-		<template v-for="(team, index) in props.group.teams" :key="index">
+		<template v-for="(teamA, index) in props.group.teams" :key="index">
 			<tr v-if="index !== props.group.teams.length - 1">
 				<th
 					:class="hoverIdA === index ? 'highlight ' : ''"
-					@mouseover="headerHover(team.id)"
+					@mouseover="headerHover(teamA.id)"
 					@mouseleave="hoverLeave()"
 				>
-					<ViewTeamNames :team="team" :inverted="true" />
+					<ViewTeamNames :team="teamA" :inverted="true" short />
 				</th>
 				<template
 					v-for="(teamB, indexB) in props.group.teams.slice().reverse()"
@@ -44,14 +44,14 @@
 								hoverIdB &&
 								((hoverIdA === index && indexB < hoverIdB) ||
 									(hoverIdB === indexB && index < hoverIdA)),
-							highlight: hoverTeam === team.id || hoverTeam === teamB.id,
+							highlight: hoverTeam === teamA.id || hoverTeam === teamB.id,
 						}"
 						@mouseover="matchHover(index, indexB)"
 						@mouseleave="hoverLeave()"
-						@click="showPopUp(findMatch(team, teamB))"
+						@click="showPopUp(findMatch(teamA, teamB).match)"
 					>
 						<div>
-							<ViewMatch :match="findMatch(team, teamB)" />
+							<ViewMatch v-bind="findMatch(teamA, teamB)" />
 						</div>
 					</td>
 				</template>
@@ -87,7 +87,10 @@ const props = defineProps<{
 const isLoggedIn = inject("loggedIn", ref(false))
 const { data: isReporter } = getIsReporter(isLoggedIn)
 
-function findMatch(teamA: Team, teamB: Team): Match {
+function findMatch(
+	teamA: Team,
+	teamB: Team,
+): { match: Match; reversed: boolean } {
 	const match: Match | undefined = props.group.matches.find((match) => {
 		if (match.teamA === null || match.teamB === null) return false
 		if (match.teamA.id === teamA.id && match.teamB.id === teamB.id) return true
@@ -97,7 +100,7 @@ function findMatch(teamA: Team, teamB: Team): Match {
 		console.error("Match does not exist")
 		throw new Error("Match does not exist")
 	}
-	return match
+	return { match, reversed: match.teamA?.id === teamB.id }
 }
 
 const hoverIdA = ref<null | number>(null)
@@ -138,7 +141,6 @@ table {
 }
 
 #first {
-	width: 150px;
 	border-top-left-radius: 15px;
 }
 

@@ -1,8 +1,16 @@
 <template>
-	<ViewPlayerName :player="props.team?.playerA" :inverted="props.inverted" />
+	<ViewPlayerName
+		:player="props.team?.playerA"
+		:inverted="props.inverted"
+		:short="props.short"
+	/>
 	<template v-if="props.team?.playerB">
 		<br />
-		<ViewPlayerName :player="props.team?.playerB" :inverted="props.inverted" />
+		<ViewPlayerName
+			:player="props.team?.playerB"
+			:inverted="props.inverted"
+			:short="props.short"
+		/>
 	</template>
 </template>
 
@@ -14,10 +22,12 @@ const props = withDefaults(
 	defineProps<{
 		team?: Team | null
 		inverted?: boolean
+		short?: boolean
 	}>(),
 	{
 		team: null,
 		inverted: false,
+		short: false,
 	},
 )
 </script>

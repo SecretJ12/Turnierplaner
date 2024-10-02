@@ -16,7 +16,7 @@ public class jUserGroup {
     public jUserGroup(Group group, GroupTools tools) {
         this.index = group.getIndex();
         this.matches = group.getMatches().stream().map(jUserMatch::new).toList();
-        this.results = tools.determineGropuResults(group);
+        this.results = tools.determineGroupResults(group);
     }
 
     public byte getIndex() {

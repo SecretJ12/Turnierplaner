@@ -4,17 +4,17 @@ import de.secretj12.turnierplaner.db.entities.competition.Team;
 
 public class jUserTeamGroupResult {
 
-    private Team team;
+    private jUserTeam team;
     private int rank;
-    private int gamesWon;
-    private int gamesLost;
-    private int setsWon;
-    private int setsLost;
     private int matchesWon;
     private int matchesLost;
+    private int setsWon;
+    private int setsLost;
+    private int gamesWon;
+    private int gamesLost;
 
     public jUserTeamGroupResult(Team team) {
-        this.team = team;
+        this.team = new jUserTeam(team);
     }
 
     public void matchWon() {
@@ -33,19 +33,19 @@ public class jUserTeamGroupResult {
         this.setsLost++;
     }
 
-    public void matchesWon(int matchesWon) {
-        this.matchesWon += matchesWon;
+    public void gamesWon(int gamesWon) {
+        this.gamesWon += gamesWon;
     }
 
-    public void matchesLost(int matchesLost) {
-        this.matchesLost += matchesLost;
+    public void gamesLost(int gamesLost) {
+        this.gamesLost += gamesLost;
     }
 
-    public Team getTeam() {
+    public jUserTeam getTeam() {
         return team;
     }
 
-    public void setTeam(Team team) {
+    public void setTeam(jUserTeam team) {
         this.team = team;
     }
 

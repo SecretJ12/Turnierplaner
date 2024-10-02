@@ -7,10 +7,7 @@ import de.secretj12.turnierplaner.db.entities.Tournament;
 import de.secretj12.turnierplaner.db.entities.competition.Competition;
 import de.secretj12.turnierplaner.db.entities.groups.Group;
 import de.secretj12.turnierplaner.db.entities.knockout.NextMatch;
-import de.secretj12.turnierplaner.db.repositories.CompetitionRepository;
-import de.secretj12.turnierplaner.db.repositories.MatchRepository;
-import de.secretj12.turnierplaner.db.repositories.SetRepository;
-import de.secretj12.turnierplaner.db.repositories.TournamentRepository;
+import de.secretj12.turnierplaner.db.repositories.*;
 import de.secretj12.turnierplaner.enums.NumberSets;
 import de.secretj12.turnierplaner.model.user.jUserSet;
 import de.secretj12.turnierplaner.model.user.jUserTeamGroupResult;
@@ -38,6 +35,8 @@ public class SetResource {
     SetRepository setRepository;
     @Inject
     MatchRepository matchRepository;
+    @Inject
+    TeamRepository teamRepository;
 
     @Inject
     GroupTools groupTools;
@@ -117,16 +116,16 @@ public class SetResource {
         }
         if (match.getGroup() != null && groupTools.isFinished(match.getGroup().getGroup())) {
             Group group = match.getGroup().getGroup();
-            List<jUserTeamGroupResult> results = groupTools.determineGropuResults(group);
+            List<jUserTeamGroupResult> results = groupTools.determineGroupResults(group);
 
             for (var fog : group.getFinalOfGroupA()) {
                 Match fin = fog.getNextMatch();
-                fin.setTeamA(results.get(fog.getPos()).getTeam());
+                fin.setTeamA(teamRepository.findById(results.get(fog.getPos()).getTeam().getId()));
                 adjustNext(fin);
             }
             for (var fog : group.getFinalOfGroupB()) {
                 Match fin = fog.getNextMatch();
-                fin.setTeamB(results.get(fog.getPos()).getTeam());
+                fin.setTeamB(teamRepository.findById(results.get(fog.getPos()).getTeam().getId()));
                 adjustNext(fin);
             }
         }
@@ -165,16 +164,24 @@ public class SetResource {
         switch (numberSets) {
             case THREE -> isNull(set4);
             case FIVE -> {
-                isValidSet(set4);
-                dif += calcDif(set4);
+                if (Math.abs(dif) == 3)
+                    isNull(set4);
+                else {
+                    isValidSet(set4);
+                    dif += calcDif(set4);
+                }
             }
         }
         Set set5 = setRepository.findById(match, (byte) 4);
         switch (numberSets) {
             case THREE -> isNull(set5);
             case FIVE -> {
-                isValidTiebreak(set5);
-                dif += calcDif(set4);
+                if (Math.abs(dif) == 3)
+                    isNull(set4);
+                else {
+                    isValidTiebreak(set5);
+                    dif += calcDif(set5);
+                }
             }
         }
         if (dif == 0)

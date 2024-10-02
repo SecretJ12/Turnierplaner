@@ -238,7 +238,7 @@ public class GroupTools {
         return group.getMatches().stream().allMatch(Match::isFinished);
     }
 
-    public List<jUserTeamGroupResult> determineGropuResults(Group group) {
+    public List<jUserTeamGroupResult> determineGroupResults(Group group) {
         Map<Team, jUserTeamGroupResult> results = new HashMap<>();
         teamsOfGroup(group).forEach(t -> results.put(t, new jUserTeamGroupResult(t)));
         NumberSets numberSets = group.getCompetition().getNumberSets();
@@ -264,17 +264,17 @@ public class GroupTools {
                     teamA.setLost();
                 }
                 if (set.getKey().getIndex() < numberSets.number - 1) {
-                    teamA.matchesWon(set.getScoreA());
-                    teamA.matchesLost(set.getScoreB());
-                    teamB.matchesWon(set.getScoreB());
-                    teamB.matchesLost(set.getScoreA());
+                    teamA.gamesWon(set.getScoreA());
+                    teamA.gamesLost(set.getScoreB());
+                    teamB.gamesWon(set.getScoreB());
+                    teamB.gamesLost(set.getScoreA());
                 } else {
                     if (set.getScoreA() > set.getScoreB()) {
-                        teamA.matchesWon(1);
-                        teamB.matchesLost(1);
+                        teamA.gamesWon(1);
+                        teamB.gamesLost(1);
                     } else {
-                        teamB.matchesWon(1);
-                        teamA.matchesLost(1);
+                        teamB.gamesWon(1);
+                        teamA.gamesLost(1);
                     }
                 }
             }
@@ -283,7 +283,7 @@ public class GroupTools {
         int rank = 1;
         Comp comp = new Comp();
         var sortedRes = results.values().stream()
-            .sorted(comp)
+            .sorted(comp.reversed())
             .toList();
         sortedRes.getFirst().setRank(1);
         for (int i = 1; i < sortedRes.size(); i++) {
@@ -300,15 +300,15 @@ public class GroupTools {
 
         @Override
         public int compare(jUserTeamGroupResult t1, jUserTeamGroupResult t2) {
-            if (t1.getGamesWon() - t1.getMatchesLost() > t2.getMatchesWon() - t2.getMatchesLost())
+            if (t1.getMatchesWon() - t1.getMatchesLost() > t2.getMatchesWon() - t2.getMatchesLost())
                 return 1;
-            if (t2.getGamesWon() - t2.getMatchesLost() > t1.getMatchesWon() - t1.getMatchesLost())
+            if (t2.getMatchesWon() - t2.getMatchesLost() > t1.getMatchesWon() - t1.getMatchesLost())
                 return -1;
             if (t1.getSetsWon() - t1.getSetsLost() > t2.getSetsWon() - t2.getSetsLost())
                 return 1;
             if (t2.getSetsWon() - t2.getSetsLost() > t1.getSetsWon() - t1.getSetsLost())
                 return -1;
-            return Integer.compare(t1.getMatchesWon() - t1.getMatchesLost(), t2.getMatchesWon() - t2.getMatchesLost());
+            return Integer.compare(t1.getGamesWon() - t1.getGamesLost(), t2.getGamesWon() - t2.getGamesLost());
         }
     }
 }
