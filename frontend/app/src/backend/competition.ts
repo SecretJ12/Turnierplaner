@@ -202,7 +202,7 @@ export function useSignUpSingle(
 					detail: t("ViewSignUp.selectPlayerFirst"),
 					life: 3000,
 				})
-				return
+				throw new Error("No player selected")
 			}
 
 			const form: TeamServer = {
@@ -239,7 +239,7 @@ export function useSignUpDoubleTog(
 					detail: t("ViewSignUp.selectPlayerFirst"),
 					life: 3000,
 				})
-				return
+				throw new Error("No player selected")
 			}
 
 			const form = {
