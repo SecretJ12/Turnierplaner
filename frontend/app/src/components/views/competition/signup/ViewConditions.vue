@@ -4,7 +4,7 @@
 			v-if="player.sex !== Sex.ANY"
 			class="w-min font-medium"
 			rounded
-			:value="t('CompetitionSettings.' + player.sex.toLowerCase())"
+			:value="t('general.' + player.sex.toLowerCase())"
 		/>
 		<Tag
 			v-if="player.hasMinAge"
