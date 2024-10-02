@@ -1,11 +1,11 @@
 <template>
 	<div
 		id="header"
-		class="flex flex-row pl-1 lg:pl-3 align-items-center gap-1 lg:gap-3"
+		class="flex flex-row pl-2 lg:pl-3 align-items-center gap-2 lg:gap-3"
 	>
-		<span class="material-symbols-outlined cursor-pointer icon" @click="toHome"
-			>sports_tennis</span
-		>
+		<span class="material-symbols-outlined cursor-pointer icon" @click="toHome">
+			sports_tennis
+		</span>
 		<div class="flex flex-column lg:flex-row align-items-center lg:gap-3">
 			<h1 id="colorHeadLine" class="m-0 cursor-pointer title" @click="toHome">
 				{{ config?.title ? t(config.title) : t("title") }}
@@ -88,9 +88,6 @@ h3 {
 	h2,
 	h3 {
 		font-size: 1em;
-	}
-	.icon {
-		font-size: 2rem;
 	}
 }
 
