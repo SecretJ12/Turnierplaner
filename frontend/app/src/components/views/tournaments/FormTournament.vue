@@ -10,7 +10,8 @@
 							<InputText
 								id="name"
 								type="text"
-								v-bind="name"
+								v-model="name"
+								v-bind="nameAttrs"
 								maxlength="30"
 								class="w-full"
 								:class="{ 'p-invalid': errors.name }"
@@ -25,7 +26,8 @@
 								t("TournamentSettings.visible")
 							}}</label>
 							<SelectButton
-								v-bind="visible"
+								v-model="visible"
+								v-bind="visibleAttrs"
 								:unselectable="false"
 								:options="[
 									{ name: t('no'), value: false },
@@ -45,7 +47,8 @@
 							rows="4"
 							maxlength="255"
 							class="w-full"
-							v-bind="description"
+							v-model="description"
+							v-bind="descriptionAttrs"
 							:disabled="disabled"
 						></Textarea>
 					</div>
@@ -55,7 +58,8 @@
 						}}</label>
 						<Calendar
 							id="registration"
-							v-bind="registration_phase"
+							v-model="registrationPhase"
+							v-bind="registrationPhaseAttrs"
 							selection-mode="range"
 							:manual-input="false"
 							class="w-full"
@@ -75,7 +79,8 @@
 						}}</label>
 						<Calendar
 							id="game_phase"
-							v-bind="game_phase"
+							v-model="gamePhase"
+							v-bind="gamePhaseAttrs"
 							selection-mode="range"
 							:manual-input="false"
 							class="w-full"
@@ -150,62 +155,62 @@ setLocale({
 	},
 })
 
-const { defineInputBinds, errors, defineComponentBinds, handleSubmit } =
-	useForm<TournamentForm>({
-		validationSchema: toTypedSchema(
-			object({
-				name: string().required().min(4),
-				visible: boolean(),
-				description: string().max(255),
-				registration_phase: array()
-					.length(2, "validation.date_missing")
-					.of(mixed().nonNullable())
-					.of(date())
-					.test(
-						"correctDates",
-						"TournamentSettings.wrong_dates",
-						(arr, context) => {
-							if (!context.parent.game_phase?.[0]) return true
-							return (
-								context.parent.registration_phase[1] <
-								context.parent.game_phase[0]
-							)
-						},
-					)
-					.required("validation.date_missing"),
-				game_phase: array()
-					.length(2, "validation.date_missing")
-					.of(mixed().nonNullable())
-					.of(date())
-					.test(
-						"correctDates",
-						"TournamentSettings.wrong_dates",
-						(arr, context) => {
-							if (!context.parent.registration_phase?.[1]) return true
-							return (
-								context.parent.registration_phase[1] <
-								context.parent.game_phase[0]
-							)
-						},
-					)
-					.required("validation.date_missing"),
-			}),
-		),
-		initialValues: {
-			name: data.name,
-			visible: data.visible,
-			description: data.description,
-			registration_phase: data.registration_phase,
-			game_phase: data.game_phase,
-		},
-	})
+const { defineField, errors, handleSubmit } = useForm<TournamentForm>({
+	validationSchema: toTypedSchema(
+		object({
+			name: string().required().min(4),
+			visible: boolean(),
+			description: string().max(255),
+			registration_phase: array()
+				.length(2, "validation.date_missing")
+				.of(mixed().nonNullable())
+				.of(date())
+				.test(
+					"correctDates",
+					"TournamentSettings.wrong_dates",
+					(arr, context) => {
+						if (!context.parent.game_phase?.[0]) return true
+						return (
+							context.parent.registration_phase[1] <
+							context.parent.game_phase[0]
+						)
+					},
+				)
+				.required("validation.date_missing"),
+			game_phase: array()
+				.length(2, "validation.date_missing")
+				.of(mixed().nonNullable())
+				.of(date())
+				.test(
+					"correctDates",
+					"TournamentSettings.wrong_dates",
+					(arr, context) => {
+						if (!context.parent.registration_phase?.[1]) return true
+						return (
+							context.parent.registration_phase[1] <
+							context.parent.game_phase[0]
+						)
+					},
+				)
+				.required("validation.date_missing"),
+		}),
+	),
+	initialValues: {
+		name: data.name,
+		visible: data.visible,
+		description: data.description,
+		registration_phase: data.registration_phase,
+		game_phase: data.game_phase,
+	},
+})
 
-const name = defineInputBinds("name")
-const visible = defineComponentBinds("visible")
-const description = defineInputBinds("description")
+const [name, nameAttrs] = defineField("name")
+const [visible, visibleAttrs] = defineField("visible")
+const [description, descriptionAttrs] = defineField("description")
 
-const registration_phase = defineComponentBinds("registration_phase")
-const game_phase = defineComponentBinds("game_phase")
+const [registrationPhase, registrationPhaseAttrs] =
+	defineField("registration_phase")
+const [gamePhase, gamePhaseAttrs] = defineField("game_phase")
 
 const emit = defineEmits(["submit"])
 
