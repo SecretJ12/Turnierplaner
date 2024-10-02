@@ -27,8 +27,8 @@
 				<template #content>
 					<HorizontalScroller>
 						<ViewKnockoutTree
-							v-model:finale="groupSystem.finale"
-							v-model:third-place="groupSystem.thirdPlace"
+							:finale="groupSystem.finale"
+							:third-place="groupSystem.thirdPlace ?? undefined"
 							:border-radius="0"
 							:border-thickness="2"
 							:margin-small="30"
@@ -60,6 +60,7 @@
 <script lang="ts" setup>
 import { useRoute } from "vue-router"
 import ViewGroupTable from "@/components/views/competition/groupSystem/ViewGroupTable.vue"
+import HorizontalScroller from "@/components/items/HorizontalScroller.vue"
 import { getGroup } from "@/backend/group"
 import { NumberSets } from "@/interfaces/competition"
 import ViewGroupResults from "@/components/views/competition/groupSystem/ViewGroupResults.vue"
@@ -70,7 +71,6 @@ import { knockoutTitle } from "@/components/views/competition/knockoutSystem/Kno
 import { getCompetitionDetails } from "@/backend/competition"
 import { useToast } from "primevue/usetoast"
 import ViewMatchDate from "@/components/views/competition/knockoutSystem/ViewMatchDate.vue"
-import HorizontalScroller from "@/components/views/competition/groupSystem/HorizontalScroller.vue"
 
 const route = useRoute()
 const { t } = useI18n()

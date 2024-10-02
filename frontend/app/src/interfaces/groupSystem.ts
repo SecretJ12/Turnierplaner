@@ -4,8 +4,8 @@ import { Team, TeamServer, teamServerToClient } from "@/interfaces/team"
 
 export interface GroupSystem {
 	groups: Group[]
-	finale: GroupMatch | undefined
-	thirdPlace: GroupMatch | undefined
+	finale: GroupMatch | null
+	thirdPlace: GroupMatch | null
 }
 
 export interface Group {
@@ -73,10 +73,10 @@ export function groupSystemServerToClient(
 		groups: groupSystem.groups.map((group) => groupServerToClient(group)),
 		finale: groupSystem.finale
 			? groupMatchServerToClient(groupSystem.finale)
-			: undefined,
+			: null,
 		thirdPlace: groupSystem.thirdPlace
 			? groupMatchServerToClient(groupSystem.thirdPlace)
-			: undefined,
+			: null,
 	}
 }
 
