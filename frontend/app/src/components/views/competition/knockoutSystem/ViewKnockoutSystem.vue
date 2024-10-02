@@ -1,5 +1,4 @@
 <template>
-	<p>Knockout system</p>
 	<template v-if="knockoutSystem">
 		<ViewKnockoutTree
 			:finale="knockoutSystem.finale ?? undefined"

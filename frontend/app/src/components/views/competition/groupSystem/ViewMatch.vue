@@ -5,15 +5,19 @@
 			{{ props.match.begin.toLocaleString(t("lang"), dateOptions) }}
 		</template>
 		<template v-else> --- </template>
+		<template v-if="props.match.court"
+			><br />
+			{{ props.match.court }}
+		</template>
 	</p>
-	<div v-else-if="props.order">
+	<div v-else-if="props.reversed">
 		<div v-for="set in props.match.sets" :key="set.index">
-			{{ set.scoreA }} - {{ set.scoreB }}
+			{{ set.scoreB }} - {{ set.scoreA }}
 		</div>
 	</div>
 	<div v-else>
 		<div v-for="set in props.match.sets" :key="set.index">
-			{{ set.scoreB }} - {{ set.scoreA }}
+			{{ set.scoreA }} - {{ set.scoreB }}
 		</div>
 	</div>
 </template>
@@ -24,15 +28,10 @@ import { useI18n } from "vue-i18n"
 
 const { t } = useI18n()
 
-const props = withDefaults(
-	defineProps<{
-		match: Match
-		order?: boolean
-	}>(),
-	{
-		order: true,
-	},
-)
+const props = defineProps<{
+	match: Match
+	reversed: boolean
+}>()
 
 const dateOptions: Intl.DateTimeFormatOptions = {
 	year: "2-digit",
