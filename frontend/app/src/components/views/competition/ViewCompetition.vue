@@ -7,8 +7,9 @@
 				class="material-symbols-outlined cursor-pointer"
 				style="font-size: 1.7rem"
 				@click="settings"
-				>settings</span
 			>
+				settings
+			</span>
 			<div id="tourName">
 				{{ route.params.tourId }}
 			</div>
@@ -95,7 +96,7 @@ const dateOptions: Intl.DateTimeFormatOptions = {
 <style scoped>
 #container {
 	width: 100%;
-	margin: 0 10px 0 10px;
+	padding: 0 10px 0 10px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
