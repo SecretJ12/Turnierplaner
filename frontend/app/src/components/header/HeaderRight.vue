@@ -1,5 +1,5 @@
 <template>
-	<div id="headerRight">
+	<div class="pr-3 flex flex-row align-items-center gap-2 lg:gap-3">
 		<Button v-if="isLoggedIn" rounded outlined size="small" @click="settings">
 			<template #icon>
 				<span class="material-symbols-outlined">settings</span>
@@ -13,16 +13,23 @@
 
 		<span
 			v-if="!isLoggedIn"
-			class="material-symbols-outlined clickable bigger"
+			class="material-symbols-outlined cursor-pointer bigger"
 			@click="login"
-			>login</span
 		>
-		<template v-else>
-			<span v-if="windowWidth > 600">{{ currentUser }}</span>
-			<span class="material-symbols-outlined clickable bigger" @click="logout"
-				>logout</span
+			login
+		</span>
+		<div
+			v-else
+			class="flex flex-column-reverse lg:flex-row align-items-center lg:gap-3"
+		>
+			<span>{{ currentUser }}</span>
+			<span
+				class="material-symbols-outlined cursor-pointer bigger"
+				@click="logout"
 			>
-		</template>
+				logout
+			</span>
+		</div>
 	</div>
 </template>
 
@@ -44,11 +51,6 @@ function settings() {
 		name: "Settings",
 	})
 }
-
-let windowWidth = ref(window.innerWidth)
-window.addEventListener("resize", () => {
-	windowWidth.value = window.innerWidth
-})
 
 watch(isLoggedIn, async () => {
 	auth.getUser().then((user) => {
@@ -77,43 +79,6 @@ export default {
 </script>
 
 <style>
-#headerRight {
-	width: fit-content;
-	padding-right: 10px;
-	display: flex;
-	align-items: center;
-	align-content: flex-end;
-	flex-direction: row;
-	justify-content: flex-end;
-}
-
-#login > span {
-	text-align: center;
-	margin-right: 20px;
-	display: flex;
-	justify-content: center;
-}
-
-@media only screen and (max-width: 500px) {
-	#headerRight {
-		padding-right: 0;
-	}
-
-	#headerRight > * {
-		margin-right: 10px;
-	}
-}
-
-#headerRight > * {
-	margin-right: 20px;
-	flex-grow: 0;
-	flex-shrink: 1;
-}
-
-.clickable {
-	cursor: pointer;
-}
-
 .bigger {
 	font-size: 2.5rem !important;
 	font-weight: bold !important;

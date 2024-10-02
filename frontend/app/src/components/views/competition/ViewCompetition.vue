@@ -35,12 +35,9 @@
 
 <script lang="ts" setup>
 import { useRoute } from "vue-router"
-import { inject, ref } from "vue"
-import { router } from "@/main"
 import ViewSignUp from "@/components/views/competition/signup/ViewSignUp.vue"
 import ViewGame from "@/components/views/competition/ViewGame.vue"
 import { useI18n } from "vue-i18n"
-import { getCanEdit } from "@/backend/security"
 import { getTournamentDetails } from "@/backend/tournament"
 import { useToast } from "primevue/usetoast"
 import { getCompetitionDetails } from "@/backend/competition"
@@ -49,8 +46,6 @@ const { t } = useI18n()
 const toast = useToast()
 
 const route = useRoute()
-const isLoggedIn = inject("loggedIn", ref(false))
-const { data: canEdit } = getCanEdit(<string>route.params.tourId, isLoggedIn)
 
 const { data: tournament, isSuccess: tournamentSuc } = getTournamentDetails(
 	route,
@@ -58,13 +53,6 @@ const { data: tournament, isSuccess: tournamentSuc } = getTournamentDetails(
 	toast,
 )
 const { data: competition } = getCompetitionDetails(route, t, toast)
-
-function settings() {
-	router.push({
-		name: "Edit competition",
-		params: { tourId: route.params.tourId, compId: route.params.compId },
-	})
-}
 
 const dateOptions: Intl.DateTimeFormatOptions = {
 	weekday: "long",
