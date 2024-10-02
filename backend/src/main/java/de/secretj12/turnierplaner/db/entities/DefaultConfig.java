@@ -8,42 +8,41 @@ import jakarta.persistence.Table;
 @Table(name = "default_config")
 public class DefaultConfig {
 
-    @Id
-    private int id;
+  @Id private int id;
 
-    private String title;
-    private String language;
-    private boolean adminVerificationNeeded;
+  private String title;
+  private String language;
+  private boolean adminVerificationNeeded;
 
-    public int getId() {
-        return id;
-    }
+  public int getId() {
+    return id;
+  }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  public void setId(int id) {
+    this.id = id;
+  }
 
-    public String getTitle() {
-        return title;
-    }
+  public String getTitle() {
+    return title;
+  }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-    public String getLanguage() {
-        return language;
-    }
+  public String getLanguage() {
+    return language;
+  }
 
-    public void setLanguage(String language) {
-        this.language = language;
-    }
+  public void setLanguage(String language) {
+    this.language = language;
+  }
 
-    public boolean isAdminVerificationNeeded() {
-        return adminVerificationNeeded;
-    }
+  public boolean isAdminVerificationNeeded() {
+    return adminVerificationNeeded;
+  }
 
-    public void setAdminVerificationNeeded(boolean adminVerificationNeeded) {
-        this.adminVerificationNeeded = adminVerificationNeeded;
-    }
+  public void setAdminVerificationNeeded(boolean adminVerificationNeeded) {
+    this.adminVerificationNeeded = adminVerificationNeeded;
+  }
 }

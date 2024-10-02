@@ -9,26 +9,27 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 @ApplicationScoped
 public class Defaults {
-    @ConfigProperty(name = "turnierplaner.club-name")
-    String clubName;
-    @ConfigProperty(name = "turnierplaner.language")
-    String language;
-    @ConfigProperty(name = "turnierplaner.admin-verification-needed")
-    boolean adminVerificationNeeded;
-    @Inject
-    DefaultConfigRepository defaultConfigRepository;
+  @ConfigProperty(name = "turnierplaner.club-name")
+  String clubName;
 
-    @Transactional
-    void addDefault() {
-        if (defaultConfigRepository.findById(0L) != null)
-            return;
+  @ConfigProperty(name = "turnierplaner.language")
+  String language;
 
-        var defaultConfig = new DefaultConfig();
-        defaultConfig.setId(0);
-        defaultConfig.setTitle(clubName);
-        defaultConfig.setAdminVerificationNeeded(adminVerificationNeeded);
-        if (language != null && !language.isEmpty() && !language.equals("title"))
-            defaultConfig.setLanguage(language);
-        defaultConfigRepository.persist(defaultConfig);
-    }
+  @ConfigProperty(name = "turnierplaner.admin-verification-needed")
+  boolean adminVerificationNeeded;
+
+  @Inject DefaultConfigRepository defaultConfigRepository;
+
+  @Transactional
+  void addDefault() {
+    if (defaultConfigRepository.findById(0L) != null) return;
+
+    var defaultConfig = new DefaultConfig();
+    defaultConfig.setId(0);
+    defaultConfig.setTitle(clubName);
+    defaultConfig.setAdminVerificationNeeded(adminVerificationNeeded);
+    if (language != null && !language.isEmpty() && !language.equals("title"))
+      defaultConfig.setLanguage(language);
+    defaultConfigRepository.persist(defaultConfig);
+  }
 }

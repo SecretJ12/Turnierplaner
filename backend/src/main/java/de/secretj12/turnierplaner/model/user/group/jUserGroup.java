@@ -3,48 +3,48 @@ package de.secretj12.turnierplaner.model.user.group;
 import de.secretj12.turnierplaner.db.entities.competition.Team;
 import de.secretj12.turnierplaner.db.entities.groups.Group;
 import de.secretj12.turnierplaner.model.user.jUserMatch;
-
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
 
 public class jUserGroup {
 
-    private byte index;
-    private List<UUID> teams;
-    private List<jUserMatch> matches;
+  private byte index;
+  private List<UUID> teams;
+  private List<jUserMatch> matches;
 
-    public jUserGroup(Group group) {
-        this.index = group.getIndex();
-        this.teams = group.getMatches().stream()
+  public jUserGroup(Group group) {
+    this.index = group.getIndex();
+    this.teams =
+        group.getMatches().stream()
             .flatMap(match -> Stream.of(match.getTeamA(), match.getTeamB()))
             .map(Team::getId)
             .distinct()
             .toList();
-        this.matches = group.getMatches().stream().map(jUserMatch::new).toList();
-    }
+    this.matches = group.getMatches().stream().map(jUserMatch::new).toList();
+  }
 
-    public byte getIndex() {
-        return index;
-    }
+  public byte getIndex() {
+    return index;
+  }
 
-    public void setIndex(byte index) {
-        this.index = index;
-    }
+  public void setIndex(byte index) {
+    this.index = index;
+  }
 
-    public List<UUID> getTeams() {
-        return teams;
-    }
+  public List<UUID> getTeams() {
+    return teams;
+  }
 
-    public void setTeams(List<UUID> teams) {
-        this.teams = teams;
-    }
+  public void setTeams(List<UUID> teams) {
+    this.teams = teams;
+  }
 
-    public List<jUserMatch> getMatches() {
-        return matches;
-    }
+  public List<jUserMatch> getMatches() {
+    return matches;
+  }
 
-    public void setMatches(List<jUserMatch> matches) {
-        this.matches = matches;
-    }
+  public void setMatches(List<jUserMatch> matches) {
+    this.matches = matches;
+  }
 }

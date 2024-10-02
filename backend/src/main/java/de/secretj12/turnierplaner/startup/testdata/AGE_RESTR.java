@@ -1,5 +1,7 @@
 package de.secretj12.turnierplaner.startup.testdata;
 
 public enum AGE_RESTR {
-    NONE, U18, O50
+  NONE,
+  U18,
+  O50
 }

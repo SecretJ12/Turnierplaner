@@ -11,47 +11,36 @@ import org.junit.jupiter.api.Test;
 @QuarkusTest
 public class TestStartup {
 
-    @Inject
-    TournamentRepository tournamentRepository;
-    @Inject
-    CompetitionRepository competitionRepository;
-    @Inject
-    PlayerRepository playerRepository;
-    @Inject
-    TeamRepository teamRepository;
-    @Inject
-    MatchRepository matchRepository;
-    @Inject
-    CourtRepositiory courtRepositiory;
-    @Inject
-    GroupRepository groupRepository;
-    @Inject
-    NextMatchRepository nextMatchRepository;
-    @Inject
-    MatchOfGroupRepository matchOfGroupRepository;
-    @Inject
-    FinalOfGroupRepository finalOfGroupRepository;
+  @Inject TournamentRepository tournamentRepository;
+  @Inject CompetitionRepository competitionRepository;
+  @Inject PlayerRepository playerRepository;
+  @Inject TeamRepository teamRepository;
+  @Inject MatchRepository matchRepository;
+  @Inject CourtRepositiory courtRepositiory;
+  @Inject GroupRepository groupRepository;
+  @Inject NextMatchRepository nextMatchRepository;
+  @Inject MatchOfGroupRepository matchOfGroupRepository;
+  @Inject FinalOfGroupRepository finalOfGroupRepository;
 
-    @Inject
-    TestdataGenerator testdataGenerator;
+  @Inject TestdataGenerator testdataGenerator;
 
-    @Test
-    public void generateTestdata() {
-        testdataGenerator.generateData();
-    }
+  @Test
+  public void generateTestdata() {
+    testdataGenerator.generateData();
+  }
 
-    @AfterEach
-    @Transactional
-    public void afterEach() {
-        finalOfGroupRepository.deleteAll();
-        nextMatchRepository.deleteAll();
-        matchOfGroupRepository.deleteAll();
-        matchRepository.deleteAll();
-        teamRepository.deleteAll();
-        groupRepository.deleteAll();
-        playerRepository.deleteAll();
-        competitionRepository.deleteAll();
-        courtRepositiory.deleteAll();
-        tournamentRepository.deleteAll();
-    }
+  @AfterEach
+  @Transactional
+  public void afterEach() {
+    finalOfGroupRepository.deleteAll();
+    nextMatchRepository.deleteAll();
+    matchOfGroupRepository.deleteAll();
+    matchRepository.deleteAll();
+    teamRepository.deleteAll();
+    groupRepository.deleteAll();
+    playerRepository.deleteAll();
+    competitionRepository.deleteAll();
+    courtRepositiory.deleteAll();
+    tournamentRepository.deleteAll();
+  }
 }

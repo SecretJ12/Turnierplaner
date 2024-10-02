@@ -1,69 +1,69 @@
 package de.secretj12.turnierplaner.db.entities;
 
 import de.secretj12.turnierplaner.db.entities.competition.Competition;
-
 import jakarta.persistence.*;
-
 import java.time.Instant;
 import java.util.UUID;
 
 @Entity
 @Table(name = "timeslots")
 public class Timeslot {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
-    private UUID id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "id", nullable = false)
+  private UUID id;
 
-    @Column(name = "begin_time")
-    private Instant begin;
-    @Column(name = "end_time")
-    private Instant end;
-    @ManyToOne
-    @JoinColumns(@JoinColumn(name = "competition_id"))
-    private Competition competition;
+  @Column(name = "begin_time")
+  private Instant begin;
 
-    @ManyToOne
-    @JoinColumn(name = "court_name")
-    private Court courts;
+  @Column(name = "end_time")
+  private Instant end;
 
-    public UUID getId() {
-        return id;
-    }
+  @ManyToOne
+  @JoinColumns(@JoinColumn(name = "competition_id"))
+  private Competition competition;
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+  @ManyToOne
+  @JoinColumn(name = "court_name")
+  private Court courts;
 
-    public Instant getBegin() {
-        return begin;
-    }
+  public UUID getId() {
+    return id;
+  }
 
-    public void setBegin(Instant begin) {
-        this.begin = begin;
-    }
+  public void setId(UUID id) {
+    this.id = id;
+  }
 
-    public Instant getEnd() {
-        return end;
-    }
+  public Instant getBegin() {
+    return begin;
+  }
 
-    public void setEnd(Instant end) {
-        this.end = end;
-    }
+  public void setBegin(Instant begin) {
+    this.begin = begin;
+  }
 
-    public Competition getCompetition() {
-        return competition;
-    }
+  public Instant getEnd() {
+    return end;
+  }
 
-    public void setCompetition(Competition competition) {
-        this.competition = competition;
-    }
+  public void setEnd(Instant end) {
+    this.end = end;
+  }
 
-    public Court getCourts() {
-        return courts;
-    }
+  public Competition getCompetition() {
+    return competition;
+  }
 
-    public void setCourts(Court courts) {
-        this.courts = courts;
-    }
+  public void setCompetition(Competition competition) {
+    this.competition = competition;
+  }
+
+  public Court getCourts() {
+    return courts;
+  }
+
+  public void setCourts(Court courts) {
+    this.courts = courts;
+  }
 }

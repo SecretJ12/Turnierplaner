@@ -9,18 +9,16 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 @ApplicationScoped
 public class Startup {
-    @Inject
-    Defaults defaults;
-    @Inject
-    TestdataGenerator testdataGenerator;
+  @Inject Defaults defaults;
+  @Inject TestdataGenerator testdataGenerator;
 
-    @ConfigProperty(name = "turnierplaner.testdata", defaultValue = "false")
-    Boolean addTestdata;
+  @ConfigProperty(name = "turnierplaner.testdata", defaultValue = "false")
+  Boolean addTestdata;
 
-    void onStart(@Observes StartupEvent ev) {
-        defaults.addDefault();
-        if (addTestdata) {
-            testdataGenerator.generateData();
-        }
+  void onStart(@Observes StartupEvent ev) {
+    defaults.addDefault();
+    if (addTestdata) {
+      testdataGenerator.generateData();
     }
+  }
 }

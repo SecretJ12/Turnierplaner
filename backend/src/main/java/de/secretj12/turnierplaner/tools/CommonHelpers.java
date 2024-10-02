@@ -10,22 +10,20 @@ import jakarta.ws.rs.NotFoundException;
 
 @ApplicationScoped
 public class CommonHelpers {
-    @Inject
-    TournamentRepository tournaments;
+  @Inject TournamentRepository tournaments;
 
-    @Inject
-    SecurityIdentity securityIdentity;
+  @Inject SecurityIdentity securityIdentity;
 
-    public void checkTournamentAccessibility(String tourName) {
-        Tournament tournament = tournaments.getByName(tourName);
-        if (tournament == null) throw new NotFoundException("Tournament could not be found");
-        if (!securityIdentity.hasRole("director") && !tournament.isVisible())
-            throw new UnauthorizedException("Cannot access tournament");
-    }
+  public void checkTournamentAccessibility(String tourName) {
+    Tournament tournament = tournaments.getByName(tourName);
+    if (tournament == null) throw new NotFoundException("Tournament could not be found");
+    if (!securityIdentity.hasRole("director") && !tournament.isVisible())
+      throw new UnauthorizedException("Cannot access tournament");
+  }
 
-    public void checkTournamentAccessibility(Tournament tournament) {
-        if (tournament == null) throw new NotFoundException("Tournament could not be found");
-        if (!securityIdentity.hasRole("director") && !tournament.isVisible())
-            throw new UnauthorizedException("Cannot access tournament");
-    }
+  public void checkTournamentAccessibility(Tournament tournament) {
+    if (tournament == null) throw new NotFoundException("Tournament could not be found");
+    if (!securityIdentity.hasRole("director") && !tournament.isVisible())
+      throw new UnauthorizedException("Cannot access tournament");
+  }
 }

@@ -2,7 +2,6 @@ package de.secretj12.turnierplaner.db.entities;
 
 import de.secretj12.turnierplaner.db.entities.competition.Competition;
 import jakarta.persistence.*;
-
 import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
@@ -10,117 +9,119 @@ import java.util.UUID;
 @Entity
 @Table(name = "tournaments")
 public class Tournament {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
-    private UUID id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "id", nullable = false)
+  private UUID id;
 
-    @Column(name = "name", unique = true)
-    private String name;
-    @Column(name = "description")
-    private String description;
+  @Column(name = "name", unique = true)
+  private String name;
 
-    @Column(name = "begin_registration")
-    private Instant beginRegistration;
-    @Column(name = "end_registration")
-    private Instant endRegistration;
+  @Column(name = "description")
+  private String description;
 
-    @Column(name = "begin_game_phase")
-    private Instant beginGamePhase;
-    @Column(name = "end_game_phase")
-    private Instant endGamePhase;
+  @Column(name = "begin_registration")
+  private Instant beginRegistration;
 
-    @Column(name = "visible")
-    private boolean visible;
+  @Column(name = "end_registration")
+  private Instant endRegistration;
 
-    @ManyToMany
-    @JoinTable(
-               name = "court_of_tournament",
-               joinColumns = {@JoinColumn(name = "id")},
-               inverseJoinColumns = {@JoinColumn(name = "name")}
-    )
-    private Set<Court> courts;
+  @Column(name = "begin_game_phase")
+  private Instant beginGamePhase;
 
-    @OneToMany(mappedBy = "tournament", fetch = FetchType.LAZY)
-    private Set<Competition> competitions;
+  @Column(name = "end_game_phase")
+  private Instant endGamePhase;
 
-    public UUID getId() {
-        return id;
-    }
+  @Column(name = "visible")
+  private boolean visible;
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+  @ManyToMany
+  @JoinTable(
+      name = "court_of_tournament",
+      joinColumns = {@JoinColumn(name = "id")},
+      inverseJoinColumns = {@JoinColumn(name = "name")})
+  private Set<Court> courts;
 
-    public String getName() {
-        return name;
-    }
+  @OneToMany(mappedBy = "tournament", fetch = FetchType.LAZY)
+  private Set<Competition> competitions;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public UUID getId() {
+    return id;
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public void setId(UUID id) {
+    this.id = id;
+  }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public Instant getBeginRegistration() {
-        return beginRegistration;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public void setBeginRegistration(Instant beginRegistration) {
-        this.beginRegistration = beginRegistration;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public Instant getEndRegistration() {
-        return endRegistration;
-    }
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-    public void setEndRegistration(Instant endRegistration) {
-        this.endRegistration = endRegistration;
-    }
+  public Instant getBeginRegistration() {
+    return beginRegistration;
+  }
 
-    public Instant getBeginGamePhase() {
-        return beginGamePhase;
-    }
+  public void setBeginRegistration(Instant beginRegistration) {
+    this.beginRegistration = beginRegistration;
+  }
 
-    public void setBeginGamePhase(Instant beginGamePhase) {
-        this.beginGamePhase = beginGamePhase;
-    }
+  public Instant getEndRegistration() {
+    return endRegistration;
+  }
 
-    public Instant getEndGamePhase() {
-        return endGamePhase;
-    }
+  public void setEndRegistration(Instant endRegistration) {
+    this.endRegistration = endRegistration;
+  }
 
-    public void setEndGamePhase(Instant endGamePhase) {
-        this.endGamePhase = endGamePhase;
-    }
+  public Instant getBeginGamePhase() {
+    return beginGamePhase;
+  }
 
-    public boolean isVisible() {
-        return visible;
-    }
+  public void setBeginGamePhase(Instant beginGamePhase) {
+    this.beginGamePhase = beginGamePhase;
+  }
 
-    public void setVisible(boolean visible) {
-        this.visible = visible;
-    }
+  public Instant getEndGamePhase() {
+    return endGamePhase;
+  }
 
-    public Set<Court> getCourts() {
-        return courts;
-    }
+  public void setEndGamePhase(Instant endGamePhase) {
+    this.endGamePhase = endGamePhase;
+  }
 
-    public void setCourts(Set<Court> courts) {
-        this.courts = courts;
-    }
+  public boolean isVisible() {
+    return visible;
+  }
 
-    public Set<Competition> getCompetitions() {
-        return competitions;
-    }
+  public void setVisible(boolean visible) {
+    this.visible = visible;
+  }
 
-    public void setCompetitions(Set<Competition> competitions) {
-        this.competitions = competitions;
-    }
+  public Set<Court> getCourts() {
+    return courts;
+  }
+
+  public void setCourts(Set<Court> courts) {
+    this.courts = courts;
+  }
+
+  public Set<Competition> getCompetitions() {
+    return competitions;
+  }
+
+  public void setCompetitions(Set<Competition> competitions) {
+    this.competitions = competitions;
+  }
 }

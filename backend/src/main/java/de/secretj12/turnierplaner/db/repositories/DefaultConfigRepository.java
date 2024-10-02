@@ -5,5 +5,4 @@ import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class DefaultConfigRepository implements PanacheRepository<DefaultConfig> {
-}
+public class DefaultConfigRepository implements PanacheRepository<DefaultConfig> {}

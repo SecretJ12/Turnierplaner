@@ -5,41 +5,40 @@ import org.keycloak.representations.idm.UserRepresentation;
 
 public class jAdminUser {
 
-    private String id;
-    private String username;
+  private String id;
+  private String username;
 
-    private AdminRole role;
+  private AdminRole role;
 
-    public jAdminUser() {
-    }
+  public jAdminUser() {}
 
-    public jAdminUser(UserRepresentation user, AdminRole role) {
-        this.id = user.getId();
-        this.username = user.getUsername();
-        this.role = role;
-    }
+  public jAdminUser(UserRepresentation user, AdminRole role) {
+    this.id = user.getId();
+    this.username = user.getUsername();
+    this.role = role;
+  }
 
-    public String getId() {
-        return id;
-    }
+  public String getId() {
+    return id;
+  }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+  public void setId(String id) {
+    this.id = id;
+  }
 
-    public String getUsername() {
-        return username;
-    }
+  public String getUsername() {
+    return username;
+  }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+  public void setUsername(String username) {
+    this.username = username;
+  }
 
-    public AdminRole getRole() {
-        return role;
-    }
+  public AdminRole getRole() {
+    return role;
+  }
 
-    public void setRole(AdminRole role) {
-        this.role = role;
-    }
+  public void setRole(AdminRole role) {
+    this.role = role;
+  }
 }

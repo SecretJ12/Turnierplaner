@@ -1,70 +1,68 @@
 package de.secretj12.turnierplaner.db.entities.groups;
 
 import de.secretj12.turnierplaner.db.entities.Match;
-
 import jakarta.persistence.*;
-
 import java.util.UUID;
 
 @Entity
 @Table(name = "final_of_group")
 public class FinalOfGroup {
 
-    @Id
-    private UUID id;
+  @Id private UUID id;
 
-    @Column(name = "position", nullable = false)
-    private int pos;
+  @Column(name = "position", nullable = false)
+  private int pos;
 
-    @MapsId
-    @OneToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "next_match", referencedColumnName = "id", nullable = false)
-    private Match nextMatch;
+  @MapsId
+  @OneToOne(cascade = CascadeType.REMOVE)
+  @JoinColumn(name = "next_match", referencedColumnName = "id", nullable = false)
+  private Match nextMatch;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "group_a", referencedColumnName = "id", nullable = false)
-    private Group groupA;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "group_b", referencedColumnName = "id", nullable = false)
-    private Group groupB;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "group_a", referencedColumnName = "id", nullable = false)
+  private Group groupA;
 
-    public UUID getId() {
-        return id;
-    }
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "group_b", referencedColumnName = "id", nullable = false)
+  private Group groupB;
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+  public UUID getId() {
+    return id;
+  }
 
-    public int getPos() {
-        return pos;
-    }
+  public void setId(UUID id) {
+    this.id = id;
+  }
 
-    public void setPos(int pos) {
-        this.pos = pos;
-    }
+  public int getPos() {
+    return pos;
+  }
 
-    public Match getNextMatch() {
-        return nextMatch;
-    }
+  public void setPos(int pos) {
+    this.pos = pos;
+  }
 
-    public void setNextMatch(Match nextMatch) {
-        this.nextMatch = nextMatch;
-    }
+  public Match getNextMatch() {
+    return nextMatch;
+  }
 
-    public Group getGroupA() {
-        return groupA;
-    }
+  public void setNextMatch(Match nextMatch) {
+    this.nextMatch = nextMatch;
+  }
 
-    public void setGroupA(Group groupA) {
-        this.groupA = groupA;
-    }
+  public Group getGroupA() {
+    return groupA;
+  }
 
-    public Group getGroupB() {
-        return groupB;
-    }
+  public void setGroupA(Group groupA) {
+    this.groupA = groupA;
+  }
 
-    public void setGroupB(Group groupB) {
-        this.groupB = groupB;
-    }
+  public Group getGroupB() {
+    return groupB;
+  }
+
+  public void setGroupB(Group groupB) {
+    this.groupB = groupB;
+  }
 }
