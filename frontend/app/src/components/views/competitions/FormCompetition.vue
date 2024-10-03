@@ -212,7 +212,10 @@
 		<Divider align="left">
 			<b>{{ t("CompetitionSettings.player") }}</b>
 		</Divider>
-		<div class="field col-12 flex flex-row align-items-center mb-4">
+		<div
+			v-if="values.mode === Mode.DOUBLE"
+			class="field col-12 flex flex-row align-items-center mb-4"
+		>
 			<Checkbox
 				id="playerB_different"
 				v-model="playerB_different"
