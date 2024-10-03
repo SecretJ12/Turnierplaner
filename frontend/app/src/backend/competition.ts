@@ -192,7 +192,7 @@ export function useSignUpSingle(
 ) {
 	return useMutation({
 		mutationFn: async (data: {
-			player: Ref<Player | null>
+			player: Ref<Player | undefined>
 			playerB: boolean
 		}) => {
 			if (!data.player.value) {
@@ -229,8 +229,8 @@ export function useSignUpDoubleTog(
 ) {
 	return useMutation({
 		mutationFn: async (data: {
-			playerA: Ref<Player | null>
-			playerB: Ref<Player | null>
+			playerA: Ref<Player | undefined>
+			playerB: Ref<Player | undefined>
 		}) => {
 			if (!data.playerA.value || !data.playerB.value) {
 				toast.add({
