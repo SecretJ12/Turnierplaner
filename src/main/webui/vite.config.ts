@@ -8,7 +8,6 @@ import { PrimeVueResolver } from "unplugin-vue-components/resolvers"
 export default defineConfig({
 	server: {
 		host: true,
-		port: 3000,
 	},
 	plugins: [
 		vue(),
