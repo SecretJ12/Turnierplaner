@@ -53,6 +53,7 @@ public class PlayerResource {
     @ConfigProperty(name = "turnierplaner.registration.expire")
     public int expire;
 
+    // expects search string as lower case!
     @GET
     @Path("/compFind/{tourId}/{compId}/")
     @Produces(MediaType.APPLICATION_JSON)
