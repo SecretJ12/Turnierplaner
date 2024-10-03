@@ -39,8 +39,10 @@ nb-configuration.xml
 .env
 
 # Frontend
-node_modules/**
-package-lock.json
+**/node_modules/**
+auto-imports.d.ts
+components.d.ts
+src/main/webui/dist/**
 
 keycloak-19.0.1/**
 backend/.mvn
