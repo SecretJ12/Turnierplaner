@@ -126,13 +126,40 @@
     </dependencies>
     <build>
         <plugins>
+            <!-- spotless formatting -->
             <plugin>
-                <groupId>net.revelc.code.formatter</groupId>
-                <artifactId>formatter-maven-plugin</artifactId>
-                <version>2.22.0</version>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <version>2.43.0</version>
                 <configuration>
-                    <configFile>formatJava.xml</configFile>
+                    <formats>
+                        <format>
+                            <includes>
+                                <include>.gitattributes</include>
+                                <include>.gitignore</include>
+                            </includes>
+                            <trimTrailingWhitespace/>
+                            <endWithNewline/>
+                            <indent>
+                                <tabs>true</tabs>
+                                <spacesPerTab>4</spacesPerTab>
+                            </indent>
+                        </format>
+                    </formats>
+                    <java>
+                        <eclipse>
+                            <file>formatJava.xml</file>
+                        </eclipse>
+                    </java>
                 </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>apply</goal> <!-- Applies formatting rules -->
+                        </goals>
+                        <phase>validate</phase> <!-- Run Spotless during the 'validate' phase -->
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>${quarkus.platform.group-id}</groupId>
