@@ -6,9 +6,9 @@
 			}}</label>
 			<InputText
 				id="first_name"
+				v-model="firstName"
 				:disabled="disabled"
 				type="text"
-				v-model="firstName"
 				v-bind="firstNameAttrs"
 				maxlength="40"
 				class="w-full"
@@ -24,9 +24,9 @@
 			}}</label>
 			<InputText
 				id="name"
+				v-model="lastName"
 				:disabled="disabled"
 				type="text"
-				v-model="lastName"
 				v-bind="lastNameAttrs"
 				maxlength="40"
 				class="w-full"
@@ -41,10 +41,10 @@
 				t("ViewPlayerRegistration.birthdate.field")
 			}}</label>
 			<Calendar
+				v-model="birthday"
 				show-icon
 				:disabled="disabled"
 				class="w-full"
-				v-model="birthday"
 				v-bind="birthdayAttrs"
 				:manual-input="false"
 				:date-format="t('date_format')"
@@ -84,9 +84,9 @@
 			<label for="email">{{ t("ViewPlayerRegistration.email.field") }}</label>
 			<InputText
 				id="email"
+				v-model="email"
 				:disabled="disabled"
 				type="text"
-				v-model="email"
 				v-bind="emailAttrs"
 				maxlength="100"
 				class="w-full"
@@ -100,9 +100,9 @@
 			<label for="phone">{{ t("ViewPlayerRegistration.phone.field") }}</label>
 			<InputText
 				id="phone"
+				v-model="phone"
 				:disabled="disabled"
 				type="text"
-				v-model="phone"
 				v-bind="phoneAttrs"
 				maxlength="30"
 				class="w-full"

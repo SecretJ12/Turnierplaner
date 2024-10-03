@@ -9,8 +9,8 @@
 							<label for="name">{{ t("general.name") }}</label>
 							<InputText
 								id="name"
-								type="text"
 								v-model="name"
+								type="text"
 								v-bind="nameAttrs"
 								maxlength="30"
 								class="w-full"
@@ -43,11 +43,11 @@
 						<label for="description">{{ t("general.description") }}</label>
 						<Textarea
 							id="description"
+							v-model="description"
 							type="text"
 							rows="4"
 							maxlength="255"
 							class="w-full"
-							v-model="description"
 							v-bind="descriptionAttrs"
 							:disabled="disabled"
 						></Textarea>
