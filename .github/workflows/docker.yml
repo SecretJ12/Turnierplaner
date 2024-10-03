@@ -49,6 +49,14 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
+      - name: Set versions
+        run: |
+          TAG_VERSION=${{ github.ref }}
+          VERSION=${TAG_VERSION#refs/tags/v}
+          mvn versions:set -DnewVersion=$VERSION
+          mvn versions:commit
+          jq --arg version "$VERSION" '.version= $version' src/main/webui/package.json > tmp.$$.json && mv tmp.$$.json src/main/webui/package.json
+
       - name: Build with Maven
         run: mvn package
 
