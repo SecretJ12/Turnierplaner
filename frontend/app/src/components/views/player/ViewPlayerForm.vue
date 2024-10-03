@@ -8,7 +8,8 @@
 				id="first_name"
 				:disabled="disabled"
 				type="text"
-				v-bind="firstName"
+				v-model="firstName"
+				v-bind="firstNameAttrs"
 				maxlength="40"
 				class="w-full"
 				:class="{ 'p-invalid': errors.firstName }"
@@ -25,7 +26,8 @@
 				id="name"
 				:disabled="disabled"
 				type="text"
-				v-bind="lastName"
+				v-model="lastName"
+				v-bind="lastNameAttrs"
 				maxlength="40"
 				class="w-full"
 				:class="{ 'p-invalid': errors.lastName }"
@@ -42,7 +44,8 @@
 				show-icon
 				:disabled="disabled"
 				class="w-full"
-				v-bind="birthday"
+				v-model="birthday"
+				v-bind="birthdayAttrs"
 				:manual-input="false"
 				:date-format="t('date_format')"
 				:class="{ 'p-invalid': errors.birthday }"
@@ -54,7 +57,8 @@
 		<div class="field col-6">
 			<label for="sex">{{ t("ViewPlayerRegistration.sex.field") }}</label>
 			<Dropdown
-				v-bind="sex"
+				v-model="sex"
+				v-bind="sexAttrs"
 				:disabled="disabled"
 				:options="[
 					{ name: t('general.male'), value: Sex.MALE },
@@ -82,7 +86,8 @@
 				id="email"
 				:disabled="disabled"
 				type="text"
-				v-bind="email"
+				v-model="email"
+				v-bind="emailAttrs"
 				maxlength="100"
 				class="w-full"
 				:class="{ 'p-invalid': errors.email }"
@@ -97,7 +102,8 @@
 				id="phone"
 				:disabled="disabled"
 				type="text"
-				v-bind="phone"
+				v-model="phone"
+				v-bind="phoneAttrs"
 				maxlength="30"
 				class="w-full"
 				:class="{ 'p-invalid': errors.phone }"
@@ -132,36 +138,35 @@ const props = withDefaults(
 const phoneRegExp =
 	/^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)$/
 
-const { defineInputBinds, errors, defineComponentBinds, handleSubmit } =
-	useForm<PlayerRegistration>({
-		validationSchema: toTypedSchema(
-			object({
-				firstName: string().min(4).max(40).required(),
-				lastName: string().min(4).max(40).required(),
-				sex: mixed().oneOf(Object.values(Sex)).required(),
-				birthday: date().required(),
-				email: string().max(100).email().required(),
-				phone: string()
-					.matches(phoneRegExp, t("ViewPlayerRegistration.phone.correct"))
-					.required(),
-			}),
-		),
-		initialValues: {
-			firstName: props.player.firstName,
-			lastName: props.player.lastName,
-			sex: props.player.sex,
-			birthday: props.player.birthday,
-			email: props.player.email,
-			phone: props.player.phone,
-		},
-	})
+const { defineField, errors, handleSubmit } = useForm<PlayerRegistration>({
+	validationSchema: toTypedSchema(
+		object({
+			firstName: string().min(4).max(40).required(),
+			lastName: string().min(4).max(40).required(),
+			sex: mixed().oneOf(Object.values(Sex)).required(),
+			birthday: date().required(),
+			email: string().max(100).email().required(),
+			phone: string()
+				.matches(phoneRegExp, t("ViewPlayerRegistration.phone.correct"))
+				.required(),
+		}),
+	),
+	initialValues: {
+		firstName: props.player.firstName,
+		lastName: props.player.lastName,
+		sex: props.player.sex,
+		birthday: props.player.birthday,
+		email: props.player.email,
+		phone: props.player.phone,
+	},
+})
 
-const firstName = defineInputBinds("firstName")
-const lastName = defineInputBinds("lastName")
-const sex = defineComponentBinds("sex")
-const birthday = defineComponentBinds("birthday")
-const email = defineInputBinds("email")
-const phone = defineInputBinds("phone")
+const [firstName, firstNameAttrs] = defineField("firstName")
+const [lastName, lastNameAttrs] = defineField("lastName")
+const [sex, sexAttrs] = defineField("sex")
+const [birthday, birthdayAttrs] = defineField("birthday")
+const [email, emailAttrs] = defineField("email")
+const [phone, phoneAttrs] = defineField("phone")
 
 const onSubmit = handleSubmit((values) => {
 	emit("submit", <PlayerRegistration>(<unknown>values))
