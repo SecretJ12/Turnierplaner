@@ -36,10 +36,7 @@ export function findCompPlayers(
 					`/player/compFind/${route.params.tourId}/${route.params.compId}`,
 					{ params: { search: search.value.toLowerCase(), playerB: playerB } },
 				)
-				.then<Player[]>((result) => {
-					console.log(result.data.map(playerServerToClient))
-					return result.data.map(playerServerToClient)
-				})
+				.then<Player[]>((result) => result.data.map(playerServerToClient))
 				.catch((error) => {
 					toast.add({
 						severity: "error",

@@ -95,7 +95,6 @@ const { data: suggestionsPlayerB, isFetching: loadingB } = findCompPlayers(
 )
 
 function queryPlayer(playerA: boolean, event: DropdownFilterEvent) {
-	console.log("event.value " + event.value)
 	if (playerA) searchA.value = event.value
 	else searchB.value = event.value
 }

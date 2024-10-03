@@ -494,7 +494,6 @@ const { values, defineField, errors, handleSubmit } = useForm<CompetitionForm>({
 			: new Date(),
 	},
 })
-console.log(values)
 
 const [name, nameAttrs] = defineField("name")
 const [description, descriptionAttrs] = defineField("description")

@@ -65,13 +65,10 @@ const { data: suggestionsPlayer, isFetching: loading } = findCompPlayers(
 )
 
 function queryPlayer(event: DropdownFilterEvent) {
-	console.log("event.value " + event.value)
 	search.value = event.value
 }
 
 function signUpPlayer() {
-	console.log(selectedPlayer.value)
-	console.log(props.isPlayerB)
 	mutateSignUpSingle({ player: selectedPlayer, playerB: props.isPlayerB })
 }
 </script>
