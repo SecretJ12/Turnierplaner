@@ -61,7 +61,7 @@ public class PlayerResource {
     @Produces(MediaType.APPLICATION_JSON)
     public List<jUserPlayer> listCompPlayer(@PathParam("tourId") String tourId, @PathParam("compId") String compId,
                                             @QueryParam("search") String search,
-                                            @DefaultValue("false") @QueryParam("playerB") boolean playerB) throws InterruptedException {
+                                            @DefaultValue("false") @QueryParam("playerB") boolean playerB) {
         Competition competition = competitionRepository.getByName(tourId, compId);
         if (competition == null)
             throw new BadRequestException("Invalid competition");
