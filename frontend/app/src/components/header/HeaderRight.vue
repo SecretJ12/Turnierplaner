@@ -1,121 +1,70 @@
 <template>
-	<div id="headerRight">
-		<Button v-if="isLoggedIn" rounded outlined size="small" @click="settings">
-			<template #icon>
-				<span class="material-symbols-outlined">settings</span>
-			</template>
-		</Button>
-		<Dropdown
-			v-model="locale"
-			:options="availableLocales"
-			@change="(event) => saveLanguage(event.value)"
-		/>
-
+	<div v-if="windowWidth < 600">
 		<span
-			v-if="!isLoggedIn"
-			class="material-symbols-outlined clickable bigger"
-			@click="login"
-			>login</span
+			class="material-symbols-outlined cursor-pointer bigger pr-2"
+			@click="sidebar = true"
 		>
-		<template v-else>
-			<span v-if="windowWidth > 600">{{ currentUser }}</span>
-			<span class="material-symbols-outlined clickable bigger" @click="logout"
-				>logout</span
-			>
-		</template>
+			menu
+		</span>
+		<Sidebar v-model:visible="sidebar" position="right">
+			<template #header>
+				<div class="flex flex-row align-items-center gap-2">
+					<span
+						class="material-symbols-outlined cursor-pointer icon"
+						style="font-size: 3rem"
+						@click="toHome"
+					>
+						sports_tennis
+					</span>
+					<h1 class="m-0 cursor-pointer title" @click="toHome">
+						{{ config?.title ? t(config.title) : t("title") }}
+					</h1>
+				</div>
+			</template>
+			<SidebarContent />
+		</Sidebar>
+	</div>
+	<div v-else class="pr-3 flex flex-row align-items-center gap-2 lg:gap-3">
+		<HeaderRightContent />
 	</div>
 </template>
 
 <script lang="ts" setup>
-import { auth } from "@/security/AuthService"
-import { inject, ref, watch } from "vue"
+import HeaderRightContent from "./HeaderRightContent.vue"
+import SidebarContent from "./SidebarContent.vue"
+import { inject, ref } from "vue"
 import { router } from "@/main"
+import { getConfig } from "@/backend/config"
 import { useI18n } from "vue-i18n"
-import { useSaveLanguage } from "@/backend/config"
 
-const currentUser = ref<string>("")
+const { t } = useI18n()
+
+const sidebar = ref(false)
+
 const isLoggedIn = inject("loggedIn", ref(false))
-const { locale, availableLocales } = useI18n()
-
-const { mutate: saveLanguage } = useSaveLanguage(isLoggedIn)
-
-function settings() {
-	router.push({
-		name: "Settings",
-	})
-}
+const { data: config } = getConfig(isLoggedIn)
 
 let windowWidth = ref(window.innerWidth)
 window.addEventListener("resize", () => {
 	windowWidth.value = window.innerWidth
 })
 
-watch(isLoggedIn, async () => {
-	auth.getUser().then((user) => {
-		if (user !== null && user.profile.preferred_username) {
-			currentUser.value = user.profile.preferred_username
-		}
-	})
-})
-
-function login() {
-	auth.login()
-}
-
-function logout() {
-	auth.logout()
+function toHome() {
+	router.push({ name: "Tournaments" })
 }
 </script>
 
-<script lang="ts">
-export default {
-	name: "LocaleChanger",
-	data() {
-		return { langs: ["en", "en"] }
-	},
-}
-</script>
+<script lang="ts"></script>
 
 <style>
-#headerRight {
-	width: fit-content;
-	padding-right: 10px;
-	display: flex;
-	align-items: center;
-	align-content: flex-end;
-	flex-direction: row;
-	justify-content: flex-end;
-}
-
-#login > span {
-	text-align: center;
-	margin-right: 20px;
-	display: flex;
-	justify-content: center;
-}
-
-@media only screen and (max-width: 500px) {
-	#headerRight {
-		padding-right: 0;
-	}
-
-	#headerRight > * {
-		margin-right: 10px;
-	}
-}
-
-#headerRight > * {
-	margin-right: 20px;
-	flex-grow: 0;
-	flex-shrink: 1;
-}
-
-.clickable {
-	cursor: pointer;
-}
-
 .bigger {
 	font-size: 2.5rem !important;
 	font-weight: bold !important;
+}
+
+h1 {
+	font-weight: 900;
+	font-size: 1.2rem;
+	color: #044154;
 }
 </style>

@@ -1,8 +1,5 @@
 <template>
 	<div id="container">
-		<h2>
-			{{ route.params.tourId }}
-		</h2>
 		<div id="content">
 			<div id="competitions">
 				<template v-if="competitions === null">
