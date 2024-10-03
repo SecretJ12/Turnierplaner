@@ -62,7 +62,6 @@ public class PlayerResource {
     public List<jUserPlayer> listCompPlayer(@PathParam("tourId") String tourId, @PathParam("compId") String compId,
                                             @QueryParam("search") String search,
                                             @DefaultValue("false") @QueryParam("playerB") boolean playerB) throws InterruptedException {
-        System.out.println("tourId: " + tourId + " compId: " + compId + " search: " + search + " playerB: " + playerB);
         Competition competition = competitionRepository.getByName(tourId, compId);
         if (competition == null)
             throw new BadRequestException("Invalid competition");
@@ -83,12 +82,7 @@ public class PlayerResource {
 
         DefaultConfig defConfig = defaultConfigRepository.findById(0L);
         boolean admin = securityIdentity.hasRole("director") || !defConfig.isAdminVerificationNeeded();
-        System.out.println("print all filters:");
-        System.out.println(
-            "search: " + search + " dbSex: " + dbSex + " minAge: " + minAge + " maxAge: " + maxAge + " admin: " + admin);
-        var res = playerRepository.filter(search, dbSex, minAge, maxAge, admin, 0, 10).toList();
-        System.out.println(res.size());
-        return res.stream().map(jUserPlayer::new).toList();
+        return playerRepository.filter(search, dbSex, minAge, maxAge, admin, 0, 10).map(jUserPlayer::new).toList();
     }
 
     @GET
