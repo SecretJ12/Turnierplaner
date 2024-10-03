@@ -18,8 +18,8 @@ import java.util.UUID;
                                AND (p.birthday <= :minAge OR :ignoreMinAge = true)
                                AND (p.birthday >= :maxAge OR :ignoreMaxAge = true)
                                AND (lower(p.firstName) like CONCAT('%', lower(:search), '%')
-                               OR lower(p.lastName) = CONCAT('%', lower(:search), '%')
-                               OR lower(CONCAT(p.firstName, ' ', p.lastName)) like CONCAT('%', lower(:search), '%'))
+                               OR lower(p.lastName) = CONCAT('%', (lower(:search)), '%')
+                               OR lower(CONCAT(p.firstName, ' ', p.lastName)) like CONCAT('%', :search, '%'))
                                ORDER BY CASE
                                    WHEN lower(p.firstName) like CONCAT(lower(:search), '%') THEN 0
                                    WHEN lower(p.lastName) like CONCAT(lower(:search), '%') THEN 1
@@ -34,9 +34,9 @@ import java.util.UUID;
                                AND (p.sex = :sex OR :ignoreSex = true)
                                AND (p.birthday <= :minAge OR :ignoreMinAge = true)
                                AND (p.birthday >= :maxAge OR :ignoreMaxAge = true)
-                               AND (lower(p.firstName) like CONCAT('%', lower(:search), '%')
-                               OR lower(p.lastName) = CONCAT('%', lower(:search), '%')
-                               OR lower(CONCAT(p.firstName, ' ', p.lastName)) like CONCAT('%', lower(:search), '%'))"""
+                               AND ((p.firstName) like CONCAT('%', :search, '%')
+                               OR (p.lastName) = CONCAT('%', :search, '%')
+                               OR (CONCAT(p.firstName, ' ', p.lastName)) like CONCAT('%', :search, '%'))"""
                ),
                @NamedQuery(name = "adminUnverified",
                            query = """
