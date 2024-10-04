@@ -1,0 +1,41 @@
+services:
+  keycloak:
+    restart: on-failure:5
+    image: quay.io/keycloak/keycloak:latest
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres_db/keycloak
+      KC_DB_USERNAME: ${POSTGRES_USER:-keycloak}
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD:-eX4mP13p455w0Rd}
+      KC_HOSTNAME: ${KC_HOSTNAME:-localhost}
+      KC_HTTP_ENABLED: true
+      HTTP_ADDRESS_FORWARDING: true
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-eX4mP13p455w0Rd}
+    command: start
+    ports:
+      - 7777:8080
+    depends_on:
+      - postgres_db
+    networks:
+      - keycloak_network
+
+  postgres_db:
+    image: postgres:latest
+    restart: always
+    volumes:
+      - keycloak_db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: ${POSTGRES_USER:-keycloak}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-eX4mP13p455w0Rd}
+    networks:
+      - keycloak_network
+
+volumes:
+  keycloak_db:
+    driver: local
+
+networks:
+  keycloak_network:
+    driver: bridge
