@@ -7,21 +7,23 @@ public class jUserConfig {
     private String title;
     private String language;
     private boolean adminVerificationNeeded;
+    private String auth_url;
 
     public jUserConfig() {
     }
 
     public jUserConfig(DefaultConfig config) {
-        this(config, null);
+        this(config, null, "");
     }
 
-    public jUserConfig(DefaultConfig defConfig, Config config) {
+    public jUserConfig(DefaultConfig defConfig, Config config, String auth_config) {
         this.title = defConfig.getTitle() != null ? defConfig.getTitle() : "title";
         if (config == null)
             this.language = defConfig.getLanguage();
         else
             this.language = config.getLanguage();
         this.adminVerificationNeeded = defConfig.isAdminVerificationNeeded();
+        this.auth_url = auth_config;
     }
 
     public String getTitle() {
@@ -46,5 +48,13 @@ public class jUserConfig {
 
     public void setAdminVerificationNeeded(boolean adminVerificationNeeded) {
         this.adminVerificationNeeded = adminVerificationNeeded;
+    }
+
+    public String getAuth_url() {
+        return auth_url;
+    }
+
+    public void setAuth_url(String auth_url) {
+        this.auth_url = auth_url;
     }
 }

@@ -11,6 +11,7 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import java.util.UUID;
@@ -28,6 +29,9 @@ public class ConfigResource {
     @Inject
     JsonWebToken jwt;
 
+    @ConfigProperty(name = "turnierplaner.frontend.oidc")
+    String frontendOidc;
+
     @GET
     @Path("/load")
     @Produces(MediaType.APPLICATION_JSON)
@@ -35,7 +39,7 @@ public class ConfigResource {
         Config config = null;
         if (jwt.getSubject() != null)
             config = configRepository.findByUUID(UUID.fromString(jwt.getSubject()));
-        return new jUserConfig(defaultConfigRepository.findById(0L), config);
+        return new jUserConfig(defaultConfigRepository.findById(0L), config, frontendOidc);
     }
 
     @POST

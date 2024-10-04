@@ -1,7 +1,7 @@
 services:
   turnierplaner:
     restart: on-failure:5
-    image: ghcr.io/secretj12/turnierplaner:0.0.2
+    image: ghcr.io/secretj12/turnierplaner:0.0.1
     container_name: turnierplaner-app
     environment:
       TURNIERPLANER_LANGUAGE: de
@@ -16,7 +16,8 @@ services:
       QUARKUS_HTTP_CORS_ORIGINS: "*"
       QUARKUS_HTTP_PORT: 8080
 
-      QUARKUS_OIDC_AUTH_SERVER_URL: http://keycloak:8080/realms/quarkus
+      OIDC_FRONTEND: http://localhost:7777/realms/Quarkus
+      QUARKUS_OIDC_AUTH_SERVER_URL: http://keycloak:8080/realms/Quarkus
       QUARKUS_OIDC_CLIENT_ID: backend-quarkus
       QUARKUS_OIDC_CREDENTIALS_SECRET: '**********'
       QUARKUS_OIDC_TLS_VERIFICATION: none

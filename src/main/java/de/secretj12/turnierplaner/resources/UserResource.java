@@ -22,7 +22,7 @@ public class UserResource {
     @Inject
     Keycloak keycloak;
 
-    @ConfigProperty(name = "turniperlaner.keycloak.realm")
+    @ConfigProperty(name = "turnierplaner.keycloak.realm")
     String realm;
 
     @GET

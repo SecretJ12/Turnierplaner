@@ -55,5 +55,8 @@ class AuthService {
 	}
 }
 
-export const auth = new AuthService()
+export let auth = new AuthService()
+export function reloadAuth() {
+	auth = new AuthService()
+}
 export const access_token = ref<string | null>(null)
