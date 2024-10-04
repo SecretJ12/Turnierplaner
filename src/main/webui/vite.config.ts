@@ -6,6 +6,16 @@ import { PrimeVueResolver } from "unplugin-vue-components/resolvers"
 
 // https://vitejs.dev/config/
 export default defineConfig({
+	build: {
+		rollupOptions: {
+			input: {
+				main: "index.html",
+				callbackSignIn: "callbackSignIn.html",
+				callbackSignOut: "callbackSignOut.html",
+				callbackSilent: "callbackSilent.html",
+			},
+		},
+	},
 	server: {
 		host: true,
 	},
