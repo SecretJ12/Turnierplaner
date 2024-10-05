@@ -1,7 +1,9 @@
 package de.secretj12.turnierplaner.resources;
 
-import de.secretj12.turnierplaner.db.entities.*;
-import de.secretj12.turnierplaner.db.entities.competition.*;
+import de.secretj12.turnierplaner.db.entities.Player;
+import de.secretj12.turnierplaner.db.entities.Tournament;
+import de.secretj12.turnierplaner.db.entities.VerificationCode;
+import de.secretj12.turnierplaner.db.entities.competition.Competition;
 import de.secretj12.turnierplaner.db.repositories.CompetitionRepository;
 import de.secretj12.turnierplaner.db.repositories.PlayerRepository;
 import de.secretj12.turnierplaner.db.repositories.TournamentRepository;
@@ -56,6 +58,7 @@ public class TestPlayerResource {
     public void addPlayer() {
         Tournament tournament = new Tournament();
         tournament.setName("Clubmeisterschaft");
+        tournament.setVisible(true);
         tournamentRepository.persist(tournament);
 
         Competition herren = genComp();
