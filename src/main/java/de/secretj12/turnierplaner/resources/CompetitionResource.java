@@ -74,12 +74,11 @@ public class CompetitionResource {
 
     @GET
     @Path("/prepare")
+    @RolesAllowed("director")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public List<jDirectorCompetitionUpdate> getPrepareCompetitions(@PathParam("tourName") String tourName) {
-        if (securityIdentity.hasRole("director"))
-            return competitions.listByName(tourName).stream().map(jDirectorCompetitionUpdate::new).toList();
-        throw new UnauthorizedException("Not authorized");
+        return competitions.listByName(tourName).stream().map(jDirectorCompetitionUpdate::new).toList();
     }
 
     @GET

@@ -9,6 +9,7 @@ import de.secretj12.turnierplaner.db.repositories.MatchRepository;
 import de.secretj12.turnierplaner.db.repositories.PlayerRepository;
 import de.secretj12.turnierplaner.db.repositories.TournamentRepository;
 import de.secretj12.turnierplaner.model.user.jUserMatchEvent;
+import de.secretj12.turnierplaner.tools.CommonHelpers;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -29,6 +30,9 @@ public class MatchResource {
     @Inject
     PlayerRepository players;
 
+    @Inject
+    CommonHelpers commonHelpers;
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<jUserMatchEvent> getMatches(
@@ -48,6 +52,8 @@ public class MatchResource {
             throw new BadRequestException("Need to specify at least a tournament or a player");
 
         return matches.filterMatches(tournament, competition, player, fromD, toD)
-            .stream().map(jUserMatchEvent::new).toList();
+            .stream()
+            .filter(m -> commonHelpers.isTournamentAccessible(m.getCompetition().getTournament()))
+            .map(jUserMatchEvent::new).toList();
     }
 }

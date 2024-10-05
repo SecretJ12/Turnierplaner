@@ -14,6 +14,7 @@ import de.secretj12.turnierplaner.model.director.jDirectorPlayerUpdateForm;
 import de.secretj12.turnierplaner.model.jPage;
 import de.secretj12.turnierplaner.model.user.jUserPlayer;
 import de.secretj12.turnierplaner.model.user.jUserPlayerRegistrationForm;
+import de.secretj12.turnierplaner.tools.CommonHelpers;
 import io.quarkus.mailer.Mailer;
 import io.quarkus.scheduler.Scheduled;
 import io.quarkus.security.identity.SecurityIdentity;
@@ -51,17 +52,19 @@ public class PlayerResource {
     DefaultConfigRepository defaultConfigRepository;
     @Inject
     SecurityIdentity securityIdentity;
+    @Inject
+    CommonHelpers commonHelpers;
 
     @ConfigProperty(name = "turnierplaner.registration.expire")
     public int expire;
 
-    // expects search string as lower case!
     @GET
     @Path("/compFind/{tourId}/{compId}/")
     @Produces(MediaType.APPLICATION_JSON)
     public List<jUserPlayer> listCompPlayer(@PathParam("tourId") String tourId, @PathParam("compId") String compId,
                                             @QueryParam("search") String search,
                                             @DefaultValue("false") @QueryParam("playerB") boolean playerB) {
+        commonHelpers.checkTournamentAccessibility(tourId);
         Competition competition = competitionRepository.getByName(tourId, compId);
         if (competition == null)
             throw new BadRequestException("Invalid competition");
@@ -196,6 +199,7 @@ public class PlayerResource {
     @Transactional
     @Path("/update")
     @Blocking
+    @RolesAllowed("director")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     public String playerRegistration(jDirectorPlayerUpdateForm uPlayer) {

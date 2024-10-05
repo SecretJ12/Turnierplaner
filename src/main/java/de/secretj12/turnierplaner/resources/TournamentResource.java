@@ -92,6 +92,7 @@ public class TournamentResource {
         Tournament tournament = tournaments.getByName(tourName);
         if (tournament == null)
             throw new NotFoundException("Could not find tournament");
+        common.checkTournamentAccessibility(tournament);
 
         return tournament.getCourts().stream().map(jUserCourt::new).collect(Collectors.toSet());
     }

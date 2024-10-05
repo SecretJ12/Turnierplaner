@@ -17,15 +17,16 @@ public class CommonHelpers {
     SecurityIdentity securityIdentity;
 
     public void checkTournamentAccessibility(String tourName) {
-        Tournament tournament = tournaments.getByName(tourName);
-        if (tournament == null) throw new NotFoundException("Tournament could not be found");
-        if (!securityIdentity.hasRole("director") && !tournament.isVisible())
-            throw new UnauthorizedException("Cannot access tournament");
+        checkTournamentAccessibility(tournaments.getByName(tourName));
     }
 
     public void checkTournamentAccessibility(Tournament tournament) {
         if (tournament == null) throw new NotFoundException("Tournament could not be found");
-        if (!securityIdentity.hasRole("director") && !tournament.isVisible())
+        if (!isTournamentAccessible(tournament))
             throw new UnauthorizedException("Cannot access tournament");
+    }
+
+    public boolean isTournamentAccessible(Tournament tournament) {
+        return securityIdentity.hasRole("director") || tournament.isVisible();
     }
 }

@@ -5,6 +5,7 @@ import de.secretj12.turnierplaner.db.entities.DefaultConfig;
 import de.secretj12.turnierplaner.db.repositories.ConfigRepository;
 import de.secretj12.turnierplaner.db.repositories.DefaultConfigRepository;
 import de.secretj12.turnierplaner.model.user.jUserConfig;
+import io.quarkus.security.Authenticated;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
@@ -45,6 +46,7 @@ public class ConfigResource {
     @POST
     @Path("/save")
     @Transactional
+    @Authenticated
     @Consumes(MediaType.APPLICATION_JSON)
     public void saveConfig(jUserConfig nConfig) {
         UUID uuid = UUID.fromString(jwt.getSubject());
