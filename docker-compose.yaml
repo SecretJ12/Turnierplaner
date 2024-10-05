@@ -1,0 +1,123 @@
+services:
+  turnierplaner:
+    build:
+      context: .
+      dockerfile: src/main/docker/Dockerfile.jvm
+    container_name: turnierplaner-app
+    environment:
+      TURNIERPLANER_LANGUAGE: de
+      TURNIERPLANER_REGISTRATION_EXPIRE: 30
+      TURNIERPLANER_ADMIN_VERIFICATION_NEEDED: "true"
+
+      QUARKUS_DATASOURCE_USERNAME: turnierplaner
+      QUARKUS_DATASOURCE_PASSWORD: turnierplaner
+      QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://turnierplaner_db/turnierplaner
+
+      QUARKUS_HTTP_CORS: "true"
+      QUARKUS_HTTP_CORS_ORIGINS: "*"
+      QUARKUS_HTTP_PORT: 8080
+
+      OIDC_FRONTEND: http://localhost:7777/realms/Quarkus
+      QUARKUS_OIDC_TOKEN_ISSUER: http://localhost:7777/realms/Quarkus
+      QUARKUS_KEYCLOAK_ADMIN_CLIENT_SERVER_URL: http://keycloak:8080
+      QUARKUS_OIDC_AUTH_SERVER_URL: http://keycloak:8080/realms/Quarkus
+      QUARKUS_OIDC_CLIENT_ID: backend-quarkus
+      QUARKUS_OIDC_CREDENTIALS_SECRET: '**********'
+      QUARKUS_OIDC_TLS_VERIFICATION: none
+
+      QUARKUS_MAILER_FROM: ${MAIL_FROM}
+      QUARKUS_MAILER_HOST: ${MAIL_HOST}
+      QUARKUS_MAILER_PORT: 587
+      QUARKUS_MAILER_START_TLS: REQUIRED
+      QUARKUS_MAILER_USERNAME: ${MAIL_USER}
+      QUARKUS_MAILER_PASSWORD: ${MAIL_PASS}
+    ports:
+      - "8080:8080"
+    depends_on:
+      turnierplaner_db:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+    networks:
+      - turnierplaner_network
+      - keycloak_network
+
+  turnierplaner_db:
+    image: postgres:latest
+    container_name: turnierplaner-db
+    environment:
+      POSTGRES_USER: turnierplaner
+      POSTGRES_PASSWORD: turnierplaner
+      POSTGRES_DB: turnierplaner
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d turnierplaner -U turnierplaner" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - turnierplaner_db:/var/lib/postgresql/data
+    networks:
+      - turnierplaner_network
+
+
+  keycloak:
+    restart: on-failure:5
+    container_name: keycloak-app
+    image: quay.io/keycloak/keycloak:26.0
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloak_db/keycloak
+      KC_DB_USERNAME: ${POSTGRES_USER:-keycloak}
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD:-eX4mP13p455w0Rd}
+      KC_HOSTNAME_STRICT: false
+#      KC_HOSTNAME: ${KC_HOSTNAME:-your.domain}
+#      KC_HOSTNAME_BACKCHANNEL_DYNAMIC: true
+      KC_HTTP_ENABLED: true
+      HTTP_ADDRESS_FORWARDING: true
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
+      KC_HEALTH_ENABLED: true
+      KC_METRICS_ENABLED: true
+    command: start
+    ports:
+      - 7777:8080
+    depends_on:
+      keycloak_db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/9000;echo -e 'GET /health/ready HTTP/1.1\r\nhost: http://localhost\r\nConnection: close\r\n\r\n' >&3;if [ $? -eq 0 ]; then echo 'Healthcheck Successful';exit 0;else echo 'Healthcheck Failed';exit 1;fi;"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      - keycloak_network
+
+  keycloak_db:
+    image: postgres:latest
+    container_name: keycloak-db
+    restart: always
+    volumes:
+      - keycloak_db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: ${POSTGRES_USER:-keycloak}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-eX4mP13p455w0Rd}
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d keycloak -U keycloak" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - keycloak_network
+
+volumes:
+  keycloak_db:
+    driver: local
+  turnierplaner_db:
+    driver: local
+
+networks:
+  keycloak_network:
+    driver: bridge
+  turnierplaner_network:
+    driver: bridge
