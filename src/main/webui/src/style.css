@@ -1,0 +1,60 @@
+.card {
+	background: var(--surface-card);
+	padding: 2rem;
+	border-radius: 10px;
+	margin-bottom: 1rem;
+}
+
+body {
+	font-family: var(--font-family);
+	font-weight: normal;
+	background: var(--surface-ground);
+	color: var(--text-color);
+	padding: 1rem;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.symbols-prep {
+	font-variation-settings:
+		"FILL" 0,
+		"wght" 500,
+		"GRAD" 200,
+		"opsz" 40;
+	margin-right: 0.5rem;
+}
+
+.ghost {
+	opacity: 50%;
+}
+.swapGhost {
+	display: none !important;
+}
+
+.playerList-enter-active,
+.playerList-leave-active {
+	transition: all 0.2s ease;
+}
+
+.playerList-enter-from,
+.playerList-leave-to {
+	opacity: 0;
+	transform: scale(0%);
+}
+
+.teamBox-leave-active {
+	transition: all 0.2s ease;
+}
+
+.teamBox-leave-to {
+	opacity: 0;
+	transform: scale(0%);
+}
+
+.min-player-height {
+	min-height: 2.5rem;
+}
+
+.min-team-height {
+	min-height: calc(5rem);
+}

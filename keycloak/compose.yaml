@@ -1,0 +1,4 @@
+services:
+  keycloak:
+    build: .
+    network_mode: host
