@@ -9,6 +9,9 @@ services:
       TURNIERPLANER_REGISTRATION_EXPIRE: 30
       TURNIERPLANER_ADMIN_VERIFICATION_NEEDED: true
 
+      TURNIERPLANER_REALM: Quarkus # used by user query for admin
+      TURNIERPLANER_OIDC_FRONTEND: http://localhost:7777/realms/Quarkus # address used by frontend
+
       # remove next to line for a clean setup without testdata
       TURNIERPLANER_TESTDATA: true
       QUARKUS_HIBERNATE_ORM_DATABASE_GENERATION: drop-and-create
@@ -18,18 +21,16 @@ services:
       QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://turnierplaner_db/turnierplaner
 
       QUARKUS_HTTP_CORS: "true"
-      QUARKUS_HTTP_CORS_ORIGINS: "*"
+      # QUARKUS_HTTP_HOST: "https://your.domain"
+      QUARKUS_HTTP_CORS_ORIGINS: "*" # set domain for prod
+      # QUARKUS_HTTP_CORS_ORIGINS: "https://your.domain"
       QUARKUS_HTTP_PORT: 8080
 
-      TURNIERPLANER_REALM: Quarkus
-      TURNIERPLANER_OIDC_FRONTEND: http://localhost:7777/realms/Quarkus
-
-      QUARKUS_OIDC_TOKEN_ISSUER: http://localhost:7777/realms/Quarkus
-      QUARKUS_KEYCLOAK_ADMIN_CLIENT_SERVER_URL: http://keycloak:8080
-      QUARKUS_OIDC_AUTH_SERVER_URL: http://keycloak:8080/realms/Quarkus
+      QUARKUS_KEYCLOAK_ADMIN_CLIENT_SERVER_URL: http://keycloak:8080 # use for user management, can be container address
+      QUARKUS_OIDC_AUTH_SERVER_URL: http://keycloak:8080/realms/Quarkus # used by backend, can be container address
       QUARKUS_OIDC_CLIENT_ID: backend-quarkus
       QUARKUS_OIDC_CREDENTIALS_SECRET: '**********'
-      QUARKUS_OIDC_TLS_VERIFICATION: none
+      QUARKUS_OIDC_TLS_VERIFICATION: none # only for use behind reverse proxy!
 
       QUARKUS_MAILER_FROM: ${MAIL_FROM}
       QUARKUS_MAILER_HOST: ${MAIL_HOST}
@@ -78,7 +79,7 @@ services:
       KC_DB_USERNAME: ${POSTGRES_USER:-keycloak}
       KC_DB_PASSWORD: ${POSTGRES_PASSWORD:-eX4mP13p455w0Rd}
 
-      # use for local tests
+      # use only for local tests
       KC_HOSTNAME_STRICT: false
 
       # use for prod system
@@ -86,11 +87,19 @@ services:
       # KC_HOSTNAME_BACKCHANNEL_DYNAMIC: true
 
       KC_HTTP_ENABLED: true
-      KC_PROXY_HEADERS: xforwarded
+      # enable for usage behind reverse proxy, xforward headers need to be set!
+      # KC_PROXY_HEADERS: xforwarded
+      # use this to check if headers are set correctly
+      # https://your-domain/realms/master/hostname-debug
+      # KC_HOSTNAME_DEBUG: true
 
       # always set a new admin account after the first start!
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
+
+      # used to determine healthiness of container
+      KC_HEALTH_ENABLED: true
+      KC_METRICS_ENABLED: true
     command: start
     ports:
       - 7777:8080 # remove this behind a reverse proxy
