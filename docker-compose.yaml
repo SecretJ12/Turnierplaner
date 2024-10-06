@@ -5,6 +5,8 @@ services:
       dockerfile: src/main/docker/Dockerfile.jvm
     container_name: turnierplaner-app
     environment:
+      # title uses the default Turnierplaner text
+      TURNIERPLANER_TITLE: title
       TURNIERPLANER_LANGUAGE: de
       TURNIERPLANER_REGISTRATION_EXPIRE: 30
       TURNIERPLANER_ADMIN_VERIFICATION_NEEDED: true
@@ -20,7 +22,7 @@ services:
       QUARKUS_DATASOURCE_PASSWORD: turnierplaner
       QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://turnierplaner_db/turnierplaner
 
-      QUARKUS_HTTP_CORS: "true"
+      QUARKUS_HTTP_CORS: true
       # QUARKUS_HTTP_HOST: "https://your.domain"
       QUARKUS_HTTP_CORS_ORIGINS: "*" # set domain for prod
       # QUARKUS_HTTP_CORS_ORIGINS: "https://your.domain"
