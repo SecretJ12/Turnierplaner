@@ -33,8 +33,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 
-import static java.lang.Thread.sleep;
-
 @Path("/player")
 public class PlayerResource {
     @Inject
@@ -45,8 +43,8 @@ public class PlayerResource {
     VerificationCodeRepository verificationCodeRepository;
     @Inject
     Mailer mailer;
-    // TODO inject mail template, store in txt/html
-    MailTemplates mailTemplates = new MailTemplates();
+    @Inject
+    MailTemplates mailTemplates;
 
     @Inject
     DefaultConfigRepository defaultConfigRepository;

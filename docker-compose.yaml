@@ -10,6 +10,7 @@ services:
       TURNIERPLANER_LANGUAGE: de
       TURNIERPLANER_REGISTRATION_EXPIRE: 30
       TURNIERPLANER_ADMIN_VERIFICATION_NEEDED: true
+      TURNIERPLANER_FRONTEND_URL: https://localhost:8080
 
       TURNIERPLANER_REALM: Quarkus # used by user query for admin
       TURNIERPLANER_OIDC_FRONTEND: http://localhost:7777/realms/Quarkus # address used by frontend
@@ -36,10 +37,12 @@ services:
 
       QUARKUS_MAILER_FROM: ${MAIL_FROM}
       QUARKUS_MAILER_HOST: ${MAIL_HOST}
-      QUARKUS_MAILER_PORT: 587
-      QUARKUS_MAILER_START_TLS: REQUIRED
+      QUARKUS_MAILER_PORT: 465
+      QUARKUS_MAILER_TLS: true
       QUARKUS_MAILER_USERNAME: ${MAIL_USER}
       QUARKUS_MAILER_PASSWORD: ${MAIL_PASS}
+
+      QUARKUS_LOG_LEVEL: DEBUG
     ports:
       - "8080:8080"
     depends_on:

@@ -1,23 +1,33 @@
 package de.secretj12.turnierplaner.resources;
 
 import io.quarkus.mailer.Mail;
-
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.core.UriBuilder;
-import java.io.File;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
+@ApplicationScoped
 public class MailTemplates {
     //    TODO internationalization
-    String url = "http://localhost:2000";
 
-    public Mail verificationMail(String recipient, String verificationcode) {
+    @ConfigProperty(name = "turnierplaner.frontend.url")
+    String url;
+
+    public Mail verificationMail(String recipient, String verificationCode) {
+        String vLink = UriBuilder
+            .fromUri(url + "/#/player/verification")
+            .queryParam("code", verificationCode)
+            .build()
+            .toString();
+        StringBuilder content = new StringBuilder();
+        content.append("<p>Welcome!,</p>");
+        content.append("<p>Please verify your email with the following link:</p>");
+        content.append("<a href=");
+        content.append(vLink);
+        content.append(">");
+        content.append(vLink);
+        content.append("</a>");
+        content.append("<p>Best regards</p>");
         return Mail
-            .withHtml(recipient, "Please verify your email",
-                "<p>Welcome!,</p>" + "<p>Please verify your email with the following link:</p>" + "<a href=" + UriBuilder
-                    .fromUri(url + "/#/player/verification")
-                    .queryParam("code", verificationcode)
-                    .build()
-                    .toString() + ">link</a>" + "<p>Best regards</p><img src=\"cid:logo@quarkus.io\"/></p>")
-            .addInlineAttachment("Turnierplaner.png", new File("src/main/resources/tennis-ball.png"), "image/png",
-                "<logo@quarkus.io>");
+            .withHtml(recipient, "Please verify your email", content.toString());
     }
 }
