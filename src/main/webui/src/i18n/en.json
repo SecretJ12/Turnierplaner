@@ -44,7 +44,8 @@
 		"to": "To",
 		"sex": "Sex",
 		"male": "Male",
-		"female": "Female"
+		"female": "Female",
+		"serverside_error": "Serverside error"
 	},
 	"DialogUpdateScore": {
 		"header": "Score Update",
@@ -196,7 +197,8 @@
 	"Player": {
 		"too_many_results": "Result ist not unique enough",
 		"no_result": "No player found",
-		"already_exists": "Player is already registered",
+		"registration_conflict": "Conflict at registration",
+		"already_exists": "$name is alreader registered",
 		"register_success": "Successful registered",
 		"register_failed": "Registration failed",
 		"over": "O",

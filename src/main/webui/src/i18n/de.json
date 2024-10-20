@@ -44,7 +44,8 @@
 		"to": "Bis",
 		"sex": "Geschlecht",
 		"male": "Männlich",
-		"female": "Weiblich"
+		"female": "Weiblich",
+		"serverside_error": "Serverseitiger Fehler"
 	},
 	"DialogUpdateScore": {
 		"header": "Punkte Eintragung",
@@ -194,8 +195,10 @@
 	"Player": {
 		"too_many_results": "Die Eingabe ist nicht eindeutig",
 		"no_result": "Keinen Spieler gefunden",
-		"already_exists": "Der Spieler ist bereits für das Turnier registriert",
+		"registration_conflict": "Konflikt bei der Registrierung",
+		"already_exists": "$name ist bereits für das Turnier registriert",
 		"register_success": "Der Spieler wurde erfolgreich registriert",
+		"register_success_team": "Das Team wurde erfolgreich registriert",
 		"register_failed": "Fehler beim Hinzufügen des Spielers",
 		"over": "Ü",
 		"under": "U",
