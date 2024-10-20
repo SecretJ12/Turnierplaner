@@ -1,11 +1,7 @@
 <template>
 	<Dialog
 		v-model:visible="visible"
-		:style="[
-			props.numberSets === NumberSets.THREE
-				? { width: '50rem' }
-				: { width: '70rem' },
-		]"
+		style="width: 70rem"
 		:header="t('DialogUpdateScore.header')"
 		modal
 	>
@@ -42,25 +38,33 @@
 			:errors="errors"
 		/>
 		<divider />
-		<div class="grid">
-			<div v-for="n in curTill + 1" :key="n" class="col">
+		<div class="flex flex-row w-12 justify-content-between mb-2">
+			<template v-for="n in curTill + 1" :key="n">
 				<Button
-					v-if="n - 1 <= curTill-2"
+					v-if="n - 1 <= curTill - 2"
 					:label="`${curTill}:${n - 1}`"
 					@click="updatePoints(curTill, n - 1)"
 				/>
-				<Button v-else :label="`${curTill+1}:${n - 1}`" @click="updatePoints(curTill+1, n - 1)" />
-			</div>
-		</div>
-		<div class="grid">
-			<div v-for="n in curTill + 1" :key="n" class="col">
 				<Button
-					v-if="n - 1 <= curTill-2"
+					v-else-if="curTill <= 6"
+					:label="`${curTill + 1}:${n - 1}`"
+					@click="updatePoints(curTill + 1, n - 1)"
+				/>
+			</template>
+		</div>
+		<div class="flex flex-row w-12 justify-content-between">
+			<template v-for="n in curTill + 1" :key="n">
+				<Button
+					v-if="n - 1 <= curTill - 2"
 					:label="`${n - 1}:${curTill}`"
 					@click="updatePoints(n - 1, curTill)"
 				/>
-				<Button v-else :label="`${n - 1}:${curTill+1}`" @click="updatePoints(n - 1, curTill+1)" />
-			</div>
+				<Button
+					v-else-if="curTill <= 6"
+					:label="`${n - 1}:${curTill + 1}`"
+					@click="updatePoints(n - 1, curTill + 1)"
+				/>
+			</template>
 		</div>
 		<divider />
 		<div class="flex justify-content-end flex-wrap gap-2">
@@ -99,7 +103,9 @@ const numberSets = computed(() =>
 const currentMatch = ref<Match | null>(null)
 const visible = ref(false)
 const selectedSet = ref(0)
-const curTill = computed(() => selectedSet.value === numberSets.value - 1 ? 10 : 6)
+const curTill = computed(() =>
+	selectedSet.value === numberSets.value - 1 ? 10 : 6,
+)
 
 const teamAGamePoints = ref<number[]>([])
 const teamBGamePoints = ref<number[]>([])
