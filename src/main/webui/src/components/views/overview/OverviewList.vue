@@ -217,7 +217,9 @@ const filters = ref<DataTableFilterMeta>({
 	title: { value: null, matchMode: TITLE_FILTER },
 	court: { value: null, matchMode: FilterMatchMode.IN },
 	begin: {
-		value: tournament.value ? tournament.value?.game_phase.begin : new Date(),
+		value: tournament.value
+			? tournament.value?.game_phase.begin
+			: new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000),
 		matchMode: FilterMatchMode.DATE_AFTER,
 	},
 	end: {
