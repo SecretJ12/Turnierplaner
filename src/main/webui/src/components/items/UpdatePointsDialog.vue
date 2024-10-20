@@ -43,27 +43,23 @@
 		/>
 		<divider />
 		<div class="grid">
-			<div v-for="n in 7" :key="n" class="col">
+			<div v-for="n in curTill + 1" :key="n" class="col">
 				<Button
-					v-if="n - 1 <= 4"
-					:label="'6:' + (n - 1)"
-					@click="updatePoints(6, n - 1)"
+					v-if="n - 1 <= curTill-2"
+					:label="`${curTill}:${n - 1}`"
+					@click="updatePoints(curTill, n - 1)"
 				/>
-				<Button
-					v-else
-					:label="'7:' + (n - 1)"
-					@click="updatePoints(7, n - 1)"
-				/>
+				<Button v-else :label="`${curTill+1}:${n - 1}`" @click="updatePoints(curTill+1, n - 1)" />
 			</div>
 		</div>
 		<div class="grid">
-			<div v-for="n in 7" :key="n" class="col">
+			<div v-for="n in curTill + 1" :key="n" class="col">
 				<Button
-					v-if="n - 1 <= 4"
-					:label="n - 1 + ':6'"
-					@click="updatePoints(n - 1, 6)"
+					v-if="n - 1 <= curTill-2"
+					:label="`${n - 1}:${curTill}`"
+					@click="updatePoints(n - 1, curTill)"
 				/>
-				<Button v-else :label="n - 1 + ':7'" @click="updatePoints(n - 1, 7)" />
+				<Button v-else :label="`${n - 1}:${curTill+1}`" @click="updatePoints(n - 1, curTill+1)" />
 			</div>
 		</div>
 		<divider />
@@ -103,6 +99,7 @@ const numberSets = computed(() =>
 const currentMatch = ref<Match | null>(null)
 const visible = ref(false)
 const selectedSet = ref(0)
+const curTill = computed(() => selectedSet.value === numberSets.value - 1 ? 10 : 6)
 
 const teamAGamePoints = ref<number[]>([])
 const teamBGamePoints = ref<number[]>([])
