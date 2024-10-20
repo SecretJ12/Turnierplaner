@@ -17,6 +17,7 @@
 				v-model="gamePoints[i]"
 				:max="100"
 				:min="0"
+				:invalid="props.errors.includes(i)"
 				:pt="{
 					input: {
 						root: { style: 'width: 120px; height: 50px', class: 'text-center' },
@@ -38,6 +39,7 @@ import { Team } from "@/interfaces/team"
 const gamePoints = defineModel("gamePoints", { type: Array<number> })
 const props = defineProps<{
 	team: Team | undefined | null
+	errors: number[]
 }>()
 </script>
 

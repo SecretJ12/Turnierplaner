@@ -264,6 +264,9 @@
 		},
 		"not_selected": "Alle Felder müssen ausgefüllt werden"
 	},
+	"set": {
+		"invalid_sets": "Es gibt ungültige Sätze"
+	},
 	"settings": {
 		"save_default": "Als Standard speichern",
 		"verification": "Verifikation",

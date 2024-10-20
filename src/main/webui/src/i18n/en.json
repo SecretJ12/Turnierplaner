@@ -265,6 +265,9 @@
 		},
 		"not_selected": "All fields need to be filled"
 	},
+	"set": {
+		"invalid_sets": "There are invalid sets"
+	},
 	"settings": {
 		"save_default": "Save as default",
 		"verification": "Verification",

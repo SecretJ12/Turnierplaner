@@ -31,13 +31,15 @@
 		</div>
 		<PlayerPointRow
 			v-if="visible"
-			v-model:game-points="team1GamePoints"
+			v-model:game-points="teamAGamePoints"
 			:team="currentMatch?.teamA"
+			:errors="errors"
 		/>
 		<PlayerPointRow
 			v-if="visible"
-			v-model:game-points="team2GamePoints"
+			v-model:game-points="teamBGamePoints"
 			:team="currentMatch?.teamB"
+			:errors="errors"
 		/>
 		<divider />
 		<div class="grid">
@@ -82,7 +84,7 @@ import { computed, ref } from "vue"
 import { useI18n } from "vue-i18n"
 import PlayerPointRow from "@/components/items/PlayerPointRow.vue"
 import { NumberSets } from "@/interfaces/competition"
-import { useUpdateSet } from "@/backend/set"
+import { checkSets, useUpdateSet } from "@/backend/set"
 import { useRoute } from "vue-router"
 import { useToast } from "primevue/usetoast"
 
@@ -102,18 +104,20 @@ const currentMatch = ref<Match | null>(null)
 const visible = ref(false)
 const selectedSet = ref(0)
 
-const team1GamePoints = ref<number[]>([])
-const team2GamePoints = ref<number[]>([])
+const teamAGamePoints = ref<number[]>([])
+const teamBGamePoints = ref<number[]>([])
+
+const errors = ref<number[]>([])
 
 const showPopUp = function (match: Match) {
 	selectedSet.value = 0
 	currentMatch.value = match
-	team1GamePoints.value = match.sets?.map((set) => set.scoreA) ?? []
-	team2GamePoints.value = match.sets?.map((set) => set.scoreB) ?? []
+	teamAGamePoints.value = match.sets?.map((set) => set.scoreA) ?? []
+	teamBGamePoints.value = match.sets?.map((set) => set.scoreB) ?? []
 	// fill the rest up with 0
-	for (let i = team1GamePoints.value.length; i < numberSets.value; i++) {
-		team1GamePoints.value.push(0)
-		team2GamePoints.value.push(0)
+	for (let i = teamAGamePoints.value.length; i < numberSets.value; i++) {
+		teamAGamePoints.value.push(0)
+		teamBGamePoints.value.push(0)
 	}
 	visible.value = true
 }
@@ -127,6 +131,18 @@ const savePoints = function () {
 	if (!currentMatch.value || !currentMatch.value.id) {
 		return
 	}
+	errors.value = checkSets(getAllSets(), numberSets.value)
+	if (errors.value.length > 0) {
+		toast.add({
+			severity: "error",
+			summary: t("general.failure"),
+			detail: t("set.invalid_sets"),
+			life: 3000,
+		})
+		selectedSet.value = errors.value[0]
+		return
+	}
+
 	const sets = getAllChangedSets()
 	if (sets.length > 0)
 		updateSet({
@@ -137,7 +153,7 @@ const savePoints = function () {
 }
 
 // return list of sets that contain all set that differ from the beginning
-const getAllChangedSets = function () {
+function getAllChangedSets() {
 	let changedSets = []
 	for (let i = 0; i < numberSets.value; i++) {
 		// case set does not exist yet
@@ -146,11 +162,11 @@ const getAllChangedSets = function () {
 			i > currentMatch.value?.sets?.length - 1
 		) {
 			// don't create a new set for 0 points
-			if (team1GamePoints.value[i] !== 0 || team2GamePoints.value[i] !== 0) {
+			if (teamAGamePoints.value[i] !== 0 || teamBGamePoints.value[i] !== 0) {
 				changedSets.push({
 					index: i,
-					scoreA: team1GamePoints.value[i],
-					scoreB: team2GamePoints.value[i],
+					scoreA: teamAGamePoints.value[i],
+					scoreB: teamBGamePoints.value[i],
 				})
 			}
 			continue
@@ -158,20 +174,32 @@ const getAllChangedSets = function () {
 		// you can set a existing set to 0, additionally check that the value is not the same as before
 		const a = currentMatch.value?.sets?.[i].scoreA
 		const b = currentMatch.value?.sets?.[i].scoreB
-		if (team1GamePoints.value[i] !== a || team2GamePoints.value[i] !== b) {
+		if (teamAGamePoints.value[i] !== a || teamBGamePoints.value[i] !== b) {
 			changedSets.push({
 				index: i,
-				scoreA: team1GamePoints.value[i],
-				scoreB: team2GamePoints.value[i],
+				scoreA: teamAGamePoints.value[i],
+				scoreB: teamBGamePoints.value[i],
 			})
 		}
 	}
 	return changedSets
 }
 
-const updatePoints = function (point1: number, point2: number) {
-	team1GamePoints.value[selectedSet.value] = point1
-	team2GamePoints.value[selectedSet.value] = point2
+function getAllSets() {
+	let sets = []
+	for (let i = 0; i < numberSets.value; i++) {
+		sets.push({
+			index: i,
+			scoreA: teamAGamePoints.value[i],
+			scoreB: teamBGamePoints.value[i],
+		})
+	}
+	return sets
+}
+
+function updatePoints(point1: number, point2: number) {
+	teamAGamePoints.value[selectedSet.value] = point1
+	teamBGamePoints.value[selectedSet.value] = point2
 	if (selectedSet.value < numberSets.value - 1) selectedSet.value++
 }
 
