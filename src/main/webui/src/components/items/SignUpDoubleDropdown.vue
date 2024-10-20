@@ -68,6 +68,7 @@ import { ref } from "vue"
 import { Player } from "@/interfaces/player"
 import { findCompPlayers } from "@/backend/player"
 import { DropdownFilterEvent } from "primevue/dropdown"
+import { getSignedUpSepByComp } from "@/backend/signup"
 
 const { t } = useI18n()
 const toast = useToast()
@@ -93,6 +94,7 @@ const { data: suggestionsPlayerB, isFetching: loadingB } = findCompPlayers(
 	t,
 	toast,
 )
+const { data: signedUp } = getSignedUpSepByComp(route, t, toast)
 
 function queryPlayer(playerA: boolean, event: DropdownFilterEvent) {
 	if (playerA) searchA.value = event.value
@@ -103,6 +105,31 @@ const { mutate: mutateSignUpDoubleTog, isPending: mutDoubleLoading } =
 	useSignUpDoubleTog(route, t, toast, queryClient)
 
 function signUpDoubleTog() {
+	const dupA = signedUp.value.teams.find(
+		(t) => t.playerA?.id == selectedPlayerA.value?.id,
+	)
+	if (dupA && dupA.playerA) {
+		toast.add({
+			severity: "error",
+			summary: t("Player.registration_conflict"),
+			detail: t("Player.already_exists").replace("$name", dupA.playerA.name),
+			life: 3000,
+		})
+		return
+	}
+	const dupB = signedUp.value.teams.find(
+		(t) => t.playerB?.id == selectedPlayerB.value?.id,
+	)
+	if (dupB && dupB.playerB) {
+		toast.add({
+			severity: "error",
+			summary: t("ViewSignUp.noPlayerSelected"),
+			detail: t("Player.already_exists").replace("$name", dupB.playerB.name),
+			life: 3000,
+		})
+		return
+	}
+
 	mutateSignUpDoubleTog({ playerA: selectedPlayerA, playerB: selectedPlayerB })
 }
 </script>

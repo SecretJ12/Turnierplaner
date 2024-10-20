@@ -252,7 +252,7 @@ export function useSignUpDoubleTog(
 				form,
 			)
 		},
-		...signUpOptions(route, t, toast, queryClient),
+		...signUpOptions(route, t, toast, queryClient, true),
 	})
 }
 
@@ -261,6 +261,7 @@ function signUpOptions(
 	t: (s: string) => string,
 	toast: ToastServiceMethods,
 	queryClient: QueryClient,
+	team?: boolean,
 ) {
 	return {
 		onSuccess() {
@@ -270,7 +271,9 @@ function signUpOptions(
 			})
 			toast.add({
 				severity: "success",
-				summary: t("Player.register_success"),
+				summary: team
+					? t("Player.register_success_team")
+					: t("Player.register_success"),
 				life: 3000,
 			})
 		},
@@ -279,7 +282,7 @@ function signUpOptions(
 			if (error.response.status === 409)
 				toast.add({
 					severity: "error",
-					summary: t("Player.already_exists"),
+					summary: t("Player.registration_conflict"),
 					life: 3000,
 				})
 			else
