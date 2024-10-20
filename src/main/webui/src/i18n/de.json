@@ -190,7 +190,8 @@
 		"playerB": "Spieler B",
 		"prepare": "Turnier vorbereiten",
 		"selectPlayer": "Wähle einen Spieler aus",
-		"searchPlayer": "Suche nach Spielern..."
+		"searchPlayer": "Suche nach Spielern...",
+		"warning_register_before_signup": "Spieler müssen vor der Anmeldung registriert werden"
 	},
 	"Player": {
 		"too_many_results": "Die Eingabe ist nicht eindeutig",

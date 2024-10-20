@@ -20,6 +20,18 @@
 					{{ t("ViewCompetition.registration_over") }}
 				</p>
 				<template v-else>
+					<div
+						class="mb-2 w-12 flex flex-row justify-content-between align-items-center"
+					>
+						<span>
+							{{ t("ViewCompetition.warning_register_before_signup") }}
+						</span>
+						<Button
+							:label="t('general.register')"
+							@click="router.push({ name: 'Player registration' })"
+						/>
+					</div>
+					<divider />
 					<ViewSignUpForm />
 				</template>
 
@@ -39,6 +51,8 @@ import ViewTable from "@/components/views/competition/signup/ViewTable.vue"
 import ViewSignUpForm from "@/components/views/competition/signup/ViewSignUpForm.vue"
 import { Competition } from "@/interfaces/competition"
 import { useI18n } from "vue-i18n"
+import { router } from "@/main"
+import Button from "primevue/button"
 
 const { t } = useI18n()
 

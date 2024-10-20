@@ -192,7 +192,8 @@
 		"playerB": "Player B",
 		"prepare": "Prepare tournament",
 		"selectPlayer": "Select a player",
-		"searchPlayer": "Search for players..."
+		"searchPlayer": "Search for players...",
+		"warning_register_before_signup": "Players need to be registered before signup"
 	},
 	"Player": {
 		"too_many_results": "Result ist not unique enough",
