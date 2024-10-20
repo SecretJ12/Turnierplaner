@@ -29,6 +29,7 @@ export function findCompPlayers(
 			search,
 			computed(() => route.params.tourId),
 			computed(() => route.params.compId),
+			playerB,
 		],
 		queryFn: async () => {
 			return axios
