@@ -120,12 +120,12 @@ public class SetResource {
 
             for (var fog : group.getFinalOfGroupA()) {
                 Match fin = fog.getNextMatch();
-                fin.setTeamA(teamRepository.findById(results.get(fog.getPos()).getTeam().getId()));
+                fin.setTeamA(teamRepository.findById(results.get(fog.getPos() - 1).getTeam().getId()));
                 adjustNext(fin);
             }
             for (var fog : group.getFinalOfGroupB()) {
                 Match fin = fog.getNextMatch();
-                fin.setTeamB(teamRepository.findById(results.get(fog.getPos()).getTeam().getId()));
+                fin.setTeamB(teamRepository.findById(results.get(fog.getPos() - 1).getTeam().getId()));
                 adjustNext(fin);
             }
         }
