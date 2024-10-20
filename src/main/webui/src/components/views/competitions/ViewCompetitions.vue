@@ -131,34 +131,38 @@ const status = ref([
 const openRegistration = ref(false)
 const { data, isLoading } = getTournamentDetails(route, t, toast)
 
-watch(data, () => {
-	if (data.value === undefined) return
+watch(
+	data,
+	() => {
+		if (data.value === undefined) return
 
-	const date = new Date()
-	if (date > data.value.registration_phase.end) {
-		status.value[0].color = "green"
-		status.value[0].icon = "pi-check"
-		openRegistration.value = false
-	} else if (date > data.value.registration_phase.begin) {
-		status.value[0].color = "blue"
-		status.value[0].icon = "pi-pencil"
-		openRegistration.value = true
-	} else {
-		status.value[0].color = "#000000"
-		status.value[0].icon = "pi-pencil"
-		openRegistration.value = false
-	}
-	if (date > data.value.game_phase.end) {
-		status.value[1].color = "green"
-		status.value[1].icon = "pi-check"
-	} else if (date > data.value.game_phase.begin) {
-		status.value[1].color = "blue"
-		status.value[1].icon = "pi-play"
-	} else {
-		status.value[1].color = "#000000"
-		status.value[1].icon = "pi-play"
-	}
-})
+		const date = new Date()
+		if (date > data.value.registration_phase.end) {
+			status.value[0].color = "green"
+			status.value[0].icon = "pi-check"
+			openRegistration.value = false
+		} else if (date > data.value.registration_phase.begin) {
+			status.value[0].color = "blue"
+			status.value[0].icon = "pi-pencil"
+			openRegistration.value = true
+		} else {
+			status.value[0].color = "#000000"
+			status.value[0].icon = "pi-pencil"
+			openRegistration.value = false
+		}
+		if (date > data.value.game_phase.end) {
+			status.value[1].color = "green"
+			status.value[1].icon = "pi-check"
+		} else if (date > data.value.game_phase.begin) {
+			status.value[1].color = "blue"
+			status.value[1].icon = "pi-play"
+		} else {
+			status.value[1].color = "#000000"
+			status.value[1].icon = "pi-play"
+		}
+	},
+	{ immediate: true },
+)
 
 function formatDate(d: Date) {
 	return d.toLocaleString(t("lang"), options)
