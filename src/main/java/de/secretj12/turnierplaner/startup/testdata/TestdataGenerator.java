@@ -242,7 +242,8 @@ public class TestdataGenerator {
     private Team[] createTeams(Competition competition, CompetitionSettings competitionSettings) {
         Team[] teams = new Team[competitionSettings.getTeamNumbers()];
         for (int i = 0; i < competitionSettings.getTeamNumbers(); i++) {
-            Player player = createPlayer(competitionSettings.getAgeRestr(), competitionSettings.getSex());
+            Player player = createPlayer(competitionSettings.getAgeRestr(), competitionSettings
+                .getSex() == SexFilter.ANY ? SexFilter.MALE : competitionSettings.getSex());
             players.persist(player);
 
             teams[i] = new Team();
@@ -250,7 +251,8 @@ public class TestdataGenerator {
             teams[i].setPlayerA(player);
 
             if (competitionSettings.getCompetitionMode() == CompetitionMode.DOUBLE) {
-                Player player2 = createPlayer(competitionSettings.getAgeRestr(), competitionSettings.getSex());
+                Player player2 = createPlayer(competitionSettings.getAgeRestr(), competitionSettings
+                    .getSex() == SexFilter.ANY ? SexFilter.FEMALE : competitionSettings.getSex());
                 players.persist(player2);
                 teams[i].setPlayerB(player2);
             }
